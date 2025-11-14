@@ -10,15 +10,79 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="main01.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #181a1b;
+        }
+        .circle-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+        }
+        .circle-link {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            text-decoration: none;
+            color: #d2d4d6;
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            transition: color 0.2s;
+        }
+        .circle-link:hover {
+            color: #ffd700;
+        }
+        .circle-link svg, .circle-link i {
+            font-size: 1.3em;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
-    <ul>
-                                
-        <li><a href="mailto:frontneststudio@gmail.com">Email: frontneststudio@gmail.com</a></li>
-        <li><a href="https://www.linkedin.com/in/gabornebesnyoiorsolya/" target="_blank">Linkedin</a></li>
-        <li><a href="https://www.sololearn.com/en/profile/8225354" target="_blank">Sololearn</a></li>
-        <li><a href="https://learn.microsoft.com/hu-hu/users/orsibesnyoi-7583/training/modules" target="_blank">Microsoft</a></li>
-                                
-    </ul>
+    <div class="circle-container" id="circleContainer">
+        <!-- Links will be injected here by JS -->
+    </div>
+    <script>
+        // Profile links data
+        const links = [
+            { href: 'mailto:frontneststudio@gmail.com', icon: '<i class="fa-brands fa-google"></i>', label: 'Gmail' },
+            { href: 'https://www.linkedin.com/in/gabornebesnyoiorsolya/', icon: '<i class="fa-brands fa-linkedin"></i>', label: 'Linkedin', target: '_blank' },
+            { href: 'https://learn.microsoft.com/hu-hu/users/orsibesnyoi-7583/training/modules', icon: '<i class="fa-brands fa-microsoft"></i>', label: 'Microsoft', target: '_blank' },
+            { href: 'https://github.com/FrontNest', icon: '<i class="fa-brands fa-github"></i>', label: 'GitHub', target: '_blank' },
+            { href: 'https://www.instagram.com/frontneststudio/', icon: '<i class="fa-brands fa-instagram"></i>', label: 'Instagram', target: '_blank' },
+            { href: 'https://www.tiktok.com/@frontneststudio', icon: '<i class="fa-brands fa-tiktok"></i>', label: 'TikTok', target: '_blank' },
+            { href: 'https://www.youtube.com/@FrontNestStudio', icon: '<i class="fa-brands fa-youtube"></i>', label: 'Youtube', target: '_blank' },
+            { href: 'https://www.facebook.com/profile.php?id=61570168303364', icon: '<i class="fa-brands fa-facebook"></i>', label: 'Facebook', target: '_blank' },
+            { href: 'https://www.sololearn.com/en/profile/8225354', icon: `<svg width="18px" height="18px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#d2d4d6"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style>.a{fill:#d2d4d6;stroke:#d2d4d6;stroke-linecap:round;stroke-linejoin:round;}</style></defs><path class="a" d="M20.7143,30.3722c0-3.2261-6.3709-3.6715-6.3709-11.7725S18.8446,9.6954,18.8446,6.55,6.38,7.23,6.38,19.2922,20.7143,33.5983,20.7143,30.3722Z"></path><path class="a" d="M30.3042,27.2168c-3.2261,0-3.6715,6.371-11.7724,6.371S9.6274,29.0865,6.4823,29.0865s.68,12.465,12.742,12.465S33.53,27.2168,30.3042,27.2168Z"></path><path class="a" d="M17.6958,20.8178c3.2261,0,3.6714-6.371,11.7724-6.371s8.9044,4.5013,12.0495,4.5013-.68-12.465-12.742-12.465S14.47,20.8178,17.6958,20.8178Z"></path><path class="a" d="M27.2864,17.6278c0,3.2261,6.371,3.6715,6.371,11.7725s-4.5012,8.9043-4.5012,12.05,12.465-.68,12.465-12.742S27.2864,14.4017,27.2864,17.6278Z"></path></g></svg>`, label: 'Sololearn', target: '_blank' }
+        ];
+
+        const container = document.getElementById('circleContainer');
+        const radius = 160; // px, from center
+        const centerX = 200;
+        const centerY = 200;
+        const total = links.length;
+        links.forEach((link, i) => {
+            const angle = (i / total) * 2 * Math.PI - Math.PI / 2;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            const a = document.createElement('a');
+            a.className = 'circle-link';
+            a.href = link.href;
+            a.innerHTML = link.icon + ' ' + link.label;
+            a.style.left = x + 'px';
+            a.style.top = y + 'px';
+            if (link.target) a.target = link.target;
+            container.appendChild(a);
+        });
+    </script>
 </body>
 </html>

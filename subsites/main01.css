@@ -154,6 +154,13 @@ body, .top-nav, .side-nav, .side-nav a, a, pre {
 	transform: rotateY(180deg);
 }
 
+.fa-brands {
+  color: #d2d4d6;
+}
+
+.profileUl, .profileLi {
+  list-style-type:none;
+}
 
 /* Oldalsó navigációs sáv */     
 .container2 {
