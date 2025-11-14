@@ -1,0 +1,87 @@
+body {
+	font-family: 'Noto Sans'; 
+  	font-size:2vw;
+	  color:#ffe4c4;
+    background-color:#1c1d1d;
+}
+
+.top-banner {
+    display: flex;
+    text-align: center;
+    gap: 100px;
+}
+
+h1, h2 {
+  display: block;
+  font-size: 1em;
+  text-align:center;
+
+}
+
+p {
+  margin: 0px;
+}
+
+.clip {  /* Text mask */
+    font-family: 'Rubik', sans-serif; 
+    font-size: 8vw;    
+    font-weight: 1000;
+    background: url("./media/galaxy_stock_bckgr.jpg") 0 0 / cover no-repeat;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        -webkit-text-stroke: 0.3px #ffe4c4;    
+    text-decoration: none;
+}
+.clip_smaller {  /* Text mask */
+  font-family: 'Rubik', sans-serif; 
+  font-size: 10vw;    
+  font-weight: 1000;
+  background: url("./media/galaxy_stock_bckgr.jpg") 0 0 / cover no-repeat;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 0.3px #ffe4c4; 
+  text-decoration: none;   
+}
+
+    #logo {
+      width: 60px;
+      height: 60px;
+      position:fixed;
+    }
+    
+  /* Main content */
+  .main {
+    padding-top: 5vw;
+    max-width: 100%; 
+    max-height: 200%; 
+  }
+
+/* HOVER ACTIONS */
+#logo:hover {
+	transform: rotateY(360deg);
+  transition-duration: 2000ms;
+  
+}
+
+/* 
+.main:hover {
+	transform:scale(1.1);
+  transition-duration: 3000ms;
+  padding-left: 60px;
+}  */
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #282929;
+  border-radius: 5px;
+  border: 1px solid #999b9e;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #282929;
+}
