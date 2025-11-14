@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const completeSound = document.getElementById('completeSound');
     
     // Constants
-    const GITHUB_RAW_BASE_URL = 'https://raw.githubusercontent.com/Felisha76/portfolio/main/cs_templates/';
+    const GITHUB_RAW_BASE_URL = 'https://raw.githubusercontent.com/frontnest/learningtools/main/cs_templates/';
     
     // Variables
     let vocabularyData = [];
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadVocabularyFiles() {
         try {
             // Fetch the list of files from GitHub API
-            const apiUrl = 'https://api.github.com/repos/Felisha76/portfolio/contents/cs_templates';
+            const apiUrl = 'https://api.github.com/repos/frontnest/learningtools/contents/cs_templates';
             const response = await fetch(apiUrl);
             
             if (!response.ok) {
