@@ -1,5 +1,5 @@
 // Global variable to store the base URL for raw GitHub content
-const GITHUB_RAW_BASE_URL = 'https://raw.githubusercontent.com/Felisha76/portfolio/main/cs_templates/';
+const GITHUB_RAW_BASE_URL = 'https://raw.githubusercontent.com/frontnest/learningtools/master/cs_templates/';
 
 // Categories configuration - map file prefixes to category names
 const CATEGORIES = {
@@ -30,7 +30,7 @@ function getCategoryForFile(fileName) {
 async function fetchCSVFileList() {
     try {
         // GitHub API endpoint to get repository contents
-        const apiUrl = 'https://api.github.com/repos/Felisha76/portfolio/contents/cs_templates';
+        const apiUrl = 'https://api.github.com/repos/frontnest/learningtools/contents/cs_templates';
         const response = await fetch(apiUrl);
         
         if (!response.ok) {

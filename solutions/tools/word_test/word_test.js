@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const completeSound = document.getElementById('completeSound');
     
     // Constants
-    const GITHUB_RAW_BASE_URL = 'https://raw.githubusercontent.com/frontnest/learningtools/main/cs_templates/';
+    const GITHUB_RAW_BASE_URL = 'https://raw.githubusercontent.com/frontnest/learningtools/master/cs_templates/';
     
     // Variables
     let vocabularyData = [];

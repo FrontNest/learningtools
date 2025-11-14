@@ -1,5 +1,5 @@
 // Global variable to store the base URL for raw GitHub content
-const GITHUB_RAW_BASE_URL = 'https://raw.githubusercontent.com/Felisha76/portfolio/main/cs_templates/';
+const GITHUB_RAW_BASE_URL = 'https://raw.githubusercontent.com/frontnest/learningtools/master/cs_templates/';
 
 // Categories configuration - map file prefixes to category names
 const CATEGORIES = {
