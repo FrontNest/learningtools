@@ -1,0 +1,159 @@
+.calibre {
+  display: block;
+  font-size: 1em;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0 5pt;
+}
+.calibre1 {
+  display: block;
+}
+.calibre2 {
+  display: block;
+  margin: 1em 0;
+}
+.calibre3 {
+  display: block;
+  font-size: 2em;
+  font-weight: bold;
+  line-height: 1.2;
+  margin: 0.67em 0;
+}
+.calibre4 {
+  display: block;
+  font-size: 1.66667em;
+  font-weight: bold;
+  line-height: 1.2;
+  margin: 0.83em 0;
+}
+.calibre5 {
+  height: auto;
+  max-width: 100%;
+  width: auto;
+}
+.calibre6 {
+  display: block;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+  margin-bottom: 1em;
+  margin-right: 0;
+  margin-top: 1em;
+}
+.calibre7 {
+  display: list-item;
+}
+.calibre8 {
+  display: block;
+  font-size: 1.29167em;
+  font-weight: bold;
+  line-height: 1.2;
+  margin: 1em 0;
+}
+.calibre9 {
+  display: block;
+  font-weight: bold;
+  margin: 1.33em 0;
+}
+.calibre10 {
+  display: block;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+  margin-bottom: 0;
+  margin-right: 0;
+  margin-top: 0;
+}
+.calibre11 {
+  border-collapse: separate;
+  border-spacing: 2px;
+  display: table;
+  margin-bottom: 0;
+  margin-top: 0;
+  text-indent: 0;
+}
+.calibre12 {
+  display: table-row;
+  vertical-align: middle;
+}
+.calibre13 {
+  display: table-cell;
+  text-align: inherit;
+  vertical-align: inherit;
+  padding: 1px;
+}
+.calibre14 {
+  font-size: 0.75em;
+  line-height: normal;
+  vertical-align: super;
+}
+.calibre15 {
+  font-size: 0.75em;
+  line-height: normal;
+  vertical-align: sub;
+}
+.bluetext {
+  color: #27619d; 
+}
+
+.bigtext {
+ font-size: 25px; 
+}
+
+.redtext {
+  color: #ce191e; 
+}
+
+num {
+ background-color: #27619d;
+ color: white;
+ padding: 0.4vh;
+ font-weight: 900;
+ border-radius: 50px;
+}
+
+rednum {
+ background-color: #ce191e;
+ color: white;
+ padding: 0.4vh;
+ font-weight: 900;
+ border-radius: 50px;
+}
+
+.greenbox {
+ background-color: #c6db66; border-radius: 10px; padding: 15px; 
+}
+
+.lightgreenbox {
+  background-color: #dae8a3;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.orangebox {
+  background-color: #f4e3bb;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.babybluebackground {
+ background-color: #e2f4fc; 
+}
+
+purplecontainer {
+ 
+  background-color: #7e3e98;
+  color: white;
+  padding: 8px;
+  font-weight: 900;
+  border-radius: 7px; 
+    
+}
+
+text {
+ font-variant: small-caps; 
+}
+
+right {
+ float: right; 
+}

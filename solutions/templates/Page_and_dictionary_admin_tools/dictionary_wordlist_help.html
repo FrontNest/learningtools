@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <title>Porfolio - DictHelp</title>
+    <link rel="icon" type="image/png" href="./media/favicon_light.png"> <!-- NE NYÚLJ HOZZÁ, MŰKÖDIK -->
+
+    <link rel="stylesheet" href="../templates/dict_help.css"> <!-- NE NYÚLJ HOZZÁ, MŰKÖDIK  -->
+
+<style>
+  :root{
+    --gutter: 8px;
+    --min-top: 80px;
+    --min-bottom: 80px;
+  }
+
+  html,body{
+    height:100%;
+    margin:0;
+    background:#111;
+    color:#eee;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;
+  }
+
+  .container{
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    width:100vw;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+
+  .top, .bottom {
+    flex:1 1 50%;
+    min-height:0;
+    position:relative;
+    overflow:auto;
+  }
+
+  iframe {
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+  }
+
+  .h-split {
+    height:var(--gutter);
+    cursor:ns-resize;
+    background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    position:relative;
+  }
+
+  .h-split:after{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:40%;
+    height:4px;
+    background:rgba(255,255,255,0.12);
+    border-radius:2px;
+  }
+
+  .dragging {
+    user-select:none;
+  }
+</style>
+</head>
+<body>
+<div class="container" id="container">
+  <div class="top" id="topPane">
+    <iframe id="aFrame" title="aFrame"
+      src="https://docs.google.com/spreadsheets/d/1C6_W_Gx_0NWVWw6WMEB1JaX38mNw0g785nFmi3zVlww/edit?gid=2000199802#gid=2000199802"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
+    </iframe>
+  </div>
+
+  <div class="h-split" id="hSplit" aria-hidden="true"></div>
+
+  <div class="bottom" id="bottomPane">
+    <iframe id="bFrame" title="bFrame"
+      src="https://docs.google.com/spreadsheets/d/1C6_W_Gx_0NWVWw6WMEB1JaX38mNw0g785nFmi3zVlww/edit?gid=2146448207#gid=2146448207"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
+    </iframe>
+  </div>
+</div>
+
+<script>
+(function(){
+  const container = document.getElementById('container');
+  const topPane = document.getElementById('topPane');
+  const hSplit = document.getElementById('hSplit');
+
+  let dragging = false;
+
+  function px(n){ return n + 'px'; }
+
+  hSplit.addEventListener('mousedown', (e)=>{
+    dragging=true;
+    document.body.classList.add('dragging');
+    e.preventDefault();
+  });
+  window.addEventListener('mouseup', ()=>{
+    if(dragging){
+      dragging=false;
+      document.body.classList.remove('dragging');
+      toggleIframePointerEvents(false);
+    }
+  });
+  window.addEventListener('mousemove', (e)=>{
+    if(dragging){
+      const rect = container.getBoundingClientRect();
+      let newTop = e.clientY - rect.top;
+      const minTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-top')) || 80;
+      const minBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-bottom')) || 80;
+      newTop = Math.max(newTop, minTop);
+      newTop = Math.min(newTop, rect.height - minBottom);
+      topPane.style.flex = '0 0 ' + px(newTop);
+      toggleIframePointerEvents(true);
+    }
+  });
+
+  // double-click = reset
+  hSplit.addEventListener('dblclick', ()=>{
+    topPane.style.flex = '1 1 50%';
+  });
+
+  function toggleIframePointerEvents(state){
+    document.querySelectorAll('iframe').forEach(fr=>{
+      fr.style.pointerEvents = state ? 'none' : '';
+    });
+  }
+})();
+</script>
+</body>
+</html>

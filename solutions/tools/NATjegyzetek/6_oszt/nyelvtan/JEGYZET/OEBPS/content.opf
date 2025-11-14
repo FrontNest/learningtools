@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="3.0" unique-identifier="BookId" xmlns="http://www.idpf.org/2007/opf">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+    <dc:identifier id="BookId">urn:uuid:b7b01ae8-7218-4d12-9d11-d8547f5d57ae</dc:identifier>
+    <dc:language>en</dc:language>
+    <dc:title>[Main title here]</dc:title>
+    <meta property="dcterms:modified">2025-10-13T18:24:39Z</meta>
+    <meta name="Sigil version" content="2.6.2"/>
+  </metadata>
+  <manifest>
+    <item id="Section0001.xhtml" href="Text/0001_FeltoltesAlatt.xhtml" media-type="application/xhtml+xml"/>
+    <item id="sgc-nav.css" href="Styles/sgc-nav.css" media-type="text/css"/>
+    <item id="nav.xhtml" href="Text/nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+    <item id="Section0002.xhtml" href="Text/SABLONOK.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x01_ny6.xhtml" href="Text/01-02_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x03_ny6.xhtml" href="Text/03_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x04_ny6.xhtml" href="Text/04_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x05_ny6.xhtml" href="Text/05-06_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x07_ny6.xhtml" href="Text/07_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x08_ny6.xhtml" href="Text/08_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x09_ny6.xhtml" href="Text/09_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x10_ny6.xhtml" href="Text/10_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x11_ny6.xhtml" href="Text/11_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x12_ny6.xhtml" href="Text/12_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x13_ny6.xhtml" href="Text/13_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x14_ny6.xhtml" href="Text/14_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x15_ny6.xhtml" href="Text/15_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x16_ny6.xhtml" href="Text/16_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x17_ny6.xhtml" href="Text/17_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x18_ny6.xhtml" href="Text/18_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x19_ny6.xhtml" href="Text/19_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x20_ny6.xhtml" href="Text/20_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x21_ny6.xhtml" href="Text/21_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x22_ny6.xhtml" href="Text/22_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x23_ny6.xhtml" href="Text/23_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x24_ny6.xhtml" href="Text/24_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x25_ny6.xhtml" href="Text/25_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x26_ny6.xhtml" href="Text/26_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x27_ny6.xhtml" href="Text/27_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x28_ny6.xhtml" href="Text/28_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x29_ny6.xhtml" href="Text/29_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x30_ny6.xhtml" href="Text/30_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x31_ny6.xhtml" href="Text/31_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x32_ny6.xhtml" href="Text/32_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x33_ny6.xhtml" href="Text/33_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x34_ny6.xhtml" href="Text/34_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x35_ny6.xhtml" href="Text/35_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x36_ny6.xhtml" href="Text/36_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x37_ny6.xhtml" href="Text/37_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x38_ny6.xhtml" href="Text/38_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x39_ny6.xhtml" href="Text/39_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x40_ny6.xhtml" href="Text/40_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x41_ny6.xhtml" href="Text/41_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x42_ny6.xhtml" href="Text/42_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x43_ny6.xhtml" href="Text/43_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x44_ny6.xhtml" href="Text/44_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x45_ny6.xhtml" href="Text/45_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x46_ny6.xhtml" href="Text/46_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x47_ny6.xhtml" href="Text/47_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x48_ny6.xhtml" href="Text/48_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x49_ny6.xhtml" href="Text/49_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x50_ny6.xhtml" href="Text/50_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x51_ny6.xhtml" href="Text/51_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x52_ny6.xhtml" href="Text/52_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x53_ny6.xhtml" href="Text/53_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x54_ny6.xhtml" href="Text/54_ny6.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x55_ny6.xhtml" href="Text/55_ny6.xhtml" media-type="application/xhtml+xml"/>
+  </manifest>
+  <spine>
+    <itemref idref="Section0001.xhtml"/>
+    <itemref idref="Section0002.xhtml"/>
+    <itemref idref="nav.xhtml" linear="no"/>
+    <itemref idref="x01_ny6.xhtml"/>
+    <itemref idref="x03_ny6.xhtml"/>
+    <itemref idref="x04_ny6.xhtml"/>
+    <itemref idref="x05_ny6.xhtml"/>
+    <itemref idref="x07_ny6.xhtml"/>
+    <itemref idref="x08_ny6.xhtml"/>
+    <itemref idref="x09_ny6.xhtml"/>
+    <itemref idref="x10_ny6.xhtml"/>
+    <itemref idref="x11_ny6.xhtml"/>
+    <itemref idref="x12_ny6.xhtml"/>
+    <itemref idref="x13_ny6.xhtml"/>
+    <itemref idref="x14_ny6.xhtml"/>
+    <itemref idref="x15_ny6.xhtml"/>
+    <itemref idref="x16_ny6.xhtml"/>
+    <itemref idref="x17_ny6.xhtml"/>
+    <itemref idref="x18_ny6.xhtml"/>
+    <itemref idref="x19_ny6.xhtml"/>
+    <itemref idref="x20_ny6.xhtml"/>
+    <itemref idref="x21_ny6.xhtml"/>
+    <itemref idref="x22_ny6.xhtml"/>
+    <itemref idref="x23_ny6.xhtml"/>
+    <itemref idref="x24_ny6.xhtml"/>
+    <itemref idref="x25_ny6.xhtml"/>
+    <itemref idref="x26_ny6.xhtml"/>
+    <itemref idref="x27_ny6.xhtml"/>
+    <itemref idref="x28_ny6.xhtml"/>
+    <itemref idref="x29_ny6.xhtml"/>
+    <itemref idref="x30_ny6.xhtml"/>
+    <itemref idref="x31_ny6.xhtml"/>
+    <itemref idref="x32_ny6.xhtml"/>
+    <itemref idref="x33_ny6.xhtml"/>
+    <itemref idref="x34_ny6.xhtml"/>
+    <itemref idref="x35_ny6.xhtml"/>
+    <itemref idref="x36_ny6.xhtml"/>
+    <itemref idref="x37_ny6.xhtml"/>
+    <itemref idref="x38_ny6.xhtml"/>
+    <itemref idref="x39_ny6.xhtml"/>
+    <itemref idref="x40_ny6.xhtml"/>
+    <itemref idref="x41_ny6.xhtml"/>
+    <itemref idref="x42_ny6.xhtml"/>
+    <itemref idref="x43_ny6.xhtml"/>
+    <itemref idref="x44_ny6.xhtml"/>
+    <itemref idref="x45_ny6.xhtml"/>
+    <itemref idref="x46_ny6.xhtml"/>
+    <itemref idref="x47_ny6.xhtml"/>
+    <itemref idref="x48_ny6.xhtml"/>
+    <itemref idref="x49_ny6.xhtml"/>
+    <itemref idref="x50_ny6.xhtml"/>
+    <itemref idref="x51_ny6.xhtml"/>
+    <itemref idref="x52_ny6.xhtml"/>
+    <itemref idref="x53_ny6.xhtml"/>
+    <itemref idref="x54_ny6.xhtml"/>
+    <itemref idref="x55_ny6.xhtml"/>
+  </spine>
+</package>

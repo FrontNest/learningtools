@@ -1,0 +1,76 @@
+/* 
+Not finished yet
+*/
+
+body, a, pre {
+	background-color: #1c1d1d;
+	font-family: 'Noto Sans'; 
+  font-size: 12px;
+	color: #d2d4d6;
+} 
+
+.center {
+  justify-items: center;
+}
+
+.left {
+  justify-items: start;
+}
+ 
+  /* Main content */
+  .main {
+    flex-grow: 1;
+    padding: 10px;
+    max-width: 80%;
+  }
+
+  .cert {
+    max-width: auto;
+    height: 100px;
+    padding: 10px;
+  }
+
+  label {
+    vertical-align: top;
+  }
+
+  li {
+    padding-right: 10px;
+    padding-left: 0px;
+  }
+
+.courses {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  list-style-type: none;
+}
+
+::placeholder {
+  color: white;
+}
+
+
+/* HOVER ACTIONS */
+.cert:hover {
+  transform: /* rotate3d(0, 0, 0.5, 360deg)*/ scale(2); 
+  transition-duration: 700ms;
+}
+
+
+/* Görgetősáv */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+  
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #282929;
+  border-radius: 5px;
+  border: 1px solid #999b9e;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #282929;
+}

@@ -1,0 +1,165 @@
+body {
+    font-family: 'Noto Sans';
+    text-align: center;
+    background-image: url("../../../media/banboo-5002308_1280.jpg");
+    background-repeat: repeat;
+    background-size: 100% 100%;
+    background-color: #1c1d1d;
+    color:#d2d4d6;
+    margin: 0;
+    padding: 0;
+}
+
+#abacus-container {
+    
+    background-color: #272929;
+    opacity: 0.9;
+    color:#d2d4d6;
+    padding: 0px;
+    margin: auto;
+    width: 500;
+    max-width: 100%;
+    min-width: 450px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+canvas {
+    display: flex;
+    margin:1px auto 1px auto;
+    background-color: #272929;
+    color:#d2d4d6;
+    border-radius: 10px;
+}
+
+#abacus-value {
+    font-size: 20px;
+    margin-top: 2px;
+    font-weight: bold;
+    color:#d2d4d6;
+}
+
+#settings {
+    background-color: #272929;
+    padding: 5px;
+    margin: 20px 20px 20px 20px;
+    width: 100%;
+    max-width: 97%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0.9;
+}
+
+#questions {
+    background-color: #272929;
+    opacity: 0.9;
+    padding: 0px;
+    margin: 1px 0px 10px auto; /* Changed margin to push it to the right */
+    width: 70%;
+    max-width: 80%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    float: right; /* Add float right to position at the right end */
+}
+
+label, select, input {
+    display: inline-block;
+    margin: 0px auto;
+    padding: 5px;
+    font-size: 16px;
+}
+
+input {
+    width: 50px;
+    padding: 1px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #058f1c;
+    color: #2be62b;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+button:hover {
+    background-color: #2be62b;
+    color: #058f1c
+}
+
+.correct-answer {
+    background-color: #016011 !important;
+    color: #2be62b !important;
+    font-weight: bold;
+}
+
+#results {
+    background-color: #272929;
+    opacity: 0.9;
+    padding: 0px;
+    margin: 1px 0px 10px auto;
+    width: 70%;
+    max-width: 90%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 20px 20px 20px;
+    width: 97%;
+    max-width: 97%;
+}
+
+.left-column {
+    flex: 1;
+    min-width: 450px;
+    padding-right: 10px;
+}
+
+.right-column {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align items to the end (right) of the container */
+}
+
+.right-column img {
+    width: 50%;
+    min-width: 250px;
+    height: auto;
+    margin-bottom: 10px;
+    opacity: 0.9;
+    border-radius: 10px;
+}
+
+#rc_buttons {
+    display:inline-block;
+}
+
+.feedback {
+    font-size:small;
+    text-decoration: none;
+    color: #e2f606;
+    font-family: 'Noto Sans';
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .left-column, .right-column {
+        width: 100%;
+        padding-right: 0;
+    }
+}

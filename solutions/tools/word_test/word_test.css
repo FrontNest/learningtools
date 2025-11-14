@@ -1,0 +1,196 @@
+body {
+    background-color: #1c1d1d;
+    font-family: 'Noto Sans';
+    color: #d2d4d6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+a {
+	text-decoration: none;
+	color: #c7e75c;
+}
+
+.settings {
+    background-color: #272929;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.settings-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+#fileSelect, #direction, #questionCount {
+    background-color: #c8c9cb;
+    color: #1c1d1d;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+#startBtn, #restartBtn {
+    padding: 10px 20px;
+    background-color: #999b9e;
+    color: #1c1d1d;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+#startBtn:hover, #restartBtn:hover {
+    background-color: #383939;
+    color: #999b9e;
+}
+
+.question-container {
+    font-size: 24px;
+    margin: 30px 0;
+    padding: 20px;
+    background-color: #272929;
+    border-radius: 8px;
+    text-align: center;
+}
+
+#sourceWord {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+#imageContainer {
+    margin: 20px 0;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+.answer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#answer {
+    font-size: 20px;
+    padding: 8px;
+    width: 200px;
+    text-align: center;
+    background-color: #c8c9cb;
+    color: #1c1d1d;
+    border-radius: 4px;
+}
+
+#nextBtn {
+    padding: 8px 16px;
+    background-color: #999b9e;
+    color: #1c1d1d;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#nextBtn:hover {
+    background-color: #383939;
+    color: #999b9e;
+}
+
+#feedback {
+    font-size: 2vw;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.correct {
+    color: #04be04;
+}
+
+.incorrect {
+    color: red;
+}
+
+.timer {
+    font-size: 18px;
+    font-weight: bold;
+    color: #d8e209;
+    margin-bottom: 10px;
+}
+
+.progress {
+    margin-top: 20px;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+#results {
+    background-color: #272929;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.feedback {
+    font-size:small;
+    text-decoration: none;
+    color: #d2d4d6;
+    font-family: 'Noto Sans';
+    text-align: right;
+}
+
+.motivation-message {
+    font-weight: bold;
+    color: #d3f919;
+    margin: 15px 0;
+    font-size: 1.2em;
+}
+
+/* Animations from multiplication_excercises */
+@keyframes bounce {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(0.95); }
+    75% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+.bounce {
+    animation: bounce 0.4s ease;
+}
+
+.shake {
+    animation: shake 0.4s ease;
+}
+
+/* Fájl: word_test.css vagy a <style> blokkban */
+.blinking {
+    animation: blinker 1s linear infinite;
+}
+@keyframes blinker {
+    50% { opacity: 0; }
+}

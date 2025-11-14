@@ -1,0 +1,9 @@
+Olvasd el végig a file-t: solutions\tools\multiple-choice_test_template\material.txt
+Elsősorban erre az információra támaszkodj!
+Ebből a tananyagból készíts 25-30 tudásellenőrző kérdést a következő formátumban:
+****;kérdés;válasz 1;válasz 2;válasz 3;válasz 4;helyes válasz;rövid magyarázat
+
+Ezek egy csv -be fognak kerülni, onnan fogja egy webapp beolvasni, hogy 10 random kérdést adjon fel hatodikos gyerekeknek a témából. Ez egy rövid téma, ezért nehéz ennyi teljesen különböző kérdést feltenni, ezért egy dologra többféleképpen is rákérdezhetsz, de a 30 kérdés összességében fedje le az egész tananyagot. 
+Ne hallucinálj!
+Minden kérdésnél a későbbi helyes válasz legyen a 3. oszlopban (válasz 1)
+Célfile: solutions\tools\multiple-choice_test_template\questions.csv

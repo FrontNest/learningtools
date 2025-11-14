@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx version="2005-1" xml:lang="hu-HU" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+<head>
+<meta name="dtb:uid" content="9786156178978"/>
+<meta name="dtb:depth" content="2"/>
+<meta name="dtb:totalPageCount" content="144"/>
+<meta name="dtb:maxPageNumber" content="144"/>
+</head>
+<docTitle><text>Term&#233;szettudom&#225;ny</text></docTitle>
+<docAuthor><text>P&#x00C9;TER BORHEGYI</text></docAuthor>
+<navMap>
+<navPoint id="nav-1" playOrder="1"><navLabel><text>Cover</text></navLabel><content src="cover.xhtml"/></navPoint>
+<navPoint id="nav-2" playOrder="2"><navLabel><text>Title</text></navLabel><content src="title.xhtml"/></navPoint>
+<navPoint id="nav-3" playOrder="3"><navLabel><text>Copyrights</text></navLabel><content src="copyright.xhtml"/></navPoint>
+<navPoint id="nav-4" playOrder="4"><navLabel><text>Tartalom</text></navLabel><content src="contents.xhtml"/></navPoint>
+<navPoint id="nav-5" playOrder="5"><navLabel><text>Bevezet&#337;</text></navLabel><content src="frontmatter.xhtml#fm01"/></navPoint>
+<navPoint id="nav-6" playOrder="6"><navLabel><text>I. A F&#246;ld bels&#337; &#233;s k&#252;ls&#337; fel&#233;p&#237;t&#233;se</text></navLabel><content src="pt01.xhtml#pt01"/>
+<navPoint id="nav-7" playOrder="7"><navLabel><text>1. A F&#246;ld bels&#337; fel&#233;p&#237;t&#233;se</text></navLabel><content src="pt01_ch01.xhtml#pt01_ch01"/></navPoint>
+<navPoint id="nav-8" playOrder="8"><navLabel><text>2&#8211;3. Hegys&#233;gk&#233;pz&#337;d&#233;s I&#8211;II.</text></navLabel><content src="pt01_ch02.xhtml#pt01_ch02"/></navPoint>
+<navPoint id="nav-9" playOrder="9"><navLabel><text>4&#8211;5. K&#337;zetek &#233;s &#225;sv&#225;nyok I&#8211;II.</text></navLabel><content src="pt01_ch03.xhtml#pt01_ch03"/></navPoint>
+<navPoint id="nav-10" playOrder="10"><navLabel><text>6. A f&#246;ldfelsz&#237;n &#233;s v&#225;ltoz&#225;sai</text></navLabel><content src="pt01_ch04.xhtml#pt01_ch04"/></navPoint>
+<navPoint id="nav-11" playOrder="11"><navLabel><text>7. A m&#233;szk&#337;hegys&#233;gek formakincse</text></navLabel><content src="pt01_ch05.xhtml#pt01_ch05"/></navPoint>
+<navPoint id="nav-12" playOrder="12"><navLabel><text>8. T&#225;voli vid&#233;kek jellemz&#337; formakincse</text></navLabel><content src="pt01_ch06.xhtml#pt01_ch06"/></navPoint>
+<navPoint id="nav-13" playOrder="13"><navLabel><text>&#214;sszefoglal&#225;s</text></navLabel><content src="pt01_ch07.xhtml#pt01_ch07"/></navPoint></navPoint>
+<navPoint id="nav-14" playOrder="14"><navLabel><text>II. Az energia</text></navLabel><content src="pt02.xhtml#pt02"/>
+<navPoint id="nav-15" playOrder="15"><navLabel><text>1. Az energia a mindennapokban</text></navLabel><content src="pt02_ch01.xhtml#pt02_ch01"/></navPoint>
+<navPoint id="nav-16" playOrder="16"><navLabel><text>2. Energiaforr&#225;sok</text></navLabel><content src="pt02_ch02.xhtml#pt02_ch02"/></navPoint>
+<navPoint id="nav-17" playOrder="17"><navLabel><text>3. Az energiafogyaszt&#225;s k&#246;rnyezeti hat&#225;sai</text></navLabel><content src="pt02_ch03.xhtml#pt02_ch03"/></navPoint>
+<navPoint id="nav-18" playOrder="18"><navLabel><text>4. K&#246;rnyezetv&#233;delem &#233;s energiatakar&#233;koss&#225;g</text></navLabel><content src="pt02_ch04.xhtml#pt02_ch04"/></navPoint>
+<navPoint id="nav-19" playOrder="19"><navLabel><text>&#214;sszefoglal&#225;s</text></navLabel><content src="pt02_ch05.xhtml#pt02_ch05"/></navPoint></navPoint>
+<navPoint id="nav-20" playOrder="20"><navLabel><text>III. K&#246;rnyezet&#252;nk vizsg&#225;lata</text></navLabel><content src="pt03.xhtml#pt03"/>
+<navPoint id="nav-21" playOrder="21"><navLabel><text>1. A k&#237;s&#233;rletez&#233;s szerepe az &#233;let&#252;nkben</text></navLabel><content src="pt03_ch01.xhtml#pt03_ch01"/></navPoint>
+<navPoint id="nav-22" playOrder="22"><navLabel><text>2. Az &#233;lettelen k&#246;rnyezeti t&#233;nyez&#337;k vizsg&#225;lata a term&#233;szetben</text></navLabel><content src="pt03_ch02.xhtml#pt03_ch02"/></navPoint>
+<navPoint id="nav-23" playOrder="23"><navLabel><text>3. Az &#233;l&#337;l&#233;nyek vizsg&#225;lata a term&#233;szetben</text></navLabel><content src="pt03_ch03.xhtml#pt03_ch03"/></navPoint>
+<navPoint id="nav-24" playOrder="24"><navLabel><text>4. Laborat&#243;riumi vizsg&#225;latok</text></navLabel><content src="pt03_ch04.xhtml#pt03_ch04"/></navPoint>
+<navPoint id="nav-25" playOrder="25"><navLabel><text>&#214;sszefoglal&#225;s</text></navLabel><content src="pt03_ch05.xhtml#pt03_ch05"/></navPoint></navPoint>
+<navPoint id="nav-26" playOrder="26"><navLabel><text>IV. A t&#233;rk&#233;pt&#337;l a modern navig&#225;ci&#243;s technik&#225;kig</text></navLabel><content src="pt04.xhtml#pt04"/>
+<navPoint id="nav-27" playOrder="27"><navLabel><text>1. A f&#246;ldrajzi atlasz</text></navLabel><content src="pt04_ch01.xhtml#pt04_ch01"/></navPoint>
+<navPoint id="nav-28" playOrder="28"><navLabel><text>2&#8211;3. A f&#246;ldrajzi fokh&#225;l&#243;zat I&#8211;II.</text></navLabel><content src="pt04_ch02.xhtml#pt04_ch02"/></navPoint>
+<navPoint id="nav-29" playOrder="29"><navLabel><text>4. Modern technik&#225;k a t&#233;rk&#233;p&#233;szetben</text></navLabel><content src="pt04_ch03.xhtml#pt04_ch03"/></navPoint>
+<navPoint id="nav-30" playOrder="30"><navLabel><text>&#214;sszefoglal&#225;s</text></navLabel><content src="pt04_ch04.xhtml#pt04_ch04"/></navPoint></navPoint>
+<navPoint id="nav-31" playOrder="31"><navLabel><text>V. Hazai t&#225;jakon</text></navLabel><content src="pt05.xhtml#pt05"/>
+<navPoint id="nav-32" playOrder="32"><navLabel><text>1. Haz&#225;nk nagyt&#225;jai</text></navLabel><content src="pt05_ch01.xhtml#pt05_ch01"/></navPoint>
+<navPoint id="nav-33" playOrder="33"><navLabel><text>2. Az Alpokalja</text></navLabel><content src="pt05_ch02.xhtml#pt05_ch02"/></navPoint>
+<navPoint id="nav-34" playOrder="34"><navLabel><text>3. A Dun&#225;nt&#250;li-domb- &#233;s hegyvid&#233;k</text></navLabel><content src="pt05_ch03.xhtml#pt05_ch03"/></navPoint>
+<navPoint id="nav-35" playOrder="35"><navLabel><text>4. A Dun&#225;nt&#250;li-k&#246;z&#233;phegys&#233;g</text></navLabel><content src="pt05_ch04.xhtml#pt05_ch04"/></navPoint>
+<navPoint id="nav-36" playOrder="36"><navLabel><text>5. Az &#201;szaki-k&#246;z&#233;phegys&#233;g</text></navLabel><content src="pt05_ch05.xhtml#pt05_ch05"/></navPoint>
+<navPoint id="nav-37" playOrder="37"><navLabel><text>6. Alf&#246;ldi t&#225;jakon</text></navLabel><content src="pt05_ch06.xhtml#pt05_ch06"/></navPoint>
+<navPoint id="nav-38" playOrder="38"><navLabel><text>7. F&#337;v&#225;rosunk, Budapest</text></navLabel><content src="pt05_ch07.xhtml#pt05_ch07"/></navPoint>
+<navPoint id="nav-39" playOrder="39"><navLabel><text>&#214;sszefoglal&#225;s</text></navLabel><content src="pt05_ch08.xhtml#pt05_ch08"/></navPoint></navPoint>
+<navPoint id="nav-40" playOrder="40"><navLabel><text>VI. Az erd&#337;k &#233;lete</text></navLabel><content src="pt06.xhtml#pt06"/>
+<navPoint id="nav-41" playOrder="41"><navLabel><text>1. T&#225;jak, &#233;letk&#246;z&#246;ss&#233;gekd</text></navLabel><content src="pt06_ch01.xhtml#pt06_ch01"/></navPoint>
+<navPoint id="nav-42" playOrder="42"><navLabel><text>2. A hazai lombhullat&#243; erd&#337;k &#233;l&#337;vil&#225;ga</text></navLabel><content src="pt06_ch02.xhtml#pt06_ch02"/></navPoint>
+<navPoint id="nav-43" playOrder="43"><navLabel><text>3. M&#225;s &#233;ghajlati &#246;vek jellemz&#337; erd&#337;i</text></navLabel><content src="pt06_ch03.xhtml#pt06_ch03"/></navPoint>
+<navPoint id="nav-44" playOrder="44"><navLabel><text>4&#8211;5. Az erd&#337; mint &#233;letk&#246;z&#246;ss&#233;g I&#8211;II.</text></navLabel><content src="pt06_ch04.xhtml#pt06_ch04"/></navPoint>
+<navPoint id="nav-45" playOrder="45"><navLabel><text>6. Erd&#337;gazd&#225;lkod&#225;s &#233;s term&#233;szetv&#233;delem</text></navLabel><content src="pt06_ch05.xhtml#pt06_ch05"/></navPoint>
+<navPoint id="nav-46" playOrder="46"><navLabel><text>7. Az erd&#337;k glob&#225;lis k&#246;rnyezeti probl&#233;m&#225;i</text></navLabel><content src="pt06_ch06.xhtml#pt06_ch06"/></navPoint>
+<navPoint id="nav-47" playOrder="47"><navLabel><text>8. Haz&#225;nk hegyvid&#233;ki nemzeti parkjai</text></navLabel><content src="pt06_ch07.xhtml#pt06_ch07"/></navPoint>
+<navPoint id="nav-48" playOrder="48"><navLabel><text>&#214;sszefoglal&#225;s</text></navLabel><content src="pt06_ch08.xhtml#pt06_ch08"/></navPoint></navPoint>
+<navPoint id="nav-49" playOrder="49"><navLabel><text>VII. A r&#233;tek &#233;s mez&#337;k &#233;l&#337;vil&#225;ga</text></navLabel><content src="pt07.xhtml#pt07"/>
+<navPoint id="nav-50" playOrder="50"><navLabel><text>1. A r&#233;tek &#233;s mez&#337;k &#233;letk&#246;z&#246;ss&#233;ge</text></navLabel><content src="pt07_ch01.xhtml#pt07_ch01"/></navPoint>
+<navPoint id="nav-51" playOrder="51"><navLabel><text>2. A r&#233;tek n&#246;v&#233;nyei</text></navLabel><content src="pt07_ch02.xhtml#pt07_ch02"/></navPoint>
+<navPoint id="nav-52" playOrder="52"><navLabel><text>3&#8211;4. A r&#233;tek &#225;llatvil&#225;ga I&#8211;II.</text></navLabel><content src="pt07_ch03.xhtml#pt07_ch03"/></navPoint>
+<navPoint id="nav-53" playOrder="53"><navLabel><text>5. T&#225;voli t&#225;jak f&#225;tlan &#233;letk&#246;z&#246;ss&#233;gei</text></navLabel><content src="pt07_ch04.xhtml#pt07_ch04"/></navPoint>
+<navPoint id="nav-54" playOrder="54"><navLabel><text>6. A f&#252;ves &#233;letk&#246;z&#246;ss&#233;gek term&#233;szeti-k&#246;rnyezeti probl&#233;m&#225;i</text></navLabel><content src="pt07_ch05.xhtml#pt07_ch05"/></navPoint>
+<navPoint id="nav-55" playOrder="55"><navLabel><text>7. Az Alf&#246;ld nemzeti parkjai</text></navLabel><content src="pt07_ch06.xhtml#pt07_ch06"/></navPoint>
+<navPoint id="nav-56" playOrder="56"><navLabel><text>&#214;sszefoglal&#225;s</text></navLabel><content src="pt07_ch07.xhtml#pt07_ch07"/></navPoint></navPoint>
+<navPoint id="nav-57" playOrder="57"><navLabel><text>VIII. A vizek, v&#237;zpartok &#233;l&#337;vil&#225;ga</text></navLabel><content src="pt08.xhtml#pt08"/>
+<navPoint id="nav-58" playOrder="58"><navLabel><text>1. A felsz&#237;ni &#233;s felsz&#237;n alatti vizek</text></navLabel><content src="pt08_ch01.xhtml#pt08_ch01"/></navPoint>
+<navPoint id="nav-59" playOrder="59"><navLabel><text>2. A foly&#243;k</text></navLabel><content src="pt08_ch02.xhtml#pt08_ch02"/></navPoint>
+<navPoint id="nav-60" playOrder="60"><navLabel><text>3. A tavak</text></navLabel><content src="pt08_ch03.xhtml#pt08_ch03"/></navPoint>
+<navPoint id="nav-61" playOrder="61"><navLabel><text>4. V&#237;zi &#233;s v&#237;zparti n&#246;v&#233;nyek</text></navLabel><content src="pt08_ch04.xhtml#pt08_ch04"/></navPoint>
+<navPoint id="nav-62" playOrder="62"><navLabel><text>5. V&#237;zben &#233;l&#337; &#225;llatok</text></navLabel><content src="pt08_ch05.xhtml#pt08_ch05"/></navPoint>
+<navPoint id="nav-63" playOrder="63"><navLabel><text>6. V&#237;zparton &#233;l&#337; &#225;llatok</text></navLabel><content src="pt08_ch06.xhtml#pt08_ch06"/></navPoint>
+<navPoint id="nav-64" playOrder="64"><navLabel><text>7. A vizek term&#233;szeti-k&#246;rnyezeti probl&#233;m&#225;i</text></navLabel><content src="pt08_ch07.xhtml#pt08_ch07"/></navPoint>
+<navPoint id="nav-65" playOrder="65"><navLabel><text>8. Nemzeti parkjaink vizes &#233;l&#337;helyeken</text></navLabel><content src="pt08_ch08.xhtml#pt08_ch08"/></navPoint>
+<navPoint id="nav-66" playOrder="66"><navLabel><text>&#214;sszefoglal&#225;s</text></navLabel><content src="pt08_ch09.xhtml#pt08_ch09"/></navPoint></navPoint>
+</navMap>
+</ncx>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx version="2005-1" xml:lang="hu-HU" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+<head>
+<meta name="dtb:uid" content="9786156178824"/>
+<meta name="dtb:depth" content="1"/>
+<meta name="dtb:totalPageCount" content="148"/>
+<meta name="dtb:maxPageNumber" content="148"/>
+</head>
+<docTitle><text>Sz&#252;l&#337;f&#246;ld&#252;nk</text></docTitle>
+<docAuthor><text>Baksa Brigitta</text></docAuthor>
+<navMap>
+<navPoint id="nav-1" playOrder="1"><navLabel><text>Cover</text></navLabel><content src="cover.xhtml"/></navPoint>
+<navPoint id="nav-2" playOrder="2"><navLabel><text>Title</text></navLabel><content src="title.xhtml"/></navPoint>
+<navPoint id="nav-3" playOrder="3"><navLabel><text>Copyright</text></navLabel><content src="copyright.xhtml"/></navPoint>
+<navPoint id="nav-4" playOrder="4"><navLabel><text>Tartalom</text></navLabel><content src="contents.xhtml"/></navPoint>
+<navPoint id="nav-5" playOrder="5"><navLabel><text>K&#246;sz&#246;nt&#337;</text></navLabel><content src="frontmatter01.xhtml"/></navPoint>
+<navPoint id="nav-6" playOrder="6"><navLabel><text>Az &#233;n vil&#225;gom</text></navLabel><content src="part01.xhtml"/>
+
+<navPoint id="nav-7" playOrder="7"><navLabel><text>Rokons&#225;g, szomsz&#233;ds&#225;g</text></navLabel><content src="pt01_ch01.xhtml"/></navPoint>
+<navPoint id="nav-8" playOrder="8"><navLabel><text>Csal&#225;dfa</text></navLabel><content src="pt01_ch02.xhtml"/></navPoint>
+<navPoint id="nav-9" playOrder="9"><navLabel><text>Nagysz&#252;leink, d&#233;dsz&#252;leink vil&#225;ga falun &#233;s v&#225;rosban</text></navLabel><content src="pt01_ch03.xhtml"/></navPoint>
+<navPoint id="nav-10" playOrder="10"><navLabel><text>Telep&#252;l&#233;s&#252;nk. Nevezetess&#233;geink. Term&#233;szeti &#233;rt&#233;keink.</text></navLabel><content src="pt01_ch04.xhtml"/></navPoint>
+<navPoint id="nav-11" playOrder="11"><navLabel><text>Hagyom&#225;nyaink</text></navLabel><content src="pt01_ch05.xhtml"/></navPoint>
+</navPoint>
+<navPoint id="nav-12" playOrder="12"><navLabel><text>Tal&#225;lkoz&#225;s a m&#250;lttal</text></navLabel><content src="part02.xhtml"/>
+<navPoint id="nav-13" playOrder="13"><navLabel><text>A paraszti h&#225;ztart&#225;s</text></navLabel><content src="pt02_ch01.xhtml"/>
+
+<navPoint id="nav-14" playOrder="14"><navLabel><text>A n&#233;pi &#233;p&#237;t&#233;szet t&#225;ji jellegzetess&#233;gei</text></navLabel><content src="pt02_ch01.xhtml#pt02_ch01-1"/></navPoint>
+<navPoint id="nav-15" playOrder="15"><navLabel><text>A szoba</text></navLabel><content src="pt02_ch02.xhtml"/></navPoint>
+<navPoint id="nav-16" playOrder="16"><navLabel><text>A konyha</text></navLabel><content src="pt02_ch03.xhtml"/></navPoint>
+<navPoint id="nav-17" playOrder="17"><navLabel><text>Munkamegoszt&#225;s a csal&#225;dban</text></navLabel><content src="pt02_ch04.xhtml"/></navPoint>
+</navPoint>
+<navPoint id="nav-18" playOrder="18"><navLabel><text>&#201;letm&#243;d</text></navLabel><content src="pt02_ch05.xhtml"/>
+<navPoint id="nav-19" playOrder="19"><navLabel><text>F&#246;ldm&#369;vel&#233;s</text></navLabel><content src="pt02_ch05.xhtml#pt02_ch05-1"/></navPoint>
+<navPoint id="nav-20" playOrder="20"><navLabel><text>&#193;llattart&#225;s</text></navLabel><content src="pt02_ch06.xhtml"/></navPoint>
+<navPoint id="nav-21" playOrder="21"><navLabel><text>A munkaalkalmakhoz kapcsol&#243;d&#243; szok&#225;sok</text></navLabel><content src="pt02_ch07.xhtml"/></navPoint>
+<navPoint id="nav-22" playOrder="22"><navLabel><text>Kendermunk&#225;k</text></navLabel><content src="pt02_ch08.xhtml"/></navPoint>
+<navPoint id="nav-23" playOrder="23"><navLabel><text>A gazd&#225;lkod&#243; emberek &#246;lt&#246;zete</text></navLabel><content src="pt02_ch09.xhtml"/></navPoint>
+<navPoint id="nav-24" playOrder="24"><navLabel><text>A n&#233;pi t&#225;pl&#225;lkoz&#225;s jellemz&#337;i</text></navLabel><content src="pt02_ch10.xhtml"/></navPoint>
+<navPoint id="nav-25" playOrder="25"><navLabel><text>Gyermekj&#225;t&#233;kok</text></navLabel><content src="pt02_ch11.xhtml"/></navPoint>
+<navPoint id="nav-26" playOrder="26"><navLabel><text>Di&#225;k&#233;let a m&#250;ltban</text></navLabel><content src="pt02_ch12.xhtml"/></navPoint>
+<navPoint id="nav-27" playOrder="27"><navLabel><text>A v&#225;rosi &#233;letforma &#233;rdekess&#233;gei</text></navLabel><content src="pt02_ch13.xhtml"/></navPoint>
+</navPoint>
+<navPoint id="nav-28" playOrder="28"><navLabel><text>Jeles napok, &#252;nnepek</text></navLabel><content src="pt02_ch14.xhtml"/>
+<navPoint id="nav-29" playOrder="29"><navLabel><text>K&#246;z&#246;ss&#233;gi alkalom &#8211; a v&#225;s&#225;r</text></navLabel><content src="pt02_ch15.xhtml"/></navPoint>
+<navPoint id="nav-30" playOrder="30"><navLabel><text>A kar&#225;csonyi &#252;nnepk&#246;r</text></navLabel><content src="pt02_ch16.xhtml"/></navPoint>
+<navPoint id="nav-31" playOrder="31"><navLabel><text>Farsang &#233;s a nagyb&#246;jti id&#337;szak szok&#225;sai</text></navLabel><content src="pt02_ch17.xhtml"/></navPoint>
+<navPoint id="nav-32" playOrder="32"><navLabel><text>A h&#250;sv&#233;ti &#252;nnepk&#246;r szok&#225;sai</text></navLabel><content src="pt02_ch18.xhtml"/></navPoint>
+<navPoint id="nav-33" playOrder="33"><navLabel><text>P&#252;nk&#246;sdi &#233;s Szent Iv&#225;n-napi n&#233;pszok&#225;sok</text></navLabel><content src="pt02_ch19.xhtml"/></navPoint>
+<navPoint id="nav-34" playOrder="34"><navLabel><text>A gyermek sz&#252;let&#233;s&#233;hez kapcsol&#243;d&#243; szok&#225;sok</text></navLabel><content src="pt02_ch20.xhtml"/></navPoint>
+<navPoint id="nav-35" playOrder="35"><navLabel><text>Az ifj&#250;kor &#233;s a h&#225;zass&#225;gk&#246;t&#233;s szok&#225;sai</text></navLabel><content src="pt02_ch21.xhtml"/></navPoint>
+</navPoint>
+</navPoint>
+<navPoint id="nav-36" playOrder="36"><navLabel><text>&#214;r&#246;ks&#233;g&#252;nk, hagyom&#225;nyaink, nagyjaink</text></navLabel><content src="part03.xhtml"/>
+<navPoint id="nav-37" playOrder="37"><navLabel><text>A magyars&#225;g &#246;sszet&#233;tel&#233;nek t&#246;rt&#233;neti alakul&#225;sa &#233;s a magyar nyelvter&#252;let nagyt&#225;jai</text></navLabel><content src="pt03_ch01.xhtml"/>
+<navPoint id="nav-38" playOrder="38"><navLabel><text>Az Alf&#246;ld</text></navLabel><content src="pt03_ch02.xhtml"/></navPoint>
+<navPoint id="nav-39" playOrder="39"><navLabel><text>Dun&#225;nt&#250;l</text></navLabel><content src="pt03_ch03.xhtml"/></navPoint>
+<navPoint id="nav-40" playOrder="40"><navLabel><text>Felf&#246;ld (&#201;szak-Magyarorsz&#225;g &#8211; Felvid&#233;k)</text></navLabel><content src="pt03_ch04.xhtml"/></navPoint>
+<navPoint id="nav-41" playOrder="41"><navLabel><text>Keleti magyar nyelvter&#252;let: Partium, Erd&#233;ly</text></navLabel><content src="pt03_ch05.xhtml"/></navPoint>
+<navPoint id="nav-42" playOrder="42"><navLabel><text>K&#225;rp&#225;tokon k&#237;v&#252;li ter&#252;let: Bukovina, Moldva</text></navLabel><content src="pt03_ch06.xhtml"/></navPoint>
+</navPoint>
+<navPoint id="nav-43" playOrder="43"><navLabel><text>A haz&#225;nkban &#233;l&#337; nemzetis&#233;gek</text></navLabel><content src="pt03_ch07.xhtml"/></navPoint>
+<navPoint id="nav-44" playOrder="44"><navLabel><text>Term&#233;szeti &#233;s &#233;p&#237;tett &#246;r&#246;ks&#233;g&#252;nk</text></navLabel><content src="pt03_ch08.xhtml"/></navPoint>
+<navPoint id="nav-45" playOrder="45"><navLabel><text>K&#246;z&#246;ss&#233;gi hagyom&#225;nyok &#233;s nemzeti &#233;rt&#233;kek</text></navLabel><content src="pt03_ch09.xhtml"/></navPoint>
+<navPoint id="nav-46" playOrder="46"><navLabel><text>A magyar tudom&#225;ny &#233;s kult&#250;ra eredm&#233;nyei &#233;s alkot&#243;i a nagyvil&#225;gban</text></navLabel><content src="pt03_ch10.xhtml"/></navPoint>
+</navPoint>
+<navPoint id="nav-47" playOrder="47"><navLabel><text>Kislexikon</text></navLabel><content src="part04.xhtml"/></navPoint>
+<navPoint id="nav-48" playOrder="48"><navLabel><text>Mell&#233;klet</text></navLabel><content src="part05.xhtml"/>
+<navPoint id="nav-49" playOrder="49"><navLabel><text>N&#233;pi j&#225;t&#233;kok</text></navLabel><content src="pt05_ch01.xhtml"/></navPoint>
+<navPoint id="nav-50" playOrder="50"><navLabel><text>Dramatikus n&#233;pszok&#225;sok</text></navLabel><content src="pt05_ch02.xhtml"/></navPoint>
+<navPoint id="nav-51" playOrder="51"><navLabel><text>N&#233;pi kalend&#225;rium</text></navLabel><content src="pt05_ch03.xhtml"/></navPoint>
+</navPoint>
+<navPoint id="nav-52" playOrder="52"><navLabel><text>Forr&#225;sjegyz&#233;k</text></navLabel><content src="backmatter01.xhtml"/></navPoint>
+</navMap>
+</ncx>

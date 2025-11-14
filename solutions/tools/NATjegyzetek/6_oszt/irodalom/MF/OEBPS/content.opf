@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="isbn" version="3.0" prefix="rendition: http://www.idpf.org/vocab/rendition/# ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/ a11y: http://www.idpf.org/epub/vocab/package/a11y/# schema: http://schema.org/" xml:lang="hu-HU">
+<metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+<dc:title>Irodalom Munkaf&#x00FC;zet 6.</dc:title>
+<dc:rights>&#x00A9; All rights reserved</dc:rights>
+<dc:publisher>eKRETA Informatikai Z&#x00E1;rtk&#x00F6;r&#x0171;en M&#x0171;k&#x00F6;d&#x0151;</dc:publisher>
+<dc:relation>https://ekretazrt.hu</dc:relation>
+<dc:language>hu-HU</dc:language>
+<dc:format>69 pages</dc:format>
+<meta property="ibooks:specified-fonts">true</meta>
+<dc:identifier id="isbn">9786156178657</dc:identifier>
+<dc:source>.pdf</dc:source>
+<dc:creator>Oktat&#x00E1;si Hivatal</dc:creator>
+<dc:date>2021-09-14</dc:date>
+<meta property="dcterms:modified">2021-09-14T12:00:15Z</meta>
+<meta name="series" content="NAT 2021"/>
+<meta name="cover" content="cover-image"/>
+</metadata>
+<manifest>
+<!-- NCX -->
+<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
+<item id="toc" properties="nav" href="navigation.xhtml" media-type="application/xhtml+xml" />
+<!-- CSS Style Sheets -->
+<item id="stylesheet" href="stylesheet.css" media-type="text/css"/>
+<!--Images-->
+<item id="cover-image" href="images/cover.jpg" media-type="image/jpeg"/>
+<item id="arrow" href="images/arrow.jpg" media-type="image/jpeg"/>
+<item id="f03-01" href="images/f03-01.jpg" media-type="image/jpeg"/>
+<item id="f03-02" href="images/f03-02.jpg" media-type="image/jpeg"/>
+<item id="f04-01" href="images/f04-01.jpg" media-type="image/jpeg"/>
+<item id="f04-02" href="images/f04-02.jpg" media-type="image/jpeg"/>
+<item id="f04-03" href="images/f04-03.jpg" media-type="image/jpeg"/>
+<item id="f05-01" href="images/f05-01.jpg" media-type="image/jpeg"/>
+<item id="f06-01" href="images/f06-01.jpg" media-type="image/jpeg"/>
+<item id="f08-01" href="images/f08-01.jpg" media-type="image/jpeg"/>
+<item id="f09-01" href="images/f09-01.jpg" media-type="image/jpeg"/>
+<item id="f09-02" href="images/f09-02.jpg" media-type="image/jpeg"/>
+<item id="f09-03" href="images/f09-03.jpg" media-type="image/jpeg"/>
+<item id="f10-01" href="images/f10-01.jpg" media-type="image/jpeg"/>
+<item id="f13-01" href="images/f13-01.jpg" media-type="image/jpeg"/>
+<item id="f14-01" href="images/f14-01.jpg" media-type="image/jpeg"/>
+<item id="f14-02" href="images/f14-02.jpg" media-type="image/jpeg"/>
+<item id="f15-01" href="images/f15-01.jpg" media-type="image/jpeg"/>
+<item id="f20-01" href="images/f20-01.jpg" media-type="image/jpeg"/>
+<item id="f20-02" href="images/f20-02.jpg" media-type="image/jpeg"/>
+<item id="f21-01" href="images/f21-01.jpg" media-type="image/jpeg"/>
+<item id="f24-01" href="images/f24-01.jpg" media-type="image/jpeg"/>
+<item id="f24-02" href="images/f24-02.jpg" media-type="image/jpeg"/>
+<item id="f24-03" href="images/f24-03.jpg" media-type="image/jpeg"/>
+<item id="f25-01" href="images/f25-01.jpg" media-type="image/jpeg"/>
+<item id="f26-01" href="images/f26-01.jpg" media-type="image/jpeg"/>
+<item id="f27-01" href="images/f27-01.jpg" media-type="image/jpeg"/>
+<item id="f28-01" href="images/f28-01.jpg" media-type="image/jpeg"/>
+<item id="f28-02" href="images/f28-02.jpg" media-type="image/jpeg"/>
+<item id="f29-01" href="images/f29-01.jpg" media-type="image/jpeg"/>
+<item id="f31-01" href="images/f31-01.jpg" media-type="image/jpeg"/>
+<item id="f33-01" href="images/f33-01.jpg" media-type="image/jpeg"/>
+<item id="f33-02" href="images/f33-02.jpg" media-type="image/jpeg"/>
+<item id="f34-01" href="images/f34-01.jpg" media-type="image/jpeg"/>
+<item id="f34-02" href="images/f34-02.jpg" media-type="image/jpeg"/>
+<item id="f36-01" href="images/f36-01.jpg" media-type="image/jpeg"/>
+<item id="f37-01" href="images/f37-01.jpg" media-type="image/jpeg"/>
+<item id="f38-01" href="images/f38-01.jpg" media-type="image/jpeg"/>
+<item id="f39-01" href="images/f39-01.jpg" media-type="image/jpeg"/>
+<item id="f41-01" href="images/f41-01.jpg" media-type="image/jpeg"/>
+<item id="f44-01" href="images/f44-01.jpg" media-type="image/jpeg"/>
+<item id="f45-01" href="images/f45-01.jpg" media-type="image/jpeg"/>
+<item id="f46-01" href="images/f46-01.jpg" media-type="image/jpeg"/>
+<item id="f46-02" href="images/f46-02.jpg" media-type="image/jpeg"/>
+<item id="f47-01" href="images/f47-01.jpg" media-type="image/jpeg"/>
+<item id="f48-01" href="images/f48-01.jpg" media-type="image/jpeg"/>
+<item id="f49-01" href="images/f49-01.jpg" media-type="image/jpeg"/>
+<item id="f50-01" href="images/f50-01.jpg" media-type="image/jpeg"/>
+<item id="f52-01" href="images/f52-01.jpg" media-type="image/jpeg"/>
+<item id="f53-01" href="images/f53-01.jpg" media-type="image/jpeg"/>
+<item id="f57-01" href="images/f57-01.jpg" media-type="image/jpeg"/>
+<item id="f58-01" href="images/f58-01.jpg" media-type="image/jpeg"/>
+<item id="f59-01" href="images/f59-01.jpg" media-type="image/jpeg"/>
+<item id="f61-01" href="images/f61-01.jpg" media-type="image/jpeg"/>
+<item id="f62-01" href="images/f62-01.jpg" media-type="image/jpeg"/>
+<item id="f65-01" href="images/f65-01.jpg" media-type="image/jpeg"/>
+<item id="f68-01" href="images/f68-01.jpg" media-type="image/jpeg"/>
+<item id="navimage" href="images/nav.jpg" media-type="image/jpeg"/>
+<!-- XHTML Content Documents -->
+<item id="cover" href="cover.xhtml" media-type="application/xhtml+xml"/>
+<item id="title" href="title.xhtml" media-type="application/xhtml+xml"/>
+<item id="copyrights" href="copyrights.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch01" href="part01_ch01.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch02" href="part01_ch02.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch03" href="part01_ch03.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch04" href="part01_ch04.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch05" href="part01_ch05.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch06" href="part01_ch06.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch07" href="part01_ch07.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch08" href="part01_ch08.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch09" href="part01_ch09.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch10" href="part01_ch10.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch11" href="part01_ch11.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch12" href="part01_ch12.xhtml" media-type="application/xhtml+xml"/>
+<item id="part01_ch13" href="part01_ch13.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch01" href="part02_ch01.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch02" href="part02_ch02.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch03" href="part02_ch03.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch04" href="part02_ch04.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch05" href="part02_ch05.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch06" href="part02_ch06.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch07" href="part02_ch07.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch08" href="part02_ch08.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch09" href="part02_ch09.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch10" href="part02_ch10.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch11" href="part02_ch11.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch12" href="part02_ch12.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch13" href="part02_ch13.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch14" href="part02_ch14.xhtml" media-type="application/xhtml+xml"/>
+<item id="part02_ch15" href="part02_ch15.xhtml" media-type="application/xhtml+xml"/>
+<item id="part03_ch01" href="part03_ch01.xhtml" media-type="application/xhtml+xml"/>
+<item id="part03_ch02" href="part03_ch02.xhtml" media-type="application/xhtml+xml"/>
+<item id="part03_ch03" href="part03_ch03.xhtml" media-type="application/xhtml+xml"/>
+<item id="part03_ch04" href="part03_ch04.xhtml" media-type="application/xhtml+xml"/>
+<item id="part03_ch05" href="part03_ch05.xhtml" media-type="application/xhtml+xml"/>
+<item id="part03_ch06" href="part03_ch06.xhtml" media-type="application/xhtml+xml"/>
+<item id="part03_ch07" href="part03_ch07.xhtml" media-type="application/xhtml+xml"/>
+<item id="part03_ch08" href="part03_ch08.xhtml" media-type="application/xhtml+xml"/>
+<item id="part03_ch09" href="part03_ch09.xhtml" media-type="application/xhtml+xml"/>
+<item id="part03_ch10" href="part03_ch10.xhtml" media-type="application/xhtml+xml"/>
+<item id="part04_ch01" href="part04_ch01.xhtml" media-type="application/xhtml+xml"/>
+<item id="part04_ch02" href="part04_ch02.xhtml" media-type="application/xhtml+xml"/>
+<item id="part04_ch03" href="part04_ch03.xhtml" media-type="application/xhtml+xml"/>
+<item id="part04_ch04" href="part04_ch04.xhtml" media-type="application/xhtml+xml"/>
+<item id="part04_ch05" href="part04_ch05.xhtml" media-type="application/xhtml+xml"/>
+<item id="part04_ch06" href="part04_ch06.xhtml" media-type="application/xhtml+xml"/>
+<item id="part04_ch07" href="part04_ch07.xhtml" media-type="application/xhtml+xml"/>
+<item id="part05_ch01" href="part05_ch01.xhtml" media-type="application/xhtml+xml"/>
+<item id="part05_ch02" href="part05_ch02.xhtml" media-type="application/xhtml+xml"/>
+<item id="part05_ch03" href="part05_ch03.xhtml" media-type="application/xhtml+xml"/>
+<item id="part05_ch04" href="part05_ch04.xhtml" media-type="application/xhtml+xml"/>
+<item id="part05_ch05" href="part05_ch05.xhtml" media-type="application/xhtml+xml"/>
+<item id="contents" href="contents.xhtml" media-type="application/xhtml+xml"/>
+<item id="bm01" href="bm01.xhtml" media-type="application/xhtml+xml"/>
+</manifest>
+<spine toc="ncx">
+<itemref idref="cover" linear="yes"/>
+<itemref idref="title" linear="yes"/>
+<itemref idref="copyrights" linear="yes"/>
+<itemref idref="contents" linear="yes"/>
+<itemref idref="part01_ch01" linear="yes"/>
+<itemref idref="part01_ch02" linear="yes"/>
+<itemref idref="part01_ch03" linear="yes"/>
+<itemref idref="part01_ch04" linear="yes"/>
+<itemref idref="part01_ch05" linear="yes"/>
+<itemref idref="part01_ch06" linear="yes"/>
+<itemref idref="part01_ch07" linear="yes"/>
+<itemref idref="part01_ch08" linear="yes"/>
+<itemref idref="part01_ch09" linear="yes"/>
+<itemref idref="part01_ch10" linear="yes"/>
+<itemref idref="part01_ch11" linear="yes"/>
+<itemref idref="part01_ch12" linear="yes"/>
+<itemref idref="part01_ch13" linear="yes"/>
+<itemref idref="part02_ch01" linear="yes"/>
+<itemref idref="part02_ch02" linear="yes"/>
+<itemref idref="part02_ch03" linear="yes"/>
+<itemref idref="part02_ch04" linear="yes"/>
+<itemref idref="part02_ch05" linear="yes"/>
+<itemref idref="part02_ch06" linear="yes"/>
+<itemref idref="part02_ch07" linear="yes"/>
+<itemref idref="part02_ch08" linear="yes"/>
+<itemref idref="part02_ch09" linear="yes"/>
+<itemref idref="part02_ch10" linear="yes"/>
+<itemref idref="part02_ch11" linear="yes"/>
+<itemref idref="part02_ch12" linear="yes"/>
+<itemref idref="part02_ch13" linear="yes"/>
+<itemref idref="part02_ch14" linear="yes"/>
+<itemref idref="part02_ch15" linear="yes"/>
+<itemref idref="part03_ch01" linear="yes"/>
+<itemref idref="part03_ch02" linear="yes"/>
+<itemref idref="part03_ch03" linear="yes"/>
+<itemref idref="part03_ch04" linear="yes"/>
+<itemref idref="part03_ch05" linear="yes"/>
+<itemref idref="part03_ch06" linear="yes"/>
+<itemref idref="part03_ch07" linear="yes"/>
+<itemref idref="part03_ch08" linear="yes"/>
+<itemref idref="part03_ch09" linear="yes"/>
+<itemref idref="part03_ch10" linear="yes"/>
+<itemref idref="part04_ch01" linear="yes"/>
+<itemref idref="part04_ch02" linear="yes"/>
+<itemref idref="part04_ch03" linear="yes"/>
+<itemref idref="part04_ch04" linear="yes"/>
+<itemref idref="part04_ch05" linear="yes"/>
+<itemref idref="part04_ch06" linear="yes"/>
+<itemref idref="part04_ch07" linear="yes"/>
+<itemref idref="part05_ch01" linear="yes"/>
+<itemref idref="part05_ch02" linear="yes"/>
+<itemref idref="part05_ch03" linear="yes"/>
+<itemref idref="part05_ch04" linear="yes"/>
+<itemref idref="part05_ch05" linear="yes"/>
+<itemref idref="bm01" linear="yes"/>
+</spine>
+<guide>
+<reference type="cover" title="Bor&#x00ED;t&#x00F3;" href="cover.xhtml"/>
+</guide>
+</package>

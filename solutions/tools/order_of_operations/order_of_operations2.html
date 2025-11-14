@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematikai Műveletek Sorrendje 2</title>
+    <link rel="icon" type="image/png" href="https://felisha76.github.io/portfolio/media/favicon_light.png">
+    <link rel="stylesheet" href="../../../subsites/substyle.css">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .question-group { 
+            margin: 5px; 
+            font-size: 20px; 
+            border: 1px solid #000; 
+            padding: 10px; 
+            display: inline-flex; 
+            flex-direction: column;
+            align-items:flex-end;
+        }
+
+        .hidden { display: none; }
+        .correct { background-color: green; color: white; font-weight: bold; }
+
+        a {
+            text-decoration: none;
+            color: #e5dd0b;
+            font-family: 'Noto Sans';
+        }
+
+        input {
+            width: 50px;
+            height: 20px;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .feedback {
+            font-size:small;
+            text-decoration: none;
+            color: #e5dd0b;
+            font-family: 'Noto Sans';
+            text-align: right;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Matematikai Műveletek Sorrendje 2</h1>
+    <h3>(Általános iskola 2. osztály számára)</h3>
+    <p>Ebben a változatban hármas egységenként kell kérdéseket megválszolni</p>
+    <p><a href="order_of_operations.html" target="_self">Váltás a másik változatra</a></p>
+    <label for="questionCount">Hány egységet szeretnél megoldani?</label>
+    <select id="questionCount">
+        <option value="3">3</option>
+        <option value="5">5</option>
+        <option value="7">7</option>
+    </select>
+    <button onclick="generateQuestionGroups()">Feladatok generálása</button>
+    <div id="questionsContainer"></div>
+    <button class="hidden" id="submitBtn" onclick="checkAnswers()">Ellenőrzés</button>
+    <p id="result"></p>
+
+
+    
+    <script>
+        function generateQuestionGroups() {
+            const count = document.getElementById("questionCount").value;
+            const container = document.getElementById("questionsContainer");
+            container.innerHTML = "";
+            
+            let questions = [];
+            for (let i = 0; i < count; i++) {
+                let group;
+                do {
+                    group = generateExpressionGroup();
+                } while (!group.valid);
+                
+                questions.push(group);
+                container.innerHTML += `
+                    <div class='question-group'>
+                        <div>${group.q1.expression} = <input type='number' id='answer${i}a'></div>
+                        <div>${group.q2.expression} = <input type='number' id='answer${i}b'></div>
+                        <div>${group.q3.expression} = <input type='number' id='answer${i}c'></div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById("submitBtn").classList.remove("hidden");
+            window.questions = questions;
+        }
+
+        function generateExpressionGroup() {
+            let a, b, c, d, baseExpression, parenExpression1, parenExpression2, valid = false;
+            do {
+                a = getRandom(1, 20);
+                b = getRandom(1, 10);
+                c = getRandom(1, 10);
+                d = getRandom(1, 10);
+                
+                baseExpression = `${a} + ${b} / ${c} - ${d}`;
+                parenExpression1 = `(${a} + ${b}) * ${c} - ${d}`;
+                parenExpression2 = `(${a} + ${b}) * (${c} - ${d})`;
+                
+                if (Math.random() < 0.5) {
+                    baseExpression = `${a} - ${b} / ${c} + ${d}`;
+                    parenExpression1 = `(${a} - ${b}) * ${c} + ${d}`;
+                    parenExpression2 = `(${a} - ${b}) * (${c} + ${d})`;
+                }
+                
+                let r1 = eval(baseExpression);
+                let r2 = eval(parenExpression1);
+                let r3 = eval(parenExpression2);
+                
+                if (isValidResult(r1) && isValidResult(r2) && isValidResult(r3)) {
+                    valid = true;
+                }
+            } while (!valid);
+            
+            return {
+                q1: { expression: baseExpression, result: eval(baseExpression) },
+                q2: { expression: parenExpression1, result: eval(parenExpression1) },
+                q3: { expression: parenExpression2, result: eval(parenExpression2) },
+                valid: true
+            };
+        }
+
+        function isValidResult(result) {
+            return Number.isInteger(result) && result > 0 && result < 100;
+        }
+
+        function getRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            window.questions.forEach((group, i) => {
+                ['a', 'b', 'c'].forEach((suffix, index) => {
+                    let userAnswerField = document.getElementById(`answer${i}${suffix}`);
+                    let userAnswer = parseFloat(userAnswerField.value);
+                    let correctAnswer = group[`q${index + 1}`].result;
+                    
+                    if (userAnswer === correctAnswer) {
+                        correct++;
+                        userAnswerField.classList.add("correct");
+                    }
+                });
+            });
+
+            // Calculate percentage
+            const total = window.questions.length;
+            const percentage = Math.round(((correct / total) * 100)/3);
+            
+            document.getElementById("result").textContent = `Helyes válaszok: ${correct} / ${window.questions.length * 3} (${percentage}%)`;
+        }
+    </script>
+
+<footer>
+        <hr>
+    <p style="font-size: medium;">
+        <a href="mailto:frontneststudio@gmail.com?&subject=Order of operations feedback: https://felisha76.github.io/portfolio/solutions/tools/order_of_operations/order_of_operations2.html" target="_top" style="color: #10f808; text-decoration: none;">
+            🔴 Error reporting</a>
+        <a href="https://felisha76.github.io/portfolio/subsites/sources.html" class="simpleLink" style="color: #e7eb0a; text-decoration: none;">
+            🟡 Media sources </a>
+        <a href="https://felisha76.github.io/portfolio/solutions/tools/order_of_operations/order_of_operations2.html" class="simpleLink" style="color: #09ebf3;text-decoration: none;">
+            🔵 Start over</a>
+    </p>
+</footer>
+
+</body>
+</html>

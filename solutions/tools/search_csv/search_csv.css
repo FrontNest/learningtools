@@ -1,0 +1,271 @@
+/* 
+Not finished yet
+*/
+
+body, a {
+	background-color: #1c1d1d;
+	font-family: 'Noto Sans'; 
+  	font-size: 12px;
+	color: #d2d4d6;
+}
+
+	.dropdown {
+	  float: left;
+	  overflow: hidden;
+	}
+
+	a:hover, .dropdown .dropbtn {
+	  background-color: inherit;
+	  font-family: inherit;
+	  font-size: 1rem;
+	  color: inherit;
+	  text-decoration: none; 
+	  border: none;
+	  outline: none;
+	  padding: inherit;
+	  margin: 0;
+	}
+ 
+	.dropdown-content {
+	  display: none;
+	  position: absolute;
+	  background-color: inherit;
+	  color: inherit;
+	  min-width: 160px;
+	  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	  z-index: 9999;
+	  flex-direction: column;
+
+        border-style: solid;
+        border-left: #1c1d1d;
+        border-top: #1c1d1d;
+        border-width: thin;
+        border-color: #999b9e;
+        border-radius: 15px;
+	}
+
+	.dropdown-content a {
+	  float: none;
+	  color: inherit;
+	  padding: 5px;
+	  text-decoration: none;
+	  display: block;
+	  text-align: left;
+	}
+ 
+  /* Main content */
+  .m12 {
+    flex-grow: 1;
+    padding: 10px;
+    max-width: 80%;
+    margin-left: 20px;
+  }
+
+  .search_open {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+    padding-top: 10px;
+  }
+
+  input::file-selector-button {
+    font-weight: bold;
+    color: #d2d4d6;
+    background-color: #272929;
+    padding: 0.5em;
+    border: thin solid #272929;
+    border-radius: 3px;
+  }
+
+
+/* TOOLTIP */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -60px;
+  
+  /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+                      /* tooltip end */
+
+
+table, td, th {
+    border: 1px solid black;
+    border-collapse: collapse;
+	  left: 200px;
+	  background-color: #272929;
+	  font-family: 'Noto Sans'; 
+    font-size: 12px;
+	  color: #d2d4d6;
+}
+
+th, td, cell {
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+  max-height: 500px;
+  max-width: 500px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* HOVER ACTIONS */
+td:hover, .side-nav a:hover  {
+	background-color: #999b9e;
+	color: #1c1d1d;
+}
+
+.side-nav .feedback:hover {
+  background-color: #1c1d1d;
+  color: #f5dd07;
+}
+
+input::file-selector-button:hover{
+  color: #272929;
+  background-color: #d2d4d6;
+}
+
+#logo:hover {
+	transform: rotateY(360deg);
+  transition-duration: 2000ms;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #999b9e;
+  color: #1c1d1d;
+}
+
+/* Táblázat oszlop szélességek */
+	#col01 {
+	    width: 10%;
+	    overflow: hidden;
+	}
+
+	#col02 {
+ 	   width: 15%;
+ 	   overflow: hidden;
+	}
+
+	#col03 {
+ 	   width: 35%;
+  	   overflow: auto;
+	}
+
+	#col04 {
+	    width: 35%;
+            overflow: auto;
+	}
+	#col05 {
+	    width: 5%;
+	}
+
+/* Táblázat cellák kattinthatósága */
+td, cell {
+ 	cursor: pointer;
+}
+
+/* Megnövelt magasságú sorok tulajdonsági */
+td.expanded {
+    max-width: 500px;
+    white-space: normal;
+}
+
+/* Táblázat fejléc tulajdonságai */
+th {
+    text-align: center;
+    padding: 5px;
+}
+
+/* Kereső field tulajdonságai */
+#search {
+    width: 300px;
+    height: 25px;
+    background-color: rgb(12, 3, 60);
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.Timage {
+  max-width: 100px;
+  height: auto;
+}
+
+.Tlink {
+	background-color: #272929;
+	font-family: 'Noto Sans'; 
+  font-size: 12px;
+	color: #d2d4d6;
+}
+
+::placeholder {
+  color: white;
+}
+
+/* Görgetősáv */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+  
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #282929;
+  border-radius: 5px;
+  border: 1px solid #999b9e;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #282929;
+}
+
+/* Responzivitási beállítások */
+  @media (max-width: 800px) {
+  
+    .wrap {
+      position: relative;
+      width: 80%;
+      height: 50%;
+      left: 80px;
+      right: 100px;
+      
+      flex-wrap: wrap;
+      justify-content: center;
+      display: flex;
+      flex-direction: row;
+    
+      gap: 2px;
+    
+    }
+
+    .m12 {
+      margin-left: 10px;
+    }
+  } 

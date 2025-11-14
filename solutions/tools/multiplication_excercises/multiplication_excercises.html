@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Practice</title>
+    <link rel="icon" type="image/png" href="https://felisha76.github.io/portfolio/media/favicon_light.png">
+    <link rel="stylesheet" href="multiplication_excercises.css">
+</head>
+<body>
+    <h1>Multiplication Practice</h1>
+    
+    <div class="settings">
+        <h2>Settings</h2>
+        <div class="settings-row">
+            <div>
+                <label for="startTable">Start with table:</label>
+                <input type="number" id="startTable" min="1" max="12" value="1">
+            </div>
+            <div>
+                <label for="endTable">End with table:</label>
+                <input type="number" id="endTable" min="1" max="12" value="12">
+            </div>
+        </div>
+        
+        <div class="settings-row">
+            <div>
+                <label for="questionCount">Number of questions:</label>
+                <input type="number" id="questionCount" min="10" max="100" value="20">
+            </div>
+            <div>
+                <input type="checkbox" id="timerEnabled">
+                <label for="timerEnabled">Enable 20-second timer</label>
+            </div>
+        </div>
+        
+        <button id="startBtn">Start Practice</button>
+    </div>
+    
+    <div id="practiceArea" class="hidden">
+        <div id="timerDisplay" class="timer hidden">Time left: 20s</div>
+        
+        <div class="question-container">
+            <div id="question">6 × 7 = ?</div>
+        </div>
+        
+        <div class="answer-container">
+            <input type="number" id="answer" placeholder="Answer">
+            <button id="nextBtn">Next</button>
+            <span id="feedback" class="answer"></span>
+        </div>
+        
+        <div class="progress">
+            <div>Questions answered: <span id="answeredCount">0</span> / <span id="totalQuestions">20</span></div>
+            <div>Correct answers: <span id="correctCount">0</span></div>
+        </div>
+    </div>
+
+
+<footer>
+        <hr>
+    <p style="font-size: medium;">
+        <a href="mailto:frontneststudio@gmail.com?&subject=Multiplication excercises feedback: https://felisha76.github.io/portfolio/solutions/tools/multiplication_excercises/multiplication_excercises.html" target="_top" style="color: #10f808; text-decoration: none;">
+            <b>🔴 Error reporting</b></a>
+        <a href="https://felisha76.github.io/portfolio/subsites/sources.html" class="simpleLink" style="color: #e7eb0a; text-decoration: none;">
+            🟡 Media sources </a>
+        <a href="https://felisha76.github.io/portfolio/solutions/tools/multiplication_excercises/multiplication_excercises.html" class="simpleLink" style="color: #09ebf3;text-decoration: none;">
+            🔵 Start over</a>
+    </p>
+</footer>
+
+    <script src="multiplication_excercises.js"></script>
+</body>
+</html>

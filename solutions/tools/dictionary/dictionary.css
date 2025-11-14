@@ -1,0 +1,145 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Noto Sans';
+    line-height: 1.6;
+    color: #d2d4d6;
+    background-color: #1c1d1d;
+    padding: 20px;
+    font-size: 1.2vw;
+}
+
+.container {
+    max-width: 95%; /* max-width: 1200px; */
+    margin: 0 auto;
+    background-color: #1c1d1d;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #d2d4d6;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.file-selector, .search-box {
+    flex: 1;
+    min-width: 250px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: large;
+}
+
+select, input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: #d2d4d6;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    vertical-align: top;
+    font-size: medium;
+}
+
+th {
+    background-color: #1c1d1d;
+    color: #d2d4d6;
+    position: sticky;
+    font-size: large;
+    top: 0;
+}
+
+tr:nth-child(even) {
+    background-color: #1c1d1d;
+}
+
+tr:hover {
+    background-color: #2b2c2c;
+    color: #d2d4d6;
+    cursor: pointer;
+}
+
+.highlight {
+    background-color: yellow;
+    font-weight: bold;
+    color:#1c1d1d;
+    font-size: larger;
+}
+
+/* Preserve whitespace in cells */
+td {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+img {
+    max-width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Feedback */
+.feedback {
+    font-size:small;
+    text-decoration: none;
+    color: #e2f606;
+    font-family: 'Noto Sans';
+    text-align: right;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #282929;
+    border-radius: 5px;
+    border: 1px solid #999b9e;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: #282929;
+  }

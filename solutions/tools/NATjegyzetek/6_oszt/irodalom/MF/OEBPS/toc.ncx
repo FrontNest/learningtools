@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx version="2005-1" xml:lang="hu-HU" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+<head>
+<meta name="dtb:uid" content="9786156178657"/>
+<meta name="dtb:depth" content="2"/>
+<meta name="dtb:totalPageCount" content="69"/>
+<meta name="dtb:maxPageNumber" content="69"/>
+</head>
+<docTitle><text>Irodalom Munkaf&#x00FC;zet 6.</text></docTitle>
+<docAuthor><text>Oktat&#x00E1;si Hivatal</text></docAuthor>
+<navMap>
+<navPoint id="nav-1" playOrder="1"><navLabel><text>Bor&#x00ED;t&#x00F3;</text></navLabel><content src="cover.xhtml"/></navPoint>
+<navPoint id="nav-2" playOrder="2"><navLabel><text>C&#x00ED;moldal</text></navLabel><content src="title.xhtml"/></navPoint>
+<navPoint id="nav-3" playOrder="3"><navLabel><text>Copyright</text></navLabel><content src="copyrights.xhtml"/></navPoint>
+<navPoint id="nav-4" playOrder="4"><navLabel><text>Tartalom</text></navLabel><content src="contents.xhtml"/></navPoint>
+<navPoint id="nav-5" playOrder="5"><navLabel><text>H&#x0151;s&#x00F6;k az irodalomban</text></navLabel><content src="part01_ch01.xhtml#pt01"/></navPoint>
+<navPoint id="nav-6" playOrder="6"><navLabel><text>H&#x0151;s&#x00F6;k &#x00E9;s h&#x0151;siess&#x00E9;g</text></navLabel><content src="part01_ch01.xhtml#pt01_ch01"/>
+<navPoint id="nav-7" playOrder="7"><navLabel><text>Szent L&#x00E1;szl&#x00F3; &#x00E9;s a kun vit&#x00E9;z k&#x00FC;zdelme</text></navLabel><content src="part01_ch02.xhtml#pt01_ch02"/></navPoint>
+<navPoint id="nav-8" playOrder="8"><navLabel><text>A tordai hasad&#x00E9;k</text></navLabel><content src="part01_ch03.xhtml#pt01_ch03"/></navPoint>
+<navPoint id="nav-9" playOrder="9"><navLabel><text>Arany J&#x00E1;nos: Szent L&#x00E1;szl&#x00F3; (legenda)</text></navLabel><content src="part01_ch04.xhtml#pt01_ch04"/></navPoint>
+<navPoint id="nav-10" playOrder="10"><navLabel><text>Cs&#x00F6;rsz &#x00E1;rka</text></navLabel><content src="part01_ch05.xhtml#pt01_ch05"/></navPoint>
+<navPoint id="nav-11" playOrder="11"><navLabel><text>Szim&#x00F3;nid&#x00E9;sz: A thermop&#x00FC;lei h&#x0151;s&#x00F6;k s&#x00ED;rfelirata</text></navLabel><content src="part01_ch06.xhtml#pt01_ch06"/></navPoint>
+<navPoint id="nav-12" playOrder="12"><navLabel><text>Sz&#x00E9;chenyi Zsigmond: Csui!&#x2026; &#x2013; r&#x00E9;szlet</text></navLabel><content src="part01_ch07.xhtml#pt01_ch07"/></navPoint>
+<navPoint id="nav-13" playOrder="13"><navLabel><text>K&#x0151;m&#x00ED;ves Kelemenn&#x00E9;</text></navLabel><content src="part01_ch08.xhtml#pt01_ch08"/></navPoint>
+<navPoint id="nav-14" playOrder="14"><navLabel><text>Arany J&#x00E1;nos: M&#x00E1;ty&#x00E1;s anyja</text></navLabel><content src="part01_ch09.xhtml#pt01_ch09"/></navPoint>
+<navPoint id="nav-15" playOrder="15"><navLabel><text>Arany J&#x00E1;nos: A walesi b&#x00E1;rdok</text></navLabel><content src="part01_ch10.xhtml#pt01_ch10"/></navPoint>
+<navPoint id="nav-16" playOrder="16"><navLabel><text>Fazekas Mih&#x00E1;ly: L&#x00FA;das Matyi &#x2013; Els&#x0151; levon&#x00E1;s, M&#x00E1;sodik levon&#x00E1;s</text></navLabel><content src="part01_ch11.xhtml#pt01_ch11"/></navPoint>
+<navPoint id="nav-17" playOrder="17"><navLabel><text>Fazekas Mih&#x00E1;ly: L&#x00FA;das Matyi&#x2013; Harmadik levon&#x00E1;s, Negyedik levon&#x00E1;s</text></navLabel><content src="part01_ch12.xhtml#pt01_ch12"/></navPoint>
+<navPoint id="nav-18" playOrder="18"><navLabel><text>&#x00D6;sszefoglal&#x00E1;s &#x2013; H&#x0151;s&#x00F6;k az irodalomban</text></navLabel><content src="part01_ch13.xhtml#pt01_ch13"/></navPoint></navPoint>
+<navPoint id="nav-19" playOrder="19"><navLabel><text>Arany J&#x00E1;nos: Toldi</text></navLabel><content src="part02_ch01.xhtml#pt02"/>
+<navPoint id="nav-20" playOrder="20"><navLabel><text>El&#x0151;hang</text></navLabel><content src="part02_ch01.xhtml#pt02_ch01"/></navPoint>
+<navPoint id="nav-21" playOrder="21"><navLabel><text>Els&#x0151; &#x00E9;nek</text></navLabel><content src="part02_ch02.xhtml#pt02_ch02"/></navPoint>
+<navPoint id="nav-22" playOrder="22"><navLabel><text>M&#x00E1;sodik &#x00E9;nek</text></navLabel><content src="part02_ch03.xhtml#pt02_ch03"/></navPoint>
+<navPoint id="nav-23" playOrder="23"><navLabel><text>Harmadik &#x00E9;nek</text></navLabel><content src="part02_ch04.xhtml#pt02_ch04"/></navPoint>
+<navPoint id="nav-24" playOrder="24"><navLabel><text>Negyedik &#x00E9;nek</text></navLabel><content src="part02_ch05.xhtml#pt02_ch05"/></navPoint>
+<navPoint id="nav-25" playOrder="25"><navLabel><text>&#x00D6;t&#x00F6;dik &#x00E9;nek</text></navLabel><content src="part02_ch06.xhtml#pt02_ch06"/></navPoint>
+<navPoint id="nav-26" playOrder="26"><navLabel><text>Hatodik &#x00E9;nek</text></navLabel><content src="part02_ch07.xhtml#pt02_ch07"/></navPoint>
+<navPoint id="nav-27" playOrder="27"><navLabel><text>R&#x00E9;sz&#x00F6;sszefoglal&#x00E1;s</text></navLabel><content src="part02_ch08.xhtml#pt02_ch08"/></navPoint>
+<navPoint id="nav-28" playOrder="28"><navLabel><text>Hetedik &#x00E9;nek</text></navLabel><content src="part02_ch09.xhtml#pt02_ch09"/></navPoint>
+<navPoint id="nav-29" playOrder="29"><navLabel><text>Nyolcadik &#x00E9;nek</text></navLabel><content src="part02_ch10.xhtml#pt02_ch10"/></navPoint>
+<navPoint id="nav-30" playOrder="30"><navLabel><text>Kilencedik &#x00E9;nek</text></navLabel><content src="part02_ch11.xhtml#pt02_ch11"/></navPoint>
+<navPoint id="nav-31" playOrder="31"><navLabel><text>Tizedik &#x00E9;nek</text></navLabel><content src="part02_ch12.xhtml#pt02_ch12"/></navPoint>
+<navPoint id="nav-32" playOrder="32"><navLabel><text>Tizenegyedik &#x00E9;nek</text></navLabel><content src="part02_ch13.xhtml#pt02_ch13"/></navPoint>
+<navPoint id="nav-33" playOrder="33"><navLabel><text>Tizenkettedik &#x00E9;nek</text></navLabel><content src="part02_ch14.xhtml#pt02_ch14"/></navPoint>
+<navPoint id="nav-34" playOrder="34"><navLabel><text>&#x00D6;sszefoglal&#x00E1;s</text></navLabel><content src="part02_ch15.xhtml#pt02_ch15"/></navPoint></navPoint>
+<navPoint id="nav-35" playOrder="35"><navLabel><text>Szeretet, hazaszeretet, szerelem</text></navLabel><content src="part03_ch01.xhtml#pt03"/>
+<navPoint id="nav-36" playOrder="36"><navLabel><text>A szeretet</text></navLabel><content src="part03_ch01.xhtml#pt03_ch01"/></navPoint>
+<navPoint id="nav-37" playOrder="37"><navLabel><text>Bevezet&#x00E9;s a bibliai t&#x00F6;rt&#x00E9;netekhez</text></navLabel><content src="part03_ch02.xhtml#pt03_ch02"/></navPoint>
+<navPoint id="nav-38" playOrder="38"><navLabel><text>M&#x00E1;ria &#x00E9;s J&#x00F3;zsef t&#x00F6;rt&#x00E9;nete</text></navLabel><content src="part03_ch03.xhtml#pt03_ch03"/></navPoint>
+<navPoint id="nav-39" playOrder="39"><navLabel><text>J&#x00E9;zus tan&#x00ED;t&#x00E1;sa a gyermekekr&#x0151;l</text></navLabel><content src="part03_ch03.xhtml#pt03_ch04"/></navPoint>
+<navPoint id="nav-40" playOrder="40"><navLabel><text>K&#x00F6;lcsey Ferenc: Himnusz</text></navLabel><content src="part03_ch04.xhtml#pt03_ch05"/></navPoint>
+<navPoint id="nav-41" playOrder="41"><navLabel><text>V&#x00F6;r&#x00F6;smarty Mih&#x00E1;ly: Sz&#x00F3;zat</text></navLabel><content src="part03_ch05.xhtml#pt03_ch06"/></navPoint>
+<navPoint id="nav-42" playOrder="42"><navLabel><text>Pet&#x0151;fi S&#x00E1;ndor: Honfidal</text></navLabel><content src="part03_ch06.xhtml#pt03_ch07"/></navPoint>
+<navPoint id="nav-43" playOrder="43"><navLabel><text>Csokonai Vit&#x00E9;z Mih&#x00E1;ly: Tart&#x00F3;zkod&#x00F3; k&#x00E9;relem</text></navLabel><content src="part03_ch07.xhtml#pt03_ch08"/></navPoint>
+<navPoint id="nav-44" playOrder="44"><navLabel><text>Pet&#x0151;fi S&#x00E1;ndor: Reszket a bokor, mert&#x2026;</text></navLabel><content src="part03_ch08.xhtml#pt03_ch09"/></navPoint>
+<navPoint id="nav-45" playOrder="45"><navLabel><text>Radn&#x00F3;ti Mikl&#x00F3;s: B&#x00E1;jol&#x00F3;</text></navLabel><content src="part03_ch09.xhtml#pt03_ch10"/></navPoint>
+<navPoint id="nav-46" playOrder="46"><navLabel><text>&#x00D6;sszefoglal&#x00E1;s</text></navLabel><content src="part03_ch10.xhtml#pt03_ch11"/></navPoint></navPoint>
+<navPoint id="nav-47" playOrder="47"><navLabel><text>G&#x00E1;rdonyi G&#x00E9;za: Egri csillagok</text></navLabel><content src="part04_ch01.xhtml#pt04"/>
+<navPoint id="nav-48" playOrder="48"><navLabel><text>A &#x201E;nagy k&#x00F6;nyv&#x201D;</text></navLabel><content src="part04_ch01.xhtml#pt04_ch01"/></navPoint>
+<navPoint id="nav-49" playOrder="49"><navLabel><text>Hol terem a magyar vit&#x00E9;z?</text></navLabel><content src="part04_ch02.xhtml#pt04_ch02"/></navPoint>
+<navPoint id="nav-50" playOrder="50"><navLabel><text>Oda Buda!</text></navLabel><content src="part04_ch03.xhtml#pt04_ch03"/></navPoint>
+<navPoint id="nav-51" playOrder="51"><navLabel><text>A rab oroszl&#x00E1;n</text></navLabel><content src="part04_ch04.xhtml#pt04_ch04"/></navPoint>
+<navPoint id="nav-52" playOrder="52"><navLabel><text>Eger veszedelme</text></navLabel><content src="part04_ch05.xhtml#pt04_ch05"/></navPoint>
+<navPoint id="nav-53" playOrder="53"><navLabel><text>Holdfogyatkoz&#x00E1;s</text></navLabel><content src="part04_ch06.xhtml#pt04_ch06"/></navPoint>
+<navPoint id="nav-54" playOrder="54"><navLabel><text>&#x00D6;sszefoglal&#x00E1;s</text></navLabel><content src="part04_ch07.xhtml#pt04_ch07"/></navPoint></navPoint>
+<navPoint id="nav-55" playOrder="55"><navLabel><text>Daniel Defoe: Robinson Crusoe</text></navLabel><content src="part05_ch01.xhtml#pt05"/>
+<navPoint id="nav-56" playOrder="56"><navLabel><text>Csod&#x00E1;latos menek&#x00FC;l&#x00E9;s</text></navLabel><content src="part05_ch01.xhtml#pt05_ch01"/></navPoint>
+<navPoint id="nav-57" playOrder="57"><navLabel><text>Berendezked&#x00E9;s a szigeten</text></navLabel><content src="part05_ch02.xhtml#pt05_ch02"/></navPoint>
+<navPoint id="nav-58" playOrder="58"><navLabel><text>Robinson Crusoe (r&#x00E9;szletek) I.</text></navLabel><content src="part05_ch03.xhtml#pt05_ch03"/></navPoint>
+<navPoint id="nav-59" playOrder="59"><navLabel><text>Robinson Crusoe (r&#x00E9;szletek) II.</text></navLabel><content src="part05_ch04.xhtml#pt05_ch04"/></navPoint>
+<navPoint id="nav-60" playOrder="60"><navLabel><text>&#x00D6;sszefoglal&#x00E1;s</text></navLabel><content src="part05_ch05.xhtml#pt05_ch05"/></navPoint></navPoint>
+</navMap>
+</ncx>

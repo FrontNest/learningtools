@@ -1,0 +1,171 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans', sans-serif;
+    padding: 5px;
+    background-color: #1c1d1d;
+    color: #d2d4d6;
+}
+
+.container {
+    max-width: 400px; /* 400px */
+    margin: 0;
+    padding: 5px;
+    background-color: #1c1d1d;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 5px;
+    margin-right: 10px; /* A táblázatot a jobb oldaltól 10px-re helyezi */
+}
+
+td {
+    padding: 2px;
+    vertical-align: middle; /* middle */
+}
+
+table tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center; /* center */
+}
+
+td:first-child {
+    width: 25%;
+    font-weight: bold;
+    text-align: left;
+}
+
+td:last-child {
+    width: 75%;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #3a3b3d;
+    color: #d2d4d6;
+}
+
+input:focus, textarea:focus {
+    background-color: #1c1d1d;
+    color: #d2d4d6;
+}
+
+input:hover, textarea:hover {
+    background-color: #1c1d1d;
+    color: #d2d4d6;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #d2d4d6;
+}
+
+button {
+    display: block;
+    margin: 5px auto 0;
+    padding: 5px 5px;
+    background-color: #3a3b3d;
+    color: #d2d4d6;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    
+}
+
+button:hover {
+    background-color: #818181;
+    color: #1c1d1d;
+}
+
+footer {
+    font-size: 12px;
+    text-align: right;
+    padding: 5px;
+    margin-top: 20px;
+    color: #fff;
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.how-to {
+    position: relative;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.how-to-hint {
+    display: none;
+    position: absolute;
+    right: 10px;
+    bottom: 25px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    width: 250px;
+    text-align: left;
+    z-index: 1;
+    box-shadow: 0px 4px 8px #00000033;
+}
+
+.how-to:hover .how-to-hint {
+    display: block;
+}
+
+.feedback {
+    font-size:small;
+    text-decoration: none;
+    color: #d2d4d6;
+    font-family: 'Noto Sans';
+    text-align: right;
+}
+
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #282929;
+    border-radius: 5px;
+    border: 1px solid #999b9e;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: #282929;
+  }
+
+  
+@media (max-width: 700px) {
+    td:first-child, td:last-child {
+        width: 80%;
+    }
+
+    button {
+       /*  width: 100%;*/
+        max-width: 400px; 
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,386 @@
+/* 
+Not finished yet
+*/
+
+body, .top-nav, .side-nav, .side-nav a, a, pre {
+	background-color: #1c1d1d;
+	font-family: 'Noto Sans'; 
+  	font-size: 12px;
+	color: #d2d4d6;
+}
+
+/* Felső navigációs sáv */
+    .top-nav {
+      display: flex;
+      align-items: stretch;
+      position: fixed;
+        top: 0;
+        left: 10px;
+      width: 100%;
+      padding: 0 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 500px;      
+    }
+
+    #logo {
+      margin-right: 100px;
+      margin-left: -5px;
+      margin-top: 5px;
+      margin-bottom: 200px;  
+      width: 60px;
+      height: 60px;
+      position:fixed;      
+    }
+     
+    .profile-info {
+      display: flex;
+      justify-content: space-between;
+      flex: 1;
+      /* margin-right: 100px; */
+    }
+
+    .profile-info a {
+	    background-color: #1c1d1d;
+	    font-family: 'Noto Sans'; 
+      font-size: 1rem;
+	    color: #d2d4d6;
+      text-decoration: none;
+    }
+
+	.dropdown {
+	  float: left;
+	  overflow: hidden;
+	}
+
+	.navbar a:hover, .dropdown .dropbtn {
+	  background-color: inherit;
+	  font-family: inherit;
+	  font-size: 1rem;
+	  color: inherit;
+	  text-decoration: none; 
+	  border: none;
+	  outline: none;
+	  padding: inherit;
+	  margin: 0;
+	}
+ 
+	.dropdown-content {
+	  display: none;
+	  position: absolute;
+	  background-color: inherit;
+	  color: inherit;
+	  min-width: 160px;
+	  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	  z-index: 9999;
+	  flex-direction: column;
+
+      border-style: solid;
+      border-left: #1c1d1d;
+      border-top: #1c1d1d;
+      border-width: thin;
+      border-color: #999b9e;
+      border-radius: 15px;
+	}
+
+	.dropdown-content a {
+	  float: none;
+	  color: inherit;
+	  padding: 5px;
+	  text-decoration: none;
+	  display: block;
+	  text-align: left;
+	}
+
+/* flicards */
+.wrap {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	left: 100px;
+  right: 100px;
+	
+	display:inline-flex;
+	flex-wrap: wrap;
+	justify-content: center;
+
+  gap: 10px;
+}
+.card {
+	width: 150px;
+	height: 50px;
+	position: relative;
+	perspective: 1000px;
+
+}
+.front, .back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 10;
+	top: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: 0.8s;
+	backface-visibility: hidden;
+	border-radius: 15px;
+
+}
+.front {
+	background-color: #232424;
+  color: #999b9e;
+  font-size: 18px;
+  border-style: solid;
+  border-left: #1c1d1d;
+  border-top: #1c1d1d;
+  border-width: thin;
+  border-color: #999b9e;
+}
+
+.front a {
+	background-color: #232424;
+}
+
+.back {
+	background-color: #1c1d1d;
+  color: #999b9e;
+  font-size: 25px;
+  font-weight: bold;
+  border-style: solid;
+  border-right: #1c1d1d;
+  border-bottom: #1c1d1d;
+  border-width: thin;
+  border-color: #999b9e;
+	transform: rotateY(180deg);
+}
+
+
+/* Oldalsó navigációs sáv */     
+.container2 {
+    display: flex;
+    flex-direction: row;
+    margin-top: 100px;
+    height: calc(100vh - 100px);
+  }
+  
+  .side-nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    width: 150px;
+    height: 90%;
+    max-width: 200%;
+    position:fixed;
+    overflow-y: auto;
+    overflow-y: auto;
+    padding-left: 10px;
+    padding-top: 0px;
+  }
+  
+  .side-nav ul {
+	  list-style: none;
+	  padding: 0;
+	  margin: 0;
+  }
+  
+  ol {
+    display: block;
+    list-style-type: decimal;
+    padding-inline-start: 10px;
+    unicode-bidi: isolate;
+}
+  .side-nav li {
+	  margin: 0;
+  }
+  
+  .side-nav a {
+	  display: block;
+
+	  text-decoration: none;
+	  padding: 5px 2px;
+  }
+
+  .side-nav p {
+    margin: 1px 2px;
+    font-size: 12px;
+    color: #d2d4d6;
+    text-align: center;
+  }
+
+  .side-nav .feedback {
+    position: sticky;;
+    bottom: 5px;
+    padding-bottom: 50px;
+    font-size: 8px;
+    color: #d2d4d6;
+    text-align: center;
+    text-decoration: none;
+  }
+
+ 
+  /* Main content */
+  .main {
+    flex-grow: 1;
+    padding: 10px;
+    max-width: 80%;
+    margin-left: 200px;
+  }
+
+  .search_open {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+    padding-top: 10px;
+  }
+
+  input::file-selector-button {
+    font-weight: bold;
+    color: #d2d4d6;
+    background-color: #272929;
+    padding: 0.5em;
+    border: thin solid #272929;
+    border-radius: 3px;
+  }
+
+
+/* TOOLTIP */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -60px;
+  
+  /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+                      /* tooltip end */
+
+/* HOVER ACTIONS */
+/* td:hover, */ .side-nav a:hover  {
+	background-color: #999b9e;
+	color: #1c1d1d;
+}
+
+.side-nav .feedback:hover {
+  background-color: #1c1d1d;
+  color: #f5dd07;
+}
+
+
+#logo:hover {
+	transform: rotateY(360deg);
+  transition-duration: 2000ms;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #999b9e;
+  color: #1c1d1d;
+}
+
+.card:hover .front {
+	transform: rotateY(180deg);
+  transition-duration: 100ms;
+}
+.card:hover .back {
+	transform: rotateY(360deg);
+  transition-duration: 100ms;
+}  
+
+
+/* Görgetősáv */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+  
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #282929;
+  border-radius: 5px;
+  border: 1px solid #999b9e;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #282929;
+}
+
+/* Responzivitási beállítások */
+  @media (max-width: 800px) {
+    .top-nav {
+        flex-direction:column; /* Egymás alá rendezés */
+        height: 100px; /* Magasság automatikusan igazodik */
+        align-items:start;
+        padding: 10px;
+        width: 80%;
+    }   
+    
+    .wrap {
+      position: relative;
+      width: 80%;
+      height: 50%;
+      left: 80px;
+      right: 100px;
+      
+      flex-wrap: wrap;
+      justify-content: center;
+      display: flex;
+      flex-direction: row;
+    
+      gap: 2px;
+    
+    }
+
+    .card {
+      height: 20px;
+    
+    }
+
+    .front {
+      font-size: 8px;
+    }
+
+    .back {
+      font-size: 8px;
+    }
+
+    .side-nav {
+      width: 100px;
+    }
+
+    .main {
+      margin-left: 100px;
+    }
+  }
+
+/* Iframe stílusok */
+.main iframe {
+    width: 100%;
+    height: calc(100vh - 100px); /* A navigációs sávok helyének figyelembevétele */
+    border: none;
+}

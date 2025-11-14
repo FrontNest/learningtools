@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paste Table HTML Generator</title>
+     <link rel="icon" type="image/png" href="https://felisha76.github.io/portfolio/media/favicon_light.png">
+    <style>
+        body {
+            font-family: 'Noto Sans';
+            margin: 20px;
+            color:#d2d4d6;
+            background-color: #1c1d1d;
+        }
+        #pasteArea {
+            width: 100%;
+            min-height: 150px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #d2d4d6;
+            overflow: auto;
+            color: #1c1d1d;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            background-color: inherit;
+            padding: 10px;
+            border: 1px solid #ddd;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Paste Table HTML Generator</h1>
+    <p>Paste your table below (e.g., copied from a document or PDF), and click "Generate HTML" to create the HTML code for a table.</p>
+    <div id="pasteArea" contenteditable="true" placeholder="Paste your table here..."></div>
+    <button onclick="generateTableHTML()">Generate HTML</button>
+    <button onclick="resetPage()">Reset</button>
+    <h2>Generated HTML:</h2>
+    <pre id="outputHTML"></pre>
+
+    <script>
+        function generateTableHTML() {
+            const pasteArea = document.getElementById('pasteArea');
+            const table = pasteArea.querySelector('table');
+
+            if (!table) {
+                document.getElementById('outputHTML').textContent = 'No table found in the pasted content.';
+                return;
+            }
+
+            let html = '<table style="border-collapse: collapse; width: 100%;">\n';
+
+            // Process headers
+            const headers = table.querySelectorAll('thead tr th');
+            if (headers.length > 0) {
+                html += '  <thead>\n    <tr>\n';
+                headers.forEach(header => {
+                    html += `      <th style="border: 1px solid black; background-color: #f2f2f2;">${header.textContent.trim()}</th>\n`;
+                });
+                html += '    </tr>\n  </thead>\n';
+            }
+
+            // Process rows
+            const rows = table.querySelectorAll('tbody tr');
+            html += '  <tbody>\n';
+            rows.forEach(row => {
+                html += '    <tr>\n';
+                const cells = row.querySelectorAll('td');
+                cells.forEach(cell => {
+                    html += `      <td style="border: 1px solid black;">${cell.textContent.trim()}</td>\n`;
+                });
+                html += '    </tr>\n';
+            });
+            html += '  </tbody>\n</table>';
+
+            document.getElementById('outputHTML').textContent = html;
+
+            // Automatically copy to clipboard
+            navigator.clipboard.writeText(html).then(() => {
+                alert('HTML code generated and copied to clipboard!');
+            }).catch(err => {
+                alert('Failed to copy HTML code: ' + err);
+            });
+        }
+
+        function resetPage() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>

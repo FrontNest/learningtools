@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx version="2005-1" xml:lang="hu-HU" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+<head>
+<meta name="dtb:uid" content="9786156178817"/>
+<meta name="dtb:depth" content="1"/>
+<meta name="dtb:totalPageCount" content="121"/>
+<meta name="dtb:maxPageNumber" content="121"/>
+</head>
+<docTitle><text>T&#x00F6;rt&#x00E9;nelem munkaf&#x00FC;zet 6.</text></docTitle>
+<docAuthor><text>Sz&#x00E9;ll Szilvia</text></docAuthor>
+<navMap>
+<navPoint id="nav-1" playOrder="1"><navLabel><text>Bor&#x00ED;t&#x00F3;</text></navLabel><content src="cover.xhtml"/></navPoint>
+<navPoint id="nav-2" playOrder="2"><navLabel><text>C&#x00ED;moldal</text></navLabel><content src="title.xhtml"/></navPoint>
+<navPoint id="nav-3" playOrder="3"><navLabel><text>Copyright</text></navLabel><content src="copyright.xhtml"/></navPoint>
+<navPoint id="nav-4" playOrder="4"><navLabel><text>Tartalom</text></navLabel><content src="content.xhtml"/></navPoint>
+<navPoint id="nav-5" playOrder="5"><navLabel><text>&#x00C9;v eleji ism&#x00E9;tl&#x00E9;s</text></navLabel><content src="fm02.xhtml#fmt02"/></navPoint>
+<navPoint id="nav-6" playOrder="6"><navLabel><text>I. fejezet. K&#x00E9;pek &#x00E9;s portr&#x00E9;k a magyar &#x00E1;llam vir&#x00E1;gkor&#x00E1;b&#x00F3;l</text></navLabel><content src="chap01.xhtml#pt01"/>
+<navPoint id="nav-7" playOrder="7"><navLabel><text>1. Magyar kir&#x00E1;lyportr&#x00E9;k a 14&#x2013;15. sz&#x00E1;zadb&#x00F3;l</text></navLabel><content src="chap01.xhtml#ch01"/></navPoint>
+<navPoint id="nav-8" playOrder="8"><navLabel><text>2. Hunyadi J&#x00E1;nos, a t&#x00F6;r&#x00F6;kver&#x0151;</text></navLabel><content src="chap02.xhtml#ch02"/></navPoint>
+<navPoint id="nav-9" playOrder="9"><navLabel><text>3. Hunyadi M&#x00E1;ty&#x00E1;s, a renesz&#x00E1;nsz uralkod&#x00F3;</text></navLabel><content src="chap03.xhtml#ch03"/></navPoint></navPoint>
+<navPoint id="nav-10" playOrder="10"><navLabel><text>II. fejezet. &#x00DA;j l&#x00E1;t&#x00F3;hat&#x00E1;rok</text></navLabel><content src="chap04.xhtml#pt02"/>
+<navPoint id="nav-11" playOrder="11"><navLabel><text>4. A f&#x00F6;ldrajzi felfedez&#x00E9;sek</text></navLabel><content src="chap04.xhtml#ch04"/></navPoint>
+<navPoint id="nav-12" playOrder="12"><navLabel><text>5. A korai kapitalizmus</text></navLabel><content src="chap05.xhtml#ch05"/></navPoint>
+<navPoint id="nav-13" playOrder="13"><navLabel><text>6. A vall&#x00E1;si meg&#x00FA;jul&#x00E1;s</text></navLabel><content src="chap06.xhtml#ch06"/></navPoint>
+<navPoint id="nav-14" playOrder="14"><navLabel><text>7. Az &#x00FA;j vil&#x00E1;gk&#x00E9;p kialakul&#x00E1;sa</text></navLabel><content src="chap07.xhtml#ch07"/></navPoint></navPoint>
+<navPoint id="nav-15" playOrder="15"><navLabel><text>III. fejezet. Portr&#x00E9;k &#x00E9;s t&#x00F6;rt&#x00E9;netek Magyarorsz&#x00E1;g kora &#x00FA;jkori t&#x00F6;rt&#x00E9;net&#x00E9;b&#x0151;l</text></navLabel><content src="chap08.xhtml#pt03"/>
+<navPoint id="nav-16" playOrder="16"><navLabel><text>&#x00A0;8. A t&#x00F6;r&#x00F6;k h&#x00E1;bor&#x00FA;k h&#x0151;sei</text></navLabel><content src="chap08.xhtml#ch08"/></navPoint>
+<navPoint id="nav-17" playOrder="17"><navLabel><text>&#x00A0;9. Bocskai, Bethlen &#x00E9;s Zr&#x00ED;nyi</text></navLabel><content src="chap09.xhtml#ch09"/></navPoint>
+<navPoint id="nav-18" playOrder="18"><navLabel><text>10. II. R&#x00E1;k&#x00F3;czi Ferenc &#x00E9;s szabads&#x00E1;gharca</text></navLabel><content src="chap10.xhtml#ch10"/></navPoint>
+<navPoint id="nav-19" playOrder="19"><navLabel><text>11. M&#x00E1;ria Ter&#x00E9;zia</text></navLabel><content src="chap11.xhtml#ch11"/></navPoint></navPoint>
+<navPoint id="nav-20" playOrder="20"><navLabel><text>IV. fejezet. &#x00C9;let a kora &#x00FA;jkori Magyarorsz&#x00E1;gon</text></navLabel><content src="chap12.xhtml#pt04"/>
+<navPoint id="nav-21" playOrder="21"><navLabel><text>12. &#x00C9;let a t&#x00F6;r&#x00F6;k h&#x00F3;dolts&#x00E1;g kori Magyarorsz&#x00E1;gon</text></navLabel><content src="chap12.xhtml#ch12"/></navPoint>
+<navPoint id="nav-22" playOrder="22"><navLabel><text>13. &#x00C9;let a 18. sz&#x00E1;zadi Magyarorsz&#x00E1;gon</text></navLabel><content src="chap13.xhtml#ch13"/></navPoint></navPoint>
+<navPoint id="nav-23" playOrder="23"><navLabel><text>V. fejezet. Forradalmak kora</text></navLabel><content src="chap14.xhtml#pt05"/>
+<navPoint id="nav-24" playOrder="24"><navLabel><text>14. Ipari forradalom</text></navLabel><content src="chap14.xhtml#ch14"/></navPoint>
+<navPoint id="nav-25" playOrder="25"><navLabel><text>15. T&#x00E1;rsadalmi-politikai forradalom</text></navLabel><content src="chap15.xhtml#ch15"/></navPoint></navPoint>
+<navPoint id="nav-26" playOrder="26"><navLabel><text>VI. fejezet. A magyar nemzeti &#x00E9;bred&#x00E9;s &#x00E9;s polg&#x00E1;rosod&#x00E1;s kora</text></navLabel><content src="chap16.xhtml#pt06"/>
+<navPoint id="nav-27" playOrder="27"><navLabel><text>16. A reformkor</text></navLabel><content src="chap16.xhtml#ch16"/></navPoint>
+<navPoint id="nav-28" playOrder="28"><navLabel><text>17. A forradalom</text></navLabel><content src="chap17.xhtml#ch17"/></navPoint>
+<navPoint id="nav-29" playOrder="29"><navLabel><text>18. K&#x00E9;pek a szabads&#x00E1;gharc t&#x00F6;rt&#x00E9;net&#x00E9;b&#x0151;l</text></navLabel><content src="chap18.xhtml#ch18"/></navPoint>
+<navPoint id="nav-30" playOrder="30"><navLabel><text>19. A kiegyez&#x00E9;s</text></navLabel><content src="chap19.xhtml#ch19"/></navPoint></navPoint>
+<navPoint id="nav-31" playOrder="31"><navLabel><text>&#x00C9;v v&#x00E9;gi &#x00F6;sszefoglal&#x00E1;s</text></navLabel><content src="bmt01.xhtml#bm01"/></navPoint>
+<navPoint id="nav-32" playOrder="32"><navLabel><text>Forr&#x00E1;sjegyz&#x00E9;k</text></navLabel><content src="bmt02.xhtml#bm02"/></navPoint>
+</navMap>
+</ncx>

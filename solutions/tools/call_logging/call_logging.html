@@ -1,0 +1,85 @@
+<!--
+TO DO:
+    - Change table to divs
+-->
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <title>Porfolio</title>
+    <link rel="icon" type="image/png" href="https://felisha76.github.io/portfolio/media/favicon_light.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="call_logging.css"> <!-- NE NYÚLJ HOZZÁ, MŰKÖDIK  -->
+</head>
+</head>
+<body>
+
+
+<!-- Adatbeviteli mezők -->
+    <div class="container">
+        <table id="myTable">
+            <tr>
+                <td>Telefonszám:</td>
+                <td><input type="text" id="input1" placeholder="Adja meg a telefonszámot"></td>
+            </tr>
+            <tr>
+                <td>Adat 01:</td>
+                <td><input type="text" id="input2" placeholder="Adja meg az adatot"></td>
+            </tr>
+            <tr>
+                <td>Adat 02:</td>
+                <td><input type="text" id="input3" placeholder="Adja meg az adatot"></td>
+            </tr>
+            <tr>
+                <td>adat 03:</td>
+                <td><input type="text" id="input4" placeholder="Adja meg az adatot"></td>
+            </tr>
+            <tr>
+                <td>Adat 04:</td>
+                <td><input type="text" id="input5" placeholder="Adja meg az adatot"></td>
+            </tr>
+            <tr>
+                <td>Hívás oka:</td>
+                <td><textarea id="input6" rows="3" placeholder="Adja meg a hívás okát"></textarea></td>
+            </tr>
+            <tr>
+                <td>Adat 05:</td>
+                <td><textarea id="input7" rows="3" placeholder="Adja meg az adatot"></textarea></td>
+            </tr>
+            <tr>
+                <td>Egyéb információk:</td>
+                <td><textarea id="input8" rows="3" placeholder="Adja meg az egyéb, fontos információkat"></textarea></td>
+            </tr>
+        </table>
+        <button onclick="copyTable()">Másolás vágólapra</button>
+        <p>Ez az eszköz csak akkor működik, ha a szerver fut. </p>
+        
+    </div>
+    <script src="/solutions/tools/call_logging.js"></script>
+
+    <footer>
+
+        <!-- How To buborék -->
+                <a href="#" class="how-to">How to use this form?
+                    <div class="how-to-hint">
+                        Töltsd ki a szöveges mezőket, amelyikre szükséged van, majd nyomd meg a gombot alul, vagy használd a CTRL+S billentyűkombinációt a kitöltött mezők vágólapra másolásához!
+                    </div>
+                </a>
+        
+
+    
+    </footer>
+
+</body>
+
+
+
+    
+
+</html>    

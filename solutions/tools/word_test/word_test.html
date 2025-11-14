@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Test</title>
+    <link rel="icon" type="image/png" href="https://felisha76.github.io/portfolio/media/favicon_light.png">
+    <link rel="stylesheet" href="word_test.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+    <h1 class="pagetitle">Word Test</h1>
+    
+    
+    <div class="settings">
+        <div class="settings-row">
+            <label for="fileSelect">Select vocabulary file:</label>
+            <select id="fileSelect">
+                <!-- Will be populated with en_hu files -->
+            </select>
+        </div>
+        <div class="settings-row">
+            <label for="questionCount">Number of questions:</label>
+            <input type="number" id="questionCount" min="5" max="50" value="10">
+        </div>
+        <div class="settings-row">
+            <label for="direction">Translation direction:</label>
+            <select id="direction">
+                <option value="hu_to_en">🇭🇺 to 🤔</option>
+                <option value="en_to_hu">🤔 to 🇭🇺</option>
+
+            </select>
+        </div>
+        <div class="settings-row">
+            <label for="timerEnabled">Enable timer:</label>
+            <input type="checkbox" id="timerEnabled">
+        </div>
+        <div class="settings-row">
+            <button id="startBtn">Start Test</button>
+        </div>
+    </div>
+
+    <div id="testContainer" class="hidden">
+        <div class="timer" id="timer">Time: 0s</div>
+        <div class="progress" id="progress">Question 0/0</div>
+        
+        <div id="questionContainer" class="question-container">
+            <div id="sourceWord" style="display: flex; justify-content: center; align-items: center; flex-direction: column;"></div>
+            <div class="answer-container">
+                <input type="text" id="answer" placeholder="Type your answer">
+                <button id="nextBtn">Next</button>
+                <div id="feedback" style="display: flex; justify-content: center; align-items: center; flex-direction: column;"></div>
+            </div>
+        </div>
+        
+        <div id="results" class="hidden">
+            <h2>Test Complete! Good job!</h2>
+            <p id="finalScore"></p>
+            <p id="timeSpent"></p>
+            <button id="restartBtn">Restart</button>
+        </div>
+    </div>
+
+
+<footer>
+        <hr>
+    <p style="font-size: medium;">
+        <a href="mailto:frontneststudio@gmail.com?&subject=Word test feedback: https://felisha76.github.io/portfolio/solutions/tools/word_test/word_test.html" target="_top" style="color: #10f808; text-decoration: none;">
+            <b>🔴 Error reporting</b></a>
+        <a href="https://felisha76.github.io/portfolio/subsites/sources.html" class="simpleLink" style="color: #e7eb0a; text-decoration: none;">🟡 Media sources </a>
+        <a href="https://felisha76.github.io/portfolio/solutions/tools/word_test/word_test.html" class="simpleLink" style="color: #09ebf3;text-decoration: none;">🔵 Start over</a>
+    </p>
+</footer>
+
+    <!-- Audio elements -->
+    <audio id="correctSound" src="../multiplication_excercises/correct.mp3"></audio>
+    <audio id="incorrectSound" src="../multiplication_excercises/incorrect.mp3"></audio>
+    <audio id="startSound" src="../multiplication_excercises/getready.mp3"></audio>
+    <audio id="completeSound" src="../multiplication_excercises/finished.mp3"></audio>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="word_test.js"></script>
+</body>
+</html>

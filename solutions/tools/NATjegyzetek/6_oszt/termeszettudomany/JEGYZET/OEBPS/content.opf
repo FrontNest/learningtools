@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="3.0" unique-identifier="BookId" xmlns="http://www.idpf.org/2007/opf">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+    <dc:identifier id="BookId">urn:uuid:c3e7a905-b762-48c8-83c8-627b5c9f06c4</dc:identifier>
+    <dc:language>en</dc:language>
+    <dc:title>[Main title here]</dc:title>
+    <meta property="dcterms:modified">2025-10-12T19:32:23Z</meta>
+    <meta name="Sigil version" content="2.6.2"/>
+  </metadata>
+  <manifest>
+    <item id="Section0001.xhtml" href="Text/I_01.xhtml" media-type="application/xhtml+xml"/>
+    <item id="sgc-nav.css" href="Styles/sgc-nav.css" media-type="text/css"/>
+    <item id="nav.xhtml" href="Text/nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+    <item id="x5f99a38e-b22f-4775-93bb-a45908aaaeb7" href="Text/I_02.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x38fcb97e-df27-4ac5-b4ff-a1116a4fd341" href="Text/I_03.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x3d4121d9-3bcb-4ab7-9dc7-733a4cbdf1a0" href="Text/I_04.xhtml" media-type="application/xhtml+xml"/>
+    <item id="xb836a4bb-44a1-42da-a787-93f5960e621b" href="Text/I_05.xhtml" media-type="application/xhtml+xml"/>
+    <item id="xcf59b75e-fab8-4948-a7d7-d0068d9b7bd8" href="Text/I_06.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x5f21c3fe-bbb4-4239-8c36-c12bea8f2e42" href="Text/I_07.xhtml" media-type="application/xhtml+xml"/>
+    <item id="xea68c7fb-cbff-49df-9e93-50806ff3b19b" href="Text/0001_FeltoltesAlatt.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x803c9568-89db-4d02-a9db-70b1efa51171" href="Text/I_08.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x833e4bd8-ac16-4874-94b0-d6f3a82a91c9" href="Text/VI_01.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x56726527-8d2e-40d3-9dc6-ae836d296c92" href="Text/VI_02.xhtml" media-type="application/xhtml+xml"/>
+    <item id="xfff55310-6ceb-4759-9b0e-3280014392f7" href="Text/VI_03.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x2faa411f-d2d6-46b7-b851-5f0b7a13ca99" href="Text/VI_04.xhtml" media-type="application/xhtml+xml"/>
+    <item id="xeb79e4a1-a1a9-42c0-b1f8-c7d54770590b" href="Text/VI_05.xhtml" media-type="application/xhtml+xml"/>
+    <item id="xcc6ff375-e2b4-472e-af08-d606266a6a5c" href="Text/VI_06.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x788d5c29-5610-4c8c-a474-952049a2bd8a" href="Text/VI_07.xhtml" media-type="application/xhtml+xml"/>
+    <item id="xfd42739a-f00e-4a73-8187-d9ec92afd33a" href="Text/VI_08.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x2b228a53-5790-4457-aa15-31b396ac9966" href="Text/VI_09.xhtml" media-type="application/xhtml+xml"/>
+    <item id="x9b9c058e-0dac-4537-a6ac-19792e5cd797" href="Text/SABLONOK.xhtml" media-type="application/xhtml+xml"/>
+  </manifest>
+  <spine>
+    <itemref idref="x9b9c058e-0dac-4537-a6ac-19792e5cd797"/>
+    <itemref idref="nav.xhtml" linear="no"/>
+    <itemref idref="xea68c7fb-cbff-49df-9e93-50806ff3b19b"/>
+    <itemref idref="Section0001.xhtml"/>
+    <itemref idref="x5f99a38e-b22f-4775-93bb-a45908aaaeb7"/>
+    <itemref idref="x38fcb97e-df27-4ac5-b4ff-a1116a4fd341"/>
+    <itemref idref="x3d4121d9-3bcb-4ab7-9dc7-733a4cbdf1a0"/>
+    <itemref idref="xb836a4bb-44a1-42da-a787-93f5960e621b"/>
+    <itemref idref="xcf59b75e-fab8-4948-a7d7-d0068d9b7bd8"/>
+    <itemref idref="x5f21c3fe-bbb4-4239-8c36-c12bea8f2e42"/>
+    <itemref idref="x803c9568-89db-4d02-a9db-70b1efa51171"/>
+    <itemref idref="x833e4bd8-ac16-4874-94b0-d6f3a82a91c9"/>
+    <itemref idref="x56726527-8d2e-40d3-9dc6-ae836d296c92"/>
+    <itemref idref="xfff55310-6ceb-4759-9b0e-3280014392f7"/>
+    <itemref idref="x2faa411f-d2d6-46b7-b851-5f0b7a13ca99"/>
+    <itemref idref="xeb79e4a1-a1a9-42c0-b1f8-c7d54770590b"/>
+    <itemref idref="xcc6ff375-e2b4-472e-af08-d606266a6a5c"/>
+    <itemref idref="x788d5c29-5610-4c8c-a474-952049a2bd8a"/>
+    <itemref idref="xfd42739a-f00e-4a73-8187-d9ec92afd33a"/>
+    <itemref idref="x2b228a53-5790-4457-aa15-31b396ac9966"/>
+  </spine>
+</package>

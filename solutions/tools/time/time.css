@@ -1,0 +1,254 @@
+body {
+    font-family: 'Noto Sans';
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #1c1d1d;
+    color: #d2d4d6;
+    margin: 0;
+    padding: 20px;
+}
+
+h1, h2, h3, p {
+    margin: 0;
+    padding: 0;
+
+}
+
+b {
+    color: #23cd16;
+    font-weight: bold;
+}
+
+.feedback {
+    font-size:small;
+    text-decoration: none;
+    color: #d2d4d6;
+    font-family: 'Noto Sans';
+    text-align: right;
+}
+
+#settings, #question-settings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #272929;
+    color: #d2d4d6;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2px;
+}
+#clock-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 2px;
+    background: #272929;
+    color: #d2d4d6;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#setClockCanvas, #testClockCanvas  {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    width: 200px;
+    height: 200px;
+    background: #272929;
+    color: #d2d4d6;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+#analog-clock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+#analog-answer {
+    width: 100px;
+    height: 20px;
+}
+
+#digital-clock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#digital-clock input {
+    width: 50px;
+    font-size: 1.2em;
+    text-align: center;
+    vertical-align: top;
+}
+
+#test-container {
+    display: flex;
+    flex-direction: column;
+    align-items:flex-end;
+    justify-content: center;
+    gap: 2px;
+    padding: 2px;
+    background: #272929;
+    color: #d2d4d6;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#test-container button {
+    background: #1c1d1d;
+    color: #999b9e;
+}
+#test-container button:hover {
+    background: #23cd16;
+    color: #1c1d1d;
+}
+
+.clock_question_row {
+    display: flex;
+    flex-direction: row;
+    background-color: aqua;
+    gap: 20px; /* Adjust spacing between elements */
+    align-items: center; /* Align vertically if needed */
+}
+
+.digital_clock_question {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Adjust spacing between elements */
+}
+
+.analog_clock_question {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0px; /* Adjust spacing between elements */
+}
+
+.question_row {
+    display: flex;
+    flex-direction:row;
+    background-color: none;
+    gap: 10px; /* Adjust spacing between elements */
+
+
+    /*align-items: center; /* Align vertically if needed */
+}
+
+.question_row p {
+    align-items:left;
+    background-color: none;
+}
+.question_row input {
+    align-items: right;
+    background-color: none;
+}
+
+#duration-container, #duration-frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    vertical-align: top;
+    justify-content: center;
+    gap: 0px; /* Adjust spacing between elements */
+    width: 600px;
+    height: 500px;
+    padding: 0px;
+}
+
+button {
+    background-color: #1c1d1d;
+    color: #999b9e;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #23cd16;
+    color: #1c1d1d;
+}
+#questions {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+    background: #1c1d1d;
+    color: #d2d4d6;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px #06060632;
+}
+
+#results-message {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: #272929;
+    color: #d2d4d6;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2px;
+    white-space: normal;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    #clock-container, #setClockCanvas, #testClockCanvas {
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+    }
+    #settings, #question-settings {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    button {
+        width: 100%;
+    }
+    .question_row {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    #clock-container, #setClockCanvas, #testClockCanvas {
+        width: 100%;
+        height: auto;
+    }
+    #settings, #question-settings {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+    button {
+        width: 100%;
+    }
+    .question_row {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+}
+

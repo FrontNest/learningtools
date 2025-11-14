@@ -1,0 +1,688 @@
+<!-- main.html bck -->
+<!-- Not finished yet -->
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <title>Portfolio</title>
+    <link rel="icon" type="image/png" href="../media/favicon_light.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="main_style.css">
+</head>
+<body>
+
+<!-- Felső navigációs sáv -->    
+<div class="container1">        
+    <div class="top-nav">      
+            <a href="../index.html"><img src="../media/favicon_light.png"  alt="FrontNest Studio logo" id="logo" class="logo"></a>
+       
+            <div>
+                <div class="wrap profile-info">  <!-- NE NYÚLJ HOZZÁ, MŰKÖDIK -->
+
+                    <div class="card">
+                        <div class="front"><span>
+                            <a href="curriculum.html" data-target="curriculum.html">
+                                Curriculum  </a></span>
+                        </div>
+                        <div class="back"><span>
+                            <a href="curriculum.html" data-target="curriculum.html"> 
+                                Curriculum </a>   </span>
+                        </div>
+                    </div>
+
+                    <div class="card">  
+                        <div class="front"><span>
+                            <a href="certificates.html" data-target="certificates.html">
+                                Certifications  </a></span>
+                        </div>
+                        <div class="back"><span>
+                            <a href="certificates.html" data-target="certificates.html"> 
+                                Certifications </a></span>
+                        </div>
+                    </div>                    
+
+                    <div class="card">
+                        <div class="front"><span>
+                            <a href="public_profiles.html" data-target="public_profiles.html">
+                                Public profiles  </a></span>
+                        </div>
+                         <div class="back"><span>
+                            <a href="public_profiles.html" data-target="public_profiles.html">	
+                                Public profiles  </a></span>
+                        </div>
+                    </div> 
+
+                    <div class="card">
+                        <div class="front"><span>
+                            <a href="">Site info</a>  </span>
+                        </div>
+                        <div class="back">
+                                <span>
+                                    <!-- dropdown menu -->
+                                    <div class="dropdown">
+                                        <a href="" class="simpleLink">Site info</a>
+                                            <button class="dropbtn"> 
+                                                <i class="fa fa-caret-down"></i>  
+                                            </button>
+                                        
+                                            <div class="dropdown-content">
+                                                <a href="sources.html" class="simpleLink">Media sources</a>
+                                                <a href="legal_notice.html" class="simpleLink">Legal Notice template</a>
+                                            </div>
+                                    </div> 
+                                </span>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+    </div>        
+</div>
+<!-- Felső navigációs sáv vége  -->
+    
+<!-- Oldalsó navigációs sáv -->  
+<div class="container2">
+    <div class="side-nav">
+        <div class="side-nav-links">
+            <ol>
+                <li><b>Python</b></a>
+                    <ul>
+                        <li><a href="python.html" data-target="python.html"  class="simpleLink">	Python core notes and code coaches	</a></li>
+                       <!-- <li><a href="code_coaches.html" data-target="code_coaches.html" class="simpleLink">	Code Coaches	</a> </li> -->
+                    </ul>
+                </li>
+                <!--<li><b>Templates</b>
+                    <ul>                        
+                        <li><a href="../solutions/templates/login.html"  class="simpleLink">Login template</a></li>
+                        <li><a href="../solutions/templates/css_grid.html" class="simpleLink">CSS grid template</a></li>
+                        <li><a href="../solutions/templates/css_flipcard.html" class="simpleLink">CSS Flipcards template</a></li>
+                        <li><a href="../solutions/templates/blur_cards.html" class="simpleLink">CSS Blurcards template</a></li>
+                        <li><a href="../solutions/templates/new_page.html" class="simpleLink">Toggle template prototype import</a></li>
+                        <li><a href="../solutions/templates/digital_clock/digital_clock.html" class="simpleLink">Digital clock template</a></li>
+                        <li><a href="../solutions/templates/bookstyle_menu/bookstyle_menu.html" class="simpleLink">Book style menu</a></li>
+                        <li><a href="../solutions/templates/bookstyle_flipcards/bookstyle_flipcards.html" class="simpleLink">Bookstyle flipcards</a></li> 
+                    </ul>
+                </li> -->
+                <li><b>Tools</b>
+
+                    <ul><b style="color:rgb(11, 204, 242)">Word Learning</b>
+                        <li><a href="../solutions/tools/dictionary/dictionary.html" class="simpleLink">Dictionaries</a></li>
+                        <li><a href="../solutions/tools/csv_quiz/csvquiz.html" class="simpleLink">Learning flipcards generator</a></li>
+                        <!-- <li><a href="../solutions/tools/bookstyle_wordlearning/bookstyle_wordlearning.html" class="simpleLink">Book style word learning</a></li> -->
+                        <li><a href="../solutions/tools/word_test/word_test.html" class="simpleLink">Word learning test for kids</a></li>
+
+                        <b style="color:rgb(5, 228, 46)">Mathematics</b>
+                        <li><a href="../solutions/tools/multiplication_excercises/multiplication_excercises.html" class="simpleLink">Multiplication practice generator for kids</a></li>
+                        <li><a href="../solutions/tools/order_of_operations/order_of_operations.html" class="simpleLink">Order of operations practice (2nd grade)</a></li>
+                        <li><a href="../solutions/tools/abacus/abacus.html" class="simpleLink">Abacus practices</a></li>
+                          
+                        <li><a href="../solutions/tools/time/time.html" class="simpleLink">Time - clock</a>                             
+                            <ul>
+                                <li><a href="../solutions/tools/time/duration_questions/duration.html" class="simpleLink">- Time duration questions</a></li>
+                            </ul>
+                        </li>
+
+                        <b style="color:rgb(255, 145, 0)">NAT Tananyagok</b><!-- ⚜️🔱🌐☣️🌍🌿🧊⚗️📖⚠️ -->
+                        <li><a href="" class="simpleLink">6. osztály</a>
+                            <ul>
+                                <li><a href="../solutions/tools/NATjegyzetek/6_oszt/tortenelem/tortenelem.html" class="simpleLink">⚜️ Történelem</a></li>
+                                <li><a href="../solutions/tools/NATjegyzetek/6_oszt/irodalom/irodalom.html" class="simpleLink">📖 Magyar irodalom</a></li>
+                                <li><a href="../solutions/tools/NATjegyzetek/6_oszt/nyelvtan/nyelvtan.html" class="simpleLink">⚠️ Magyar Nyelvtan</a></li>
+                                <li><a href="../solutions/tools/NATjegyzetek/6_oszt/termeszettudomany/termeszettudomany_6.html" class="simpleLink">🌿Természettudomány</a></li>
+                            </ul>
+                        
+                        </li>
+                        
+                        <!-- 
+                        <li><a href="" class="simpleLink">7. osztály</a>
+                            <ul>
+                                <li><a href="" class="simpleLink">⚜️ Történelem</a></li>
+                                <li><a href="" class="simpleLink">📖 Magyar irodalom</a></li>
+                                <li><a href="" class="simpleLink">⚠️ Magyar Nyelvtan</a></li>
+                                <li><a href="" class="simpleLink">🌍🌿⚗️Természettudomány</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="" class="simpleLink">8. osztály</a>
+                            <ul>
+                                <li><a href="" class="simpleLink">⚜️ Történelem</a></li>
+                                <li><a href="" class="simpleLink">📖 Magyar irodalom</a></li>
+                                <li><a href="" class="simpleLink">⚠️ Magyar Nyelvtan</a></li>
+                                <li><a href="" class="simpleLink">🌍🌿⚗️Természettudomány</a></li>
+                            </ul>
+                        </li> 
+                        -->
+
+
+
+                        </li>
+
+                        <b style="color:yellow">Other</b>
+                        <li><a href="../solutions/tools/call_logging/call_logging.html" class="simpleLink">Call logging tool</a></li>
+                        <li><a href="../parentHub/frontend/index.html" class="simpleLink">Parent Hub</a></li>
+                        <li><a href="../solutions/tools/search_csv/search_csv.html" class="simpleLink">CSV search tool</a></li>
+                        <li><a href="../solutions/tools/word_draw_tool/word_draw_tool_1_4.html" class="simpleLink">Interesting tool to visualize text</a></li>
+                    </ul>
+                <li><a href=""><b>Terraform notes</b></a></li>
+                <li><b>Other links</b>
+                    <ul>
+                        
+                    </ul>
+                    
+                </li>
+          
+            </ol>
+        </div>
+        <div>
+            <a href="mailto:felisha19761228@gmail.com?
+            &subject=Call%20Logging%20Form&body=Feedback%20about%20the%20form:" target="_top" class="feedback">
+            
+			<hr>
+			Felisha76 &copy; <br>Feedback<hr>v.1.1</a>
+		</div>
+			
+			
+    </div>
+    
+
+<!-- Fő tartalom -->
+<div class="main">
+<p>Újdonságok az oldalon</p>
+
+<!--
+    <div class="search_open">    
+        <input type="text" id="search" placeholder="  Type at least 4 characters for search">
+    	<label> Table type results </label>
+        
+        <label for="fileInput"></label>
+
+        <input type="file" id="fileInput" accept=".csv" onchange="loadCSV()"> 
+    </div>
+
+
+    <table id="resultTable">
+
+        <thead>
+        <tr>
+            <th id="col01">Category</th>
+            <th id="col02">Subcategory</th>
+            <th id="col03">Info</th>
+            <th id="col04">Code bits</th>
+            <th id="col05">Row</th>
+        </tr>
+        </thead>
+
+        <tbody>
+            <!-- Szűrt eredmények megjelenítése 
+             
+        </tbody>
+    </table>
+   <h4>This subpage is for opening a .csv file and searching the data. 
+    It loads the first 500 rows, displays columns B:G, 
+    and allows you to search based on keywords in column A. 
+    The operation is performed by JavaScript.
+    This small tool can be useful when you need to search through a lot of small information. 
+    For example, for customer service telephone dispatchers, 
+    this format of the knowledge base can be useful during calls.</h4>
+-->
+
+
+</div>
+
+
+
+    <script src="main_script.js"></script>
+</body>
+</html>
+
+// main_script.js BCK
+
+// Not finished yet //
+
+document.querySelectorAll('.dropdown').forEach(dropdown => {
+    dropdown.addEventListener('mouseenter', () => {
+        dropdown.querySelector('.dropdown-content').style.display = 'flex';
+    });
+    dropdown.addEventListener('mouseleave', () => {
+        dropdown.querySelector('.dropdown-content').style.display = 'none';
+    });
+});
+
+
+let csvData = [];
+let prevClickedCell = null;
+
+// CSV file loading
+function loadCSV() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            Papa.parse(event.target.result, {
+                complete: function(results) {
+                    csvData = results.data.slice(0, 2000); // loading the first 2000 lines from csv
+                    displayResults(csvData);
+                },
+                header: false
+            });
+        };
+        reader.readAsText(file);
+    }
+}
+
+// Eredmények megjelenítése
+function displayResults(data) {
+    const tbody = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
+    tbody.innerHTML = ''; // reset table
+
+    const searchTerm = document.getElementById('search').value.toLowerCase();
+
+    data.forEach(row => {
+        const tr = document.createElement('tr');
+        row.slice(1, 6).forEach(cell => { // show only B-G columns (1-5)
+            const td = document.createElement('td');
+            let cellContent = cell;
+
+            // Highlight search term
+            if (searchTerm && cell.toLowerCase().includes(searchTerm)) {
+                const regex = new RegExp(`(${searchTerm})`, 'gi');
+                cellContent = cell.replace(regex, '<span style="background-color: yellow; font-weight: bold; color: black;">$1</span>');
+            }
+
+            td.innerHTML = cellContent; // inserting html with highlighted term
+            td.classList.add('cell'); // cell class creation
+            styleCell(td, cell); // unique cell styles
+            td.addEventListener('click', () => adjustCellHeight(td)); // click event
+            tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+    });
+}
+
+
+// cell parameter changin on mouse click
+function adjustCellHeight(td) {
+    if (prevClickedCell && prevClickedCell !== td) {
+        prevClickedCell.style.height = "10px";
+        prevClickedCell.style.width = "500px";
+        prevClickedCell.style.whiteSpace = "nowrap";
+    }
+
+    if (td.style.height === "10px" || td.style.height === "") {
+        td.style.height = "";
+        td.style.width = "500px";
+        td.style.whiteSpace = "pre-wrap";
+    } else {
+        td.style.height = "100px";
+        td.style.width = "500px";
+        td.style.whiteSpace = "nowrap";
+    }
+    prevClickedCell = td; // saving clicked cell
+}
+
+// Filter CSV data based on search term
+function filterCSV() {
+    const searchTerm = document.getElementById('search').value.toLowerCase();
+    const filteredData = csvData.filter(row => {
+        return row[0].toLowerCase().includes(searchTerm); // searches in the A column
+    });
+    displayResults(filteredData);
+}
+
+// start searching on ENTER
+document.getElementById('search').addEventListener('input', function(event) {
+    filterCSV(); // searching process
+});
+
+// cell styles based on content - example
+function styleCell(td, cellValue) {
+    if (cellValue.toLowerCase().includes("paprikás")) {
+        td.style.backgroundColor = "#f7d702";
+        td.style.color = "black";
+    } else if (cellValue.toLowerCase().includes("gdpr")) {
+        td.style.backgroundColor = "#700000";
+        td.style.color = "white";
+
+    } else if (cellValue.toLowerCase().includes("fontos")) {
+        td.style.backgroundColor = "#f79102";
+        td.style.color = "black";
+    } else if (cellValue.toLowerCase().includes("script")) {
+        td.style.backgroundColor = "#054101";
+        td.style.color = "white";
+
+    }
+}
+
+
+// loading nav links to the main content section
+document.addEventListener('DOMContentLoaded', () => {
+    const links = document.querySelectorAll('.profile-info a, .side-nav-links a'); // Navigációs linkek a felső sávban
+    const mainContent = document.querySelector('.main'); // target area for the content
+  
+    links.forEach(link => {
+      link.addEventListener('click', event => {
+        event.preventDefault(); // prevent default link activity
+  
+        if (link.classList.contains('simpleLink')) {
+            // if the link class="simpleLink", it shows the hre's content
+            const targetUrl = link.getAttribute('href');
+            mainContent.innerHTML = `
+              <iframe src="${targetUrl}" name="mainFrame" style="width: 100%; height: 100%; border: none;"></iframe>
+            `;
+            return;
+          }
+
+        const targetUrl = link.getAttribute('href'); // getting url
+  
+        // loading content from csv
+        fetch(targetUrl)
+          .then(response => {
+            if (!response.ok) throw new Error('Failed to load the page');
+            return response.text();
+          })
+          .then(html => {
+            mainContent.innerHTML = html; // showing csv content in the html
+          })
+          .catch(error => {
+            mainContent.innerHTML = `<p>Error loading content: ${error.message}</p>`;
+          });
+      });
+    });
+  });
+
+
+-------------- *** MÓDOSÍTOTT *** -------------
+
+
+
+HTML
+
+<!-- Not finished yet -->
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <title>Portfolio</title>
+    <link rel="icon" type="image/png" href="../media/favicon_light.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="main_style.css">
+</head>
+<body>
+
+<!-- Felső navigációs sáv -->    
+<div class="container1">        
+    <div class="top-nav">      
+            <a href="../index.html"><img src="../media/favicon_light.png"  alt="FrontNest Studio logo" id="logo" class="logo"></a>
+       
+            <div>
+                <div class="wrap profile-info">  <!-- NE NYÚLJ HOZZÁ, MŰKÖDIK -->
+
+                    <div class="card">
+                        <div class="front"><span>
+                            <a href="javascript:void(0);" data-target="curriculum.html">
+                                Curriculum  </a></span>
+                        </div>
+                        <div class="back"><span>
+                            <a href="javascript:void(0);" data-target="curriculum.html"> 
+                                Curriculum </a>   </span>
+                        </div>
+                    </div>
+
+                    <div class="card">  
+                        <div class="front"><span>
+                            <a href="javascript:void(0);" data-target="certificates.html">
+                                Certifications  </a></span>
+                        </div>
+                        <div class="back"><span>
+                            <a href="javascript:void(0);" data-target="certificates.html"> 
+                                Certifications </a></span>
+                        </div>
+                    </div>                    
+
+                    <div class="card">
+                        <div class="front"><span>
+                            <a href="javascript:void(0);" data-target="public_profiles.html">
+                                Public profiles  </a></span>
+                        </div>
+                         <div class="back"><span>
+                            <a href="javascript:void(0);" data-target="public_profiles.html">	
+                                Public profiles  </a></span>
+                        </div>
+                    </div> 
+
+                    <div class="card">
+                        <div class="front"><span>
+                            <a href="">Site info</a>  </span>
+                        </div>
+                        <div class="back">
+                                <span>
+                                    <!-- dropdown menu -->
+                                    <div class="dropdown">
+                                        <a href="" class="simpleLink">Site info</a>
+                                            <button class="dropbtn"> 
+                                                <i class="fa fa-caret-down"></i>  
+                                            </button>
+                                        
+                                            <div class="dropdown-content">
+                                                <a href="javascript:void(0);" data-target="sources.html" class="simpleLink">Media sources</a>
+                                                <a href="javascript:void(0);" data-target="legal_notice.html" class="simpleLink">Legal Notice template</a>
+                                            </div>
+                                    </div> 
+                                </span>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+    </div>        
+</div>
+<!-- Felső navigációs sáv vége  -->
+    
+<!-- Oldalsó navigációs sáv -->  
+<div class="container2">
+    <div class="side-nav">
+        <div class="side-nav-links">
+            <ol>
+                <li><b>Python</b></a>
+                    <ul>
+                        <li><a href="javascript:void(0);" data-target="python.html" class="simpleLink">	Python core notes and code coaches	</a></li>
+                       <!-- <li><a href="code_coaches.html" data-target="code_coaches.html" class="simpleLink">	Code Coaches	</a> </li> -->
+                    </ul>
+                </li>
+                <!--<li><b>Templates</b>
+                    <ul>                        
+                        <li><a href="../solutions/templates/login.html"  class="simpleLink">Login template</a></li>
+                        <li><a href="../solutions/templates/css_grid.html" class="simpleLink">CSS grid template</a></li>
+                        <li><a href="../solutions/templates/css_flipcard.html" class="simpleLink">CSS Flipcards template</a></li>
+                        <li><a href="../solutions/templates/blur_cards.html" class="simpleLink">CSS Blurcards template</a></li>
+                        <li><a href="../solutions/templates/new_page.html" class="simpleLink">Toggle template prototype import</a></li>
+                        <li><a href="../solutions/templates/digital_clock/digital_clock.html" class="simpleLink">Digital clock template</a></li>
+                        <li><a href="../solutions/templates/bookstyle_menu/bookstyle_menu.html" class="simpleLink">Book style menu</a></li>
+                        <li><a href="../solutions/templates/bookstyle_flipcards/bookstyle_flipcards.html" class="simpleLink">Bookstyle flipcards</a></li> 
+                    </ul>
+                </li> -->
+                <li><b>Tools</b>
+
+                    <ul><b style="color:rgb(11, 204, 242)">Word Learning</b>
+                        <li><a href="javascript:void(0);" data-target="../solutions/tools/dictionary/dictionary.html" class="simpleLink">Dictionaries</a></li>
+                        <li><a href="javascript:void(0);" data-target="../solutions/tools/csv_quiz/csvquiz.html" class="simpleLink">Learning flipcards generator</a></li>
+                        <!-- <li><a href="../solutions/tools/bookstyle_wordlearning/bookstyle_wordlearning.html" class="simpleLink">Book style word learning</a></li> -->
+                        <li><a href="javascript:void(0);" data-target="../solutions/tools/word_test/word_test.html" class="simpleLink">Word learning test for kids</a></li>
+
+                        <b style="color:rgb(5, 228, 46)">Mathematics</b>
+                        <li><a href="javascript:void(0);" data-target="../solutions/tools/multiplication_excercises/multiplication_excercises.html" class="simpleLink">Multiplication practice generator for kids</a></li>
+                        <li><a href="javascript:void(0);" data-target="../solutions/tools/order_of_operations/order_of_operations.html" class="simpleLink">Order of operations practice (2nd grade)</a></li>
+                        <li><a href="javascript:void(0);" data-target="../solutions/tools/abacus/abacus.html" class="simpleLink">Abacus practices</a></li>
+                          
+                        <li><a href="javascript:void(0);" data-target="../solutions/tools/time/time.html" class="simpleLink">Time - clock</a>                             
+                            <ul>
+                                <li><a href="javascript:void(0);" data-target="../solutions/tools/time/duration_questions/duration.html" class="simpleLink">- Time duration questions</a></li>
+                            </ul>
+                        </li>
+
+                        <b style="color:rgb(255, 145, 0)">NAT Tananyagok</b><!-- ⚜️🔱🌐☣️🌍🌿🧊⚗️📖⚠️ -->
+                        <li><a href="" class="simpleLink">6. osztály</a>
+                            <ul>
+                                <li><a href="javascript:void(0);" data-target="../solutions/tools/NATjegyzetek/6_oszt/tortenelem/tortenelem.html" class="simpleLink">⚜️ Történelem</a></li>
+                                <li><a href="javascript:void(0);" data-target="../solutions/tools/NATjegyzetek/6_oszt/irodalom/irodalom.html" class="simpleLink">📖 Magyar irodalom</a></li>
+                                <li><a href="javascript:void(0);" data-target="../solutions/tools/NATjegyzetek/6_oszt/nyelvtan/nyelvtan.html" class="simpleLink">⚠️ Magyar Nyelvtan</a></li>
+                                <li><a href="javascript:void(0);" data-target="../solutions/tools/NATjegyzetek/6_oszt/termeszettudomany/termeszettudomany_6.html" class="simpleLink">🌿Természettudomány</a></li>
+                            </ul>
+                        
+                        </li>
+                        
+                        <!-- 
+                        <li><a href="" class="simpleLink">7. osztály</a>
+                            <ul>
+                                <li><a href="" class="simpleLink">⚜️ Történelem</a></li>
+                                <li><a href="" class="simpleLink">📖 Magyar irodalom</a></li>
+                                <li><a href="" class="simpleLink">⚠️ Magyar Nyelvtan</a></li>
+                                <li><a href="" class="simpleLink">🌍🌿⚗️Természettudomány</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="" class="simpleLink">8. osztály</a>
+                            <ul>
+                                <li><a href="" class="simpleLink">⚜️ Történelem</a></li>
+                                <li><a href="" class="simpleLink">📖 Magyar irodalom</a></li>
+                                <li><a href="" class="simpleLink">⚠️ Magyar Nyelvtan</a></li>
+                                <li><a href="" class="simpleLink">🌍🌿⚗️Természettudomány</a></li>
+                            </ul>
+                        </li> 
+                        -->
+
+
+
+                        </li>
+
+                        <b style="color:yellow">Other</b>
+                        <li><a href="javascript:void(0);" data-target="../solutions/tools/call_logging/call_logging.html" class="simpleLink">Call logging tool</a></li>
+                        <li><a href="javascript:void(0);" data-target="../parentHub/frontend/index.html" class="simpleLink">Parent Hub</a></li>
+                        <li><a href="javascript:void(0);" data-target="../solutions/tools/search_csv/search_csv.html" class="simpleLink">CSV search tool</a></li>
+                        <li><a href="javascript:void(0);" data-target="../solutions/tools/word_draw_tool/word_draw_tool_1_4.html" class="simpleLink">Interesting tool to visualize text</a></li>
+                    </ul>
+                <li><a href=""><b>Terraform notes</b></a></li>
+                <li><b>Other links</b>
+                    <ul>
+                        
+                    </ul>
+                    
+                </li>
+          
+            </ol>
+        </div>
+        <div>
+            <a href="mailto:felisha19761228@gmail.com?
+            &subject=Call%20Logging%20Form&body=Feedback%20about%20the%20form:" target="_top" class="feedback">
+            
+			<hr>
+			Felisha76 &copy; <br>Feedback<hr>v.1.1</a>
+		</div>
+			
+			
+    </div>
+    
+
+<!-- Fő tartalom -->
+<div class="main" id="main-content">
+<p>Újdonságok az oldalon</p>
+
+<!--
+    <div class="search_open">    
+        <input type="text" id="search" placeholder="  Type at least 4 characters for search">
+    	<label> Table type results </label>
+        
+        <label for="fileInput"></label>
+
+        <input type="file" id="fileInput" accept=".csv" onchange="loadCSV()"> 
+    </div>
+
+
+    <table id="resultTable">
+
+        <thead>
+        <tr>
+            <th id="col01">Category</th>
+            <th id="col02">Subcategory</th>
+            <th id="col03">Info</th>
+            <th id="col04">Code bits</th>
+            <th id="col05">Row</th>
+        </tr>
+        </thead>
+
+        <tbody>
+            Szűrt eredmények megjelenítése 
+             
+        </tbody>
+    </table>
+   <h4>This subpage is for opening a .csv file and searching the data. 
+    It loads the first 500 rows, displays columns B:G, 
+    and allows you to search based on keywords in column A. 
+    The operation is performed by JavaScript.
+    This small tool can be useful when you need to search through a lot of small information. 
+    For example, for customer service telephone dispatchers, 
+    this format of the knowledge base can be useful during calls.</h4>
+-->
+
+
+</div>
+
+
+
+    <script src="main_script.js"></script>
+</body>
+</html>
+
+
+js
+
+
+// main_script.js - Tisztított verzió
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Navigációs linkek kezelése
+    const links = document.querySelectorAll('a[data-target]');
+    const mainContent = document.getElementById('main-content');
+
+    if (!mainContent) {
+        console.error('Error: The element with id "main-content" was not found.');
+        return; // Ha nincs ilyen elem, ne folytassuk a kód futását
+    }
+
+    links.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault(); // Az alapértelmezett link viselkedés megakadályozása
+            const target = link.getAttribute('data-target');
+
+            console.log(`Loading content from: ${target}`); // Naplózás a konzolba
+
+            // Tartalom betöltése
+            fetch(target)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    console.log(`Content loaded successfully from: ${target}`); // Sikeres betöltés naplózása
+                    mainContent.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error loading content:', error);
+                    mainContent.innerHTML = `<p>Error loading content from ${target}. Please try again later.</p>`;
+                });
+        });
+    });
+});
+
+
+

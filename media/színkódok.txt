@@ -1,0 +1,145 @@
+python -m http.server 8000
+http://localhost:8000/subsites/main.html
+
+python -m http.server 5500
+http://localhost:5500
+
+firebase natanyag
+https://natanyag-f408e.web.app/
+
+body bckgr:		#1c1d1d
+body color:		#d2d4d6
+table bckgr:		#272929
+table color:		#d2d4d6
+td hover bckgr:		#999b9e
+td hover color:		#1c1d1d
+
+Sötétszürke: 		#0b0c0c
+világosszürke: 		#999b9e
+még világosabb szürke: 	#bbbdbf
+még világosabb szürke: 	#d2d4d6
+
+BUTTON:
+    background-color: #999b9e;
+    color: #1c1d1d;
+INPUT:
+    background-color: #272929;
+    color: #999b9e;
+FONTS:
+	font-family: 'Noto Sans'; 
+  	font-size:2vw;
+	  color: #d2d4d6;
+    background-color:#1c1d1d;
+
+    MASK:
+        font-family: 'Rubik', sans-serif;
+        color:#ffe4c4; 
+    font-size: 20vw;    
+    font-weight: 1000;
+    background: url("./media/galaxy_stock_bckgr.jpg") 0 0 / cover no-repeat;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        -webkit-text-stroke: 0.5px #ffe4c4;    
+    text-decoration: none;
+
+
+/* Görgetősáv */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 14px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #282929;
+  border-radius: 5px;
+  border: 1px solid #999b9e;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #282929;
+}
+
+====FEEDBACK TO THE BOTTOM OF THE PAGE===========
+    <div class="feedback">
+        <a href="https://felisha76.github.io/portfolio/subsites/sources.html" class="simpleLink">Media sources </a>
+        <a href="mailto:felisha19761228@gmail.com?
+        &subject=Portfolio:" target="_top" class="feedback">
+        
+        <hr>
+        Felisha76 &copy;2025.</a>
+    </div>
+    ------------------
+   .feedback {
+    font-size:small;
+    text-decoration: none;
+    color: #d2d4d6;
+    font-family: 'Noto Sans';
+    text-align: right;
+}
+================================
+
+
+#016011
+#2be62b
+#058f1c
+#e2f606
+
+
+<footer>
+        <hr>
+    <p style="font-size: medium;">
+        <a href="mailto:felisha19761228@gmail.com?&subject=<...> feedback:" target="_top" style="color: #10f808; text-decoration: none;">
+        🔴 Error reporting</a>
+        <a href="https://felisha76.github.io/portfolio/subsites/sources.html" class="simpleLink" style="color: #e7eb0a; text-decoration: none;">
+        🟡 Media sources </a>
+        <a href="https://felisha76.github.io/portfolio/solutions/tools/..." class="simpleLink" style="color: #09ebf3;text-decoration: none;">
+        🔵 Start over</a>
+    </p>
+</footer>
+
+Használt emojik:
+⚜️🔱🌐☣️🌍🌿🧊⚗️📖⚠️ 
+🟩🟦➡️🔴❤️💤💥💫☮️☯️🆘❌⭕‼️❓❗💯🔅🔆🔱☢️☣️🔰♻️
+❎✅🌐🆗#️⃣*️⃣0️⃣1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣🔟▶️⏸️⏯️⏹️⏺️
+🔁➡️⬅️⬆️⬇️↗️↘️↙️↖️⤴️↩️↪️🔄️⤵️   🆕
+✔️➕➖🟰🔴🟠🟡🟢🔵🟣🟥🟧🟨🟩🟦🟪⬜⬛💭🗯️💬🗨️🔺🔻-->
+🤗
+
+NAT jegyzet tetejére:
+
+<p>Váltás: 
+<a href="tk/OEBPS/navigation.xhtml" target="docs-frame01" style="text-decoration: none;"> 🔵 Tankönyv</a>
+<a href="mf/OEBPS/navigation.xhtml" target="docs-frame01" style="text-decoration: none;"> 🟢 Munkafüzet</a>
+<a href="JEGYZET/OEBPS/Text/nav.xhtml" target="docs-frame01" style="text-decoration: none;"> 🔴 Jegyzet</a>
+</p>
+<!--
+
+<li><a href="" target="docs-frame01"> 🟣 Atlasz</a></li>
+-->
+</ul>	
+
+
+ol {
+    list-style-type: "➡️";
+}
+
+/* Görgetősáv */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 14px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d19f73;
+  border-radius: 5px;
+  border: 1px solid #d9bda5;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #d9bda5;
+}
+
+<tr>
+    <th style="border: 1px solid black; background-color: #d9bda5;">Műnem</th>
+    <th style="border: 1px solid black; background-color: #d9bda5;">Hogyan jelenik meg a balladában?</th>
+    </tr>

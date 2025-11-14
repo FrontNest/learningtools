@@ -1,0 +1,234 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(45deg, #d9bda5, #eee7d7);
+            min-height: 100vh;
+            height: 100%;
+            padding: 0;
+        }
+ 
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            border-radius: 1em;
+            box-shadow: 0 1em 3em rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #683304, #eee7d7);
+            color: #2b1501;
+            padding: 0.5em;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.2em;
+            margin-bottom: 0.5em;
+            text-shadow: 0 0.2em 0.4em #351901f8;
+        }
+
+        .header p {
+            padding: 0;
+            font-size: 1em;
+            opacity: 0.9;
+            text-shadow: 0 0.2em 0.4em #351901f8;
+        }
+
+        /* LOGO */
+        #logo {
+            margin: 0;
+            width: 4em;
+            height: 4em;
+            position: absolute;
+            top: 1em;
+            right: 1em;
+        }
+
+		#logo:hover {
+		    transform: rotateY(360deg);
+			transition-duration: 2000ms;
+		}
+
+        
+        .main-content {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            min-height: 100svh;
+            height: 100svh;
+            max-height: 100svh;
+            gap: 0;
+            overflow: hidden;
+        }
+        
+        #docsFrame01 {
+            flex: 0 0 25%;
+            width: 25%;
+            height: 100%;
+            min-width: 150px;
+            border: none;
+            margin: 0;
+            display: block;
+            background-color: #f6eee3;
+        }
+        #docsFrame02 {
+            flex: 1 1 75%;
+            width: 75%;
+            height: 100%;
+            min-width: 200px;
+            border: none;
+            margin: 0;
+            display: block;
+            background-color: #f6eee3;
+        }
+
+        #toggleFrame01 {
+            display:none;
+            margin:0.5em 0;
+            background-color: #f6eee3;
+            border-color: #d9bda5;
+            border-radius: 10%;
+            box-shadow: #572b05;
+            font-size: large;
+        }
+
+        #tkBtn, #mfBtn, #nBtn, #aBtn, #testBtn {
+            margin:0.5em 0;
+            /* background-color: #f6eee3; */
+            border-color: #d9bda5;
+            border-radius: 20%;
+            box-shadow: 0 4px 6px #572b05;
+        }
+
+        #tkBtn {
+            background: linear-gradient(45deg, #062a5c, #04b3da);
+        }
+
+        #mfBtn {
+            background: linear-gradient(45deg, #033e03, #039403);
+        }
+
+        #nBtn {
+            background: linear-gradient(45deg, #3c0101, #aa0404);
+        }
+
+        #aBtn {
+            background: linear-gradient(45deg, #7a7002, #d5c303);
+        }
+
+        #testBtn {
+            background: linear-gradient(45deg, #e80303, #02691a);
+        }
+
+        #tkBtn a, #mfBtn a, #nBtn a, #aBtn a, #testBtn a {
+            text-align: left;
+            font-size: xx-large;
+            font-weight: bold;
+        }
+
+
+/* RESPONSIVITY SETTINGS  */        
+    @media (max-width: 300px) {
+        #docsFrame01, #docsFrame02 {
+            width: 98vw;
+            height: 50svh;
+            min-width: 150px;
+            min-height: 100px;
+        }
+        #logo {
+            margin: 0;
+            width: 2em;
+            height: 2em;
+            position: absolute;
+            top: 0.5em;
+            right: 0.5em;
+        }
+    }
+
+    @media (max-width: 600px) {
+        #docsFrame01 {
+            display: none !important;
+        }
+        #docsFrame02 {
+            width: 100vw !important;
+            min-width: 150px;
+            min-height: 100px;
+        }
+        #toggleFrame01 {
+            display: inline-block !important;
+        }
+        .show-frame01 #docsFrame01 {
+            display: block !important;
+        }
+        .show-frame01 #docsFrame02 {
+            width: 75vw !important;
+        }
+        .show-frame01 #toggleFrame01 {
+            display: inline-block !important;
+        }
+        #logo {
+            margin: 0;
+            width: 3em;
+            height: 3em;
+            position: absolute;
+            top: 0.5em;
+            right: 0.5em;
+        }
+    }
+        
+
+
+/* Jegyzet oldalakra és TK, MF navigációkra is használt stílusok */        
+a {
+    color: black;
+    text-decoration: none;    
+}
+
+p {
+    padding: 0 10px 0 20px;
+}
+
+ol, ul {
+    list-style-type: "🔹";
+    padding: 0 10px 0 40px;
+}
+
+table {
+    border-collapse: collapse; width: 100%;
+}
+
+th {
+    text-align: center;
+    font-weight: bold;
+    background-color: #d9bda5;
+    border: 1px solid black;
+}
+
+td {
+    padding: 0 2px 0 5px;
+    border: 1px solid black;
+}
+/* Görgetősáv */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 14px;
+}
+
+::-webkit-scrollbar-thumb {
+  /*background-color: #d19f73;*/
+  background: linear-gradient(45deg, #6f421b, #d9bda5);
+  border-radius: 5px;
+  border: 1px solid #d9bda5;
+}
+
+::-webkit-scrollbar-track {
+  /*background-color: #d9bda5;*/
+  background: linear-gradient(45deg, #6f421b, #d9bda5);
+}

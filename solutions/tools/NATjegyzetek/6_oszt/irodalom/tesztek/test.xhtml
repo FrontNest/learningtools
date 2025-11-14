@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="hu">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Interaktív Tudásellenőrző Teszt</title>
+    <link rel="stylesheet" href="test.css" />
+</head>
+<body>
+  <div class="container"> 
+        <div class="top-bar">
+                            <!-- FrontnestStudio Logo 
+		            <a href="mailto:frontneststudio@gmail.com?&amp;subject=Feleletválasztásos teszt visszajelzés:">
+			        <img src="../../../media/favicon_light.png"  
+							alt="FrontNest Studio" 
+							id="logo" /></a>-->
+		                    <!-- FrontnestStudio Logo -->  
+
+            <div class="top-bar-left">
+                                <label class="chapter-label">Fejezetek:</label>
+                                <div id="customDropdown" class="custom-dropdown">
+                                    <div class="selected">Válaszd ki a fejezeteket:</div>
+                                    <div class="options" style="display:none;"></div>
+                                </div>
+            </div>
+
+
+            <div class="top-bar-center"> 
+                    <span class="timer" id="timer">00:00</span>
+                    <div class="button-row">
+                        <button id="startTestBtn">Teszt indítása</button>
+                        <button type="button" id="checkBtn">Ellenőrzés</button> 
+                    </div>          
+            </div>
+
+            <div class="top-bar-right">
+                
+                <div id="resultSummary" class="result-summary">
+                    	                   
+                </div>
+            </div>
+        </div>
+
+        <div class="test-bar">
+            <form id="testForm">
+                <ol id="questionList"></ol>
+            </form>
+        </div>
+
+        <div id="description">
+            <h3>▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️</h3>
+            <h3>Pontszámítás:</h3>
+
+        <p><b>Minél több helyes választ adsz, és minél gyorsabban töltöd ki a tesztet, annál több pontot kapsz!</b></p>
+            <b>A bónuszpontok számítása egyszerűen így működik:</b>
+
+                    <ul>
+                <li>Minden helyes válaszért 10 pont jár. A helytelen válaszok nem vonnak le pontot.</li>
+                <li>Minden helyes válaszhoz kapsz plusz bónuszpontot, ha gyorsan válaszolsz.</li>
+                <li>Egy kérdésre maximum 30 másodpercet számolunk. Ha például egy kérdésre átlagosan 20 másodperc alatt válaszolsz, akkor 10 bónuszpontot kapsz (30 - 20 = 10).</li>
+                <li>Ha egy kérdésre 30 másodperc vagy annál több idő kell, akkor  nem kapsz bónuszpontot arra a kérdésre.</li>
+            </ul>
+
+            <b>Összefoglalva:</b>
+            <ul>
+                <li>Minden helyes válasz: 10 pont</li>
+                <li>Minden helyes válaszhoz: (30 - átlagos idő másodpercben) bónuszpont, de minimum 0</li>
+            </ul>
+
+
+            <b>Példa:</b>
+            <p>Ha 5 kérdésből 4 helyes, és összesen 80 másodperc alatt töltöd ki a tesztet:</p>
+
+            <ul>
+                <li>Átlagos idő: 80 / 5 = 16 mp/kérdés</li>
+                <li>Minden helyes válasz után: 30 - 16 = 14 bónuszpont</li>
+                <li>Összes pont: 4 × 10 + 4 × 14 = 40 + 56 = 96 pont</li>
+            </ul>
+
+            
+        <p><b> Kezdhetjük?</b></p>
+
+            <ol>
+                <li>Válassz egy, vagy akár több témakört!</li>
+                <li>Nyomd meg a "teszt indítása" gombot!</li>
+                <li>Jelöld be az általad helyesnek ítélt válaszokat a rádiógombokkal!</li>
+                <li>Ha végeztél, nyomd meg az "Ellenőrzés" gombot, és felül láthatod:</li>
+            </ol>
+                <blockquote>
+                    <ul>
+                    <li>a helyes válaszaid számát,</li>
+                    <li>mennyi idő alatt oldottad meg a tesztet,</li>
+                    <li>az időbónuszt,</li>
+                    <li>és az összpontszámod.</li>
+                </ul>
+                </blockquote>
+                <p>Üdvözlettel: 
+                <a href="mailto:frontneststudio@gmail.com?&amp;subject=Feleletválasztásos teszt visszajelzés:">
+                    FrontNest Studio</a></p>
+            <h3>▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️</h3>
+        </div>
+
+  </div>
+    <script type="text/javascript" src="test.js"></script>
+</body>
+</html> 

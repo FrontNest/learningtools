@@ -1,0 +1,77 @@
+	<!DOCTYPE html>
+	<html lang="hu">
+	<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/png" href="../../../../media/favicon_light.png">
+
+
+														<!-- OSZTÁLY / TANTÁRGY -->
+														<title>Fáy András Technikum OT9	- Műszaki szakrajz alapjai
+	</title>
+	<link rel="stylesheet" href="../TEMPLATES/fayOT9.css">
+	</head>
+	<body>
+	<div class="container">
+	<div class="header">
+		<!-- FrontnestStudio Logo -->
+		<a href="../../../../subsites/main.html">
+			<img src="../../../../media/favicon_light.png"  
+							alt="FrontNest Studio" 
+							id="logo"></a>
+		<!-- FrontnestStudio Logo -->
+
+		<h2>📚 Fáy András Technikum - OT9	- Műszaki szakrajz alapjai</h2>
+
+		<!-- Flex switcher gomb -->
+		<button id="flex-switcher" 
+		title="Váltás egymás mellé/alá" 
+		style="position:absolute;top:20px;right:30px;
+		padding:8px 14px;border-radius:8px;border:none;
+		background:#0e00002d;color:#4285f4;font-size:1.2em;
+		box-shadow:0 2px 6px rgba(0,0,0,0.12);cursor:pointer;
+		z-index:10;">
+			<span id="flex-switcher-icon">🔀</span>
+		</button>
+	</div>
+
+		<!-- Első dokumentum szekció: két docs-frame -->
+		<div class="document-section">
+
+			<div class="iframe-row">
+				<div class="iframe-half-left">
+					<div class="loading-overlay" id="docs-loading01">
+						<div class="loading-spinner"></div>
+						<div class="loading-text">Dokumentum betöltése...</div>
+					</div>
+					<iframe
+						id="docs-frame01"
+						name="docs-frame01"
+															src='epub_export/OEBPS/000_nav.xhtml'
+						onload="hideLoading('docs-loading01')"
+						onerror="showError('docs-error01')"
+						title='docs-frame01'>
+					</iframe>
+				</div>
+				<div class="iframe-half-right">
+					<div class="loading-overlay" id="docs-loading02">
+						<div class="loading-spinner"></div>
+						<div class="loading-text">Dokumentum betöltése...</div>
+					</div>
+					<iframe
+						id="docs-frame02"
+						name="docs-frame02"
+															src='epub_export/OEBPS/001.xhtml'
+						onload="hideLoading('docs-loading02')"
+						onerror="showError('docs-error02')"
+						title='docs-frame02'>
+					</iframe>
+				</div>
+			</div>
+		</div>
+	
+
+		<script src="../TEMPLATES/fayOT9.js"></script>
+
+		</body>
+		</html>

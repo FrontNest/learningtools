@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Szöveg vizualizátor + Hang</title>
+<link rel="icon" type="image/png" href="../../../media/favicon_light.png">
+
+<style>
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, sans-serif;
+    background: #0e1117;
+    color: #bfddb9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  .container {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .panel {
+    flex: 1;
+    min-width: 300px;
+    background: #161b22;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+  }
+  textarea {
+  
+    width: 100%;
+    height: 50vh;
+    resize: vertical;
+    background: #0e1117;
+    color: #2fe00c;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    box-sizing: border-box;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+  }
+  .control { font-size: 0.9rem; }
+  .svg-wrap {
+    background: #0e1117;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 0.5rem;
+    overflow: auto;
+    max-height: 300px;
+  }
+  button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover { background: #1d4ed8; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="panel">
+    <label for="inputText">Írd be a szöveget:</label>
+
+  
+
+    <textarea id="inputText" placeholder="Írj ide valamit!"></textarea>
+    <div class="control">
+
+</div>
+      <!-- Kezelőszervek -->
+    <div class="controls">
+      <div class="control">Pontméret: <input id="dotSize" type="range" min="1" max="20" value="8"></div>
+      <div class="control">X-távolság: <input id="xSpacing" type="range" min="10" max="200" value="12"></div>
+      <div class="control">Y-távolság: <input id="ySpacing" type="range" min="1" max="200" value="1"></div>
+
+      <div class="control"><label><input id="showAxes" type="checkbox" checked> Tengelyek</label></div>
+
+    </div>
+
+    <div class="controls">
+      <div class="control">Min. frekvencia: <input id="minFreq" type="range" min="50" max="2000" value="220"><span id="minFreqVal"> 220</span> Hz</div>
+      <div class="control">Max. frekvencia: <input id="maxFreq" type="range" min="500" max="6000" value="3000"><span id="maxFreqVal"> 3000</span> Hz</div>
+    </div>
+
+    <div class="controls">
+      <div class="control"><button id="exportBtn">Export PNG</button></div>
+      <div class="control"><button id="exportAudioBtn">Export Hang (WAV)</button></div>      
+      <div class="control"><button id="speakBtn">Felolvasás</button></div>
+      Nyelv:
+        <select id="voiceSelect">
+        <option value="hu-HU">Magyar</option>
+        <option value="en-US">Angol</option>
+        <option value="de-DE">Német</option>
+        <option value="fr-FR">Francia</option>
+      </select>
+    </div>
+
+  </div>
+
+   <!-- Karakter kirajzoló panel -->
+  <div class="panel">
+    <label for="inputText">A szöveg alapján generált grafikon és hang:</label>
+    <div class="svg-wrap" id="svgWrap"></div>
+  </div>
+</div>
+
+<script>
+const textarea = document.getElementById("inputText");
+const svgWrap = document.getElementById("svgWrap");
+const dotSizeInput = document.getElementById("dotSize");
+const xSpacingInput = document.getElementById("xSpacing");
+const ySpacingInput = document.getElementById("ySpacing");
+const showAxesInput = document.getElementById("showAxes");
+const exportBtn = document.getElementById("exportBtn");
+
+const speakBtn = document.getElementById("speakBtn");
+
+speakBtn.addEventListener("click", () => {
+  speakText(textarea.value);
+});
+
+function speakText(text) {
+  if (!text) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "hu-HU"; // magyar hang
+  utterance.rate = 1;       // sebesség
+  utterance.pitch = 1;      // hangmagasság
+  speechSynthesis.speak(utterance);
+}
+
+// nyelv választás lehetősége a felolvasáshoz
+const voiceSelect = document.getElementById("voiceSelect");
+
+function speakText(text) {
+  if (!text) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = voiceSelect.value; // kiválasztott nyelv
+  utterance.rate = 1;
+  utterance.pitch = 1;
+  speechSynthesis.speak(utterance);
+}
+
+
+
+// Web Audio API
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let currentOscillator = null; // a legutóbbi hang tárolása
+
+function playNoteByY(y, height) {
+  const minFreq = Number(document.getElementById("minFreq").value);
+  const maxFreq = Number(document.getElementById("maxFreq").value);
+  const freq = maxFreq - ((y / height) * (maxFreq - minFreq));
+
+  // Ha van már futó oszcillátor, állítsuk le
+  if (currentOscillator) {
+    currentOscillator.stop();
+    currentOscillator.disconnect();
+    currentOscillator = null;
+  }
+
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  oscillator.type = 'sine';
+  oscillator.frequency.value = freq;
+  gainNode.gain.value = 0.1;
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + 0.15);
+
+  // az aktuális oszcillátort tároljuk
+  currentOscillator = oscillator;
+}
+
+
+// magyar digráfok és trigráf
+const DIGRAPHS = ["dzs", "dz", "cs", "gy", "ly", "ny", "sz", "ty", "zs"];
+function tokenizeText(text) {
+  const words = text.split(/\s+/).filter(Boolean);
+  const tokens = [];
+  words.forEach((word, wi) => {
+    let i = 0;
+    while (i < word.length) {
+      const rest = word.slice(i).toLowerCase();
+      const digraph = DIGRAPHS.find(d => rest.startsWith(d));
+      if (digraph) {
+        tokens.push({ch: word.slice(i, i + digraph.length), x: tokens.length, wordIndex: wi});
+        i += digraph.length;
+      } else {
+        tokens.push({ch: word[i], x: tokens.length, wordIndex: wi});
+        i++;
+      }
+    }
+  });
+  return tokens;
+}
+
+// karakterkészlet + paletta
+let CHARSET = createCharset();
+let palette = createPalette(CHARSET.length);
+
+function createCharset() {
+  /* 
+  Írásjelek
+  Számok
+  Kisbetűk
+  Nagybetűk commented out on 2025.10.07
+ */
+  const punct = ['.', ',','?', '!', "'"];
+  const digits = Array.from({length:10}, (_,i)=>String(i));
+  const base = ['A','a','Á','á','B','b','C','c','Cs','cs','D','d','Dz','dz','Dzs','dzs','E','e','É','é','F','f','G','g','Gy','gy','H','h','I','i','Í','í','J','j','K','k','L','l','Ly','ly','M','m','N','n','Ny','ny','O','o','Ó','ó','Ö','ö','Ő','ő','P','p','Q','q','R','r','S','s','Sz','sz','T','t','Ty','ty','U','u','Ú','ú','Ü','ü','Ű','ű','V','v','W','w','X','x','Y','y','Z','z','Zs','zs'];
+  // const caps = base.map(ch => ch.toUpperCase()); commented out on 2025.10.07
+  return [punct[0], ...punct.slice(1), ...digits, ...base]; // return [...punct, ...digits, ...base]; // , ...caps commented out on 2025.10.07
+}
+
+function createPalette(n) {
+  const colors = [];
+  for (let i = 0; i < n; i++) {
+    const hue = Math.round((i / n) * 280);
+    colors.push(`hsl(${hue}deg 70% 50%)`);
+  }
+  return colors;
+}
+
+function charIndex(ch) {
+  const idx = CHARSET.indexOf(ch);
+  if (idx !== -1) return idx;
+  CHARSET.push(ch);
+  palette = createPalette(CHARSET.length);
+  return CHARSET.length - 1;
+}
+
+function render() {
+  const text = textarea.value || "";
+  const dotSize = Number(dotSizeInput.value);
+  const xSpacing = Number(xSpacingInput.value);
+  const ySpacing = Number(ySpacingInput.value);
+  const showAxes = showAxesInput.checked;
+
+  const processed = tokenizeText(text);
+  const maxX = processed.reduce((m, it) => Math.max(m, it.x), 0);
+  const width = Math.max(600, (maxX + 2) * xSpacing);
+  const rawHeight = (CHARSET.length + 1) * ySpacing + 60;
+  const height = Math.max(50, rawHeight);
+
+  const svgns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgns, "svg");
+  svg.setAttribute("width", width);
+  svg.setAttribute("height", height);
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.style.display = "block";
+
+  const marginLeft = 10;
+  const marginTop = 1;
+
+  if (showAxes) {
+    const xline = document.createElementNS(svgns, "line");
+    xline.setAttribute("x1", marginLeft);
+    xline.setAttribute("y1", height - marginTop);
+    xline.setAttribute("x2", width - 20);
+    xline.setAttribute("y2", height - marginTop);
+    xline.setAttribute("stroke", "rgba(255,255,255,0.15)");
+    svg.appendChild(xline);
+
+    const yline = document.createElementNS(svgns, "line");
+    yline.setAttribute("x1", marginLeft);
+    yline.setAttribute("y1", marginTop);
+    yline.setAttribute("x2", marginLeft);
+    yline.setAttribute("y2", height - marginTop);
+    yline.setAttribute("stroke", "rgba(255,255,255,0.15)");
+    svg.appendChild(yline);
+  }
+
+  // összekötő vonalak
+  if (processed.length > 1) {
+    for (let i = 0; i < processed.length - 1; i++) {
+      // Ha bármelyik karakter szóköz, ne rajzolj vonalat!
+      if (processed[i].ch === ' ' || processed[i+1].ch === ' ') continue;
+      const ci1 = charIndex(processed[i].ch);
+      const ci2 = charIndex(processed[i+1].ch);
+      const x1 = marginLeft + processed[i].x * xSpacing;
+      const y1 = height - marginTop - ci1 * ySpacing;
+      const x2 = marginLeft + processed[i+1].x * xSpacing;
+      const y2 = height - marginTop - ci2 * ySpacing;
+      const line = document.createElementNS(svgns, "line");
+      line.setAttribute("x1", x1);
+      line.setAttribute("y1", y1);
+      line.setAttribute("x2", x2);
+      line.setAttribute("y2", y2);
+      line.setAttribute("stroke", "gray");
+      line.setAttribute("stroke-width", "1");
+      svg.appendChild(line);
+    }
+  }
+
+      // pontok + hang
+      processed.forEach((it) => {
+        const ci = charIndex(it.ch);
+        const cx = marginLeft + it.x * xSpacing;
+        // Bármilyen whitespace karakter felismerése
+        const isWhitespace = /^\s$/.test(it.ch);
+        const cy = isWhitespace ? (height - marginTop) : (height - marginTop - ci * ySpacing);
+        const color = isWhitespace ? '#000' : palette[ci];
+        const circle = document.createElementNS(svgns, "circle");
+        circle.setAttribute("cx", cx);
+        circle.setAttribute("cy", cy);
+        circle.setAttribute("r", dotSize);
+        circle.setAttribute("fill", color);
+        svg.appendChild(circle);
+
+        playNoteByY(cy, height);
+      });
+
+  svgWrap.innerHTML = "";
+  svgWrap.appendChild(svg);
+
+  // mindig legörgetve
+  svgWrap.scrollTop = svgWrap.scrollHeight;
+
+  document.getElementById("minFreqVal").textContent = document.getElementById("minFreq").value;
+  document.getElementById("maxFreqVal").textContent = document.getElementById("maxFreq").value;
+}
+
+// PNG export
+function exportToPNG() {
+  const svg = svgWrap.querySelector("svg");
+  if (!svg) return;
+  const xml = new XMLSerializer().serializeToString(svg);
+  const svg64 = btoa(unescape(encodeURIComponent(xml)));
+  const imgSrc = `data:image/svg+xml;base64,${svg64}`;
+  const img = new Image();
+  img.onload = function() {
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#0e1117";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img, 0, 0);
+    const png = canvas.toDataURL("image/png");
+
+
+    let filename = textarea.value.trim().slice(0, 10); 
+    filename = filename.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_]/g, "_");
+    if (!filename) filename = "titkosiras";
+
+    /* original
+    let filename = textarea.value.trim()
+      .replace(/\s+/g, "_")
+      .replace(/[^a-zA-Z0-9_]/g, "_");
+    if (!filename) filename = "titkosiras";
+    */
+
+
+    const link = document.createElement("a");
+    link.href = png;
+    link.download = filename + ".png";
+    link.click();
+  };
+  img.src = imgSrc;
+}
+
+document.getElementById("exportAudioBtn").addEventListener("click", exportToWAV);
+
+function exportToWAV() {
+  const text = textarea.value || "";
+  const dotSize = Number(dotSizeInput.value);
+  const xSpacing = Number(xSpacingInput.value);
+  const ySpacing = Number(ySpacingInput.value);
+
+  const processed = tokenizeText(text);
+  const maxX = processed.reduce((m, it) => Math.max(m, it.x), 0);
+  const width = Math.max(600, (maxX + 2) * xSpacing);
+  const rawHeight = (CHARSET.length + 1) * ySpacing + 60;
+  const height = Math.max(50, rawHeight);
+
+  const minFreq = Number(document.getElementById("minFreq").value);
+  const maxFreq = Number(document.getElementById("maxFreq").value);
+
+  // Hang paraméterek
+  const sampleRate = 44100;
+  const durationPerChar = 0.2; // másodperc
+  const totalDuration = processed.length * durationPerChar;
+  const buffer = new Float32Array(Math.ceil(totalDuration * sampleRate));
+
+  processed.forEach((it, idx) => {
+    const ci = charIndex(it.ch);
+    const isWhitespace = /^\s$/.test(it.ch);
+    const cy = isWhitespace ? (height - 1) : (height - 1 - ci * ySpacing);
+    const freq = maxFreq - ((cy / height) * (maxFreq - minFreq));
+    const start = Math.floor(idx * durationPerChar * sampleRate);
+    for (let i = 0; i < durationPerChar * sampleRate; i++) {
+      const t = i / sampleRate;
+      // Szóközre ne legyen hang (csend)
+      buffer[start + i] = isWhitespace ? 0 : Math.sin(2 * Math.PI * freq * t) * 0.2;
+    }
+  });
+
+  // WAV export - filenév a begépelt szöveg első 10 karaktere
+  const wavBlob = encodeWAV(buffer, sampleRate);
+
+  let filename = textarea.value.trim().slice(0, 10); 
+  filename = filename.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_]/g, "_");
+  if (!filename) filename = "titkosiras";
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(wavBlob);
+  link.download = filename + ".wav";
+  link.click();
+}
+
+// WAV kódoló
+function encodeWAV(samples, sampleRate) {
+  const buffer = new ArrayBuffer(44 + samples.length * 2);
+  const view = new DataView(buffer);
+
+  // RIFF header
+  writeString(view, 0, 'RIFF');
+  view.setUint32(4, 36 + samples.length * 2, true);
+  writeString(view, 8, 'WAVE');
+  writeString(view, 12, 'fmt ');
+  view.setUint32(16, 16, true); // PCM
+  view.setUint16(20, 1, true);  // PCM format
+  view.setUint16(22, 1, true);  // mono
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * 2, true); // byte rate
+  view.setUint16(32, 2, true); // block align
+  view.setUint16(34, 16, true); // bits per sample
+  writeString(view, 36, 'data');
+  view.setUint32(40, samples.length * 2, true);
+
+  // PCM samples
+  let offset = 44;
+  for (let i = 0; i < samples.length; i++, offset += 2) {
+    let s = Math.max(-1, Math.min(1, samples[i]));
+    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+  }
+  return new Blob([buffer], { type: 'audio/wav' });
+}
+
+function writeString(view, offset, string) {
+  for (let i = 0; i < string.length; i++) {
+    view.setUint8(offset + i, string.charCodeAt(i));
+  }
+}
+
+// események
+textarea.addEventListener("input", render);
+dotSizeInput.addEventListener("input", render);
+xSpacingInput.addEventListener("input", render);
+ySpacingInput.addEventListener("input", render);
+showAxesInput.addEventListener("change", render);
+exportBtn.addEventListener("click", exportToPNG);
+document.getElementById("minFreq").addEventListener("input", render);
+document.getElementById("maxFreq").addEventListener("input", render);
+
+// alap példa
+textarea.value = "";
+render();
+
+document.getElementById("minFreqVal").textContent = document.getElementById("minFreq").value;
+document.getElementById("maxFreqVal").textContent = document.getElementById("maxFreq").value;
+</script>
+</body>
+</html>

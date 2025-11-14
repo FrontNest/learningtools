@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx version="2005-1" xml:lang="hu-HU" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+<head>
+<meta name="dtb:uid" content="97861561787943"/>
+<meta name="dtb:depth" content="2"/>
+<meta name="dtb:totalPageCount" content="185"/>
+<meta name="dtb:maxPageNumber" content="185"/>
+</head>
+<docTitle><text>T&#246;rt&#233;nelem</text></docTitle>
+<docAuthor><text>P&#x00C9;TER BORHEGYI</text></docAuthor>
+<navMap>
+<navPoint id="nav-1" playOrder="1"><navLabel><text>Cover</text></navLabel><content src="cover.xhtml"/></navPoint>
+<navPoint id="nav-2" playOrder="2"><navLabel><text>Title</text></navLabel><content src="title.xhtml"/></navPoint>
+<navPoint id="nav-3" playOrder="3"><navLabel><text>Copyright</text></navLabel><content src="copyright.xhtml"/></navPoint>
+<navPoint id="nav-4" playOrder="4"><navLabel><text>Kedves &#214;t&#246;dikes!</text></navLabel><content src="frontmatter01.xhtml"/></navPoint>
+<navPoint id="nav-5" playOrder="5"><navLabel><text>Tartalom</text></navLabel><content src="contents.xhtml"/></navPoint>
+<navPoint id="nav-6" playOrder="6"><navLabel><text>&#201;v eleji ism&#233;tl&#233;s</text></navLabel><content src="frontmatter02.xhtml"/></navPoint>
+<navPoint id="nav-7" playOrder="7"><navLabel><text>I. K&#201;PEK &#201;S PORTR&#201;K A MAGYAR &#193;LLAM VIR&#193;GKOR&#193;B&#211;L</text></navLabel><content src="part01.xhtml"/>
+<navPoint id="nav-8" playOrder="8"><navLabel><text>&#160;&#160;1. Magyar kir&#225;lyportr&#233;k a 14&#8211;15. sz&#225;zadb&#243;l</text></navLabel><content src="pt01_ch01.xhtml"/></navPoint>
+<navPoint id="nav-9" playOrder="9"><navLabel><text>&#160;&#160;2. Hunyadi J&#225;nos, a t&#246;r&#246;kver&#337;</text></navLabel><content src="pt01_ch02.xhtml"/></navPoint>
+<navPoint id="nav-10" playOrder="10"><navLabel><text>&#160;&#160;3. Hunyadi M&#225;ty&#225;s, a renesz&#225;nsz uralkod&#243;</text></navLabel><content src="pt01_ch03.xhtml"/></navPoint>
+<navPoint id="nav-11" playOrder="11"><navLabel><text>Vend&#233;gs&#233;gben M&#225;ty&#225;s kir&#225;lyn&#225;l (Olvasm&#225;ny)</text></navLabel><content src="pt01_ch03.xhtml#pt01_ch03-1"/></navPoint>
+<navPoint id="nav-12" playOrder="12"><navLabel><text>Hunyadi M&#225;ty&#225;s tr&#243;nra l&#233;p&#233;se (K&#233;preg&#233;ny)</text></navLabel><content src="pt01_ch03.xhtml#pt01_ch03-3"/></navPoint>
+<navPoint id="nav-13" playOrder="13"><navLabel><text>K&#233;pek &#233;s portr&#233;k a magyar &#225;llam vir&#225;gkor&#225;b&#243;l (&#214;sszefoglal&#225;s)</text></navLabel><content src="pt01_ch03.xhtml#pt01_ch03-2"/></navPoint>
+<navPoint id="nav-14" playOrder="14"><navLabel><text>Projektfeladat</text></navLabel><content src="pt01_ch03.xhtml#pt01_ch03-4"/></navPoint>
+</navPoint>
+<navPoint id="nav-15" playOrder="15"><navLabel><text>II. &#218;J L&#193;T&#211;HAT&#193;ROK</text></navLabel><content src="part02.xhtml"/>
+<navPoint id="nav-16" playOrder="16"><navLabel><text>&#160;&#160;4. A f&#246;ldrajzi felfedez&#233;sek</text></navLabel><content src="pt02_ch04.xhtml"/></navPoint>
+<navPoint id="nav-17" playOrder="17"><navLabel><text>&#160;&#160;5. A korai kapitalizmus</text></navLabel><content src="pt02_ch05.xhtml"/></navPoint>
+<navPoint id="nav-18" playOrder="18"><navLabel><text>&#201;let XIV. Lajos udvar&#225;ban (Olvasm&#225;ny)</text></navLabel><content src="pt02_ch05.xhtml#pt02_ch05-1"/></navPoint>
+<navPoint id="nav-19" playOrder="19"><navLabel><text>&#160;&#160;6. A vall&#225;si meg&#250;jul&#225;s</text></navLabel><content src="pt02_ch06.xhtml"/></navPoint>
+<navPoint id="nav-20" playOrder="20"><navLabel><text>A boszork&#225;nyok (Olvasm&#225;ny)</text></navLabel><content src="pt02_ch06.xhtml#pt02_ch06-1"/></navPoint>
+<navPoint id="nav-21" playOrder="21"><navLabel><text>&#160;&#160;7. Az &#250;j vil&#225;gk&#233;p kialakul&#225;sa</text></navLabel><content src="pt02_ch07.xhtml"/></navPoint>
+<navPoint id="nav-22" playOrder="22"><navLabel><text>Tud&#243;s feltal&#225;l&#243;k (Olvasm&#225;ny)</text></navLabel><content src="pt02_ch07.xhtml#pt02_ch07-1"/></navPoint>
+<navPoint id="nav-23" playOrder="23"><navLabel><text>A felvil&#225;gosod&#225;s elveinek megval&#243;sul&#225;sa &#8211; az Amerikai Egyes&#252;lt &#193;llamok l&#233;trej&#246;tte (Olvasm&#225;ny)</text></navLabel><content src="pt02_ch07.xhtml#pt02_ch07-2"/></navPoint>
+<navPoint id="nav-24" playOrder="24"><navLabel><text>&#218;j l&#225;t&#243;hat&#225;rok (&#214;sszefoglal&#225;s)</text></navLabel><content src="pt02_ch07.xhtml#pt02_ch07-3"/></navPoint>
+<navPoint id="nav-25" playOrder="25"><navLabel><text>Az els&#337; telepesek az &#218;jvil&#225;gban (K&#233;preg&#233;ny)</text></navLabel><content src="pt02_ch07.xhtml#pt02_ch07-4"/></navPoint>
+</navPoint>
+
+<navPoint id="nav-26" playOrder="26"><navLabel><text>III. PORTR&#201;K &#201;S T&#214;RT&#201;NETEK MAGYARORSZ&#193;G KORA &#218;JKORI T&#214;RT&#201;NET&#201;B&#336;L</text></navLabel><content src="part03.xhtml"/>
+<navPoint id="nav-27" playOrder="27"><navLabel><text>&#160;&#160;8. A t&#246;r&#246;k h&#225;bor&#250;k h&#337;sei</text></navLabel><content src="pt03_ch08.xhtml"/></navPoint>
+<navPoint id="nav-28" playOrder="28"><navLabel><text>Fegyverek &#233;s taktik&#225;k a v&#225;rostromokn&#225;l (Olvasm&#225;ny)</text></navLabel><content src="pt03_ch08.xhtml#pt03_ch08-1"/></navPoint>
+<navPoint id="nav-29" playOrder="29"><navLabel><text>&#160;&#160;9. Bocskai, Bethlen &#233;s Zr&#237;nyi</text></navLabel><content src="pt03_ch09.xhtml"/></navPoint>
+<navPoint id="nav-30" playOrder="30"><navLabel><text>Zr&#237;nyi Ilona, Munk&#225;cs h&#337;sn&#337;je (Olvasm&#225;ny)</text></navLabel><content src="pt03_ch09.xhtml#pt03_ch09-1"/></navPoint>
+<navPoint id="nav-31" playOrder="31"><navLabel><text>10. II. R&#225;k&#243;czi Ferenc &#233;s szabads&#225;gharca</text></navLabel><content src="pt03_ch10.xhtml"/></navPoint>
+<navPoint id="nav-32" playOrder="32"><navLabel><text>II. R&#225;k&#243;czi Ferenc gyermekkora (K&#233;preg&#233;ny)</text></navLabel><content src="pt03_ch10.xhtml#pt03_ch10-1"/></navPoint>
+<navPoint id="nav-33" playOrder="33"><navLabel><text>Projektfeladat</text></navLabel><content src="pt03_ch10.xhtml#pt03_ch10-2"/></navPoint>
+<navPoint id="nav-34" playOrder="34"><navLabel><text>11. M&#225;ria Ter&#233;zia</text></navLabel><content src="pt03_ch11.xhtml"/></navPoint>
+<navPoint id="nav-35" playOrder="35"><navLabel><text>Portr&#233;k &#233;s t&#246;rt&#233;netek Magyarorsz&#225;g kora &#250;jkori t&#246;rt&#233;net&#233;b&#337;l (&#214;sszefoglal&#225;s)</text></navLabel><content src="pt03_ch11.xhtml#pt03_ch11-1"/></navPoint>
+</navPoint>
+
+<navPoint id="nav-36" playOrder="36"><navLabel><text>IV. &#201;LET A KORA &#218;JKORI MAGYARORSZ&#193;GON</text></navLabel><content src="part04.xhtml"/>
+<navPoint id="nav-37" playOrder="37"><navLabel><text>12. &#201;let a t&#246;r&#246;k h&#243;dolts&#225;gi Magyarorsz&#225;gon</text></navLabel><content src="pt04_ch12.xhtml"/></navPoint>
+<navPoint id="nav-38" playOrder="38"><navLabel><text>13. &#201;let a 18. sz&#225;zadi Magyarorsz&#225;gon</text></navLabel><content src="pt04_ch13.xhtml"/></navPoint>
+<navPoint id="nav-39" playOrder="39"><navLabel><text>&#201;let a kora &#250;jkori Magyar orsz&#225;gon (&#214;sszefoglal&#225;s)</text></navLabel><content src="pt04_ch13.xhtml#pt04_ch13-1"/></navPoint>
+</navPoint>
+
+<navPoint id="nav-40" playOrder="40"><navLabel><text>V. FORRADALMAK KORA</text></navLabel><content src="part05.xhtml"/>
+<navPoint id="nav-41" playOrder="41"><navLabel><text>14. Ipari forradalom</text></navLabel><content src="pt05_ch14.xhtml"/></navPoint>
+<navPoint id="nav-42" playOrder="42"><navLabel><text>15. T&#225;rsadalmi-politikai forradalom</text></navLabel><content src="pt05_ch15.xhtml"/></navPoint>
+<navPoint id="nav-43" playOrder="43"><navLabel><text>A Szent Sz&#246;vets&#233;g korszaka (Olvasm&#225;ny)</text></navLabel><content src="pt05_ch15.xhtml#pt05_ch15-1"/></navPoint>
+<navPoint id="nav-44" playOrder="44"><navLabel><text>Forradalmak kora (&#214;sszefoglal&#225;s)</text></navLabel><content src="pt05_ch15.xhtml#pt05_ch15-2"/></navPoint>
+<navPoint id="nav-45" playOrder="45"><navLabel><text>Az &#8222;asszonyok menete&#8221; 1789-ben (K&#233;preg&#233;ny)</text></navLabel><content src="pt05_ch15.xhtml#pt05_ch15-3"/></navPoint>
+<navPoint id="nav-46" playOrder="46"><navLabel><text>Projektfeladat</text></navLabel><content src="pt05_ch15.xhtml#pt05_ch15-4"/></navPoint>
+</navPoint>
+<navPoint id="nav-47" playOrder="47"><navLabel><text>VI. A MAGYAR NEMZETI &#201;BRED&#201;S &#201;S POLG&#193;ROSOD&#193;S KORA</text></navLabel><content src="part06.xhtml"/>
+<navPoint id="nav-48" playOrder="48"><navLabel><text>16. A reformkor</text></navLabel><content src="pt06_ch16.xhtml"/></navPoint>
+<navPoint id="nav-49" playOrder="49"><navLabel><text>Az &#225;rv&#237;zi haj&#243;s (Olvasm&#225;ny)</text></navLabel><content src="pt06_ch16.xhtml#pt06_ch16-1"/></navPoint>
+<navPoint id="nav-50" playOrder="50"><navLabel><text>De&#225;k Ferenc politikai p&#225;ly&#225;ja (Olvasm&#225;ny)</text></navLabel><content src="pt06_ch16.xhtml#pt06_ch16-2"/></navPoint>
+<navPoint id="nav-51" playOrder="51"><navLabel><text>17. A forradalom</text></navLabel><content src="pt06_ch17.xhtml"/></navPoint>
+<navPoint id="nav-52" playOrder="52"><navLabel><text>18. K&#233;pek a szabads&#225;gharc t&#246;rt&#233;net&#233;b&#337;l1</text></navLabel><content src="pt06_ch18.xhtml"/></navPoint>
+<navPoint id="nav-53" playOrder="53"><navLabel><text>A h&#337;s aradi tizenh&#225;rom (Olvasm&#225;ny)</text></navLabel><content src="pt06_ch18.xhtml#pt06_ch18-1"/></navPoint>
+<navPoint id="nav-54" playOrder="54"><navLabel><text>Projektfeladat</text></navLabel><content src="pt06_ch18.xhtml#pt06_ch18-2"/></navPoint>
+<navPoint id="nav-55" playOrder="55"><navLabel><text>19. A kiegyez&#233;s</text></navLabel><content src="pt06_ch19.xhtml"/></navPoint>
+<navPoint id="nav-56" playOrder="56"><navLabel><text>A magyar nemzeti &#233;bred&#233;s &#233;s polg&#225;rosod&#225;s kora (&#214;sszefoglal&#225;s)</text></navLabel><content src="pt06_ch19.xhtml#pt06_ch19-1"/></navPoint>
+</navPoint>
+<navPoint id="nav-57" playOrder="57"><navLabel><text>Id&#337;rendi t&#225;bl&#225;zat</text></navLabel><content src="bm01.xhtml"/></navPoint>
+<navPoint id="nav-58" playOrder="58"><navLabel><text>M&#250;ltunk eml&#233;kezet&#233;nek meg&#337;rz&#233;se</text></navLabel><content src="bm02.xhtml"/></navPoint>
+<navPoint id="nav-59" playOrder="59"><navLabel><text>Ahogyan a t&#246;rt&#233;n&#233;szek gondolkodnak</text></navLabel><content src="bm03.xhtml"/></navPoint>
+<navPoint id="nav-60" playOrder="60"><navLabel><text>Kislexikon</text></navLabel><content src="bm04.xhtml"/></navPoint>
+<navPoint id="nav-61" playOrder="61"><navLabel><text>A k&#233;pek forr&#225;sai</text></navLabel><content src="bm05.xhtml"/></navPoint>
+</navMap>
+</ncx>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Föld belső felépítése – Interaktív feladat</title>
+<style>
+  body {
+    font-family: "Noto Sans", sans-serif;
+    background-color: #f0f8ff;
+    color: #222;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+  }
+  h1, h2  {
+    text-align: center;
+    color: #003366;
+  }
+  section {
+    margin-top: 20px;
+  }
+  input[type="text"] {
+    width: 60%;
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+  .feedback {
+    font-weight: bold;
+    margin-left: 10px;
+  }
+  .correct {
+    color: green;
+  }
+  .incorrect {
+    color: red;
+  }
+  button {
+    display: block;
+    margin: 25px auto;
+    padding: 10px 20px;
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #005fa3;
+  }
+  /* --- A Föld belső felépítése szekció --- */
+.feladat1-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 15px;
+}
+
+/* Bal oldali kép */
+.feladat1-container .kep {
+  flex: 0 0 40%; /* fix kb. 40% szélesség a képnek */
+  text-align: center;
+}
+
+.feladat1-container img {
+  width: 100%;
+  max-width: 300px; /* ne legyen túl nagy */
+  height: auto;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.feladat1-container figcaption {
+  font-size: 0.9em;
+  color: #444;
+  margin-top: 8px;
+}
+
+/* Jobb oldali kérdések */
+.feladat1-container .kerdesek {
+  flex: 0 0 50%;
+}
+
+.feladat1-container .kerdesek p {
+  margin: 6px 0;
+}
+
+.feladat1-container input[type="text"] {
+  width: 50%;          /* kisebb mező, hogy elférjen */
+  padding: 5px;
+  margin-left: 5px;
+  border: 1px solid #999;
+  border-radius: 4px;
+}
+
+.feladat1-container select {
+  width: 55%;
+  padding: 6px;
+  border: 1px solid #888;
+  border-radius: 5px;
+  font-size: 1em;
+  background-color: #fdfdfd;
+  cursor: pointer;
+}
+
+.feladat1-container select:focus {
+  outline: 2px solid #007bff;
+}
+
+
+/* Mobilbarát beállítás */
+@media (max-width: 700px) {
+  .feladat1-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .feladat1-container .kep,
+  .feladat1-container .kerdesek {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+  .feladat1-container input[type="text"] {
+    width: 70%;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<h1>🌍 A Föld belső felépítése</h1>
+
+<section id="feladat1">
+  <h2>1. Nevezd meg az ábra részeit!</h2>
+  <div class="feladat1-container">
+    <div class="kep">
+      <figure>
+        <img src="../../_media/a_fold_belso_felepitese.jpeg" alt="A Föld belső felépítése">
+        <figcaption><em>Tanulmányozd az ábrát, majd nevezd meg a részeit!
+            <br>Forrás:    1. A Föld belső szerkezete
+            <br>OH (és jogelődei) / Jécsai Zoltán
+        </em></figcaption>
+      </figure>
+    </div>
+
+    <div class="kerdesek">
+      <p>A – 
+        <select id="A">
+          <option value="">Válassz...</option>
+          <option value="szárazföld">Szárazföld</option>
+          <option value="belső mag">Belső Mag</option>
+          <option value="külső mag">Külső mag</option>
+          <option value="a földköpeny olvadt része">A földköpeny olvadt része</option>
+          <option value="a földköpeny szilárd része">A földköpeny szilárd része</option>
+          <option value="földkéreg (kőzetburok)">Földkéreg</option>
+          <option value="óceán">Óceán</option>
+          <option value="kőzetburok">Kőzetburok</option>
+        </select>
+      </p>
+
+      <p>B – 
+        <select id="B">
+          <option value="">Válassz...</option>
+          <option value="szárazföld">Szárazföld</option>
+          <option value="belső mag">Belső Mag</option>
+          <option value="külső mag">Külső mag</option>
+          <option value="a földköpeny olvadt része">A földköpeny olvadt része</option>
+          <option value="a földköpeny szilárd része">A földköpeny szilárd része</option>
+          <option value="földkéreg (kőzetburok)">Földkéreg</option>
+          <option value="óceán">Óceán</option>
+          <option value="kőzetburok">Kőzetburok</option>
+        </select>
+      </p>
+
+      <p>C – 
+        <select id="C">
+          <option value="">Válassz...</option>
+          <option value="szárazföld">Szárazföld</option>
+          <option value="belső mag">Belső Mag</option>
+          <option value="külső mag">Külső mag</option>
+          <option value="a földköpeny olvadt része">A földköpeny olvadt része</option>
+          <option value="a földköpeny szilárd része">A földköpeny szilárd része</option>
+          <option value="földkéreg (kőzetburok)">Földkéreg</option>
+          <option value="óceán">Óceán</option>
+          <option value="kőzetburok">Kőzetburok</option>
+        </select>
+      </p>
+
+      <p>D – 
+        <select id="D">
+          <option value="">Válassz...</option>
+          <option value="szárazföld">Szárazföld</option>
+          <option value="belső mag">Belső Mag</option>
+          <option value="külső mag">Külső mag</option>
+          <option value="a földköpeny olvadt része">A földköpeny olvadt része</option>
+          <option value="a földköpeny szilárd része">A földköpeny szilárd része</option>
+          <option value="földkéreg (kőzetburok)">Földkéreg</option>
+          <option value="óceán">Óceán</option>
+          <option value="kőzetburok">Kőzetburok</option>
+        </select>
+      </p>
+
+      <p>E – 
+        <select id="E">
+          <option value="">Válassz...</option>
+          <option value="szárazföld">Szárazföld</option>
+          <option value="belső mag">Belső Mag</option>
+          <option value="külső mag">Külső mag</option>
+          <option value="a földköpeny olvadt része">A földköpeny olvadt része</option>
+          <option value="a földköpeny szilárd része">A földköpeny szilárd része</option>
+          <option value="földkéreg (kőzetburok)">Földkéreg</option>
+          <option value="óceán">Óceán</option>
+          <option value="kőzetburok">Kőzetburok</option>
+        </select>
+      </p>
+
+      <p>F – 
+        <select id="F">
+          <option value="">Válassz...</option>
+          <option value="szárazföld">Szárazföld</option>
+          <option value="belső mag">Belső Mag</option>
+          <option value="külső mag">Külső mag</option>
+          <option value="a földköpeny olvadt része">A földköpeny olvadt része</option>
+          <option value="a földköpeny szilárd része">A földköpeny szilárd része</option>
+          <option value="földkéreg (kőzetburok)">Földkéreg</option>
+          <option value="óceán">Óceán</option>
+          <option value="kőzetburok">Kőzetburok</option>
+        </select>
+      </p>
+
+      <p>G – 
+        <select id="G">
+          <option value="">Válassz...</option>
+          <option value="szárazföld">Szárazföld</option>
+          <option value="belső mag">Belső Mag</option>
+          <option value="külső mag">Külső mag</option>
+          <option value="a földköpeny olvadt része">A földköpeny olvadt része</option>
+          <option value="a földköpeny szilárd része">A földköpeny szilárd része</option>
+          <option value="földkéreg (kőzetburok)">Földkéreg</option>
+          <option value="óceán">Óceán</option>
+          <option value="kőzetburok">Kőzetburok</option>
+        </select>
+      </p>
+
+      <p>H – 
+        <select id="H">
+          <option value="">Válassz...</option>
+          <option value="szárazföld">Szárazföld</option>
+          <option value="belső mag">Belső Mag</option>
+          <option value="külső mag">Külső mag</option>
+          <option value="a földköpeny olvadt része">A földköpeny olvadt része</option>
+          <option value="a földköpeny szilárd része">A földköpeny szilárd része</option>
+          <option value="földkéreg (kőzetburok)">Földkéreg</option>
+          <option value="óceán">Óceán</option>
+          <option value="kőzetburok">Kőzetburok</option>
+        </select>
+      </p>
+
+    </div>
+  </div>
+</section>
+
+
+<hr>
+
+<section id="feladat2">
+  <h2>2. Kapcsold össze az állításokat a megfelelő betűkkel!</h2>
+  <ol>
+    <li>A Föld legkülső burka: <input type="text" id="q1" maxlength="1" placeholder="A–H" style="width: 25px;"></li>
+    <li>Csak a legfelső rétege szilárd: <input type="text" id="q2" maxlength="1" placeholder="A–H" style="width: 25px;"></li>
+    <li>Lemezekre tagolódik: <input type="text" id="q3" maxlength="1" placeholder="A–H" style="width: 25px;"></li>
+    <li>Izzó kőzetolvadék található benne: <input type="text" id="q4" maxlength="1" placeholder="A–H" style="width: 25px;"></li>
+    <li>Alsó része a földköpenyhez tartozik: <input type="text" id="q5" maxlength="1" placeholder="A–H" style="width: 25px;"></li>
+    <li>Közvetlenül az óceánok vize alatt helyezkedik el: <input type="text" id="q6" maxlength="1" placeholder="A–H" style="width: 25px;"></li>
+    <li>Egyik része a földkéreg: <input type="text" id="q7" maxlength="1" placeholder="A–H" style="width: 25px;"></li>
+    <li>A mag szilárd része: <input type="text" id="q8" maxlength="1" placeholder="A–H" style="width: 25px;"></li>
+  </ol>
+</section>
+
+<button onclick="ellenoriz()">✅ Ellenőrzés</button>
+
+<p id="eredmeny"></p>
+
+<hr>
+<section style="text-align: center; margin-bottom: 20px;">
+    <h2>Források és tananyagok:</h2>
+    <a href="https://www.nkp.hu/tankonyv/termeszettudomany_6_nat2020/lecke_01_001" target="_blank">Tananyag az NKP-n</a> 
+    <a href="https://www.tankonyvkatalogus.hu/storage/pdf/OH-TER06TA__teljes.pdf" target="_blank">Tananyag a Tankönyvkatalógusban 12.oldal</a>  
+</section>
+<hr>
+
+<script>
+function ellenoriz() {
+ const helyes = {
+    A: "óceán",
+    B: "szárazföld",
+    C: "belső mag",
+    D: "külső mag",
+    E: "a földköpeny olvadt része",
+    F: "a földköpeny szilárd része",
+    G: "földkéreg",
+    H: "kőzetburok"
+};
+
+  // 2. feladat helyes betűk
+  const helyes2 = {
+    q1: "A",
+    q2: "B",
+    q3: "A",
+    q4: "C",
+    q5: "B",
+    q6: "E",
+    q7: "A",
+    q8: "H"
+  };
+
+  let pont = 0, osszes = 16;
+
+  // Ellenőrzés az 1. feladathoz
+  for (let betu in helyes) {
+    let valasz = document.getElementById(betu).value.trim().toLowerCase();
+    let helyesValasz = helyes[betu].toLowerCase();
+    let elem = document.getElementById(betu);
+    if (valasz === helyesValasz) {
+      elem.style.border = "2px solid green";
+      pont++;
+    } else {
+      elem.style.border = "2px solid red";
+    }
+  }
+
+  // Ellenőrzés a 2. feladathoz
+  for (let q in helyes2) {
+    let valasz = document.getElementById(q).value.trim().toUpperCase();
+    let helyesValasz = helyes2[q];
+    let elem = document.getElementById(q);
+    if (valasz === helyesValasz) {
+      elem.style.border = "2px solid green";
+      pont++;
+    } else {
+      elem.style.border = "2px solid red";
+    }
+  }
+
+  // Eredmény kiírása
+  let uzenet = `Eredményed: ${pont}/${osszes} pont. `;
+  if (pont === osszes) uzenet += "🎉 Szuper, minden válasz helyes!";
+  else if (pont > osszes * 0.6) uzenet += "🙂 Nagyon ügyes vagy, csak pár hiba!";
+  else uzenet += "😅 Gyakorolj még egy kicsit, menni fog!";
+  document.getElementById("eredmeny").innerHTML = uzenet;
+}
+</script>
+
+</body>
+</html>

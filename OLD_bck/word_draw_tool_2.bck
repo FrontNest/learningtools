@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Titkosírás vizualizáció</title>
+<style>
+  body {
+    margin: 0;
+    background: #111;
+    color: #eee;
+    font-family: "Segoe UI", sans-serif;
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+  }
+  @media (max-width: 768px) {
+    body { flex-direction: column; }
+  }
+  .left, .right {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  textarea {
+    flex: 1;
+    background: #222;
+    color: #fff;
+    border: none;
+    resize: none;
+    font-size: 1.2rem;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  canvas {
+    background: #fff;
+    border-radius: 8px;
+    width: 100%;
+    height: auto;
+  }
+  .controls {
+    margin-top: .5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+  button {
+    background: #444;
+    color: #fff;
+    border: none;
+    padding: .5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover { background: #666; }
+</style>
+</head>
+<body>
+  <div class="left">
+    <textarea id="inputText" placeholder="Írj ide szöveget..."></textarea>
+    <div class="controls">
+      <button id="toggleAxes">Tengelyek ki/be</button>
+      <button id="exportPng">Export PNG</button>
+    </div>
+  </div>
+  <div class="right">
+    <canvas id="chart"></canvas>
+  </div>
+
+<script>
+const canvas = document.getElementById("chart");
+const ctx = canvas.getContext("2d");
+let showAxes = true;
+
+// kisebb magasság
+canvas.width = window.innerWidth * 0.9;
+canvas.height = window.innerHeight * 0.4;
+
+// magyar ábécé + kiegészítések
+const alphabet = [
+  "a","á","b","c","cs","d","dz","dzs","e","é","f","g","gy","h","i","í","j","k",
+  "l","ly","m","n","ny","o","ó","ö","ő","p","q","r","s","sz","t","ty","u","ú",
+  "ü","ű","v","w","x","y","z","zs","0","1","2","3","4","5","6","7","8","9",".",",",":",";","-","+","?","!","'"
+];
+
+function getColor(index) {
+  const hue = (index / alphabet.length) * 300;
+  return `hsl(${hue}, 90%, 50%)`;
+}
+
+function drawAxes() {
+  ctx.strokeStyle = "#999";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  // X tengely
+  ctx.moveTo(40, canvas.height - 40);
+  ctx.lineTo(canvas.width - 20, canvas.height - 40);
+  // Y tengely
+  ctx.moveTo(40, canvas.height - 40);
+  ctx.lineTo(40, 20);
+  ctx.stroke();
+}
+
+function drawTextVisualization(text) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (showAxes) drawAxes();
+
+  const words = text.toLowerCase().trim().split(" ");
+  let xStep = (canvas.width - 80) / Math.max(text.length, 1);
+  let baseY = canvas.height - 40;
+  let prev = null;
+
+  let position = 0;
+
+  words.forEach((word, wIndex) => {
+    // digráf-ellenőrzés
+    let i = 0;
+    while (i < word.length) {
+      let match = null;
+      const three = word.slice(i, i + 3);
+      const two = word.slice(i, i + 2);
+      const one = word[i];
+      if (alphabet.includes(three)) match = three;
+      else if (alphabet.includes(two)) match = two;
+      else match = one;
+
+      const index = alphabet.indexOf(match);
+      if (index >= 0) {
+        const x = 40 + position * xStep;
+        const y = baseY - (index / alphabet.length) * (canvas.height - 80);
+        const color = getColor(index);
+
+        // pont
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // vonal
+        if (prev) {
+          const grad = ctx.createLinearGradient(prev.x, prev.y, x, y);
+          grad.addColorStop(0, prev.color);
+          grad.addColorStop(1, color);
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(prev.x, prev.y);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+        }
+
+        prev = { x, y, color };
+        position++;
+      }
+      i += match.length;
+    }
+
+    // szóköz → vonal megszakítása
+    prev = null;
+    position++;
+  });
+}
+
+document.getElementById("inputText").addEventListener("input", e => {
+  drawTextVisualization(e.target.value);
+});
+
+document.getElementById("toggleAxes").addEventListener("click", () => {
+  showAxes = !showAxes;
+  drawTextVisualization(document.getElementById("inputText").value);
+});
+
+document.getElementById("exportPng").addEventListener("click", () => {
+  const link = document.createElement("a");
+  link.download = "vizualizacio.png";
+  link.href = canvas.toDataURL();
+  link.click();
+});
+
+drawTextVisualization("");
+</script>
+</body>
+</html>

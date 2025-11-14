@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <title>Dictionary</title>
+    <link rel="icon" type="image/png" href="https://felisha76.github.io/portfolio/media/favicon_light.png">
+    <link rel="stylesheet" href="dictionary.css">
+</head>
+<body>
+
+    
+    
+        <div class="container">
+        <h1>Dictionary</h1>
+        
+        
+        <div class="controls">
+            <div class="file-selector">
+                <label for="fileSelect">Select Dictionary File:</label>
+                <select id="fileSelect">
+                    <option value="">Loading files...</option>
+                </select>
+            </div>
+            
+            <div class="search-box">
+                <label for="searchInput">Search:</label>
+                <input type="text" id="searchInput" placeholder="Type to search...">
+            </div>
+        </div>
+        
+        <div id="loadingIndicator" class="loading">Loading...</div>
+        
+        <div class="table-container">
+            <table id="notesTable">
+                <thead>
+                    <tr>
+                        <th>Book/Ch/L</th>
+                        <th>Word</th>
+                        <th>Hungarian</th>
+                        <th>Picture</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Table content will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+
+<footer>
+        <hr>
+    <p style="font-size: medium;">
+        <a href="mailto:frontneststudio@gmail.com?&subject=Dictionary feedback: https://felisha76.github.io/portfolio/solutions/tools/dictionary/dictionary.html" target="_top" style="color: #10f808; text-decoration: none;">
+            <b>🔴 Error reporting</b></a>
+        <a href="https://felisha76.github.io/portfolio/subsites/sources.html" class="simpleLink" style="color: #e7eb0a; text-decoration: none;">🟡 Media sources </a>
+        <a href="https://felisha76.github.io/portfolio/solutions/tools/dictionary/dictionary.html" class="simpleLink" style="color: #09ebf3;text-decoration: none;">🔵 Start over</a>
+    </p>
+</footer>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="dictionary.js"></script>
+</body>
+</html>

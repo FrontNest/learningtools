@@ -1,0 +1,65 @@
+<!-- Not finished yet -->
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <title>Portfolio</title>
+    <link rel="icon" type="image/png" href="../../../media/favicon_light.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="search_csv.css">
+</head>
+<body>
+
+<!-- Fő tartalom -->
+<div class="m12">
+    <div class="search_open">    
+        <input type="text" id="search" placeholder="  Type at least 4 characters for search">
+    	<label> Table type results </label>
+        
+        <label for="fileInput"></label>
+
+        <input type="file" id="fileInput" accept=".csv" onchange="loadCSV()"> 
+    </div>
+
+
+    <table id="resultTable">
+
+        <thead>
+        <tr>
+            <th id="col01">Column B</th>
+            <th id="col02">Column C</th>
+            <th id="col03">Column D</th>
+            <th id="col04">Column E</th>
+            <th id="col05">Column F</th>
+        </tr>
+        </thead>
+
+        <tbody>
+            <!-- Szűrt eredmények megjelenítése -->
+             
+        </tbody>
+    </table>
+   <h3>This subpage is for opening a .csv file from your PC and searching the data. <br>
+    It loads the <b>first 2000 rows</b>, displays <b>columns B:G</b>, <br>
+    and allows you to <b>search based on keywords in column A.</b><br>
+
+    The operation is performed by JavaScript.<br>
+    This small tool can be useful when you need to search through a lot of small information. <br>
+    For example, for customer service telephone dispatchers, <br>
+    this format of the knowledge base can be useful during calls.</h3>
+    <h2>
+        You can download a template csv from 
+        <a href="Adatbazis.csv" target="_blank"><b style="color: yellowgreen; font-size: large;">here</b></a>
+    </h2>
+</div>
+
+
+
+    <script src="search_csv.js"></script>
+</body>
+</html>

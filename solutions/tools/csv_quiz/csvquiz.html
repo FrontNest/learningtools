@@ -1,0 +1,74 @@
+<!-- based on flipcards -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="csvquiz.css">
+	<title>Quiz</title>
+    <link rel="icon" type="image/png" href="https://felisha76.github.io/portfolio/media/favicon_light.png">
+</head>
+<body>
+
+    <label for="csv-dropdown-container"> 
+        🔄️  Turn your phone horizontally! 🔄️
+        <a href="https://felisha76.github.io/portfolio/solutions/tools/word_test/word_test.html" target="_blank">     ( Word test is here )</a>
+    
+    </label>
+    <hr>
+    
+	<div class="wrap">
+
+        
+        <!-- <div class="card"><div class="front"><span>
+            Front   </span></div><div class="back"><span>
+            Back    </span></div></div> -->
+        
+    </div>
+
+
+
+
+
+<footer>
+    <hr>
+        <p style="font-size: medium;">
+        <a href="mailto:frontneststudio@gmail.com?&subject=Flipcards feedback: https://felisha76.github.io/portfolio/solutions/tools/csv_quiz/csvquiz.html" target="_top" style="color: #10f808; text-decoration: none;">
+            <b>🔴 Error reporting</b></a>
+        <a href="https://felisha76.github.io/portfolio/subsites/sources.html" class="simpleLink" style="color: #e7eb0a; text-decoration: none;">🟡 Media sources </a>
+        <a href="https://felisha76.github.io/portfolio/solutions/tools/csv_quiz/csvquiz.html" class="simpleLink" style="color: #09ebf3;text-decoration: none;">🔵 Start over</a>
+    </p>
+
+</footer>
+    
+    <script src="csvquiz.js"></script>
+</body>
+</html>
+
+<!--  
+How This Works:
+File Naming Convention:
+Files should be named with a prefix that indicates their category
+For example: 
+    en_hu_animals.csv, 
+    ge_hu_tiere.csv
+    math_fractions.csv, 
+    game_pokemon.csv
+
+Category Detection:
+The getCategoryForFile function determines which category a file belongs to based on its prefix
+Files that don't match any prefix go into an "Other" category
+
+Dropdown Organization:
+Files are grouped by category using the <optgroup> HTML element
+Each category becomes a header in the dropdown
+Files within each category are sorted alphabetically
+
+Display Names:
+The code removes the category prefix and file extension to create more readable display names
+Underscores are replaced with spaces for better readability
+
+Quiz Title:
+When a quiz is selected, its name is displayed as a title above the cards
+-->

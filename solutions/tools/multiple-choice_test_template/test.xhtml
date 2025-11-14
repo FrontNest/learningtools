@@ -1,0 +1,623 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="hu">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Interaktív Tudásellenőrző Teszt</title>
+    <link rel="stylesheet" href="test.css" />
+</head>
+<body>
+  <div class="container"> 
+        <div class="top-bar">
+                            <!-- FrontnestStudio Logo 
+		            <a href="mailto:frontneststudio@gmail.com?&amp;subject=Feleletválasztásos teszt visszajelzés:">
+			        <img src="../../../media/favicon_light.png"  
+							alt="FrontNest Studio" 
+							id="logo" /></a>-->
+		                    <!-- FrontnestStudio Logo -->  
+
+            <div class="top-bar-left">
+                                <label class="chapter-label">Fejezetek:</label>
+                                <div id="customDropdown" class="custom-dropdown">
+                                    <div class="selected">Válaszd ki a fejezeteket:</div>
+                                    <div class="options" style="display:none;"></div>
+                                </div>
+            </div>
+
+
+            <div class="top-bar-center"> 
+                    <span class="timer" id="timer">00:00</span>
+                    <div class="button-row">
+                        <button id="startTestBtn">Teszt indítása</button>
+                        <button type="button" id="checkBtn">Ellenőrzés</button> 
+                    </div>          
+            </div>
+
+            <div class="top-bar-right">
+                
+                <div id="resultSummary" class="result-summary">
+                    	                   
+                </div>
+            </div>
+        </div>
+
+        <div class="test-bar">
+            <form id="testForm">
+                <ol id="questionList"></ol>
+            </form>
+        </div>
+
+        <div id="description">
+            <h3>▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️</h3>
+            <h1>EZ EGY MINTA TESZT</h1>
+            <h3>Egy kész teszt működését a <a href="https://natanyag-f408e.web.app/" target="_blank">
+            <b><u>NATanyag</u><sup>&copy;</sup></b></a> irodalom tananyagában lehet kipróbálni.</h3>
+            <h3>▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️</h3>
+            <h3>Pontszámítás:</h3>
+
+        <p><b>Minél több helyes választ adsz, és minél gyorsabban töltöd ki a tesztet, annál több pontot kapsz!</b></p>
+            <b>A bónuszpontok számítása egyszerűen így működik:</b>
+
+                    <ul>
+                <li>Minden helyes válaszért 10 pont jár. A helytelen válaszok nem vonnak le pontot.</li>
+                <li>Minden helyes válaszhoz kapsz plusz bónuszpontot, ha gyorsan válaszolsz.</li>
+                <li>Egy kérdésre maximum 30 másodpercet számolunk. Ha például egy kérdésre átlagosan 20 másodperc alatt válaszolsz, akkor 10 bónuszpontot kapsz (30 - 20 = 10).</li>
+                <li>Ha egy kérdésre 30 másodperc vagy annál több idő kell, akkor  nem kapsz bónuszpontot arra a kérdésre.</li>
+            </ul>
+
+            <b>Összefoglalva:</b>
+            <ul>
+                <li>Minden helyes válasz: 10 pont</li>
+                <li>Minden helyes válaszhoz: (30 - átlagos idő másodpercben) bónuszpont, de minimum 0</li>
+            </ul>
+
+
+            <b>Példa:</b>
+            <p>Ha 5 kérdésből 4 helyes, és összesen 80 másodperc alatt töltöd ki a tesztet:</p>
+
+            <ul>
+                <li>Átlagos idő: 80 / 5 = 16 mp/kérdés</li>
+                <li>Minden helyes válasz után: 30 - 16 = 14 bónuszpont</li>
+                <li>Összes pont: 4 × 10 + 4 × 14 = 40 + 56 = 96 pont</li>
+            </ul>
+
+            
+        <p><b> Kezdhetjük?</b></p>
+
+            <ol>
+                <li>Válassz egy, vagy akár több témakört!</li>
+                <li>Nyomd meg a "teszt indítása" gombot!</li>
+                <li>Jelöld be az általad helyesnek ítélt válaszokat a rádiógombokkal!</li>
+                <li>Ha végeztél, nyomd meg az "Ellenőrzés" gombot, és felül láthatod:</li>
+            </ol>
+                <blockquote>
+                    <ul>
+                    <li>a helyes válaszaid számát,</li>
+                    <li>mennyi idő alatt oldottad meg a tesztet,</li>
+                    <li>az időbónuszt,</li>
+                    <li>és az összpontszámod.</li>
+                </ul>
+                </blockquote>
+                <p>Üdvözlettel: 
+                <a href="mailto:frontneststudio@gmail.com?&amp;subject=Feleletválasztásos teszt visszajelzés:">
+                    FrontNest Studio</a></p>
+            <h3>▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️</h3>
+        </div>
+
+  </div>
+    <script type="text/javascript" src="test.js"></script>
+</body>
+</html>
+<!-- 
+        <div id="offer">
+                <H3><b> Ez egy minta teszt.</b></H3>
+                <p>Ha szeretnél ilyen teszteket íratni a diákjaiddal,
+                kérlek, küld el a használni kívánt kérdéseket, válaszokat 
+                valamilyen táblázatos* formában (pl google sheets, vagy excel táblázat),
+                és nagyon szívesen elkészítem az egyedileg használható tesztet. </p>
+
+                <p>Üdvözlettel:</p>
+                <a href="mailto:frontneststudio@gmail.com?&amp;subject=Feleletválasztásos teszt visszajelzés:">
+                    FrontNest Studio</a>
+                <p>*A táblázat formátuma:</p>
+                <p>Az A oszlop fejezetneveiből lesznek a menüpontok a legördülő menüben.</p>
+                <p>A cellákban lehet bármilyen szöveges formátum, emojik is. 
+                    Ha képeket szeretnél beilleszteni, 
+                    a képeket külön küld el az email csatolmányában, 
+                    és a cellába csak a kép nevét írd be!</p>
+                <table style="border-collapse: collapse; width: 100%;">
+                    <tbody>
+                        <tr>
+                        <th style="border: 1px solid black;">Jegyzet neve</th>
+                        <th style="border: 1px solid black;">kérdés</th>
+                        <th style="border: 1px solid black;">A</th>
+                        <th style="border: 1px solid black;">B</th>
+                        <th style="border: 1px solid black;">C</th>
+                        <th style="border: 1px solid black;">D</th>
+                        <th style="border: 1px solid black;">helyes válasz</th>
+                        <th style="border: 1px solid black;">magyarázat</th>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 1</td>
+                        <td style="border: 1px solid black;">one</td>
+                        <td style="border: 1px solid black;">two</td>
+                        <td style="border: 1px solid black;">three</td>
+                        <td style="border: 1px solid black;">four</td>
+                        <td style="border: 1px solid black;">three</td>
+                        <td style="border: 1px solid black;">Because why not?</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 2</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">Magyarázat 2</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 3</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">Magyarázat 3</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 4</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 4</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 5</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">Magyarázat 5</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 6</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">Magyarázat 6</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 7</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">Magyarázat 7</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 8</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 8</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 9</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">Magyarázat 9</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 10</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">Magyarázat 10</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 11</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">Magyarázat 11</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 12</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 12</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 13</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">Magyarázat 13</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 14</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">Magyarázat 14</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 15</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">Magyarázat 15</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 16</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 16</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 17</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">Magyarázat 17</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 18</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">Magyarázat 18</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 19</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">Magyarázat 19</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 20</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 20</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 21</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">Magyarázat 21</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 22</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">Magyarázat 22</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 23</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">Magyarázat 23</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">1. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 24</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 24</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 1</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">Magyarázat 25</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 2</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">Magyarázat 26</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 3</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">Magyarázat 27</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 4</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 28</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 5</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">Magyarázat 29</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 6</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">Magyarázat 30</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 7</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">Magyarázat 31</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 8</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 32</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 9</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">Magyarázat 33</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 10</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">Magyarázat 34</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 11</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">Magyarázat 35</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 12</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 36</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 13</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">Magyarázat 37</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 14</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">Magyarázat 38</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 15</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">Magyarázat 39</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 16</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 40</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 17</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 41</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 18</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 42</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 19</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 43</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 20</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 44</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 21</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 45</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 22</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 46</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 23</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 47</td>
+                        </tr>
+                        <tr>
+                        <td style="border: 1px solid black;">2. fejezet</td>
+                        <td style="border: 1px solid black;">Kérdés 24</td>
+                        <td style="border: 1px solid black;">A</td>
+                        <td style="border: 1px solid black;">B</td>
+                        <td style="border: 1px solid black;">C</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">D</td>
+                        <td style="border: 1px solid black;">Magyarázat 48</td>
+                        </tr>
+                    </tbody>
+                    </table>
+        </div>
+        -->

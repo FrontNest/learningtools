@@ -1,0 +1,309 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="hun">
+  <head>
+    <meta name="dtb:uid" content="73feb583-05b7-44cd-bb09-e0a99d114ecd"/>
+    <meta name="dtb:depth" content="2"/>
+    <meta name="dtb:generator" content="calibre (7.4.0)"/>
+    <meta name="dtb:totalPageCount" content="0"/>
+    <meta name="dtb:maxPageNumber" content="0"/>
+  </head>
+  <docTitle>
+    <text>OH-MNY06TA__teljes</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="Id_95E73F53-B073-4E05-BD39-8DFEDC3C0A02_" playOrder="1" class="chapter">
+      <navLabel>
+        <text>1–2. Ismétlés</text>
+      </navLabel>
+      <content src="main-1.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_A45E1F90-D3B2-46B7-BF25-5E91F292D228_" playOrder="2" class="chapter">
+      <navLabel>
+        <text>3. Szövegértés, szövegalkotás a gyakorlatban</text>
+      </navLabel>
+      <content src="main-2.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_32D7B41C-01E8-4200-8855-A37EF9E354B6_" playOrder="3" class="chapter">
+      <navLabel>
+        <text>4. Az ismeretközlő szöveg beszédben és írásban</text>
+      </navLabel>
+      <content src="main-3.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_13915116-F849-4D86-949C-D95E44FB355E_" playOrder="4" class="chapter">
+      <navLabel>
+        <text>5–6. A szófajok csoportjai</text>
+      </navLabel>
+      <content src="main-4.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_CDA69DD3-9694-43A7-8764-5D2AECA6FECC_" playOrder="5" class="chapter">
+      <navLabel>
+        <text>7. A főnév jelentése, toldalékolhatósága, mondatbeli szerepe</text>
+      </navLabel>
+      <content src="main-5.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_C848741D-75CB-466A-B7C2-0A9A3F2A576C_" playOrder="6" class="chapter">
+      <navLabel>
+        <text>8. A főnév fajtái</text>
+      </navLabel>
+      <content src="main-6.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_E01A8AE7-4C33-45E5-B79B-70D2ECFFA963_" playOrder="7" class="chapter">
+      <navLabel>
+        <text>9. A tulajdonnevek helyesírása I.</text>
+      </navLabel>
+      <content src="main-7.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_656C9A31-7F7C-49E3-8EB6-B4E89EF9DA5D_" playOrder="8" class="chapter">
+      <navLabel>
+        <text>10. A tulajdonnevek helyesírása II. A földrajzi nevek helyesírása</text>
+      </navLabel>
+      <content src="main-8.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_058AF126-913E-4E85-A0C1-9D76440D3BF0_" playOrder="9" class="chapter">
+      <navLabel>
+        <text>11. Gyakorlás – Részösszefoglalás: a főnév</text>
+      </navLabel>
+      <content src="main-9.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_BA21A0CE-3545-48FE-8196-CF49D33274A7_" playOrder="10" class="chapter">
+      <navLabel>
+        <text>12. A viszonyszók I. névelő, névutó, kötőszó, tagadószó</text>
+      </navLabel>
+      <content src="main-10.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_80670B99-EB83-4388-AA96-9880131EFC2F_" playOrder="11" class="chapter">
+      <navLabel>
+        <text>13. A melléknév</text>
+      </navLabel>
+      <content src="main-11.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_8FC218E7-C3DD-4A38-8B04-46258A342A9D_" playOrder="12" class="chapter">
+      <navLabel>
+        <text>15. A melléknév helyesírásának gyakorlása</text>
+      </navLabel>
+      <content src="main-12.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_BC194481-108B-4988-A4D4-FAF6876D650B_" playOrder="13" class="chapter">
+      <navLabel>
+        <text>16. Részösszefoglalás: a melléknév</text>
+      </navLabel>
+      <content src="main-13.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_6EAB764D-3EA0-4161-B8C4-66096C4FB4CD_" playOrder="14" class="chapter">
+      <navLabel>
+        <text>17. Szövegalkotás – jellemzés</text>
+      </navLabel>
+      <content src="main-14.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_FC8834F2-4EE8-474E-A9FD-D1BF9D6C15E0_" playOrder="15" class="chapter">
+      <navLabel>
+        <text>18. A számnév</text>
+      </navLabel>
+      <content src="main-15.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_FD9F28DD-DFFC-42D1-8EE0-F39567E5BCDD_" playOrder="16" class="chapter">
+      <navLabel>
+        <text>19. A számnév helyesírása és helyes használata</text>
+      </navLabel>
+      <content src="main-16.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_C76FDD02-F8C8-4D0A-B213-7854CA1A5722_" playOrder="17" class="chapter">
+      <navLabel>
+        <text>20–21. Összefoglalás – Szövegértés</text>
+      </navLabel>
+      <content src="main-17.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_B88A2431-1C72-4C27-8C68-E2CF44D006AA_" playOrder="18" class="chapter">
+      <navLabel>
+        <text>Ellenőrizd tudásodat!</text>
+      </navLabel>
+      <content src="main-18.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_214205BD-2919-4822-A398-CC1FCA8DB7D3_" playOrder="19" class="chapter">
+      <navLabel>
+        <text>22. A névmások csoportosítása, a személyes névmás</text>
+      </navLabel>
+      <content src="main-19.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_133F7FE5-9A77-4D17-86CC-722D6454C559_" playOrder="20" class="chapter">
+      <navLabel>
+        <text>23. A visszaható és a kölcsönös névmás</text>
+      </navLabel>
+      <content src="main-20.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_26840001-0D6F-451F-A442-A28C5959D506_" playOrder="21" class="chapter">
+      <navLabel>
+        <text>24. A kérdő és a vonatkozó névmás</text>
+      </navLabel>
+      <content src="main-21.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_DF417ED9-366D-426B-B820-4F67E5932C25_" playOrder="22" class="chapter">
+      <navLabel>
+        <text>25. A határozatlan és az általános névmás</text>
+      </navLabel>
+      <content src="main-22.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_6AFA1345-EC2A-4D12-AE05-BF7130283883_" playOrder="23" class="chapter">
+      <navLabel>
+        <text>26. A mutató névmás és a névmások helyes használata</text>
+      </navLabel>
+      <content src="main-23.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_F17CB2BA-87B5-42F9-A742-31393163793E_" playOrder="24" class="chapter">
+      <navLabel>
+        <text>27. Szövegértés – a névmások összefoglalása</text>
+      </navLabel>
+      <content src="main-24.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_9CAC3201-C7F4-4D47-B920-E8B350CB6E0E_" playOrder="25" class="chapter">
+      <navLabel>
+        <text>Ellenőrizd tudásodat!</text>
+      </navLabel>
+      <content src="main-25.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_B52FC250-7836-4CD4-BB58-3F892BC277D5_" playOrder="26" class="chapter">
+      <navLabel>
+        <text>28. Az ige fogalma, az igeidők</text>
+      </navLabel>
+      <content src="main-26.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_FB50B457-FB2B-4373-95AB-73EA32FFA547_" playOrder="27" class="chapter">
+      <navLabel>
+        <text>29. Az igeidők és igemódok</text>
+      </navLabel>
+      <content src="main-27.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_5C58AE25-F1C7-4014-927A-AFF65A16C2FB_" playOrder="28" class="chapter">
+      <navLabel>
+        <text>30. Az igeragozás és az ige bővítményei</text>
+      </navLabel>
+      <content src="main-28.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_93D50E7C-3F6E-4530-B0E8-E251D1137B02_" playOrder="29" class="chapter">
+      <navLabel>
+        <text>31. Igealakok a mondatban – Gyakorlás</text>
+      </navLabel>
+      <content src="main-29.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_9BFEBC50-CE39-473F-A575-008A982D0CD1_" playOrder="30" class="chapter">
+      <navLabel>
+        <text>32. Az igék helyesírása I. A felszólító mód</text>
+      </navLabel>
+      <content src="main-30.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_ED3EEFC8-C541-4140-AD45-27BD5522A0D6_" playOrder="31" class="chapter">
+      <navLabel>
+        <text>33. Az igék helyesírása II.</text>
+      </navLabel>
+      <content src="main-31.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_C6FB0754-AE15-4368-84DF-E486C120F6F6_" playOrder="32" class="chapter">
+      <navLabel>
+        <text>34–35. Az igék helyesírása – rendszerezés és gyakorlás</text>
+      </navLabel>
+      <content src="main-32.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_0379D8E2-8E24-4E4F-9C6D-177028BF611C_" playOrder="33" class="chapter">
+      <navLabel>
+        <text>37. Szövegalkotás, szövegértés</text>
+      </navLabel>
+      <content src="main-33.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_1DB80C47-97CB-431D-897D-ACA163DAEED2_" playOrder="34" class="chapter">
+      <navLabel>
+        <text>38. A viszonyszók II. Igekötő, segédige</text>
+      </navLabel>
+      <content src="main-34.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_50F1F4F6-3BED-4844-BAE4-37E1CC36E709_" playOrder="35" class="chapter">
+      <navLabel>
+        <text>39. Az igekötők és a segédigék</text>
+      </navLabel>
+      <content src="main-35.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_2E9CE7A8-FB44-4D30-8237-3CD233EDF703_" playOrder="36" class="chapter">
+      <navLabel>
+        <text>40. A segédigék</text>
+      </navLabel>
+      <content src="main-36.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_3D33A1B4-F002-427F-83C3-4439D30D2CDA_" playOrder="37" class="chapter">
+      <navLabel>
+        <text>Ellenőrizd tudásodat!</text>
+      </navLabel>
+      <content src="main-37.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_4F2BAD09-187B-4C20-91CC-A70F7ECA61DB_" playOrder="38" class="chapter">
+      <navLabel>
+        <text>42. A határozószók</text>
+      </navLabel>
+      <content src="main-38.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_3E41AADD-6C1D-4CB0-9CE7-09FAD5236C57_" playOrder="39" class="chapter">
+      <navLabel>
+        <text>43. Helyesírás, nyelvhasználat</text>
+      </navLabel>
+      <content src="main-39.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_100673CA-5D94-4B98-83D2-245E73365468_" playOrder="40" class="chapter">
+      <navLabel>
+        <text>44. A mondatszók</text>
+      </navLabel>
+      <content src="main-40.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_1A24CF89-F46E-4903-ABA0-1CF3B66CC67B_" playOrder="41" class="chapter">
+      <navLabel>
+        <text>45. Az igenevek – a főnévi igenév</text>
+      </navLabel>
+      <content src="main-41.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_0A7FFDC4-7AC1-46DD-A963-B748D2A800C1_" playOrder="42" class="chapter">
+      <navLabel>
+        <text>46. A melléknévi igenév</text>
+      </navLabel>
+      <content src="main-42.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_E4BB3E81-6CF9-44BB-9CC2-CE89BFD12AF8_" playOrder="43" class="chapter">
+      <navLabel>
+        <text>47. A határozói igenév</text>
+      </navLabel>
+      <content src="main-43.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_1FA37207-DC96-4F31-A123-AD733D321DFE_" playOrder="44" class="chapter">
+      <navLabel>
+        <text>48. Az igenevek – gyakorlás – összefoglalás</text>
+      </navLabel>
+      <content src="main-44.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_243A0DE6-0CB2-443A-8C35-F9E4A9CF046A_" playOrder="45" class="chapter">
+      <navLabel>
+        <text>49. Plakát, meghívó</text>
+      </navLabel>
+      <content src="main-45.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_764DC1E3-2814-4EA4-A48F-E4C4144DEDC2_" playOrder="46" class="chapter">
+      <navLabel>
+        <text>51. Tájékozódás – papíron és online</text>
+      </navLabel>
+      <content src="main-46.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_2C60FB35-160B-4416-BA96-3AC5B6E28C41_" playOrder="47" class="chapter">
+      <navLabel>
+        <text>52. Hagyományos és online sajtó</text>
+      </navLabel>
+      <content src="main-47.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_2255D3BE-12EA-429C-A4EF-BF1E23143E66_" playOrder="48" class="chapter">
+      <navLabel>
+        <text>Fogalomtár</text>
+      </navLabel>
+      <content src="main-48.xhtml"/>
+    </navPoint>
+    <navPoint id="Id_81E74DBE-0D70-4472-AF08-FFD4D26D3F5D_" playOrder="49" class="chapter">
+      <navLabel>
+        <text>Forrásjegyzék</text>
+      </navLabel>
+      <content src="main-49.xhtml"/>
+    </navPoint>
+  </navMap>
+</ncx>

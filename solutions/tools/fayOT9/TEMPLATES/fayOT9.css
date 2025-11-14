@@ -1,0 +1,373 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(45deg, #4285f4, #34a853);
+            min-height: 100vh;
+            padding: 20px;
+        }
+ 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            /* background: linear-gradient(45deg, #4285f4, #34a853); */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            /* background: linear-gradient(45deg, #4285f4, #34a853); */
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* LOGO */
+        #logo {
+			margin: 0; /* Remove all margins */
+			width: 60px;
+			height: 60px;
+			position: absolute; /* Position relative to the header */
+			top: 20px; /* Align to the top */
+			left: 20px; /* Align to the left */
+		}
+
+		#logo:hover {
+		    transform: rotateY(360deg);
+			transition-duration: 2000ms;
+		}
+
+        .document-section-outer {
+            width: 50%;
+            margin: 0 auto 2rem auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .document-section {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 1rem;
+
+        }
+        .iframe-row {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+            width: 100%;
+            height: 80vh;
+        }
+        .iframe-half-left {
+            flex: 1 1 15%;
+            min-width: 0;
+            height: 80vh;
+            border: 2px solid #222;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .iframe-half-right {
+            flex: 1 1 85%;
+            min-width: 0;
+            height: 80vh;
+            border: 2px solid #222;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .document-title {
+            background: #f8f9fa;
+            border-left: 5px solid #4285f4;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .document-title h2 {
+            color: #1a73e8;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .document-title p {
+            color: #5f6368;
+            font-size: 0.95em;
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: none;
+            background: transparent;
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .iframe-half iframe,
+        .iframe-half-left iframe,
+        .iframe-half-right iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            border: none;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+            border-radius: 8px;
+        }
+
+        /* Error overlays for each frame */
+        #docs-error01, #docs-error02, #drive-error01, #drive-error02 {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,0,0,0.1);
+            color: #b00;
+            font-size: 1.2em;
+            font-weight: bold;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            border-radius: 8px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e3e3e3;
+            border-top: 4px solid #4285f4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #5f6368;
+            font-size: 14px;
+        }
+
+ 
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #2273ec, transparent);
+            margin: 10px 20px;
+        }
+
+
+        .link-bar {
+        display: flex;
+        justify-content: space-between; /* egyik balra, másik jobbra */
+        align-items: center;
+        margin-bottom: 8px;
+        padding: 6px 10px;
+        background-color: #f5f5f5;
+        border-radius: 6px;
+        }
+
+        .link-bar a {
+        text-decoration: none;
+        color: #0073e6;
+        font-weight: 500;
+        }
+
+        .link-bar a:hover {
+        color: #005bb5;
+        text-decoration: underline;
+        }
+
+        /* Tooltip  */
+        .tooltip {
+        position: relative;
+        cursor: pointer;
+        }
+
+        .tooltip::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        top: 0;
+        left: 100%;
+        transform: translate(5%, -100%); /* Reduced horizontal offset */
+        background-color: #333;
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .tooltip::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 100%;
+        transform: translate(5%, -100%); /* Reduced horizontal offset */
+        border-width: 6px;
+        border-style: solid;
+        border-color: transparent transparent #333 transparent;
+        opacity: 0;
+        transition: opacity 0.3s;
+        }
+
+        .tooltip:hover::after,
+        .tooltip:hover::before {
+        opacity: 1;
+        transform: translate(5%, -110%);
+        }
+
+        
+        @media (max-width: 900px) {
+            .document-section-outer {
+                width: 100%;
+            }
+            .iframe-row {
+                display: none !important;
+            }
+        }
+
+        /* Csak portrait módban és max-width: 800px alatt jelenjen meg a figyelmeztetés */
+        @media (orientation: portrait) and (max-width: 300px) {
+            .portrait-warning {
+                display: flex !important;
+            }
+        }
+
+        @media (orientation: landscape), (orientation: portrait) and (min-width: 301px) {
+            .portrait-warning {
+                display: none !important; 
+            }
+            .iframe-row {
+                display: flex !important;
+            }
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .document-section {
+                margin: 15px;
+            }
+            .iframe-container {
+                height: 500px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .iframe-container {
+                height: 400px;
+            }
+
+            .header {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Portrait warning message */
+        .portrait-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 1000;
+            font-size: 1.3em;
+            padding: 30px;
+        }
+
+
+        		.document-section {
+			display: flex;
+			flex-direction: column;
+			margin-bottom: 1rem;
+		}
+		.iframe-row {
+			display: flex;
+			flex-direction: row;
+			gap: 1rem;
+			width: 100%;
+		}
+       
+        
+        /* Alapértelmezett (asztali gép) */
+g {
+  transform: scale(0.85, 0.85);
+  transform-origin: 0 0;
+}
+
+/* Mobil landscape */
+@media only screen and (max-width: 700px) and (orientation: landscape) {
+  g {
+    transform: scale(0.5, 0.5);
+  }
+}

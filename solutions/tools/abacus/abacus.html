@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Abacus Learning Tool</title>
+    <link rel="icon" type="image/png" href="https://felisha76.github.io/portfolio/media/favicon_light.png">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="abacus.css">
+</head>
+<body>
+    
+    <div id="settings">
+        <label><b>Number of Digits:</b>
+            <select id="digit-count">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+        </label>
+        
+        <label><input type="checkbox" id="addition"> Addition</label>
+        <label><input type="checkbox" id="subtraction"> Subtraction</label>
+        <label><input type="checkbox" id="multiplication"> Multiplication</label>
+        <label><input type="checkbox" id="division"> Division</label>
+        <label><b>Number of Questions:</b>
+            <select id="question-count">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+            </select>
+        </label>
+        <label><b>Operations per Question:</b>
+            <select id="operations-count">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+        </label>
+        <button id="start">Start</button>
+    </div>
+    
+    <div class="container">
+        <div class="left-column">
+            <div id="abacus-container">
+                <canvas id="abacus"></canvas>
+                <div id="abacus-value">Value: 0</div>
+                <button id="reset-abacus">Reset abacus</button>
+                
+                
+            </div>
+        </div>
+        
+        <div class="right-column">
+            <div id="questions"></div>
+            <div id="results"></div>
+            <div id="rc_buttons">
+                <button id="check-answers">Check Answers</button>
+                
+                <button id="restart">Restart</button>
+            </div>
+            <img src="../../../media/abacus_big_friend_small_friend.png" alt="abacus big friends and small friends">
+
+        </div>
+    </div>
+    
+    <script src="abacus.js"></script>
+
+
+<footer>
+        <hr>
+    <p style="font-size: medium;">
+        <a href="mailto:frontneststudio@gmail.com?&subject=Abacus tool feedback: https://felisha76.github.io/portfolio/solutions/tools/abacus/abacus.html" target="_top" style="color: #10f808; text-decoration: none;">
+        🔴 Error reporting</a>
+        <a href="https://felisha76.github.io/portfolio/subsites/sources.html" class="simpleLink" style="color: #e7eb0a; text-decoration: none;">
+        🟡 Media sources </a>
+        <a href="https://felisha76.github.io/portfolio/solutions/tools/abacus/abacus.html" class="simpleLink" style="color: #09ebf3;text-decoration: none;">
+        🔵 Start over</a>
+    </p>
+</footer>
+    
+</body>
+</html>

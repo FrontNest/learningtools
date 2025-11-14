@@ -1,0 +1,699 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="hu">
+  <head>
+    <meta name="dtb:uid" content="Id_A99F729A-3A74-4B83-B0EC-105841EF1B62_"/>
+    <meta name="dtb:depth" content="3"/>
+    <meta name="dtb:generator" content="calibre (8.2.100)"/>
+    <meta name="dtb:totalPageCount" content="0"/>
+    <meta name="dtb:maxPageNumber" content="0"/>
+  </head>
+  <docTitle>
+    <text>OH-TOR58ATL</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="num_1" playOrder="1">
+      <navLabel>
+        <text>ŐSKOR–ÓKOR (Kr. u. 476-ig)</text>
+      </navLabel>
+      <content src="part_1.xhtml#toc_1"/>
+      <navPoint id="num_2" playOrder="2">
+        <navLabel>
+          <text>Az ember elterjedése a Földön az őskor végén</text>
+        </navLabel>
+        <content src="part_1.xhtml"/>
+      </navPoint>
+      <navPoint id="num_3" playOrder="3">
+        <navLabel>
+          <text>Az ókori Kelet</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_1"/>
+      </navPoint>
+      <navPoint id="num_4" playOrder="4">
+        <navLabel>
+          <text>Az ókori Egyiptom</text>
+        </navLabel>
+        <content src="part_2.xhtml"/>
+      </navPoint>
+      <navPoint id="num_5" playOrder="5">
+        <navLabel>
+          <text>A görög törzsek elhelyezkedése és a görög mondavilág helyszínei</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_3"/>
+      </navPoint>
+      <navPoint id="num_6" playOrder="6">
+        <navLabel>
+          <text>A görög kultúra és gazdaság</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_4"/>
+      </navPoint>
+      <navPoint id="num_7" playOrder="7">
+        <navLabel>
+          <text>Görög–perzsa háborúk, Kr. e. 5. század</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_5"/>
+      </navPoint>
+      <navPoint id="num_8" playOrder="8">
+        <navLabel>
+          <text>A marathóni csata, Kr. e. 490</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_6"/>
+      </navPoint>
+      <navPoint id="num_9" playOrder="9">
+        <navLabel>
+          <text>Nagy Sándor hódításai, Kr. e. 336–323</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_7"/>
+      </navPoint>
+      <navPoint id="num_10" playOrder="10">
+        <navLabel>
+          <text>Itália népei és római meghódítása, Kr. e. 5–3. század</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_8"/>
+      </navPoint>
+      <navPoint id="num_11" playOrder="11">
+        <navLabel>
+          <text>A Római Birodalom gazdasága és kultúrája</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_9"/>
+      </navPoint>
+      <navPoint id="num_12" playOrder="12">
+        <navLabel>
+          <text>A Római Birodalom legnagyobb kiterjedése idején, Kr. u. 2. század</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_10"/>
+      </navPoint>
+      <navPoint id="num_13" playOrder="13">
+        <navLabel>
+          <text>Az ókori Róma városa</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_11"/>
+      </navPoint>
+      <navPoint id="num_14" playOrder="14">
+        <navLabel>
+          <text>A kereszténység elterjedése a Római Birodalom területén, 1–6. század</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_12"/>
+      </navPoint>
+      <navPoint id="num_15" playOrder="15">
+        <navLabel>
+          <text>A Római Birodalom a népvándorlás korában, 4–5. század</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_13"/>
+      </navPoint>
+      <navPoint id="num_16" playOrder="16">
+        <navLabel>
+          <text>Pannónia a római korban</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_14"/>
+      </navPoint>
+      <navPoint id="num_17" playOrder="17">
+        <navLabel>
+          <text>A hun birodalom az 5. század közepén</text>
+        </navLabel>
+        <content src="part_2.xhtml#toc_15"/>
+      </navPoint>
+      <navPoint id="num_18" playOrder="18">
+        <navLabel>
+          <text>Európa Nagy Károly korában, 768–814</text>
+        </navLabel>
+        <content src="part_3.xhtml"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="num_19" playOrder="19">
+      <navLabel>
+        <text>KÖZÉPKOR (476–1492)</text>
+      </navLabel>
+      <content src="part_3.xhtml#toc_1"/>
+      <navPoint id="num_20" playOrder="20">
+        <navLabel>
+          <text>Az iszlám világ és az Arab Birodalom, 7–10. század</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_17"/>
+      </navPoint>
+      <navPoint id="num_21" playOrder="21">
+        <navLabel>
+          <text>A magyar nép vándorlása és a honfoglalás, 6–9. század</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_18"/>
+      </navPoint>
+      <navPoint id="num_22" playOrder="22">
+        <navLabel>
+          <text>A Kárpát-medence a honfoglalás idején</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_19"/>
+      </navPoint>
+      <navPoint id="num_23" playOrder="23">
+        <navLabel>
+          <text>Magyar hadjáratok, „kalandozások” Európában, 899–970</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_20"/>
+      </navPoint>
+      <navPoint id="num_24" playOrder="24">
+        <navLabel>
+          <text>Európa a 11–13. században</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_21"/>
+      </navPoint>
+      <navPoint id="num_25" playOrder="25">
+        <navLabel>
+          <text>A középkori Európa kulturális emlékei</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_22"/>
+      </navPoint>
+      <navPoint id="num_26" playOrder="26">
+        <navLabel>
+          <text>A Magyar Királyság a 11. században</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_23"/>
+      </navPoint>
+      <navPoint id="num_27" playOrder="27">
+        <navLabel>
+          <text>A Magyar Királyság kultúrája a 13–16. században</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_24"/>
+      </navPoint>
+      <navPoint id="num_28" playOrder="28">
+        <navLabel>
+          <text>A Magyar Királyság a 13. században és a tatárjárás</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_25"/>
+      </navPoint>
+      <navPoint id="num_29" playOrder="29">
+        <navLabel>
+          <text>A muhi csata, 1241. április 10–11</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_26"/>
+      </navPoint>
+      <navPoint id="num_30" playOrder="30">
+        <navLabel>
+          <text>A Mongol Birodalom hódításai a 13–14. században</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_27"/>
+      </navPoint>
+      <navPoint id="num_31" playOrder="31">
+        <navLabel>
+          <text>Az oszmán-török birodalom terjeszkedése, 1300–1683</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_28"/>
+      </navPoint>
+      <navPoint id="num_32" playOrder="32">
+        <navLabel>
+          <text>Európa gazdasága és kereskedelme a 15. század végén</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_29"/>
+      </navPoint>
+      <navPoint id="num_33" playOrder="33">
+        <navLabel>
+          <text>Luxemburgi Zsigmond országai</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_30"/>
+      </navPoint>
+      <navPoint id="num_34" playOrder="34">
+        <navLabel>
+          <text>A Magyar Királyság a Hunyadiak korában, 1442–1490</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_31"/>
+      </navPoint>
+      <navPoint id="num_35" playOrder="35">
+        <navLabel>
+          <text>A nándorfehérvári diadal, 1456. július</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_32"/>
+      </navPoint>
+      <navPoint id="num_36" playOrder="36">
+        <navLabel>
+          <text>A Magyar Királyság népei a 15. század végén</text>
+        </navLabel>
+        <content src="part_3.xhtml#toc_33"/>
+      </navPoint>
+      <navPoint id="num_37" playOrder="37">
+        <navLabel>
+          <text>A nagy földrajzi felfedezések és a gyarmatosítás</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_34"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="num_38" playOrder="38">
+      <navLabel>
+        <text>ÚJKOR (1492–1914)</text>
+      </navLabel>
+      <content src="part_4.xhtml#toc_1"/>
+      <navPoint id="num_39" playOrder="39">
+        <navLabel>
+          <text>A reformáció Európában, 16. század</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_35"/>
+      </navPoint>
+      <navPoint id="num_40" playOrder="40">
+        <navLabel>
+          <text>A katolikus megújulás, 16–17. század</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_36"/>
+      </navPoint>
+      <navPoint id="num_41" playOrder="41">
+        <navLabel>
+          <text>A mohácsi csata, 1526. augusztus 29</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_37"/>
+      </navPoint>
+      <navPoint id="num_42" playOrder="42">
+        <navLabel>
+          <text>A három részre szakadt ország a 16. században</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_38"/>
+      </navPoint>
+      <navPoint id="num_43" playOrder="43">
+        <navLabel>
+          <text>A reformáció és a katolikus megújulás kulturális emlékei hazánkban</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_49"/>
+      </navPoint>
+      <navPoint id="num_44" playOrder="44">
+        <navLabel>
+          <text>Európa a 17. század második felében</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_40"/>
+      </navPoint>
+      <navPoint id="num_45" playOrder="45">
+        <navLabel>
+          <text>Habsburg-ellenes küzdelmek a három részre szakadt országban a 17. században</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_41"/>
+      </navPoint>
+      <navPoint id="num_46" playOrder="46">
+        <navLabel>
+          <text>Törökellenes harcok a három részre szakadt országban a 17. században</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_42"/>
+      </navPoint>
+      <navPoint id="num_47" playOrder="47">
+        <navLabel>
+          <text>A Rákóczi-szabadságharc, 1703–1711</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_43"/>
+      </navPoint>
+      <navPoint id="num_48" playOrder="48">
+        <navLabel>
+          <text>A Magyar Királyság a 18. században</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_44"/>
+      </navPoint>
+      <navPoint id="num_49" playOrder="49">
+        <navLabel>
+          <text>Etnikai változások a Kárpát-medencében a 16–18. században</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_45"/>
+      </navPoint>
+      <navPoint id="num_50" playOrder="50">
+        <navLabel>
+          <text>A Magyar Királyság etnikai térképe a 18. század végén</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_46"/>
+      </navPoint>
+      <navPoint id="num_51" playOrder="51">
+        <navLabel>
+          <text>Európa a 18. században és a felvilágosodás</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_47"/>
+      </navPoint>
+      <navPoint id="num_52" playOrder="52">
+        <navLabel>
+          <text>Az észak-amerikai függetlenségi háború, 1775–1783</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_48"/>
+      </navPoint>
+      <navPoint id="num_53" playOrder="53">
+        <navLabel>
+          <text>Az ipari forradalom Európában 1850-ig</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_50"/>
+      </navPoint>
+      <navPoint id="num_54" playOrder="54">
+        <navLabel>
+          <text>Európa a Szent Szövetség korában, 1815–1849</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_51"/>
+      </navPoint>
+      <navPoint id="num_55" playOrder="55">
+        <navLabel>
+          <text>A Magyar Királyság a reformkorban</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_52"/>
+      </navPoint>
+      <navPoint id="num_56" playOrder="56">
+        <navLabel>
+          <text>A Magyar Királyság gazdasága és kultúrája a reformkorban</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_53"/>
+      </navPoint>
+      <navPoint id="num_57" playOrder="57">
+        <navLabel>
+          <text>A pest-budai forradalom eseményei, 1848. március 15</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_54"/>
+      </navPoint>
+      <navPoint id="num_58" playOrder="58">
+        <navLabel>
+          <text>A szabadságharc főbb hadműveletei, 1848. július – 1849. február</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_55"/>
+      </navPoint>
+      <navPoint id="num_59" playOrder="59">
+        <navLabel>
+          <text>A tavaszi hadjárat és Erdély felszabadítása, 1849. március–május</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_56"/>
+      </navPoint>
+      <navPoint id="num_60" playOrder="60">
+        <navLabel>
+          <text>A szabadságharc leverése, 1849. június–október</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_57"/>
+      </navPoint>
+      <navPoint id="num_61" playOrder="61">
+        <navLabel>
+          <text>Olaszország és Németország kialakulása, 1859–1871</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_58"/>
+      </navPoint>
+      <navPoint id="num_62" playOrder="62">
+        <navLabel>
+          <text>Az Egyesült Államok kialakulása és polgárháborúja a 19. században</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_59"/>
+      </navPoint>
+      <navPoint id="num_63" playOrder="63">
+        <navLabel>
+          <text>A Föld országai és a gyarmati rendszer 1914-ben</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_60"/>
+      </navPoint>
+      <navPoint id="num_64" playOrder="64">
+        <navLabel>
+          <text>Az Osztrák–Magyar Monarchia népei, 1910</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_61"/>
+      </navPoint>
+      <navPoint id="num_65" playOrder="65">
+        <navLabel>
+          <text>A Magyar Királyság a dualizmus idején</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_62"/>
+      </navPoint>
+      <navPoint id="num_66" playOrder="66">
+        <navLabel>
+          <text>Gazdaság és kultúra a dualizmus idején</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_63"/>
+      </navPoint>
+      <navPoint id="num_67" playOrder="67">
+        <navLabel>
+          <text>Budapest fejlődése, 1873–1914</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_64"/>
+      </navPoint>
+      <navPoint id="num_68" playOrder="68">
+        <navLabel>
+          <text>A Tisza szabályozásának egy szakasza</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_65"/>
+      </navPoint>
+      <navPoint id="num_69" playOrder="69">
+        <navLabel>
+          <text>A vasúthálózat fejlődése 1914-ig</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_66"/>
+      </navPoint>
+      <navPoint id="num_70" playOrder="70">
+        <navLabel>
+          <text>Szövetségi rendszerek az első világháború előtt</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_67"/>
+      </navPoint>
+      <navPoint id="num_71" playOrder="71">
+        <navLabel>
+          <text>Az első világháború Európában, 1914–1918</text>
+        </navLabel>
+        <content src="part_4.xhtml#toc_68"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="num_72" playOrder="72">
+      <navLabel>
+        <text>JELENKOR (1914-től napjainkig)</text>
+      </navLabel>
+      <content src="part_6.xhtml#toc_1"/>
+      <navPoint id="num_73" playOrder="73">
+        <navLabel>
+          <text>Oroszország, Szovjet-Oroszország, Szovjetunió, 1917–1922</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_69"/>
+      </navPoint>
+      <navPoint id="num_74" playOrder="74">
+        <navLabel>
+          <text>Gulag munkatáborok a Szovjetunióban az 1950-es évek közepéig</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_70"/>
+      </navPoint>
+      <navPoint id="num_75" playOrder="75">
+        <navLabel>
+          <text>Az Osztrák–Magyar Monarchia felbomlása 1918 után</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_71"/>
+      </navPoint>
+      <navPoint id="num_76" playOrder="76">
+        <navLabel>
+          <text>Magyarország 1918–19-ben</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_72"/>
+      </navPoint>
+      <navPoint id="num_77" playOrder="77">
+        <navLabel>
+          <text>Közép-Európa 1914-ben</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_73"/>
+      </navPoint>
+      <navPoint id="num_78" playOrder="78">
+        <navLabel>
+          <text>Európa a második világháború előtt</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_74"/>
+      </navPoint>
+      <navPoint id="num_79" playOrder="79">
+        <navLabel>
+          <text>Magyarország trianoni veszteségei, 1920</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_75"/>
+      </navPoint>
+      <navPoint id="num_80" playOrder="80">
+        <navLabel>
+          <text>Magyarország a két világháború között, 1920–1938</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_76"/>
+      </navPoint>
+      <navPoint id="num_81" playOrder="81">
+        <navLabel>
+          <text>A második világháború Európában és Észak-Afrikában, 1939. szeptember – 1942. október</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_77"/>
+      </navPoint>
+      <navPoint id="num_82" playOrder="82">
+        <navLabel>
+          <text>Magyarország, 1938–1941</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_78"/>
+      </navPoint>
+      <navPoint id="num_83" playOrder="83">
+        <navLabel>
+          <text>A második világháború Európában és Észak-Afrikában, 1942. november – 1945. május</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_79"/>
+      </navPoint>
+      <navPoint id="num_84" playOrder="84">
+        <navLabel>
+          <text>A sztálingrádi csata, 1942. november 19. – 1943. február 2</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_80"/>
+      </navPoint>
+      <navPoint id="num_85" playOrder="85">
+        <navLabel>
+          <text>Hadműveletek a Kárpát-medencében, 1944. augusztus – 1945. április</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_81"/>
+      </navPoint>
+      <navPoint id="num_86" playOrder="86">
+        <navLabel>
+          <text>Budapest ostroma, 1944. december 24. – 1945. február 13</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_82"/>
+      </navPoint>
+      <navPoint id="num_87" playOrder="87">
+        <navLabel>
+          <text>A csendes-óceáni háború, 1941. december – 1945. szeptember</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_83"/>
+      </navPoint>
+      <navPoint id="num_88" playOrder="88">
+        <navLabel>
+          <text>Háborús emberveszteségek Európában, 1939–1945</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_84"/>
+      </navPoint>
+      <navPoint id="num_89" playOrder="89">
+        <navLabel>
+          <text>A holokauszt Európában, 1939–1945</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_85"/>
+      </navPoint>
+      <navPoint id="num_90" playOrder="90">
+        <navLabel>
+          <text>A magyarországi vidéki zsidóság gettósítása és deportálása, 1944</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_86"/>
+      </navPoint>
+      <navPoint id="num_91" playOrder="91">
+        <navLabel>
+          <text>Magyarellenes atrocitások, 1944–1945</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_87"/>
+      </navPoint>
+      <navPoint id="num_92" playOrder="92">
+        <navLabel>
+          <text>Népmozgások és kitelepítések Közép-Európában, 1944–1952</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_88"/>
+      </navPoint>
+      <navPoint id="num_93" playOrder="93">
+        <navLabel>
+          <text>Közép-Európa, 1939–1941</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_89"/>
+      </navPoint>
+      <navPoint id="num_94" playOrder="94">
+        <navLabel>
+          <text>A megosztott Európa, 1945–1989</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_90"/>
+      </navPoint>
+      <navPoint id="num_95" playOrder="95">
+        <navLabel>
+          <text>Az ENSZ terve Palesztina felosztására, 1947</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_91"/>
+      </navPoint>
+      <navPoint id="num_96" playOrder="96">
+        <navLabel>
+          <text>A Közel-Kelet, 1988–2016</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_92"/>
+      </navPoint>
+      <navPoint id="num_97" playOrder="97">
+        <navLabel>
+          <text>A megosztott világ, 1945–1990</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_93"/>
+      </navPoint>
+      <navPoint id="num_98" playOrder="98">
+        <navLabel>
+          <text>Az Egyesült Államok és a Szovjetunió katonai szembenállása a hidegháború idején</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_94"/>
+      </navPoint>
+      <navPoint id="num_99" playOrder="99">
+        <navLabel>
+          <text>Magyarország 1949 és 1960 között</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_95"/>
+      </navPoint>
+      <navPoint id="num_100" playOrder="100">
+        <navLabel>
+          <text>Magyarország 1961 és 1990 között</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_96"/>
+      </navPoint>
+      <navPoint id="num_101" playOrder="101">
+        <navLabel>
+          <text>Az egységesülő Európa 1990-től napjainkig</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_97"/>
+      </navPoint>
+      <navPoint id="num_102" playOrder="102">
+        <navLabel>
+          <text>A Szovjetunió felbomlása, 1991</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_98"/>
+      </navPoint>
+      <navPoint id="num_103" playOrder="103">
+        <navLabel>
+          <text>Magyarország közigazgatási térképe, 2023</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_99"/>
+      </navPoint>
+      <navPoint id="num_104" playOrder="104">
+        <navLabel>
+          <text>A magyarországi nemzetiségek, 2022</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_100"/>
+      </navPoint>
+      <navPoint id="num_105" playOrder="105">
+        <navLabel>
+          <text>A Kárpát-medencei magyarság a második ezredfordulón</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_101"/>
+      </navPoint>
+      <navPoint id="num_106" playOrder="106">
+        <navLabel>
+          <text>A Föld vallási kultúrái a második ezredfordulón</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_102"/>
+      </navPoint>
+      <navPoint id="num_107" playOrder="107">
+        <navLabel>
+          <text>Magyarok a világban</text>
+        </navLabel>
+        <content src="part_6.xhtml#toc_103"/>
+      </navPoint>
+    </navPoint>
+    <navPoint id="num_108" playOrder="108">
+      <navLabel>
+        <text>MELLÉKLETEK</text>
+      </navLabel>
+      <content src="indexes.xhtml#toc_1"/>
+      <navPoint id="num_109" playOrder="109">
+        <navLabel>
+          <text>Helynévmutató</text>
+        </navLabel>
+        <content src="indexes.xhtml#toc_1"/>
+      </navPoint>
+      <navPoint id="num_110" playOrder="110">
+        <navLabel>
+          <text>Képes időrendi táblák</text>
+        </navLabel>
+        <content src="part_7.xhtml#toc_104"/>
+      </navPoint>
+      <navPoint id="num_111" playOrder="111">
+        <navLabel>
+          <text>Címerek a magyar állam történetéből</text>
+        </navLabel>
+        <content src="part_7.xhtml#toc_105"/>
+      </navPoint>
+      <navPoint id="num_112" playOrder="112">
+        <navLabel>
+          <text>Zászlók a magyar állam történetéből</text>
+        </navLabel>
+        <content src="part_7.xhtml#toc_106"/>
+      </navPoint>
+      <navPoint id="num_113" playOrder="113">
+        <navLabel>
+          <text>Magyarország területi változásai</text>
+        </navLabel>
+        <content src="part_7.xhtml#toc_1"/>
+      </navPoint>
+      <navPoint id="num_114" playOrder="114">
+        <navLabel>
+          <text>30 magyar vonatkozású történelmi emlékhely a Kárpát-medencében</text>
+        </navLabel>
+        <content src="part_7.xhtml#toc_2"/>
+      </navPoint>
+    </navPoint>
+  </navMap>
+</ncx>

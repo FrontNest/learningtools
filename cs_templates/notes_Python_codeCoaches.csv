@@ -1,0 +1,1521 @@
+﻿,Main,Topics,Description,Codes,1
+,python codeCoeaches Easy,dividable if,"POPSICLES
+You have a box of popsicles and you want to give them all away to a group of brothers and sisters. If you have enough left in the box to give them each an even amount you should go for it! If not, they will fight over them, and you should eat them yourself later.
+
+Task
+Given the number of siblings that you are giving popsicles to, determine if you can give them each an even amount or if you shouldn't mention the popsicles at all.
+
+Input Format
+Two integer values, the first one represents the number of siblings, and the second one represents the number of popsicles that you have left in the box.
+
+Output Format
+A string that says 'give away' if you are giving them away, or 'eat them yourself' if you will be eating them yourself.
+
+Sample Input
+3 9
+
+Sample Output
+give away","siblings = int(input())
+popsicles = int(input())
+
+#your code goes here
+
+if popsicles % siblings == 0:
+    print('give away')
+else:
+    print('eat them yourself')",,2
+,python codeCoeaches Easy,import math ceil,"HALLOWEEN CANDY
+
+You go trick or treating with a friend and all but three of the houses that you visit are giving out candy. One house that you visit is giving out toothbrushes and two houses are giving out dollar bills. 
+
+Task
+Given the input of the total number of houses that you visited, what is the percentage chance that one random item pulled from your bag is a dollar bill? 
+
+Input Format 
+An integer (>=3) representing the total number of houses that you visited. 
+
+Output Format
+A percentage value rounded up to the nearest whole number.
+
+Sample Input
+4
+
+Sample Output 
+50","import math
+houses = int(input())
+
+#your code goes here
+print(math.ceil((100/houses)*2))",,3
+,python codeCoeaches Easy,import math floor,"FRUIT BOWL
+You have a bowl on your counter with an even number of pieces of fruit in it. Half of them are bananas, and the other half are apples. You need 3 apples to make a pie. 
+
+Task 
+Your task is to evaluate the total number of pies that you can make with the apples that are in your bowl given to total amount of fruit in the bowl.
+
+Input Format
+An integer that represents the total amount of fruit in the bowl.
+
+Output Format
+An integer representing the total number of whole apple pies that you can make.
+
+Sample Input
+26 
+
+Sample Output 
+4","import math
+
+fruit = int(input())
+
+#your code goes here
+
+apples = fruit/2
+pie = apples/3
+
+print(math.floor(pie))",,4
+,python codeCoeaches Easy,dictionary for adding items to dictionary += round,"BALLPARK ORDERS
+You and three friends go to a baseball game and you offer to go to the concession stand for everyone. They each order one thing, and you do as well. Nachos and Pizza both cost $6.00. A Cheeseburger meal costs $10. Water is $4.00 and Coke is $5.00. Tax is 7%.
+
+Task 
+Determine the total cost of ordering four items from the concession stand. If one of your friend’s orders something that isn't on the menu, you will order a Coke for them instead.
+
+Input Format
+You are given a string of the four items that you've been asked to order that are separated by spaces.
+
+Output Format 
+You will output a number of the total cost of the food and drinks.
+
+Sample Input 
+'Pizza Cheeseburger Water Popcorn'
+
+Sample Output 
+26.75","food = {
+    ""Nachos"": 6.00,
+    ""Pizza"": 6.00,
+    ""Cheeseburger"": 10.00,
+    ""Water"": 4.00,
+    ""Coke"": 5.00
+}
+
+tax = 0.07
+
+order = input()
+
+items = order.split()
+
+total = 0
+for i in items:
+    if i not in food:
+        total += food[""Coke""]
+    else:
+        total += food[i]
+
+totalT = total * (1 + tax)
+
+totalT = round(totalT, 2)
+print(totalT)",,5
+,python codeCoeaches Easy,strip if elif else,"CHEER CREATOR
+You are cheering on your favorite team. After each play, if your team got over 10 yards further down the field, you stand up and give your friend a high five. If they don't move forward by at least a yard you stay quiet and say 'shh', and if they move forward 10 yards or less, you say 'Ra!' for every yard that they moved forward in that play.
+
+Task 
+Given the number of yards that your team moved forward, output either 'High Five' (for over 10), 'shh' (for <1), or a string that has a 'Ra!' for every yard that they gained.
+
+Input Format 
+An integer value that represents the number of yards gained or lost by your team.
+
+Output Format 
+A string of the appropriate cheer. 
+
+Sample Input 
+3
+
+Sample Output
+Ra!Ra!Ra!","yard = int(input().strip())
+
+if yard > 10:
+    print(""High Five"")
+elif yard > 0:
+    print(""Ra!"" * yard)
+else:
+    print(""shh"")",,6
+,python codeCoeaches Easy,int round if else,"SKEE-BALL
+You are playing a game at your local arcade, and you receive 1 ticket from the machine for every 12 points that you score. You want to purchase a squirt gun with your tickets. Given your score, and the price of the squirt gun (in tickets) are you able to buy it?
+
+Task 
+Evaluate whether or not you have scored high enough to earn enough tickets to purchase the squirt gun at the arcade.
+
+Input Format 
+The first input is an integer value that represents the points that you scored playing, and the second input is an integer value that represents the cost of the squirt gun (in tickets).
+
+Output Format 
+A string that say 'Buy it!' if you will have enough tickets, or a string that says 'Try again' if you will not.
+
+Sample Input 
+500
+40
+
+Sample Output
+Buy it!","score = int(input())
+price = int(input())
+
+tickets = round(score/12)
+
+if price > tickets:
+  print(""Try again"")
+else:
+  print(""Buy it!"")",,7
+,python codeCoeaches Easy,round math,"PAINT COST
+You are getting ready to paint a piece of art. The canvas and brushes that you want to use will cost 40.00. Each color of paint that you buy is an additional 5.00. Determine how much money you will need based on the number of colors that you want to buy if tax at this store is 10%.
+
+Task 
+Given the total number of colors of paint that you need, calculate and output the total cost of your project rounded up to the nearest whole number.
+
+Input Format 
+An integer that represents the number of colors that you want to purchase for your project.
+
+Output Format 
+A number that represents the cost of your purchase rounded up to the nearest whole number.
+
+Sample Input 
+10
+
+Sample Output 
+99","canvas = 40.00
+paint = 5.00
+tax = 0.1
+
+amount = int(input())
+price = (canvas + (paint*amount))* (1 + tax)
+print(round(price))",,8
+,python codeCoeaches Easy,float echange rate,"ARGENTINA
+You are in a hat store in Argentina! The prices are listed in US Dollars and Argentinian Pesos. You have both, but you want to make sure you pay the lower price! Do you pay in Dollars or Pesos? The exchange rate is 2 cents for every Peso.
+
+Task 
+Create a program that takes two prices and tells you which one is lower after conversion.
+
+Input Format 
+Two integer values, the first one is the price in Pesos and the second one is the price in Dollars.
+
+Output Format 
+A string that says which currency you should make the purchase in ('Dollars' or 'Pesos').
+
+Sample Input 
+4000
+100
+
+Sample Output 
+Pesos","peso = float(input())
+dollar = float(input())
+
+exchp = peso*(0.02)
+
+if exchp < dollar:
+  print(""Pesos"")
+else:
+  print(""Dollars"")",,9
+,python codeCoeaches Easy,math split map list comrehention,"BALCONIES
+
+You are trying to determine which of two apartments has a larger balcony. Both balconies are rectangles, and you have the length and width, but you need the area.
+
+Task 
+Evaluate the area of two different balconies and determine which one is bigger.
+
+Input Format 
+Your inputs are two strings where the measurements for height and width are separated by a comma. The first one represents apartment A, the second represents apartment B.
+
+Output Format: 
+A string that says whether apartment A or apartment B has a larger balcony.
+
+Sample Input 
+'5,5'
+'2,10'
+
+Sample Output 
+Apartment A","import math
+A = map(int, input().split(','))
+B = map(int, input().split(','))
+
+asq = math.prod(A)
+bsq = math.prod(B)
+
+print(""Apartment A"" if asq > bsq else ""Equal"" if asq == bsq else ""Apartment B"")",,10
+,python codeCoeaches Easy,int math,"CANDLES
+
+It is almost Hanukkah and the store in your town is completely out of candles! You decide to place an order online, and you talk to your friends to see who else needs candles. How many candles should you order in total for the holiday? 
+
+Task 
+Determine how many candles you need to order based on how many friends ask to join your order (each friend will need 9 candles).
+
+Input Format 
+An integer that represents the number of friends that ask to order candles with you.
+
+Output Format 
+An integer that represents the total number of candles that you need to order.
+
+Sample Input 
+4
+
+Sample Output 
+45","friends = int(input())
+cpf = friends * 9
+candles = cpf + 9
+print(candles)",,11
+,python codeCoeaches Easy,math int surface ceil,"DUCT TAPE
+You want to completely cover a flat door on both sides with duct tape. You need to know how many rolls of duct tape to buy when you go to the store.
+
+Task: 
+Given the height and width of the door, determine how many rolls of duct tape you will need (a roll of duct tape is 60 feet long and 2 inches wide and there are 12 inches in each foot). Don't forget both sides of the door!
+
+Input Format: 
+Two integers that represent the height and width of the door.
+
+Output Format: 
+An integer that represents the total rolls of duct tape that you need to buy.
+
+Sample Input: 
+7
+4
+
+Sample Output: 
+6","import math
+H = int(input())*12
+W = int(input())*12
+surface = ((H*W)*2)
+
+duct = (60*12)*2
+
+s = math.ceil(surface/duct)
+print(s)",,12
+,python codeCoeaches Easy,int if else logic,"EASTER EGGS
+You go hunting for Easter eggs with a friend. You think that you have found all of the eggs, but you want to make sure that you don't leave any behind! Compare Easter baskets with your friend to decide if you should keep hunting.
+
+Task: 
+If you know the total number of eggs that were hidden and the amount in both of your baskets. Evaluate whether it is time to eat candy or keep hunting for more eggs.
+
+Input Format: 
+Three integer values. The first represents the total number of eggs, the second, the amount in your basket, and lastly the amount that your friend has found.
+
+Output Format: 
+A string that says 'Keep Hunting' if there are still eggs out there or 'Candy Time' if you found all the eggs.
+
+Sample Input:
+100
+40
+60
+
+Sample Output: 
+Candy Time","total = int(input())
+basket = int(input())
+friend = int(input())
+
+if total == basket+friend:
+    print(""Candy Time"")
+else:
+    print(""Keep Hunting"") ",,13
+,python codeCoeaches Easy,int perimeter,"GUARD FLAMINGOS
+You decide to add a pink flamingo lawn ornament every 2 feet around the perimeter of your yard. How many flamingos do you need to purchase?
+
+Task: 
+Given the length and width of your rectangular yard, determine how many flamingos your should buy to put one every 2 feet along the edges of your yard.
+
+Input Format: 
+Two integer values that represent the length and width of your front yard.
+
+Output Format: 
+An integer that represents the total number of flamingos that you should purchase.
+
+Sample Input: 
+10
+10
+
+Sample Output: 
+20","L = int(input())
+W = int(input())
+peri = (L+W)*2
+
+fl = int(peri/2)
+print(fl)",,14
+,python codeCoeaches Easy,if elif else logic,"GOTHAM CITY
+You are a police officer, and you get a report of criminal activity! Should you go on your own, or should you call a superhero to help you fight the crime? If there are less than 5, you can handle this on your own, if there are 5-10, you will want to go with Batman for backup, and if there are more than 10, you should stay where it is safe and let Batman handle this on his own!
+
+Task: 
+Determine whether you need to call backup based on the total number of criminals being reported.
+
+Input Format: 
+An integer that represents the total number of criminals present at the scene.
+
+Output Format: 
+A string that says 'I got this!', 'Help me Batman', or 'Good Luck out there!' depending on the scenario.
+
+Sample Input: 
+7
+
+Sample Output: 
+'Help me Batman'","criminals = int(input())
+if criminals <5:
+  print(""I got this!"")
+elif 5 <= criminals <=10:
+  print(""Help me Batman"")
+else:
+  print(""Good Luck out there!"")",,15
+,python codeCoeaches Easy,if elif else logic balance,"HOVERCRAFT
+You run a hovercraft factory. Your factory makes ten hovercrafts in a month. Given the number of customers you got that month, did you make a profit? It costs you 2,000,000 to build a hovercraft, and you are selling them for 3,000,000. You also pay 1,000,000 each month for insurance.
+
+Task: 
+Determine whether or not you made a profit based on how many of the ten hovercrafts you were able to sell that month.
+ 
+Input Format: 
+An integer that represents the sales that you made that month.
+
+Output Format: 
+A string that says 'Profit', 'Loss', or 'Broke Even'.
+
+Sample Input: 
+5
+
+Sample Output: 
+Loss","import math
+sales = int(input())
+build = 2000000
+sell = 3000000
+insurance = 1000000
+
+neg = 10*(2000000)+insurance
+pos = sales*(3000000)
+balance = pos - neg
+
+if balance > 0:
+    print(""Profit"")
+elif balance == 0:
+    print(""Broke Even"")
+else:
+    print(""Loss"")",,16
+,python codeCoeaches Easy,dictionary for adding items to dictionary += ,"IZZY THE IGUANA
+Your pet Iguana has run away, and you found it up in a tree! It will come down right away if you brought the right snacks, but if you don't have enough, you will have to wait. You need 10 total snack points to bring it down. Lettuce is worth 5, Carrot is worth 4, Mango is worth 9, and Cheeseburger is worth 0.
+
+Task: 
+Evaluate whether or not you have enough snack points to convince your iguana to come down.
+
+Input Format: 
+Your input is a string that represents the snacks that you have. Snacks are separated by spaces, you can have any number of snacks, and they can repeat.
+
+Output Format: 
+A string that says 'Come on Down!' if you have enough points, or 'Time to wait' if you do not. 
+
+Sample Input: 
+Mango Cheeseburger Carrot
+
+Sample Output:
+Come on Down!","snack = input()
+
+snacks = {
+    ""Lettuce"" : 5,
+    ""Carrot"" : 4,
+    ""Mango"" : 9,
+    ""Cheeseburger"" : 0
+}
+
+snacklist = list((snack.split("" "")))
+
+total = 0
+for i in snacklist:
+    total += snacks[i]
+
+if total >= 10:
+    print(""Come on Down!"")
+else:
+    print(""Time to wait"")",,17
+,python codeCoeaches Easy,if else round tax,"KALEIDOSCOPES
+You sell souvenir kaleidoscopes at a gift shop, and if a customer buys more than one, they get a 10% discount on all of them!
+Given the total number of kaleidoscopes that a customer buys, let them know what their total will be. Tax is 7%. All of your kaleidoscopes cost the same amount, 5.00.
+
+Task: 
+Take the number of kaleidoscopes that a customer buys and output their total cost including tax and any discounts.
+
+Input Format: 
+An integer value that represents the number of kaleidoscopes that a customer orders.
+
+Output Format: 
+A number that represents the total purchase price to two decimal places.
+
+Sample Input: 
+4
+
+Sample Output: 
+19.26","number = float(input())
+
+tax = 1.07
+disc = 0.90
+cost = 5.00
+
+if number > 1:
+    print(round((((number*cost)*disc)*tax), 2))
+else:
+    print(round((cost*tax), 2))",,18
+,python codeCoeaches Easy,dictionary for append split ,"JUNGLE CAMPING
+You are camping alone out in the jungle and you hear some animals in the dark nearby. Based on the noise they make, determine which animals they are.
+
+Task: 
+You are given the noises made by different animals that you can hear in the dark, evaluate each noise to determine which animal it belongs to. Lions say 'Grr', Tigers say 'Rawr', Snakes say 'Ssss', and Birds say 'Chirp'.
+
+Input Format: 
+A string that represent the noises that you hear with a space between them.
+
+Output Format: 
+A string that includes each animal that you hear with a space after each one. (animals can repeat)
+
+Sample Input: 
+Rawr Chirp Ssss
+
+Sample Output: 
+Tiger Bird Snake","animals = {
+    ""Grr"": ""Lion"",
+    ""Rawr"": ""Tiger"",
+    ""Ssss"": ""Snake"",
+    ""Chirp"": ""Bird""
+}
+sounds = input().split()
+result = []
+for sound in sounds:
+    result.append(animals.get(sound))
+print(*result)",,19
+,python codeCoeaches Easy,int if else logic,"LAND HO!
+You are on a large ship and you put down anchor near a beautiful beach. There is a small boat ferrying passengers back and forth, and you get in line for it. How long will you have to wait to get to the beach? You know that 20 people can fit on the boat and each trip to shore takes 10 minutes each way.
+
+Task: 
+Determine your wait time if you know the total number of people ahead of you in line.  
+
+Input Format: 
+An integer that represents the total number of people ahead of you in line.
+
+Output Format: 
+An integer that represents the number of minutes that you will have to wait until you are standing on the beach.
+
+Sample Input: 
+15
+
+Sample Output: 
+10","input = int(input())
+
+boat = 20
+time = 10
+
+x = (input//boat)
+if input <= 20:
+    print(time)
+else:
+    print((x*boat)+time)",,20
+,python codeCoeaches Easy,int f string,"NEVERLAND
+If you live in Neverland, you never get any older! You and your twin go to Neverland for an afternoon, then your twin goes back home and you stay. Over time, how much older is your twin than you, and how old are they?
+
+Task: 
+Evaluate the difference between your ages, and the age that your twin is now if you are given the age that you were when you got to Neverland, and the time that has elapsed since then.
+
+Input Format: 
+Two integer values. The first represents your age when you arrived at Neverland, and the second, the number of years that have passed since your twin went back.
+
+Output Format: 
+A string that states 'My twin is X years old and they are Y years older than me' Where X is their age and Y is the difference. 
+
+Sample Input: 
+10 
+8
+
+Sample Output: 
+My twin is 18 years old and they are 8 years older than me","me = int(input())
+time = int(input())
+
+twin = me+time
+time1 = time
+print(f""My twin is {twin} years old and they are {time1} years older than me"") ",,21
+,python codeCoeaches Easy,list join slice,"EXTRA-TERRESTRIALS
+You meet a group of aliens, and their language is just like English except that they say every word backwards. 
+How will you learn to communicate with them?
+
+Task: 
+Take a word in English that you would like to say, and turn it into language that these aliens will understand.
+
+Input Format: 
+A string of a word in English.
+
+Output Format: 
+A string of the reversed word that represents the original word translated into alien language.
+
+Sample Input: 
+howdy
+
+Sample Output: 
+ydwoh","inp = input()
+alien = list(inp)
+res = """".join(alien[::-1])
+print(res)",,22
+,python codeCoeaches Easy,isnumeric if else logic len,"ZIP CODE VALIDATOR
+As headmaster of the post office, sometimes people write zip codes that don't exist or zip codes that are not valid.  
+You are tasked with making a system to check if the inputted zip code is a valid zip code. 
+
+Task:
+Write a program that takes in a string representing a zip code. Output true or false if it is a valid zip code or not. 
+A valid zip code is only numbers, must be 5 characters in length, and contain no spaces.
+
+Input Format: 
+A string containing a zip code.
+
+Output Format: 
+A string: true is the input is a valid zip code, or false, if it is not. 
+
+Sample Input: 
+752f78
+
+Sample Output: 
+false  the lenght of list is longer then the lenght of set if the items are duplicated","inp = input() # zip code input
+
+if inp.isnumeric() and len(inp) == 5:
+    print(""true"")
+else:
+    print(""false"")",,23
+,python codeCoeaches Easy,for if char upper count += sum list,"VOWEL COUNTER
+You are in an English class, your teacher tells the class that vowels are the glue that hold words and sentences together. 
+They want to make sure you understand the importance of vowels in a sentence.  
+You are given example sentences and are to give a total amount of vowels that are in each sentence.
+
+Task: 
+Write a program that takes in a string as input, counts and outputs the number of vowels (A, E, I, O, U).
+
+Input Format: 
+A string (letters can be both uppercase or lower case).
+
+Output Format: 
+A number which represents the total number of vowels in the string.
+
+Sample Input: 
+this is a sentence
+
+Sample Output: 
+6","inp = input()
+
+vowels = [""A"", ""E"", ""I"", ""O"", ""U""]
+# count = sum(1 for char in inp.upper() if char in vowels)
+# print(count)
+
+count = 0
+for char in inp.upper():
+    if char in vowels:
+        count += 1
+
+print(count)",,24
+,python codeCoeaches Easy,len list set if else logic,"ISOGRAM DETECTOR
+An isogram is a word that has no repeating letters, whether they are consecutive or non-consecutive.  
+Your job is to find a way to detect if a word is an isogram.
+
+Task: Write a program that takes in a string as input, detects if the string is an isogram and outputs true or false based on the result.
+ 
+Input Format: 
+A string containing one word.
+
+Output Format: 
+A string: true or false.
+
+Sample Input: 
+turbulence
+
+Sample Output: 
+false","inp = input()    # orsolya
+inpL = list(inp) # ['o', 'r', 's', 'o', 'l', 'y', 'a']
+
+lenght = len(inpL) # 7
+thisset = len(set(inpL)) # 6
+
+if lenght == thisset:
+     print(""true"")
+else:
+    print(""false"")",,25
+,python codeCoeaches Easy,int dividable 3 5 +=,"MULTIPLES
+You need to calculate the sum of all the multiples of 3 or 5 below a given number.
+
+Task: 
+Given an integer number, output the sum of all the multiples of 3 and 5 below that number. 
+If a number is a multiple of both, 3 and 5, it should appear in the sum only once.
+
+Input Format: 
+An integer.
+
+Output Format: 
+An integer, representing the sum of all the multiples of 3 and 5 below the given input.
+
+Sample Input: 
+10
+
+Sample Output:
+23      In this excercise the logic filters autamically that the number is not dividable 3 AND 5 at the same time.","inp = int(input())
+
+n = 0
+total = 0
+while n < inp:
+    if n % 3 == 0 or n % 5 == 0:
+        total += n
+    n += 1
+        
+print(total)",,26
+,python codeCoeaches Easy,int list bin,"NUMBER OF ONES
+Task:
+Count the number of ones in the binary representation of a given integer.
+
+Input Format:
+An integer.
+
+Output Format: 
+An integer representing the count of ones in the binary representation of the input.
+
+Sample Input:
+9
+
+Sample Output:
+2","inp = int(input())    # 10
+rep = list(bin(inp))  # ['0', 'b', '1', '0', '1', '0']
+
+print(rep.count('1'))",,27
+,python codeCoeaches MEDIUM,list split for adding items to string slice,"PIG LATIN
+You have two friends who are speaking Pig Latin to each other! Pig Latin is the same words in the same order except that you take the first letter of each word and put it on the end, then you add 'ay' to the end of that. (""road"" = ""oadray"") 
+
+Task
+Your task is to take a sentence in English and turn it into the same sentence in Pig Latin! 
+
+Input Format 
+A string of the sentence in English that you need to translate into Pig Latin. (no punctuation or capitalization)
+
+Output Format 
+A string of the same sentence in Pig Latin.
+
+Sample Input 
+""nevermind youve got them""
+
+Sample Output 
+""evermindnay ouveyay otgay hemtay""","inp = input() # nevermind youve got them
+
+wordlist = list(inp.split("" "")) # ['nevermind', 'youve', 'got', 'them']
+
+newsentence = """"
+for item in wordlist:
+    str1 = item[1:]
+    str1 += item[0]
+    str1 += ""ay ""
+    
+    newsentence += str1
+print(newsentence[:-1])",,28
+,python codeCoeaches MEDIUM,list input split if,"SAFETY DESPOSIT BOXES
+You are robbing a bank, but you’re not taking everything. You are looking for a specific item in the safety deposit boxes and you are going to drill into each one in order to find your item. Once you find your item you can make your escape, but how long will it take you to get to that item?
+
+Task
+Determine the amount of time it will take you to find the item you are looking for if it takes you 5 minutes to drill into each box.
+
+Input Format 
+A string that represent the items in each box that will be drilled in order (items are separated by a comma), and secondly, a string of which item you are looking for.
+
+Output Format 
+An integer of the amount of time it will take for you to find your item.
+
+Sample Input
+'gold,diamonds,documents,Declaration of Independence,keys'
+'Declaration of Independence'
+
+Sample Output 
+20","boxItems = input() # [ , , ,]
+searchFor = input() # 1 str item
+
+boxTime = 5  # minutes for each box
+boxList = list(boxItems.split("","")) # ['gold', 'diamonds', 'documents', 'Declaration of Independence', 'keys']
+
+if searchFor in boxList:
+    x = ((boxList.index(searchFor))*5)+5
+    print(x)",,29
+,python codeCoeaches MEDIUM,in if else,"ROAD RUNNER
+
+A coyote is chasing a roadrunner and they start out 50 feet apart. If you know how fast they are both traveling, and how far the roadrunner is from safety, determine whether or not the coyote is able to catch the roadrunner. 
+Both animals and the roadrunner's safe place are on a straight line.
+
+Task: 
+Determine whether or not the roadrunner made it to safety.
+
+Input Format: 
+Three integer values, the first value represents the distance the roadrunner is from safety, then the roadrunner's speed (feet/second) and then the coyote's speed (feet/second).
+
+Output Format: 
+A string that says 'Meep Meep' if the roadrunner made it, or 'Yum' if the coyote caught up to the roadrunner.
+
+Sample Input: 
+10 
+5 
+20
+
+Sample Output: 
+Meep Meep","# Distance
+dist = int(input()) # feet from safety : 10
+# Speeds
+speedR = int(input()) # feet/sec : 5
+speedC = int(input()) # feet/sec : 20
+# output strings
+out1 = ""Meep Meep"" # Sample
+out2 = ""Yum""
+# feet apart. distR - distC
+diff = 50 
+# sec to the safety
+timeR = dist/speedR 
+timeC = (dist+diff)/speedC
+# Logic
+if timeR < timeC:
+    print(out1)
+else:
+    print(out2)",,30
+,python codeCoeaches MEDIUM,multiple input for if elif else list comprehention dividable 2 3 append join,"SNAP, CRACKLE AND POP
+
+You have six bowls of Rice Krispies in front of you, and they make different noises when you pour milk over them based on the total number of Rice Krispies in each bowl.
+If a bowl has a number of Rice Krispies that is divisible by 3, it will make a Pop sound. If it is not divisible by 3 but is odd it will make a Snap sound.  If it is not divisible by 3, but it is even, it will make a Crackle sound.
+
+Task: 
+Based on the quantities in each bowl, output the noise that they make.
+
+Input Format: 
+You receive 6 integers and each integer represents the number of Rice Krispies in your bowls.
+
+Output Format: 
+You should output a string with the sounds made by each bowl separated by spaces in the order that they were input.
+
+Sample Input: 
+18
+5
+100
+25
+40
+24
+
+Sample Output: 
+Pop Snap Crackle Snap Crackle Pop","""""""
+Multiple input
+My original code:
+a = int(input())
+b = int(input())
+c = int(input())
+d = int(input())
+e = int(input())
+f = int(input())
+
+riceL = [a, b, c, d, e, f]
+
+outL = """"
+for item in riceL:
+    if item % 3 == 0:
+        outL += ""Pop ""
+    elif item % 3 != 0 and item % 2 != 0:
+        outL += ""Snap ""
+    elif item % 3 != 0 and item % 2 ==0:
+        outL += ""Crackle ""
+    else:
+        (print(""Valami nem jó""))
+print(outL[:-1])
+
+Optimalized:
+""""""
+riceL = [int(input()) for _ in range(6)]
+
+outL = []
+
+for item in riceL:
+    if item % 3 == 0:
+        outL.append(""Pop"")
+    elif item % 2 == 0:
+        outL.append(""Crackle"")
+    else:
+        outL.append(""Snap"")
+
+print("" "".join(outL))",,31
+,python codeCoeaches MEDIUM,len list set logic,"DEJA VU
+
+You aren't paying attention and you accidentally type a bunch of random letters on your keyboard. You want to know if you ever typed the same letter twice, or if they are all unique letters.
+
+Task: 
+If you are given a string of random letters, your task is to evaluate whether any letter is repeated in the string or if you only hit unique keys while you typing.
+
+Input Format: 
+A string of random letter characters (no numbers or other buttons were pressed).
+
+Output Format: 
+A string that says 'Deja Vu' if any letter is repeated in the input string, or a string that says 'Unique' if there are no repeats.
+
+Sample Input: 
+aaaaaaaghhhhjkll
+
+Sample Output: 
+Deja Vu   the lenght of list is longer then the lenght of set if the items are duplicated","inp = input()
+inpL = list(inp)
+outp = ""Deja Vu""
+
+lenght = len(inpL)
+thisset = len(set(inpL))
+
+if lenght == thisset:
+    print(""Unique"")
+else:
+    print(""Deja Vu"")",,33
+,python codeCoeaches MEDIUM,list slice for if += isspace isalpha,"THE SPY LIFE
+You are a secret agent, and you receive an encrypted message that needs to be decoded. The code that is being used flips the message backwards and inserts non-alphabetic characters in the message to make it hard to decipher.
+
+Task: 
+Create a program that will take the encoded message, flip it around, remove any characters that are not a letter or a space, and output the hidden message.
+
+Input Format:  
+A string of characters that represent the encoded message.
+
+Output Format: 
+A string of character that represent the intended secret message.
+
+Sample Input: 
+d89%l++5r19o7W *o=l645le9H
+
+Sample Output: 
+Hello World","inp = input()
+inpL = list(inp[::-1])
+
+outp = """"
+for item in inpL:
+    if item.isalpha() or item.isspace():
+        outp += item
+print(outp)",,33
+,python codeCoeaches MEDIUM,for hexa += replace  f string ,"HEX COLOR CODE GENERATOR
+You are starting a new company and unfortunately that means you can no longer rely on the free hex-color code software you used to rely on. It’s time to put your skills to the test and create one from the ground up!
+
+Task: 
+Create a function that accepts three integers that represent the RGB (red, green, blue) values and outputs the hex-code representation.
+
+Input Format: 
+Three integers that represent RGB values.
+
+Output Format: 
+The hexadecimal color code string that corresponds with the entered RGB values.
+
+Sample Input: 
+100 
+200 
+233
+
+Sample Output: 
+#64c8e9","inp = [int(input()) for _ in range(3)]
+
+hexaS = ""#""
+for item in inp:
+        hexaS += hex(item).replace('0x', '')
+
+print(hexaS)  
+
+""""""
+Corrected version by chatgpt (true, line 8 is better with this f string):
+
+inputs = [int(input(""Enter an integer: "")) for _ in range(3)]
+
+hex_string = ""#""
+
+for number in inputs:
+# Format the number as a two-character hexadecimal value
+    hex_string += f""{number:02x}""
+
+print(hex_string)
+
+""""""",,34
+,python codeCoeaches MEDIUM,list for isalnum isspace +=,"SYMBOLS
+
+There is a problem with your keyboard: it randomly writes symbols when you are typing a text. You need to clean up the text by removing all symbols.
+
+Task: 
+Take a text that includes some random symbols and translate it into a text that has none of them. The resulting text should only include letters and numbers.
+
+Input Format: 
+A string with random symbols.
+
+Output Format: 
+A string of the text with all the symbols removed.
+
+Sample Input: 
+#l$e%ts go @an#d@@ g***et #l#unch$$$
+
+Sample Output: 
+lets go and get lunch","inp = input()
+inpL = list(inp)
+
+outp = """"
+for item in inpL:
+    if item.isalnum() or item.isspace():
+        outp += item
+print(outp)",,35
+,python codeCoeaches MEDIUM,def float list sum tax ,"SUPER SALE Your favorite store is having a sale! You pay full price for the most expensive item that you get, but then you get 30% off of everything else in your purchase! How much are you going to save? 
+Sales tax is 7%. 
+Also, you leave anything below a dollar in your saving as a tip to the seller. If your saving is a round amount, you don't leave any tips.
+
+Task: 
+Given the prices of items you want to purchase, determine how much you will save during your shopping! 
+
+Input Format: 
+An string of numbers separated by commas that represent the prices for all of the items that you want to purchase (without tax).
+
+Output Format: 
+An integer number that represents the total savings that you got for shopping during the sale.
+
+Sample Input: 
+100.25,80.99,40.00
+
+Sample Output: 
+38","inp = input()
+
+def calcSavings(pricesL):
+    # Convert input to float list
+    prices = list(map(float, pricesL.split(',')))
+
+    # Most expensive item
+    maxPrices = max(prices)
+
+    # Other items' price with 30% discount
+    discPrice = [price * 0.7 for price in prices if price != maxPrices]
+    discPriceTotal = sum(discPrice)
+
+    # Savings
+    origPrice = sum(prices)
+    salePrice = maxPrices + discPriceTotal
+    saving = origPrice - salePrice
+
+    # Tax
+    tax = 0.07
+    origPriceTax = origPrice * (1 + tax)
+    salePriceTax = salePrice * (1 + tax)
+    savingsTotal = origPriceTax - salePriceTax
+
+    # Tip
+    tip = savingsTotal % 1 if savingsTotal % 1 != 0 else 0
+    savingFinal = savingsTotal - tip
+
+    return int(savingFinal)
+
+# Bill
+bill = calcSavings(inp)
+print(bill)
+",,36
+,python codeCoeaches MEDIUM,convert string list to float rount d to two digits list comprehention count if else,"DUTY FREE
+You make a purchase of souvenirs priced in Euros at a duty free store in the Rome airport. You didn't want to spend any more than 20 US Dollars on any specific item. 
+Can you go through your list and make sure you stayed under your limit? The conversion rate on this day is 1.1 US Dollars to 1 Euro.
+
+Task: 
+Evaluate each item that you purchased to make sure that you didn't spend more than $20 on that particular item. 
+If you did, you will need to go back to the store to return it.  
+
+Input Format: 
+An string of numbers separated by spaces that represent the prices of each of your items in Euros.
+
+Output Format: 
+A string that says 'On to the terminal' if you stayed under your cap, or 'Back to the store' if you spent too much money.
+
+Sample Input: 
+18 15.50 2 14
+
+Sample Output: 
+On to the terminal","priceEU = input() # [18 15.50 2 14]
+
+# convert it to a string list
+priceEUlist = priceEU.split("" "")  # [""18"", ""15.50"", ""2"", ""14""]
+priceEUfloat = [float(number) for number in priceEUlist] # [18.0, 15.5, 2.0, 14.0]
+cRate = 1.10   # conversation 1.1 USD to 1 Eur print(price*1.1)
+priceUSD = [round((number*1.1), 2) for number in priceEUfloat]
+
+x = 0
+for item in priceUSD:
+    if item > 20.00:
+        x += 1
+        
+if x > 0:
+    print(""Back to the store"")
+else:
+    print(""On to the terminal"")",,37
+,python codeCoeaches MEDIUM,int leftover dividable f string if else logic,"CARROT CAKE
+You are packing boxes of carrots for a farm co-op, and you are supposed to evenly distribute all of the carrots that you have into the boxes.
+The total number of carrots in each box doesn't matter as long as you distribute them evenly, and there are not enough leftover to put another carrot in each box. Anything that you have left over, you get to keep. 
+You need 7 carrots to make the cake the way that you want to.
+
+Task: 
+Determine if you will have enough leftover carrots to make your cake.  
+
+Input Format: 
+Two integer values. The first represents the number of carrots that you start with, and the second is the number of boxes that need to be packed into.
+
+Output Format: 
+A string that says 'Cake Time' if you have enough, or that says 'I need to buy X more' where X is the extra amount you need for your cake.
+
+Sample Input: 
+100
+10
+
+Sample Output: 
+I need to buy 7 more","numofCarrots = int(input())
+numofBoxes = int(input())
+
+cake = 7
+
+if numofCarrots % numofBoxes > cake:
+    print(""Cake Time"")
+else:
+    x = cake - numofCarrots % numofBoxes
+    print(f""I need to buy {x} more"")",,38
+,python codeCoeaches MEDIUM,multiple input ,"BUILDING BLOCKS
+
+You are dividing up building block toys by color into even amounts for all of the kids in a 15 person kindergarten class. You don't want to give anyone more than anyone else, so you might have some leftover blocks of each color in the end.  How many total do you have left over?
+
+Task: 
+If you know how many of each color block you have, add up the leftover blocks to come up with the amount you will have after you have evenly distributed each color to all 15 students.
+
+Input Format: 
+4 integers that represent the blue, red, green, and yellow blocks that you are sorting out (in that order).
+
+Output Format: 
+An integer of the total remaining blocks after you have distributed an even amount to all 15 students.
+
+Sample Input: 
+150
+20
+300
+53
+
+Sample Output: 
+13","blockColors = [(int(input())) for x in range(4)]  # [2, 3, 4, 5]
+
+kids = 15
+
+a = blockColors[0]%kids
+b = blockColors[1]%kids
+c = blockColors[2]%kids
+d = blockColors[3]%kids
+x = [a, b, c, d]
+print(sum(x))",,39
+,python codeCoeaches MEDIUM,list split range for if else,"NAME BUDDY
+You are grouped into groups for a project, and you are supposed to come up with as many famous scientists who have the same first letter of their name as you as possible. 
+Will you have to come up with the answers on your own, or is there somebody in your group that you can work with?
+
+Task: 
+Determine if anyone in your group has the same first letter of their name as you.
+
+Input Format: 
+A string of your group members' names separated by spaces, and then a string of your name.
+
+Output Format: 
+A string that says 'Compare notes' if you have a name buddy, or 'No such luck' if you have to work on this alone.
+
+Sample Input: 
+Becky Joan Fred Trey
+Brad
+
+Sample Output: 
+Compare notes","names = input()
+myName = input()
+
+namesList = list(names.split("" ""))
+
+firstLetters = []  # ['B', 'J', 'F', 'T']
+for letter in namesList:
+    a = letter[0]
+    firstLetters += a
+
+if myName[0] in firstLetters:
+        print(""Compare notes"")
+else:
+        print(""No such luck"")
+
+
+",,40
+,python codeCoeaches MEDIUM,that's odd,"THAT'S ODD
+You want to take a list of numbers and find the sum of all of the even numbers in the list. Ignore any odd numbers.
+
+Task:
+Find the sum of all even integers in a list of numbers.
+
+Input Format: 
+The first input denotes the length of the list (N). The next N lines contain the list elements as integers.
+
+Output Format: 
+An integer that represents the sum of only the even numbers in the list.
+
+Sample Input: 
+9
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+Sample Output: 
+20","inp = int(input())
+
+count = 0
+outp = 0
+while count < inp :
+    x = int(input())
+    if (x % 2) == 0:
+        outp += x
+        
+    count = count +1
+
+print(outp)",,
+,python codeCoeaches MEDIUM,No numerals,"You write a phrase and include a lot of number characters (0-9), but you decide that for numbers 10 and under you would rather write the word out instead. Can you go in and edit your phrase to write out the name of each number instead of using the numeral? 
+
+Task: 
+Take a phrase and replace any instances of an integer from 0-10 and replace it with the English word that corresponds to that integer.
+
+Input Format: 
+A string of the phrase in its original form (lowercase).
+
+Output Format: 
+A string of the updated phrase that has changed the numerals to words.
+
+Sample Input: 
+i need 2 pumpkins and 3 apples
+
+Sample Output: 
+i need two pumpkins and three apples","
+import re
+
+def replace_numbers_with_words():
+    number_words = {
+        '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four',
+        '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', '10': 'ten'
+    }
+    
+    phrase = input()
+
+    # Replace numbers in the phrase with their word equivalents
+    def replace_match(match):
+        return number_words[match.group(0)]
+    
+    updated_phrase = re.sub(r'\b(0|1|2|3|4|5|6|7|8|9|10)\b(?=[.,!?;:]|\s|$)', replace_match, phrase)
+
+    
+    print(updated_phrase)
+
+replace_numbers_with_words()",,
+,python codeCoeaches MEDIUM,Secret Message,"You are trying to send a secret message, and you've decided to encode it by replacing every letter in your message with its corresponding letter in a backwards version of the alphabet. 
+What do your messages look like?
+
+Task: 
+Create a program that replaces each letter in a message with its corresponding letter in a backwards version of the English alphabet.
+
+Input Format: 
+A string of your message in its normal form.
+
+Output Format: 
+A string of your message once you have encoded it (all lower case).
+
+Sample Input: 
+Hello World
+
+Sample Output: 
+svool dliow      You are trying to send a secret message, and you've decided to encode it by replacing every letter in your message with its corresponding letter in a backwards version of the alphabet. 
+What do your messages look like?
+
+Task: 
+Create a program that replaces each letter in a message with its corresponding letter in a backwards version of the English alphabet.
+
+Input Format: 
+A string of your message in its normal form.
+
+Output Format: 
+A string of your message once you have encoded it (all lower case).
+
+Sample Input: 
+Hello World
+
+Sample Output: 
+svool dliow","import string
+# 
+
+inp = input().lower()
+
+# Make a list from the input string's characters
+
+inp2 = list(inp) # ['w', 'e', 'r', 't', 'z']
+
+# Letters of the ABC
+
+alphabet_list = list(string.ascii_lowercase[0:])
+
+
+# Reverse ABC
+
+reverse_alphabet_list = list(string.ascii_lowercase[::-1])
+
+
+new_input = []
+
+for item in inp:
+
+# Only translate letters
+
+    if item in reverse_alphabet_list:
+
+# search for inde of the character in the ABC
+
+        index_of_letter = reverse_alphabet_list.index(item)
+
+# Search that index in the reverse ABC 
+
+        translated_letter = alphabet_list[index_of_letter]
+
+# Join the translated letter to the stringlist
+        new_input.append(translated_letter)
+    else:
+# Join the translated letter to the stringlist    
+        new_input.append(item)
+
+new_input_str = """".join(new_input)
+
+print(new_input_str)",,
+,python codeCoeaches MEDIUM,Divisible,"You need to know if a number is divisible by each of a group of other numbers. If you are given the number and the group of other numbers, you will test to make sure that it is divisible by all of them.  
+
+Task: 
+Test your number against all of the other numbers that you are given to make sure that it is divisible by them.
+
+Input Format: 
+Two inputs: an integer value (the number you are testing) and a string of variable length of the integers that you should test against separated by spaces.
+
+Output Format: 
+A string that says 'divisible by all' or 'not divisible by all'.
+
+Sample Input: 
+100
+2 5 10
+
+Sample Output: 
+divisible by all   Explanation: 
+100 is divisible by 2, 5, and 10.","numberForTesting = int(input())
+otherNumbers = input().split("" "") # list o strings
+
+lenght_of_otherNumbers_list = len(otherNumbers)
+count = 0
+for item in otherNumbers:
+        i = int(item)
+        if numberForTesting % i != 0:
+                count = 0
+        else:
+                count += 1
+                
+if count == lenght_of_otherNumbers_list:
+        print(""divisible by all"")
+else:
+        print(""not divisible by all"")",,
+,,Even Numbers,"Given a list of numbers, you want to take out all of the odd ones and leave just the even ones.
+
+Task: 
+Evaluate each number in your list to see if it is even or odd. Then, output a new list that only contains the even numbers from your original list.
+
+Input Format: 
+A string that includes all of the integer values in your list separated by spaces.
+
+Output Format: 
+A string that includes all of the even integer values from your first list separated by spaces.
+
+Sample Input: 
+8 10 19 25 5 16 12
+
+Sample Output: 
+8 10 16 12       Explanation: 
+Your new list would only contain the even numbers (8, 10, 16, and 12) and would not include the odd ones (19, 25, and 5). Note, that both, input and output, are strings.","user_input = input().split("" "") # list o strings separated by spaces
+
+output = []
+outp2 = "" ""
+for item in user_input:
+        x = int(item)
+        if x % 2 == 0:
+                output.append(item)
+                to_be_printed = outp2.join(output)
+
+print(to_be_printed)",,
+,,Military Time,"You want to convert the time from a 12 hour clock to a 24 hour clock. If you are given the time on a 12 hour clock, you should output the time as it would appear on a 24 hour clock.  
+
+Task:  
+Determine if the time you are given is AM or PM, then convert that value to the way that it would appear on a 24 hour clock.
+
+Input Format: 
+A string that includes the time, then a space and the indicator for AM or PM.
+
+Output Format: 
+A string that includes the time in a 24 hour format (XX:XX)
+
+Sample Input: 
+1:15 PM
+
+Sample Output: 
+13:15   Explanation:
+1:00 PM on a 12 hour clock is equivalent to 13:00 on a 24 hour clock.","user_input = input() # 1:15 PM string 7 or 8 character
+
+newTime = """"
+
+if user_input.endswith("" PM""):
+        hrs = int(user_input[0:2])
+        newhrs = hrs + 12
+        time = newTime.join(str(newhrs) + user_input[2:5])
+        print(time)
+elif len(user_input) == 8:
+        amfrom10to12 = newTime.join(user_input[0:5])
+        print(amfrom10to12)
+else:
+        amfrom0to9 = newTime.join(""0"" + user_input[0:4])
+        print(amfrom0to9)",,
+,,Tax Free,"You are shopping at a store that is having a special where you do not have to pay the tax on anything that costs 20 dollars or more! 
+If you have a list of prices for all of your items, what is your total once the tax is added in? Tax is 7% on the items that you would still need to pay tax on.
+
+Task: 
+Determine the total cost once you include tax of 7% on the items that are still taxed.
+
+Input Format: 
+A string of numbers, separated by commas, that represent to price of each item that you are going to buy.
+
+Output Format: 
+A number, rounded to two decimal places, of the total for your purchase once tax is included on items under 20 dollars.
+
+Sample Input: 
+5,18,25,34
+
+Sample Output: 
+83.61     Explanation: 
+You would only have to pay the tax on the 5 and 18 dollar items and that bring your total to $83.61.","prices_input = input().split("","")
+
+tax = 1.07
+
+full_price = 0.00
+for numerical in prices_input:
+        price = int(numerical)
+        if price >= 20.00:
+                full_price += price
+        else:
+                full_price += price * tax
+
+print(full_price)",,
+,,How Far?,"You are walking from your house to a pond that is down your street. 
+How many blocks over will you have to walk until you get to the pond?
+
+Task: 
+Evaluate how many blocks you will have to walk if you are given a representation of your street where H represents your house, P represents the pond, and every B represents a block in between the two.
+
+Input Format: 
+A string of letters representing your house, the pond, and blocks on your street.
+
+Output Format: 
+An integer value that represents the number of blocks between your house and the pond.
+
+Sample Input: 
+BBHBBBBPBBB
+
+Sample Output: 
+4     Explanation: 
+There are 4 blocks between your house and the pond on your street.","txt = input()
+
+txt2 = ""..."" + txt + ""...""
+x = txt2.find(""H"")
+y = txt2.find(""P"")
+
+if int(y) > int(x):
+        print(int(y) - int(x) - 1)
+else:
+        print(int(x) - int(y) -1)",,
+,,Average Word Length,"You are in a college level English class, your professor wants you to write an essay, but you need to find out the average length of all the words you use. It is up to you to figure out how long each word is and to average it out.
+
+Task: 
+Takes in a string, figure out the average length of all the words and return a number representing the average length. Remove all punctuation. Round up to the nearest whole number.
+
+Input Format: 
+A string containing multiple words.
+
+Output Format: 
+A number representing the average length of each word, rounded up to the nearest whole number.
+
+Sample Input: 
+this phrase has multiple words
+
+Sample Output: 
+6    Explanation:
+The string in question has five words with a total of 26 letters (spaces do not count). The average word length is 5.20 letters, rounding it up to the nearest whole numbers results in 6.","import numpy
+import math
+import re
+
+phrase = input().split("" "")
+
+list_of_word_lenght = []
+for word in phrase:
+        word_alphanum = s2 = re.sub(r'[^a-zA-Z0-9]', '', word)
+        word_lenght = len(word_alphanum)
+        list_of_word_lenght.append(word_lenght)
+
+x = numpy.mean(list_of_word_lenght)
+y = math.ceil(x)      
+print(y)",,
+,,YouTube Link Finder,"You and your friends like to share YouTube links all throughout the day. You want to keep track of all the videos you watch in your own personal notepad, but you find that keeping the entire link is unnecessary. 
+Keep the video ID (the combination of letters and numbers at the end of the link) in your notepad to slim down the URL.
+
+Task: 
+Create a program that parses through a link, extracts and outputs the YouTube video ID.
+
+Input Format: 
+A string containing the URL to a YouTube video. The format of the string can be in ""https://www.youtube.com/watch?v=kbxkq_w51PM"" or the shortened ""https://youtu.be/KMBBjzp5hdc"" format. Note that the input can be in two different formats.
+
+Output Format: 
+A string containing the extracted YouTube video id.
+
+Sample Input: 
+https://www.youtube.com/watch?v=RRW2aUSw5vU
+
+Sample Output: 
+RRW2aUSw5vU     ","import datetime
+
+date_input = input()
+
+def convert_date(date_input):
+    try:
+        # Try parsing the date in MM/DD/YYYY format
+        date_obj = datetime.datetime.strptime(date_input, ""%m/%d/%Y"")
+        return date_obj.strftime(""%-d/%-m/%Y"")
+    except ValueError:
+        try:
+            # Try parsing the date in 'Month DD, YYYY' format
+            date_obj = datetime.datetime.strptime(date_input, ""%B %d, %Y"")
+            return date_obj.strftime(""%-d/%-m/%Y"")
+        except ValueError:
+            return ""Invalid date format""
+
+print(convert_date(date_input))",,
+,,Convert US date to EU date,"You and your friends are going to Europe! You have made plans to travel around Europe with your friends, but one thing you need to take into account so that everything goes according to play, is that the format of their date is different than from what is used in the United States. Your job is to convert all your dates from MM/DD/YYYY to DD/MM/YYYY.
+
+Task: 
+Create a function that takes in a string containing a date that is in US format, and return a string of the same date converted to EU.
+
+Input Format: 
+A string that contains a date formatting 11/19/2019 or November 19, 2019.
+
+Output Format: 
+A string of the same date but in a different format: 19/11/2019.
+
+Sample Input: 
+7/26/2019
+
+Sample Output: 
+26/7/2019","import datetime
+
+date_input = input()
+
+def convert_date(date_input):
+    try:
+        # Try parsing the date in MM/DD/YYYY format
+        date_obj = datetime.datetime.strptime(date_input, ""%m/%d/%Y"")
+        return date_obj.strftime(""%-d/%-m/%Y"")
+    except ValueError:
+        try:
+            # Try parsing the date in 'Month DD, YYYY' format
+            date_obj = datetime.datetime.strptime(date_input, ""%B %d, %Y"")
+            return date_obj.strftime(""%-d/%-m/%Y"")
+        except ValueError:
+            return ""Invalid date format""
+
+print(convert_date(date_input))",,

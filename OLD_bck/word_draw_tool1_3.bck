@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Magyar "Titkosírás" vizualizátor</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, sans-serif;
+    background: #0e1117;
+    color: #e6eef6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .container {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .panel {
+    flex: 1;
+    min-width: 300px;
+    background: #161b22;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+  }
+
+  textarea {
+    width: 100%;
+    height: 50vh;
+    resize: vertical;
+    background: #0e1117;
+    color: #e6eef6;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+  }
+
+  .control {
+    font-size: 0.9rem;
+  }
+
+  .svg-wrap {
+    background: #0e1117;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 0.5rem;
+    overflow: auto;
+    max-height: 300px; // rajzot befoglaló keret magassága
+  }
+
+  button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #1d4ed8;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="panel">
+      <label for="inputText">Írd be a szöveget:</label>
+      <textarea id="inputText" placeholder="Írj ide valamit!"></textarea>
+
+      <div class="controls">
+        <div class="control">Pontméret: <input id="dotSize" type="range" min="4" max="20" value="8"></div>
+        <div class="control">X-távolság: <input id="xSpacing" type="range" min="5" max="200" value="20"></div>
+        <div class="control">Y-távolság: <input id="ySpacing" type="range" min="5" max="200" value="5"></div>
+        <div class="control"><label><input id="showAxes" type="checkbox" checked> Tengelyek</label></div>
+        <div class="control"><button id="exportBtn">Export PNG</button></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="svg-wrap" id="svgWrap"></div>
+    </div>
+  </div>
+
+<script>
+const textarea = document.getElementById("inputText");
+const svgWrap = document.getElementById("svgWrap");
+const dotSizeInput = document.getElementById("dotSize");
+const xSpacingInput = document.getElementById("xSpacing");
+const ySpacingInput = document.getElementById("ySpacing");
+const showAxesInput = document.getElementById("showAxes");
+const exportBtn = document.getElementById("exportBtn");
+
+// magyar digráfok és trigráf
+const DIGRAPHS = ["dzs", "dz", "cs", "gy", "ly", "ny", "sz", "ty", "zs"];
+
+function tokenizeText(text) {
+  const words = text.split(/\s+/).filter(Boolean);
+  const tokens = [];
+
+  words.forEach((word, wi) => {
+    let i = 0;
+    while (i < word.length) {
+      const rest = word.slice(i).toLowerCase();
+      const digraph = DIGRAPHS.find(d => rest.startsWith(d));
+      if (digraph) {
+        tokens.push({ch: word.slice(i, i + digraph.length), x: tokens.length, wordIndex: wi});
+        i += digraph.length;
+      } else {
+        tokens.push({ch: word[i], x: tokens.length, wordIndex: wi});
+        i++;
+      }
+    }
+  });
+
+  return tokens;
+}
+
+// karakterkészlet + paletta
+let CHARSET = createCharset();
+let palette = createPalette(CHARSET.length);
+
+function createCharset() {
+  const base = ['a','á','b','c','cs','d','dz','dzs','e','é','f','g','gy','h','i','í','j','k','l','ly','m','n','ny','o','ó','ö','ő','p','q','r','s','sz','t','ty','u','ú','ü','ű','v','w','x','y','z','zs'];
+  const caps = base.map(ch => ch.toUpperCase());
+  const digits = Array.from({length:10}, (_,i)=>String(i));
+  const punct = ['.',',',':','-','+','?','!','\''];
+  return [' ', ...base, ...caps, ...digits, ...punct]; // szóköz legelöl
+}
+
+function createPalette(n) {
+  const colors = [];
+  for (let i = 0; i < n; i++) {
+    const hue = Math.round((i / n) * 280);
+    colors.push(`hsl(${hue}deg 70% 50%)`);
+  }
+  return colors;
+}
+
+function charIndex(ch) {
+  const idx = CHARSET.indexOf(ch);
+  if (idx !== -1) return idx;
+  CHARSET.push(ch);
+  palette = createPalette(CHARSET.length);
+  return CHARSET.length - 1;
+}
+
+function render() {
+  const text = textarea.value || "";
+  const dotSize = Number(dotSizeInput.value);
+  const xSpacing = Number(xSpacingInput.value);
+  const ySpacing = Number(ySpacingInput.value);
+  const showAxes = showAxesInput.checked;
+
+  const tokens = tokenizeText(text);
+
+  // új x-index: szóban elfoglalt sorszám
+  const processed = tokenizeText(text);
+
+
+  const maxX = processed.reduce((m, it) => Math.max(m, it.x), 0);
+  const width = Math.max(600, (maxX + 2) * xSpacing);
+  const rawHeight = (CHARSET.length + 1) * ySpacing + 60; // +60 egy kis margó
+  const height = Math.max(200, rawHeight);
+
+
+
+  const svgns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgns, "svg");
+  svg.setAttribute("width", width);
+  svg.setAttribute("height", height);
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.style.display = "block";
+
+  const marginLeft = 50;
+  const marginTop = 30;
+
+  if (showAxes) {
+    const xline = document.createElementNS(svgns, "line");
+    xline.setAttribute("x1", marginLeft);
+    xline.setAttribute("y1", height - marginTop);
+    xline.setAttribute("x2", width - 20);
+    xline.setAttribute("y2", height - marginTop);
+    xline.setAttribute("stroke", "rgba(255,255,255,0.15)");
+    svg.appendChild(xline);
+
+    const yline = document.createElementNS(svgns, "line");
+    yline.setAttribute("x1", marginLeft);
+    yline.setAttribute("y1", marginTop);
+    yline.setAttribute("x2", marginLeft);
+    yline.setAttribute("y2", height - marginTop);
+    yline.setAttribute("stroke", "rgba(255,255,255,0.15)");
+    svg.appendChild(yline);
+  }
+
+  // először összekötjük a pontokat sorrendben
+  if (processed.length > 1) {
+    for (let i = 0; i < processed.length - 1; i++) {
+      const ci1 = charIndex(processed[i].ch);
+      const ci2 = charIndex(processed[i+1].ch);
+
+      const x1 = marginLeft + processed[i].x * xSpacing;
+      const y1 = height - marginTop - ci1 * ySpacing;
+      const x2 = marginLeft + processed[i+1].x * xSpacing;
+      const y2 = height - marginTop - ci2 * ySpacing;
+
+      const line = document.createElementNS(svgns, "line");
+      line.setAttribute("x1", x1);
+      line.setAttribute("y1", y1);
+      line.setAttribute("x2", x2);
+      line.setAttribute("y2", y2);
+      line.setAttribute("stroke", "gray");
+      line.setAttribute("stroke-width", "1");
+      svg.appendChild(line);
+    }
+  }
+
+  // aztán kirajzoljuk a köröket
+  processed.forEach((it) => {
+    const ci = charIndex(it.ch);
+    const cx = marginLeft + it.x * xSpacing;
+    const cy = height - marginTop - ci * ySpacing;
+    const color = palette[ci];
+
+    const circle = document.createElementNS(svgns, "circle");
+    circle.setAttribute("cx", cx);
+    circle.setAttribute("cy", cy);
+    circle.setAttribute("r", dotSize);
+    circle.setAttribute("fill", color);
+    svg.appendChild(circle);
+  });
+
+
+  svgWrap.innerHTML = "";
+  svgWrap.appendChild(svg);
+
+  // mindig legörgetett legyen a kezdőállapot
+  svgWrap.scrollTop = svgWrap.scrollHeight;
+
+}
+
+function exportToPNG() {
+  const svg = svgWrap.querySelector("svg");
+  if (!svg) return;
+
+  const xml = new XMLSerializer().serializeToString(svg);
+  const svg64 = btoa(unescape(encodeURIComponent(xml)));
+  const imgSrc = `data:image/svg+xml;base64,${svg64}`;
+
+  const img = new Image();
+  img.onload = function() {
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#0e1117";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img, 0, 0);
+    const png = canvas.toDataURL("image/png");
+
+    // fájlnév generálása a textarea tartalmából
+    let filename = textarea.value.trim()
+      .replace(/\s+/g, "_")       // szóközök _
+      .replace(/[^a-zA-Z0-9_]/g, "_"); // speciális karakterek _
+
+    if (!filename) filename = "titkosiras";
+
+    const link = document.createElement("a");
+    link.href = png;
+    link.download = filename + ".png";
+    link.click();
+  };
+  img.src = imgSrc;
+}
+
+
+textarea.addEventListener("input", render);
+dotSizeInput.addEventListener("input", render);
+xSpacingInput.addEventListener("input", render);
+ySpacingInput.addEventListener("input", render);
+showAxesInput.addEventListener("change", render);
+exportBtn.addEventListener("click", exportToPNG);
+
+// alap példa
+textarea.value = "";
+render();
+</script>
+</body>
+</html>

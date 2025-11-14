@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Titkosírás vizualizáció — Deluxe</title>
+<style>
+  body {
+    margin: 0;
+    background: #111;
+    color: #eee;
+    font-family: "Segoe UI", sans-serif;
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+  }
+  @media (max-width: 768px) {
+    body { flex-direction: column; }
+  }
+  .left, .right {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  textarea {
+    flex: 1;
+    background: #222;
+    color: #fff;
+    border: none;
+    resize: none;
+    font-size: 1.2rem;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  canvas {
+    background: #fff;
+    border-radius: 8px;
+    width: 100%;
+    height: auto;
+  }
+  .controls {
+    margin-top: .5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+  }
+  label {
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  input[type=range] {
+    width: 100%;
+  }
+  button, select {
+    background: #444;
+    color: #fff;
+    border: none;
+    padding: .4rem .8rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover, select:hover { background: #666; }
+</style>
+</head>
+<body>
+  <div class="left">
+    <textarea id="inputText" placeholder="Írj ide szöveget..."></textarea>
+    <div class="controls">
+      <label>Pontméret: <span id="dotSizeLabel">3</span></label>
+      <input type="range" id="dotSize" min="1" max="10" step="0.5" value="3">
+
+      <label>Vonalvastagság: <span id="lineWidthLabel">0.5</span></label>
+      <input type="range" id="lineWidth" min="0.1" max="5" step="0.1" value="0.5">
+
+      <label>Skálázás: <span id="scaleLabel">1</span></label>
+      <input type="range" id="scale" min="0.5" max="3" step="0.1" value="1">
+
+      <label>Eltolás: <span id="offsetLabel">0</span></label>
+      <input type="range" id="offset" min="-200" max="200" step="10" value="0">
+
+      <label>Háttérszín:</label>
+      <input type="color" id="bgColor" value="#ffffff">
+
+      <div style="display:flex; gap:.5rem; flex-wrap:wrap;">
+        <button id="toggleAxes">Tengelyek ki/be</button>
+        <button id="exportPng">Export PNG</button>
+        <button id="exportSvg">Export SVG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <canvas id="chart"></canvas>
+  </div>
+
+<script>
+const canvas = document.getElementById("chart");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth * 0.9;
+canvas.height = window.innerHeight * 0.4;
+
+const inputText = document.getElementById("inputText");
+let showAxes = true;
+
+// magyar abc + kiegészítések
+const alphabet = [
+  "a","á","b","c","cs","d","dz","dzs","e","é","f","g","gy","h","i","í","j","k",
+  "l","ly","m","n","ny","o","ó","ö","ő","p","q","r","s","sz","t","ty","u","ú",
+  "ü","ű","v","w","x","y","z","zs","0","1","2","3","4","5","6","7","8","9",".",",",":",";","-","+","?","!","'"
+];
+
+function getColor(index) {
+  const hue = (index / alphabet.length) * 300;
+  return `hsl(${hue}, 90%, 50%)`;
+}
+
+function drawAxes(bg) {
+  ctx.strokeStyle = bg === "#ffffff" ? "#ccc" : "#666";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(40, canvas.height - 40);
+  ctx.lineTo(canvas.width - 20, canvas.height - 40);
+  ctx.moveTo(40, canvas.height - 40);
+  ctx.lineTo(40, 20);
+  ctx.stroke();
+}
+
+function drawVisualization() {
+  const text = inputText.value.toLowerCase();
+  const scale = parseFloat(document.getElementById("scale").value);
+  const offset = parseFloat(document.getElementById("offset").value);
+  const dotSize = parseFloat(document.getElementById("dotSize").value);
+  const lineWidth = parseFloat(document.getElementById("lineWidth").value);
+  const bg = document.getElementById("bgColor").value;
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if (showAxes) drawAxes(bg);
+
+  const words = text.trim().split(" ");
+  let xStep = (canvas.width - 80) / Math.max(text.length, 1);
+  let baseY = canvas.height - 40;
+  let prev = null;
+  let position = 0;
+
+  words.forEach(word => {
+    let i = 0;
+    while (i < word.length) {
+      let match = null;
+      const three = word.slice(i, i + 3);
+      const two = word.slice(i, i + 2);
+      const one = word[i];
+      if (alphabet.includes(three)) match = three;
+      else if (alphabet.includes(two)) match = two;
+      else match = one;
+
+      const index = alphabet.indexOf(match);
+      if (index >= 0) {
+        const x = 40 + position * xStep * scale;
+        const y = baseY - (index / alphabet.length) * (canvas.height - 80) * scale + offset;
+        const color = getColor(index);
+
+        ctx.beginPath();
+        ctx.arc(x, y, dotSize, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        if (prev) {
+          const grad = ctx.createLinearGradient(prev.x, prev.y, x, y);
+          grad.addColorStop(0, prev.color);
+          grad.addColorStop(1, color);
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = lineWidth;
+          ctx.beginPath();
+          ctx.moveTo(prev.x, prev.y);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+        }
+
+        prev = { x, y, color };
+        position++;
+      }
+      i += match.length;
+    }
+    prev = null;
+    position++;
+  });
+}
+
+inputText.addEventListener("input", drawVisualization);
+["scale","offset","dotSize","lineWidth","bgColor"].forEach(id => {
+  document.getElementById(id).addEventListener("input", e => {
+    document.getElementById(id+"Label")?.textContent = e.target.value;
+    drawVisualization();
+  });
+});
+
+document.getElementById("toggleAxes").addEventListener("click", () => {
+  showAxes = !showAxes;
+  drawVisualization();
+});
+
+document.getElementById("exportPng").addEventListener("click", () => {
+  const link = document.createElement("a");
+  link.download = "vizualizacio.png";
+  link.href = canvas.toDataURL();
+  link.click();
+});
+
+document.getElementById("exportSvg").addEventListener("click", () => {
+  const text = inputText.value.toLowerCase();
+  const dotSize = parseFloat(document.getElementById("dotSize").value);
+  const lineWidth = parseFloat(document.getElementById("lineWidth").value);
+  const bg = document.getElementById("bgColor").value;
+  const scale = parseFloat(document.getElementById("scale").value);
+  const offset = parseFloat(document.getElementById("offset").value);
+  const width = canvas.width, height = canvas.height;
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" style="background:${bg}">`;
+  const words = text.trim().split(" ");
+  let baseY = height - 40;
+  let xStep = (width - 80) / Math.max(text.length, 1);
+  let prev = null, position = 0;
+
+  words.forEach(word => {
+    let i = 0;
+    while (i < word.length) {
+      let match = null;
+      const three = word.slice(i, i + 3);
+      const two = word.slice(i, i + 2);
+      const one = word[i];
+      if (alphabet.includes(three)) match = three;
+      else if (alphabet.includes(two)) match = two;
+      else match = one;
+      const index = alphabet.indexOf(match);
+      if (index >= 0) {
+        const x = 40 + position * xStep * scale;
+        const y = baseY - (index / alphabet.length) * (height - 80) * scale + offset;
+        const color = getColor(index);
+        svg += `<circle cx="${x}" cy="${y}" r="${dotSize}" fill="${color}" />`;
+        if (prev) {
+          svg += `<line x1="${prev.x}" y1="${prev.y}" x2="${x}" y2="${y}" stroke-width="${lineWidth}" stroke="${color}" />`;
+        }
+        prev = {x,y,color};
+        position++;
+      }
+      i += match.length;
+    }
+    prev = null;
+    position++;
+  });
+
+  svg += `</svg>`;
+  const blob = new Blob([svg], {type: "image/svg+xml"});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "vizualizacio.svg";
+  link.click();
+});
+
+drawVisualization();
+</script>
+</body>
+</html>

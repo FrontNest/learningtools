@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Notes Search</title>
+    <link rel="stylesheet" href="python.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Python Notes Search</h1>
+        
+        <div class="controls">
+            <div class="file-selector">
+                <label for="fileSelect">Select Notes File:</label>
+                <select id="fileSelect">
+                    <option value="">Loading files...</option>
+                </select>
+            </div>
+            
+            <div class="search-box">
+                <label for="searchInput">Search:</label>
+                <input type="text" id="searchInput" placeholder="Type to search...">
+            </div>
+        </div>
+        
+        <div id="loadingIndicator" class="loading">Loading...</div>
+        
+        <div class="table-container">
+            <table id="notesTable">
+                <thead>
+                    <tr>
+                        <th>Main</th>
+                        <th>Topics</th>
+                        <th>Description</th>
+                        <th>Codes</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Table content will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="python.js"></script>
+</body>
+</html>

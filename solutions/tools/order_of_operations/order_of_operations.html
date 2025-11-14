@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematikai Műveletek Sorrendje 1</title>
+    <link rel="icon" type="image/png" href="https://felisha76.github.io/portfolio/media/favicon_light.png">
+    <link rel="stylesheet" href="../../../subsites/substyle.css">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+
+        .question { 
+            margin: 10px; 
+            font-size: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+     
+       .expression {
+            text-align: right;
+            flex-grow: 1;
+        }
+
+        .hidden { display: none; }
+        .correct { background-color: green; color: white; font-weight: bold; }
+
+
+        a {
+            text-decoration: none;
+            color: #e5dd0b;
+            font-family: 'Noto Sans';
+        }
+        
+        input {
+            width: 50px;
+            height: 20px;
+            font-size: 16px;
+            text-align: center;
+            margin-left: 10px;
+        }
+
+        .feedback {
+            font-size:small;
+            text-decoration: none;
+            color: #e5dd0b;
+            font-family: 'Noto Sans';
+            text-align: right;
+        }
+    </style> 
+</head>
+<body>
+    <h1>Matematikai Műveletek Sorrendje 1</h1>
+    <h3>(Általános iskola 2. osztály számára)</h3>
+    <p>Ebben a változatban egyéni feladatokra kell válaszolni</p>
+    <p><a href="order_of_operations2.html" target="_self">Váltás a másik változatra</a></p>
+    <label for="questionCount">Hány kérdést szeretnél megoldani?</label>
+    <select id="questionCount">
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+    </select>
+    <button onclick="generateQuestions()">Feladatok generálása</button>
+    <div id="questionsContainer"></div>
+    <button class="hidden" id="submitBtn" onclick="checkAnswers()">Ellenőrzés</button>
+    <p id="result"></p>
+
+    <script>
+        function generateQuestions() {
+            const count = document.getElementById("questionCount").value;
+            const container = document.getElementById("questionsContainer");
+            container.innerHTML = "";
+            
+            let questions = [];
+            for (let i = 0; i < count; i++) {
+                let q;
+                do {
+                    q = generateExpression();
+                } while (q.result <= 0 || q.result >= 100 || !Number.isInteger(q.result));
+                
+                questions.push(q);
+                container.innerHTML += `<div class='question'><span class='expression'>${q.expression} =</span><input type='number' id='answer${i}'></div>`;
+
+            }
+            
+            document.getElementById("submitBtn").classList.remove("hidden");
+            window.questions = questions;
+        }
+
+        function generateExpression() {
+            let a, b, c, op1, op2, parenType, expression, result;
+            do {
+                a = getRandom(1, 20);
+                b = getRandom(1, 20);
+                c = getRandom(1, 20);
+                op1 = getRandomOperator();
+                op2 = getRandomOperator();
+                parenType = getRandom(0, 2);
+
+                if (parenType === 0) {
+                    expression = `${a} ${op1} ${b} ${op2} ${c}`;
+                    result = eval(expression);
+                } else if (parenType === 1) {
+                    expression = `(${a} ${op1} ${b}) ${op2} ${c}`;
+                    result = eval(`(${a} ${op1} ${b}) ${op2} ${c}`);
+                } else {
+                    expression = `(${a} ${op1} ${b}) * ${c}`;
+                    result = eval(`(${a} ${op1} ${b}) * ${c}`);
+                }
+            } while (!Number.isInteger(result) || result <= 0 || result >= 100);
+            
+            return { expression, result };
+        }
+
+        function getRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomOperator() {
+            const operators = ['+', '-', '*', '/'];
+            return operators[getRandom(0, operators.length - 1)];
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            window.questions.forEach((q, i) => {
+                let userAnswerField = document.getElementById(`answer${i}`);
+                let userAnswer = parseFloat(userAnswerField.value);
+                
+                if (userAnswer === q.result) {
+                    correct++;
+                    userAnswerField.classList.add("correct");
+                }
+            });
+
+                // Calculate percentage
+            const total = window.questions.length;
+            const percentage = Math.round((correct / total) * 100);
+            
+            document.getElementById("result").textContent = `Helyes válaszok: ${correct} / ${total} (${percentage}%)`;
+
+        }
+    </script>
+
+
+<footer>
+        <hr>
+    <p style="font-size: medium;">
+        <a href="mailto:frontneststudio@gmail.com?&subject=Order of operations feedback: https://felisha76.github.io/portfolio/solutions/tools/order_of_operations/order_of_operations.html" target="_top" style="color: #10f808; text-decoration: none;">
+            <b>🔴 Error reporting</b></a>
+        <a href="https://felisha76.github.io/portfolio/subsites/sources.html" class="simpleLink" style="color: #e7eb0a; text-decoration: none;">🟡 Media sources </a>
+        <a href="https://felisha76.github.io/portfolio/solutions/tools/order_of_operations/order_of_operations.html" class="simpleLink" style="color: #09ebf3;text-decoration: none;">🔵 Start over</a>
+    </p>
+</footer>
+
+</body>
+</html>

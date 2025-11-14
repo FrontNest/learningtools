@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time - Clock</title>
+    <link rel="icon" type="image/png" href="https://felisha76.github.io/portfolio/media/favicon_light.png">
+    <link rel="stylesheet" href="time.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Óra - idő gyakorló</h1>
+    <p>Mozgasd az egérrel a mutatókat!</p>
+    <h3>Az oldal fejlesztés alatt áll (under development)</h3>
+    <div id="settings">
+        <label for="clockType">Óratípus:</label>
+        <select id="clockType">
+            <option value="analog">Analóg</option>
+            <option value="digital">Digitális</option>
+        </select>
+        
+        <label for="timeFormat">Időformátum:</label>
+        <select id="timeFormat">
+            <option value="12">12 órás</option>
+            <option value="24">24 órás</option>
+        </select>
+    </div>
+
+    <div id="clock-container">
+        
+        <div id="analog-clock">
+            
+            <canvas id="clockCanvas" width="200" height="200"></canvas>
+        </div>
+        <div id="digital-clock">
+            <input type="number" id="digital-hours" min="0" max="23" placeholder="HH">
+            :
+            <input type="number" id="digital-minutes" min="0" max="59" placeholder="MM">
+        </div>
+    </div>
+
+    <div id="question-settings">
+ 
+        <button id="start-test">Teszt indítása</button>
+    </div>
+
+    <div id="test-container">
+        <!-- A tesztkérdések ide kerülnek dinamikusan -->
+         
+    </div>
+    
+    <!-- <div id="duration-container">
+        <iframe id="duration-frame" src="duration_questions/duration.html"></iframe>
+        
+    </div> -->
+
+
+<footer>
+        <hr>
+    <p style="font-size: medium;">
+        <a href="mailto:frontneststudio@gmail.com?&subject=Time tool feedback: https://felisha76.github.io/portfolio/solutions/tools/time/time.html" target="_top" style="color: #10f808; text-decoration: none;">
+        🔴 Error reporting</a>
+        <a href="https://felisha76.github.io/portfolio/subsites/sources.html" class="simpleLink" style="color: #e7eb0a; text-decoration: none;">
+        🟡 Media sources </a>
+        <a href="https://felisha76.github.io/portfolio/solutions/tools/time/time.html" class="simpleLink" style="color: #09ebf3;text-decoration: none;">
+        🔵 Start over</a>
+    </p>
+</footer>
+
+    <script src="time.js"></script>
+</body>
+</html>

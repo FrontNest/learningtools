@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
+    <title>Porfolio - Page styling helper</title>
+    <link rel="icon" type="image/png" href="./media/favicon_light.png"> <!-- NE NYÚLJ HOZZÁ, MŰKÖDIK -->
+
+    <link rel="stylesheet" href="../templates/dict_help.css"> <!-- NE NYÚLJ HOZZÁ, MŰKÖDIK  -->
+
+<style>
+  :root{
+    --gutter: 8px; /* szélesség a fogónak */
+    --min-left: 150px;
+    --min-right: 150px;
+    --min-top: 80px;
+    --min-bottom: 80px;
+  }
+
+  html,body{
+    height:100%;
+    margin:0;
+    background:#111;
+    color:#eee;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;
+  }
+
+  /* teljes képernyős konténer */
+  .container{
+    display:flex;
+    height:100vh;
+    width:100vw;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+
+  /* bal oldali panel (two stacked frames) */
+  .left {
+    display:flex;
+    flex-direction:column;
+    width:30%; /* alap: 50% */
+    min-width:var(--min-left);
+    box-sizing:border-box;
+    background:#0f1720;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    position:relative;
+  }
+
+  /* a két rész (felső / alsó) */
+  .top, .bottom {
+    flex:1 1 50%;
+    min-height:0; /* fontos flexbox görgetéshez */
+    position:relative;
+    overflow:auto; /* görgethető doboz */
+  }
+
+  /* az iframe-ek kitöltik a dobozt */
+  .left iframe, .right iframe {
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+    box-sizing:border-box;
+  }
+
+  /* jobboldal */
+  .right {
+    width:70%;
+    min-width:var(--min-right);
+    position:relative;
+    background:#0b1220;
+    min-height:0;
+    overflow:auto;
+  }
+
+  /* fogók (splitter) */
+  .v-split {
+    width:var(--gutter);
+    cursor:ew-resize;
+    background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    box-sizing:border-box;
+  }
+  .h-split {
+    height:var(--gutter);
+    cursor:ns-resize;
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    box-sizing:border-box;
+  }
+
+  /* fogó vizuális jelzése (kis pontok) */
+  .v-split:after, .h-split:after{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:4px;
+    height:40%;
+    background:rgba(255,255,255,0.12);
+    border-radius:2px;
+    display:block;
+  }
+
+  /* drag közbeni kurzor és select tiltás */
+  .dragging {
+    user-select:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+  }
+
+  /* kisebb kijelzőkön: függőleges stack (opcionális, reszponzív) */
+  @media (max-width:720px){
+    .container { flex-direction:column; }
+    .left, .right { width:100%; min-width:0; }
+    .v-split { width:100%; height:var(--gutter); cursor:ns-resize; }
+    .container.swap-v { flex-direction:column; }
+  }
+
+  /* kicsit kontraszt a fogók köré */
+  .v-split:hover, .h-split:hover { background:rgba(255,255,255,0.04); }
+</style>
+</head>
+<body>
+<div class="container" id="container">
+  <div class="left" id="left">
+    <div class="top" id="topPane">
+      <iframe id="aFrame" title="aFrame - Google sheet top"
+        src="https://docs.google.com/spreadsheets/d/1C6_W_Gx_0NWVWw6WMEB1JaX38mNw0g785nFmi3zVlww/edit?gid=2000199802#gid=2000199802"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
+      </iframe>
+    </div>
+
+    <div class="h-split" id="hSplit" aria-hidden="true"></div>
+
+    <div class="bottom" id="bottomPane">
+      <iframe id="bFrame" title="bFrame - Google sheet bottom"
+        src="https://docs.google.com/spreadsheets/d/1C6_W_Gx_0NWVWw6WMEB1JaX38mNw0g785nFmi3zVlww/edit?gid=2146448207#gid=2146448207"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
+      </iframe>
+    </div>
+  </div>
+
+  <div class="v-split" id="vSplit" aria-hidden="true"></div>
+
+  <div class="right" id="right">
+    <iframe id="cFrame" title="cFrame - depositphotos"
+      src="https://felisha76.github.io/portfolio/index.html"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
+    </iframe>
+  </div>
+</div>
+
+<script>
+/*
+ Resizable splitters:
+ - vSplit: változtatja a .left width-ét (vízszintes osztás)
+ - hSplit: változtatja a topPane / bottomPane arányát (függőleges osztás belül)
+*/
+
+(function(){
+  const container = document.getElementById('container');
+  const left = document.getElementById('left');
+  const right = document.getElementById('right');
+  const vSplit = document.getElementById('vSplit');
+
+  const topPane = document.getElementById('topPane');
+  const bottomPane = document.getElementById('bottomPane');
+  const hSplit = document.getElementById('hSplit');
+
+  let draggingV = false;
+  let draggingH = false;
+
+  // helper: get numeric px from style
+  function px(n){ return n + 'px'; }
+
+  // VERTICAL SPLIT (left / right)
+  vSplit.addEventListener('mousedown', (e) => {
+    draggingV = true;
+    document.body.classList.add('dragging');
+    e.preventDefault();
+  });
+
+  // HORIZONTAL SPLIT (top / bottom inside left)
+  hSplit.addEventListener('mousedown', (e) => {
+    draggingH = true;
+    document.body.classList.add('dragging');
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (draggingV) {
+      // compute new left width (clamped)
+      const rect = container.getBoundingClientRect();
+      let newLeftWidth = e.clientX - rect.left; // px
+      const minL = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-left')) || 150;
+      const minR = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-right')) || 150;
+      // clamp
+      newLeftWidth = Math.max(newLeftWidth, minL);
+      newLeftWidth = Math.min(newLeftWidth, rect.width - minR - 1);
+      // set left width in px, right will flex to remaining
+      left.style.width = px(newLeftWidth);
+      // prevent iframe pointer events during drag for smoother dragging
+      disablePointerEventsWhileDragging(true);
+    } else if (draggingH) {
+      // adjust topPane height relative to left container
+      const rect = left.getBoundingClientRect();
+      let newTopHeight = e.clientY - rect.top;
+      const minTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-top')) || 80;
+      const minBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-bottom')) || 80;
+      // clamp
+      newTopHeight = Math.max(newTopHeight, minTop);
+      newTopHeight = Math.min(newTopHeight, rect.height - minBottom - 1);
+      // Set flex basis on topPane in px; bottom will fill remaining
+      topPane.style.flex = '0 0 ' + px(newTopHeight);
+      // improve dragging
+      disablePointerEventsWhileDragging(true);
+    }
+  });
+
+  // stop dragging
+  window.addEventListener('mouseup', () => {
+    if (draggingV || draggingH) {
+      draggingV = draggingH = false;
+      document.body.classList.remove('dragging');
+      disablePointerEventsWhileDragging(false);
+    }
+  });
+
+  // touch support (basic)
+  vSplit.addEventListener('touchstart', (e)=>{ draggingV=true; document.body.classList.add('dragging'); e.preventDefault(); });
+  hSplit.addEventListener('touchstart', (e)=>{ draggingH=true; document.body.classList.add('dragging'); e.preventDefault(); });
+  window.addEventListener('touchmove', (e)=>{
+    if (!e.touches || e.touches.length===0) return;
+    const t = e.touches[0];
+    if (draggingV) {
+      const rect = container.getBoundingClientRect();
+      let newLeftWidth = t.clientX - rect.left;
+      const minL = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-left')) || 150;
+      const minR = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-right')) || 150;
+      newLeftWidth = Math.max(newLeftWidth, minL);
+      newLeftWidth = Math.min(newLeftWidth, rect.width - minR - 1);
+      left.style.width = px(newLeftWidth);
+      disablePointerEventsWhileDragging(true);
+      e.preventDefault();
+    } else if (draggingH) {
+      const rect = left.getBoundingClientRect();
+      let newTopHeight = t.clientY - rect.top;
+      const minTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-top')) || 80;
+      const minBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-bottom')) || 80;
+      newTopHeight = Math.max(newTopHeight, minTop);
+      newTopHeight = Math.min(newTopHeight, rect.height - minBottom - 1);
+      topPane.style.flex = '0 0 ' + px(newTopHeight);
+      disablePointerEventsWhileDragging(true);
+      e.preventDefault();
+    }
+  }, {passive:false});
+  window.addEventListener('touchend', ()=>{ draggingV=draggingH=false; document.body.classList.remove('dragging'); disablePointerEventsWhileDragging(false); });
+
+  // While dragging, pointer-events on iframes off so dragging is smooth
+  function disablePointerEventsWhileDragging(state){
+    const iframes = document.querySelectorAll('iframe');
+    iframes.forEach(fr => {
+      fr.style.pointerEvents = state ? 'none' : '';
+    });
+  }
+
+  // Double-click fogók visszaállít ahogy volt
+  vSplit.addEventListener('dblclick', ()=>{
+    left.style.width = '50%';
+    topPane.style.flex = '1 1 50%';
+  });
+  hSplit.addEventListener('dblclick', ()=>{
+    topPane.style.flex = '1 1 50%';
+  });
+
+  // Accessibility: if user resizes window, ensure left width not exceed container
+  window.addEventListener('resize', ()=>{
+    const rect = container.getBoundingClientRect();
+    const leftRect = left.getBoundingClientRect();
+    const minR = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--min-right')) || 150;
+    if (leftRect.width > rect.width - minR - 1) {
+      left.style.width = px(Math.max(rect.width/2, 150));
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

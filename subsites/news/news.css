@@ -1,0 +1,97 @@
+/* 
+Not finished yet
+*/
+
+body, a, pre {
+ 
+	background-color: #1c1d1d;
+  	font-size:14;
+    color: #d2d4d6;
+    
+}
+
+h1, h2, h3, .item h2, .item h3, .item p {
+    font-family:'Noto Sans';
+    
+    color: #d2d4d6;
+}
+
+  /* Main content */
+  .main {
+    flex-grow: 1;
+    padding: 10px;
+    max-width: 80%;
+    margin-left: 200px;
+  }
+
+h1 {
+    position:sticky;
+    align-items: center;
+    text-align: center;
+    font-size: 14;
+    background-color: #1c1d1d; /* Optional: Add a background color to prevent overlap */
+    z-index: 1000; /* Ensure it stays above other elements */
+}
+
+/* Blog container */
+#blog {
+    background-color: #1c1d1d;
+    background-size: cover;
+    border: 1px solid #d2d4d6;
+    padding: 30px;
+
+}
+
+/* Blog items */ 
+.item {
+    display: block;
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid;
+    border-color: #999b9e;
+    background-color: #272929;
+    overflow:scroll;
+}
+
+.item h2 {
+    margin-top: 0px;
+}
+
+.item p, li {
+    margin-left: 20px;
+    font-family:'Noto Sans';
+    color: #d2d4d6;
+}
+
+.highlight {
+    color: #6dadee;
+    font-weight: bold;
+    text-decoration:solid;
+    text-decoration-color: rgb(8, 242, 70);
+}
+
+/* Görgetősáv */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+  
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #282929;
+  border-radius: 5px;
+  border: 1px solid #999b9e;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #282929;
+}
+
+/* Responzivitási beállítások */
+  @media (max-width: 800px) {
+    
+
+    .main {
+      margin-left: 100px;
+    }
+  }

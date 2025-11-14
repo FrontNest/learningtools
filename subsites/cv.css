@@ -1,0 +1,80 @@
+/* 
+Not finished yet
+
+
+body, .side-nav2, .side-nav2 a {
+	background-color: #1c1d1d;
+	font-family: 'Noto Sans'; 
+  	font-size: 1em;
+	color: #d2d4d6;
+}
+*/
+
+.container3 {
+  display: flex;
+  flex-direction: row; 
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.container3, ol, ul, li, a, p, h1, h2, h3 {
+  padding: 0;
+  margin: 0;
+  color: #d2d4d6;
+  font-family: 'Noto Sans';
+  text-decoration: none;
+}
+
+.side-nav2 {
+  display: flex;
+  flex-direction: column;
+  padding-right: 10px;
+  min-width: 250px;
+  width: 30%;
+  overflow: hidden;
+  overflow-wrap: normal;
+}
+
+.main2 {
+  width: 65%;
+}
+
+h1, h2, h3 {
+  font-weight: bold;
+  text-decoration: underline;
+  padding-top: 3px;
+}
+
+p {
+  padding-left: 15px;
+}
+
+li {
+  padding-left: 15px;
+  list-style-type: circle;
+}
+
+
+.marginBottom {
+  margin-bottom: 30px;
+}
+
+
+
+/* Görgetősáv */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+  
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #282929;
+  border-radius: 5px;
+  border: 1px solid #999b9e;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #282929;
+}
+

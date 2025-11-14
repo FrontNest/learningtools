@@ -1,0 +1,51 @@
+<!--- I hate facebook. Stone me for it to death if you like...
+I have no clue how to make a social media page, 
+but as a learning project it soulds interesting.-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎒 Parent Hub</title>
+  <link rel="icon" type="image/png" href="https://felisha76.github.io/portfolio/media/favicon_light.png">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    
+    <div class="toggle-container">
+        
+        <label for="light-mode-toggle" class="toggle-label">Light mode<input type="checkbox" id="light-mode-toggle" /></label>  
+        
+      </div>
+    
+      <h1>🎒 Parent Hub - under construction</h1>
+    <div id="post-list"></div>
+  </div>
+
+  <template id="post-template">
+    <div class="post">
+      <div class="post-header">
+        <strong class="group-name">Group Name</strong> · <span class="author">Author</span> · <span class="timestamp">Date Time</span>
+      </div>
+      <div class="post-body">
+        <p class="text">Post text goes here...</p>
+        <img class="post-image" src="" alt="" style="display:none;"/>
+      </div>
+      <div class="post-actions">
+        <button class="like-btn">👍 <span>0</span></button>
+        <button class="dislike-btn">👎 <span>0</span></button>
+      </div>
+      <div class="comments-section">
+        <div class="comment-list"></div>
+        <textarea maxlength="500" class="comment-input" placeholder="Write a comment..."></textarea>
+        <button class="add-comment">Comment</button>
+      </div>
+    </div>
+  </template>
+
+
+
+  <script src="script.js"></script>
+</body>
+</html>
