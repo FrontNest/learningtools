@@ -41,7 +41,8 @@ FONTS:
         -webkit-text-fill-color: transparent;
         -webkit-text-stroke: 0.5px #ffe4c4;    
     text-decoration: none;
-
+    
+a----
 
 /* Görgetősáv */
 ::-webkit-scrollbar {
