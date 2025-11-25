@@ -1,0 +1,89 @@
+GitHub history tisztítás:
+
+# Ha még nincs telepítve a filter-repo:
+# pip install git-filter-repo
+
+# ha upgreade-elni kell és több python van fent:
+# py -m pip install --upgrade pip
+
+# azt a path kell beírni, ahol a git-filter van:
+# "C:/Users/Orsi/AppData/Roaming/Python/Python314/Scripts/git-filter-repo.exe" --strip-blobs-bigger-than 100M
+
+# ha be akarod tenni a path-ba: 
+# C:\Users\Orsi\AppData\Roaming\Python\Python314\Scripts
+# utána már működik bárhonnan:
+# git filter-repo --strip-blobs-bigger-than 100M
+
+# Visszaadjuk az origint:
+# git remote add origin https://github.com/Felisha76/portfolio
+# majd ellenőrizzük:
+# git remote -v
+
+
+# ez után ez szükséges:
+# git push --force --all
+# git push --force --tags
+
+# Kézzel állítsd be az upstreamet (figyelj rá, hogy mi a branch neve master, vagy main, vagy más):
+# git branch -u origin/main
+# ha a test ágat is használod, akkor
+# git branch -u origin/test test
+
+# git mappa mérete a history-val együtt:
+# du -sh .git
+
+# ha még mindig nagy:
+# git gc --prune=now --aggressive
+# majd újra megnézni a méretet:
+# du -sh .git
+
+------------------
+.gitignore a repo gyökerébe (állítsd be, mi NE legyen feltöltve a githubra):
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vite/React build output
+dist/
+build/
+
+# Python venv
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# IDE/Editor
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Backup files
+*~
+*.bak
+*.tmp
+
+# Large media (példa: minden .jpeg, .jpg, .png a public/media-ból)
+public/media/*.jpeg
+public/media/*.jpg
+public/media/*.png
+
+# Saját tankönyv, letöltött vagy generált nagy fájlok
+X_test/books_to_convert/
+X_test/fay_tankonyvek/
+
+# Egyéb, nem verziózandó mappák/fájlok
+natanyag/natanyag@0.0.0
+natanyag/vite/
+
+----------------------------------------------------
