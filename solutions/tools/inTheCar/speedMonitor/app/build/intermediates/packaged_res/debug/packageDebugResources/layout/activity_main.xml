@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="00:00"
         android:textSize="28sp"
-        android:textColor="#FFFFFF"
+        android:textColor="#43d40a"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:text="0"
         android:textSize="120sp"
-        android:textColor="#f2ee09"
+        android:textColor="#767668"
         android:textStyle="bold"
         android:layout_centerInParent="true"/>
 
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:text="Hely: "
         android:textSize="40sp"
-        android:textColor="#00FF00"
+        android:textColor="#43d40a"
         android:textStyle="bold"
         android:layout_below="@id/tvSpeed"
         android:layout_centerHorizontal="true"
