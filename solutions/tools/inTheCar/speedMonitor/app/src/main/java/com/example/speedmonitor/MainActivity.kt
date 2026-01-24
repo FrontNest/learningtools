@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvTime: TextView
     private lateinit var tvSpeed: TextView
     private lateinit var tvRoad: TextView
+    private lateinit var tvVideoStatus: TextView
     private val client = OkHttpClient()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -31,9 +32,28 @@ class MainActivity : AppCompatActivity() {
         tvTime = findViewById(R.id.tvTime)
         tvSpeed = findViewById(R.id.tvSpeed)
         tvRoad = findViewById(R.id.tvRoad)
+        tvVideoStatus = findViewById(R.id.tvVideoStatus)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        requestCameraAndAudioPermissions()
         startClock()
         startLocationUpdates()
+
+    }
+
+    private fun requestCameraAndAudioPermissions() {
+        val permissions = mutableListOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO
+        )
+        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.P) {
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+        val notGranted = permissions.filter {
+            ActivityCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+        if (notGranted.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, notGranted.toTypedArray(), 2)
+        }
     }
 
     private fun startClock() {
