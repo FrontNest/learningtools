@@ -4,7 +4,7 @@
             "outputFile": "com.example.speedmonitor.app-mergeDebugResources-31:/values-h320dp-port-v13/values-h320dp-port-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\lol\\.gradle\\caches\\8.10.2\\transforms\\f9c14ed0f49bb2d6623e4862f8fd5324\\transformed\\material-1.11.0\\res\\values-h320dp-port-v13\\values-h320dp-port-v13.xml",
+                    "source": "C:\\Users\\lol\\.gradle\\caches\\8.10.2\\transforms\\7177bf3c784715746b9762c0447f6da8\\transformed\\material-1.11.0\\res\\values-h320dp-port-v13\\values-h320dp-port-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
