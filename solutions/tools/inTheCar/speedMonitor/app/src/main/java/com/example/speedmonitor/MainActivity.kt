@@ -21,22 +21,22 @@ import java.util.*
 // CameraX imports
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.core.CameraSelector
-import androidx.camera.video.Recorder
 import androidx.camera.video.VideoCapture
 import androidx.camera.video.Recording
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
-import androidx.camera.video.Recorder.OutputFileOptions
+import androidx.camera.video.Recorder
+import androidx.camera.video.MediaStoreOutputOptions
 
 class MainActivity : AppCompatActivity() {
-        private var isRecording = false
-            private var videoCapture: VideoCapture<Recorder>? = null
-            private var recording: Recording? = null
+    private var isRecording = false
+    private var videoCapture: VideoCapture<Recorder>? = null
+    private var recording: Recording? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private lateinit var tvTime: TextView
     private lateinit var tvSpeed: TextView
-    private lateinit var tvRoad: TextView
+    private lateinit var tvAddress: TextView
     private lateinit var tvVideoStatus: TextView
     private val client = OkHttpClient()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         tvTime = findViewById(R.id.tvTime)
         tvSpeed = findViewById(R.id.tvSpeed)
-        tvRoad = findViewById(R.id.tvRoad)
+        tvAddress = findViewById(R.id.tvAddress)
         tvVideoStatus = findViewById(R.id.tvVideoStatus)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         requestCameraAndAudioPermissions()
@@ -148,11 +148,12 @@ class MainActivity : AppCompatActivity() {
                     put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
                     put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/Camera")
                 }
-                val outputOptions = OutputFileOptions.Builder(
+                val outputOptions = MediaStoreOutputOptions.Builder(
                     contentResolver,
-                    android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                    contentValues
-                ).build()
+                    android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                )
+                    .setContentValues(contentValues)
+                    .build()
                 val recordingPre = videoCapture?.output
                     ?.prepareRecording(this, outputOptions)
                 // withAudioEnabled() only if RECORD_AUDIO permission granted
@@ -192,7 +193,7 @@ class MainActivity : AppCompatActivity() {
                 "Ismeretlen út"
             }
             withContext(Dispatchers.Main) {
-                tvRoad.text = road
+                tvAddress.text = road
             }
         }
     }
