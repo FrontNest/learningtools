@@ -1,1 +1,0 @@
-C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\java\com\example\speedmonitor\MainActivity.kt

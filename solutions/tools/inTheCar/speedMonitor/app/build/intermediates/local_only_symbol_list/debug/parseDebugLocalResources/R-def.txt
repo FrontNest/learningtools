@@ -1,5 +1,6 @@
 R_DEF: Internal format may change without notice
 local
+id tvAddress
 id tvSpeed
 id tvTime
 id tvVideoStatus
