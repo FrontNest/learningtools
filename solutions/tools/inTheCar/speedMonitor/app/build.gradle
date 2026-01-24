@@ -6,6 +6,7 @@ buildscript {
 apply plugin: 'com.android.application'
 
 android {
+    namespace 'com.example.speedmonitor'
     compileSdkVersion 34
     defaultConfig {
         applicationId "com.example.speedmonitor"
