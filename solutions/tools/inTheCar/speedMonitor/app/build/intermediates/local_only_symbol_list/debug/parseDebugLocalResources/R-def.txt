@@ -2,7 +2,7 @@ R_DEF: Internal format may change without notice
 local
 id tvRoad
 id tvSpeed
-id tvTime
+id tvVideoStatus
 layout activity_main
 mipmap ic_launcher
 mipmap ic_launcher_round

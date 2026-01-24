@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.speedmonitor.app-mergeDebugResources-31:/values-ko/values-ko.xml",
+            "outputFile": "com.example.speedmonitor.app-mergeDebugResources-39:/values-ko/values-ko.xml",
             "map": [
                 {
                     "source": "C:\\Users\\lol\\.gradle\\caches\\8.10.2\\transforms\\296c20b5b0ceada7a3018eba37e031ea\\transformed\\jetified-play-services-basement-18.1.0\\res\\values-ko\\values.xml",

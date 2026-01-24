@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.speedmonitor.app-mergeDebugResources-31:/values-xlarge-v4/values-xlarge-v4.xml",
+            "outputFile": "com.example.speedmonitor.app-mergeDebugResources-39:/values-xlarge-v4/values-xlarge-v4.xml",
             "map": [
                 {
                     "source": "C:\\Users\\lol\\.gradle\\caches\\8.10.2\\transforms\\70452f150381b1460ab69bfae5a9c968\\transformed\\appcompat-1.6.1\\res\\values-xlarge-v4\\values-xlarge-v4.xml",

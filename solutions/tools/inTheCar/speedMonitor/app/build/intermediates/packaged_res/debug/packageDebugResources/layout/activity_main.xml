@@ -7,18 +7,30 @@
 
 
     <TextView
-        android:id="@+id/tvTime"
+        android:id="@+id/tvRoad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"
+        android:text="Hely: "
         android:textSize="40sp"
         android:textColor="#00FF00"
         android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"/>
+        android:layout_below="@id/tvSpeed"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:singleLine="false"
+        android:maxLines="3"/>
 
+    <TextView
+        android:id="@+id/tvVideoStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="28sp"
+        android:textColor="#FF0000"
+        android:textStyle="bold"
+        android:layout_below="@id/tvRoad"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:id="@+id/tvSpeed"
@@ -41,6 +53,8 @@
         android:textStyle="bold"
         android:layout_below="@id/tvSpeed"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"/>
+        android:layout_marginTop="32dp"
+        android:singleLine="false"
+        android:maxLines="3" />
 
 </RelativeLayout>
