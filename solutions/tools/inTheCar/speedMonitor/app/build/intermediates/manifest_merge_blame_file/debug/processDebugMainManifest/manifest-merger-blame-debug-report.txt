@@ -45,107 +45,106 @@
 28-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:12:9-54
 29        android:supportsRtl="true"
 29-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:13:9-35
-30        android:testOnly="true"
-31        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
-31-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:14:9-65
-32        <activity
-32-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:15:9-20:20
-33            android:name="com.example.speedmonitor.MainActivity"
-33-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:15:19-47
-34            android:exported="true" >
-34-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:15:48-71
-35            <intent-filter>
-35-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:16:13-19:29
-36                <action android:name="android.intent.action.MAIN" />
-36-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:17:17-69
-36-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:17:25-66
-37
-38                <category android:name="android.intent.category.LAUNCHER" />
-38-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:18:17-77
-38-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:18:27-74
-39            </intent-filter>
-40        </activity>
-41        <activity
-41-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\042923011682d763b793562435ff8412\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:20:9-22:45
-42            android:name="com.google.android.gms.common.api.GoogleApiActivity"
-42-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\042923011682d763b793562435ff8412\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:20:19-85
-43            android:exported="false"
-43-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\042923011682d763b793562435ff8412\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:22:19-43
-44            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-44-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\042923011682d763b793562435ff8412\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:21:19-78
-45
-46        <meta-data
-46-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\296c20b5b0ceada7a3018eba37e031ea\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:21:9-23:69
-47            android:name="com.google.android.gms.version"
-47-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\296c20b5b0ceada7a3018eba37e031ea\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:22:13-58
-48            android:value="@integer/google_play_services_version" />
-48-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\296c20b5b0ceada7a3018eba37e031ea\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:23:13-66
-49
-50        <provider
-50-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
-51            android:name="androidx.startup.InitializationProvider"
-51-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:25:13-67
-52            android:authorities="com.example.speedmonitor.androidx-startup"
-52-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:26:13-68
-53            android:exported="false" >
-53-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:27:13-37
-54            <meta-data
-54-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
-55                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-55-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:30:17-75
-56                android:value="androidx.startup" />
-56-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:31:17-49
-57            <meta-data
-57-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\lol\.gradle\caches\8.10.2\transforms\ec6f342090ac3647c35bfb8320bab32a\transformed\jetified-lifecycle-process-2.6.1\AndroidManifest.xml:29:13-31:52
-58                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-58-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\lol\.gradle\caches\8.10.2\transforms\ec6f342090ac3647c35bfb8320bab32a\transformed\jetified-lifecycle-process-2.6.1\AndroidManifest.xml:30:17-78
-59                android:value="androidx.startup" />
-59-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\lol\.gradle\caches\8.10.2\transforms\ec6f342090ac3647c35bfb8320bab32a\transformed\jetified-lifecycle-process-2.6.1\AndroidManifest.xml:31:17-49
-60            <meta-data
-60-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
-61                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-61-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
-62                android:value="androidx.startup" />
-62-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
-63        </provider>
-64
-65        <receiver
-65-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
-66            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-66-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
-67            android:directBootAware="false"
-67-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
-68            android:enabled="true"
-68-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
-69            android:exported="true"
-69-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
-70            android:permission="android.permission.DUMP" >
-70-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
-71            <intent-filter>
-71-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
-72                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-72-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
-72-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
-73            </intent-filter>
-74            <intent-filter>
-74-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
-75                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-75-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
-75-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
-76            </intent-filter>
-77            <intent-filter>
-77-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
-78                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-78-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
-78-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
-79            </intent-filter>
-80            <intent-filter>
-80-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
-81                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-81-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
-81-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
-82            </intent-filter>
-83        </receiver>
-84    </application>
-85
-86</manifest>
+30        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+30-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:14:9-65
+31        <activity
+31-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:15:9-20:20
+32            android:name="com.example.speedmonitor.MainActivity"
+32-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:15:19-47
+33            android:exported="true" >
+33-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:15:48-71
+34            <intent-filter>
+34-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:16:13-19:29
+35                <action android:name="android.intent.action.MAIN" />
+35-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:17:17-69
+35-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:17:25-66
+36
+37                <category android:name="android.intent.category.LAUNCHER" />
+37-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:18:17-77
+37-->C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app\src\main\AndroidManifest.xml:18:27-74
+38            </intent-filter>
+39        </activity>
+40        <activity
+40-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\042923011682d763b793562435ff8412\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:20:9-22:45
+41            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+41-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\042923011682d763b793562435ff8412\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:20:19-85
+42            android:exported="false"
+42-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\042923011682d763b793562435ff8412\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:22:19-43
+43            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+43-->[com.google.android.gms:play-services-base:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\042923011682d763b793562435ff8412\transformed\jetified-play-services-base-18.1.0\AndroidManifest.xml:21:19-78
+44
+45        <meta-data
+45-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\296c20b5b0ceada7a3018eba37e031ea\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:21:9-23:69
+46            android:name="com.google.android.gms.version"
+46-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\296c20b5b0ceada7a3018eba37e031ea\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:22:13-58
+47            android:value="@integer/google_play_services_version" />
+47-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\296c20b5b0ceada7a3018eba37e031ea\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:23:13-66
+48
+49        <provider
+49-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+50            android:name="androidx.startup.InitializationProvider"
+50-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:25:13-67
+51            android:authorities="com.example.speedmonitor.androidx-startup"
+51-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:26:13-68
+52            android:exported="false" >
+52-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:27:13-37
+53            <meta-data
+53-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+54                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+54-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:30:17-75
+55                android:value="androidx.startup" />
+55-->[androidx.emoji2:emoji2:1.2.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\604adf3b66fcb390a5f67d06a4dd046e\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:31:17-49
+56            <meta-data
+56-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\lol\.gradle\caches\8.10.2\transforms\ec6f342090ac3647c35bfb8320bab32a\transformed\jetified-lifecycle-process-2.6.1\AndroidManifest.xml:29:13-31:52
+57                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+57-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\lol\.gradle\caches\8.10.2\transforms\ec6f342090ac3647c35bfb8320bab32a\transformed\jetified-lifecycle-process-2.6.1\AndroidManifest.xml:30:17-78
+58                android:value="androidx.startup" />
+58-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\lol\.gradle\caches\8.10.2\transforms\ec6f342090ac3647c35bfb8320bab32a\transformed\jetified-lifecycle-process-2.6.1\AndroidManifest.xml:31:17-49
+59            <meta-data
+59-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
+60                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+60-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
+61                android:value="androidx.startup" />
+61-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
+62        </provider>
+63
+64        <receiver
+64-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
+65            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+65-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
+66            android:directBootAware="false"
+66-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
+67            android:enabled="true"
+67-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
+68            android:exported="true"
+68-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
+69            android:permission="android.permission.DUMP" >
+69-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
+70            <intent-filter>
+70-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
+71                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+71-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
+71-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
+72            </intent-filter>
+73            <intent-filter>
+73-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
+74                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+74-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
+74-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
+75            </intent-filter>
+76            <intent-filter>
+76-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
+77                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+77-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
+77-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
+78            </intent-filter>
+79            <intent-filter>
+79-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
+80                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+80-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
+80-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\lol\.gradle\caches\8.10.2\transforms\abd6693db58053b716d19f5d6f2c2ea4\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
+81            </intent-filter>
+82        </receiver>
+83    </application>
+84
+85</manifest>
