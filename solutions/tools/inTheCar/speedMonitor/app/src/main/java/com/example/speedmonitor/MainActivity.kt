@@ -26,7 +26,7 @@ import androidx.camera.video.VideoCapture
 import androidx.camera.video.Recording
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
-import androidx.camera.video.OutputFileOptions
+import androidx.camera.video.Recorder.OutputFileOptions
 
 class MainActivity : AppCompatActivity() {
         private var isRecording = false
