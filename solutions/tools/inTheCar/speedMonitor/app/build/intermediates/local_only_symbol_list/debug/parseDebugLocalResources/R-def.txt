@@ -4,3 +4,5 @@ id tvRoad
 id tvSpeed
 id tvTime
 layout activity_main
+mipmap ic_launcher
+mipmap ic_launcher_round
