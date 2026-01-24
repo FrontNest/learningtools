@@ -1,5 +1,6 @@
 package com.example.speedmonitor
 
+
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
@@ -8,6 +9,7 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
@@ -15,6 +17,16 @@ import okhttp3.Request
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
+
+// CameraX imports
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.core.CameraSelector
+import androidx.camera.video.Recorder
+import androidx.camera.video.VideoCapture
+import androidx.camera.video.Recording
+import androidx.camera.video.Quality
+import androidx.camera.video.QualitySelector
+import androidx.camera.video.OutputFileOptions
 
 class MainActivity : AppCompatActivity() {
         private var isRecording = false
