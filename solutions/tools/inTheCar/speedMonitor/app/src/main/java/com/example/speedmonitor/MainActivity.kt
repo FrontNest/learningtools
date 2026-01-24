@@ -18,8 +18,8 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
         private var isRecording = false
-        private var videoCapture: androidx.camera.video.VideoCapture<androidx.camera.video.Recorder>? = null
-        private var recording: androidx.camera.video.Recording? = null
+            private var videoCapture: VideoCapture<Recorder>? = null
+            private var recording: Recording? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private lateinit var tvTime: TextView
@@ -112,19 +112,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startVideoRecording() {
-        // Only start if not already recording
         if (isRecording) return
         isRecording = true
         tvVideoStatus.text = "Video felvétel aktív"
-        // Start CameraX video capture (no preview)
-        val cameraProviderFuture = androidx.camera.lifecycle.ProcessCameraProvider.getInstance(this)
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
-            val recorder = androidx.camera.video.Recorder.Builder()
-                .setQualitySelector(androidx.camera.video.QualitySelector.from(androidx.camera.video.Quality.HD))
+            val recorder = Recorder.Builder()
+                .setQualitySelector(QualitySelector.from(Quality.HD))
                 .build()
-            videoCapture = androidx.camera.video.VideoCapture.withOutput(recorder)
-            val cameraSelector = androidx.camera.core.CameraSelector.DEFAULT_BACK_CAMERA
+            videoCapture = VideoCapture.withOutput(recorder)
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             try {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
@@ -138,15 +136,20 @@ class MainActivity : AppCompatActivity() {
                     put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
                     put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/Camera")
                 }
-                val outputOptions = androidx.camera.video.OutputFileOptions.Builder(
+                val outputOptions = OutputFileOptions.Builder(
                     contentResolver,
                     android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                     contentValues
                 ).build()
-                recording = videoCapture?.output
+                val recordingPre = videoCapture?.output
                     ?.prepareRecording(this, outputOptions)
-                    ?.withAudioEnabled()
-                    ?.start(ContextCompat.getMainExecutor(this)) { }
+                // withAudioEnabled() only if RECORD_AUDIO permission granted
+                val hasAudio = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+                recording = if (hasAudio) {
+                    recordingPre?.withAudioEnabled()?.start(ContextCompat.getMainExecutor(this)) { }
+                } else {
+                    recordingPre?.start(ContextCompat.getMainExecutor(this)) { }
+                }
             } catch (exc: Exception) {
                 tvVideoStatus.text = "Videó indítás hiba: ${exc.message}"
             }
