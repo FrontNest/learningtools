@@ -68,7 +68,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateSpeed(location: Location) {
         val speedKmh = location.speed * 3.6
-        tvSpeed.text = "Sebesség: %.1f km/h".format(speedKmh)
+        tvSpeed.text = "%.0f".format(speedKmh)
+        // A sebesség értékétől függően állítja be a szöveg színét:
+        val color = when {
+            speedKmh < 30 -> 0xffebf709.toInt()
+            speedKmh < 50 -> 0xfff7a409.toInt()
+            speedKmh < 90 -> 0xfff75809.toInt()
+            speedKmh < 110 -> 0xfff71109.toInt()
+            speedKmh <= 140 -> 0xffff0000.toInt()
+            else -> 0xffff0000.toInt()
+        }
+        tvSpeed.setTextColor(color)
     }
 
     private fun updateRoadName(location: Location) {
@@ -85,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 "Ismeretlen út"
             }
             withContext(Dispatchers.Main) {
-                tvRoad.text = "Út: $road"
+                tvRoad.text = road
             }
         }
     }

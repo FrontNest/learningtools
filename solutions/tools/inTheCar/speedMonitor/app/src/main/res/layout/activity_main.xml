@@ -1,33 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp">
+    android:background="#000000">
+
 
     <TextView
         android:id="@+id/tvTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Idő"
-        android:textSize="24sp"
-        android:layout_marginBottom="16dp"/>
+        android:text="0"
+        android:textSize="20sp"
+        android:textColor="#00FF00"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"/>
+
 
     <TextView
         android:id="@+id/tvSpeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sebesség"
-        android:textSize="32sp"
-        android:layout_marginBottom="16dp"/>
+        android:text="0"
+        android:textSize="64sp"
+        android:textColor="#f2ee09"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"/>
+
 
     <TextView
         android:id="@+id/tvRoad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Út neve"
-        android:textSize="20sp"
-        android:layout_marginBottom="16dp"/>
+        android:text="0"
+        android:textSize="28sp"
+        android:textColor="#00FF00"
+        android:textStyle="bold"
+        android:layout_below="@id/tvSpeed"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"/>
 
-</LinearLayout>
+</RelativeLayout>
