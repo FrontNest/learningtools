@@ -41,7 +41,4 @@
         android:textStyle="bold"
         android:layout_centerInParent="true"/>
 
-
-    <!-- Only one tvRoad should exist, already defined above -->
-
 </RelativeLayout>
