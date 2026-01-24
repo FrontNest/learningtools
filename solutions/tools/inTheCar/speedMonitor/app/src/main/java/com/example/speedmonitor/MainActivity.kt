@@ -17,6 +17,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+        private var isRecording = false
+        private var videoCapture: androidx.camera.video.VideoCapture<androidx.camera.video.Recorder>? = null
+        private var recording: androidx.camera.video.Recording? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private lateinit var tvTime: TextView
@@ -99,6 +102,65 @@ class MainActivity : AppCompatActivity() {
             else -> 0xffff0000.toInt()
         }
         tvSpeed.setTextColor(color)
+
+        // Video recording logic
+        if (speedKmh > 10 && !isRecording) {
+            startVideoRecording()
+        } else if (speedKmh <= 10 && isRecording) {
+            stopVideoRecording()
+        }
+    }
+
+    private fun startVideoRecording() {
+        // Only start if not already recording
+        if (isRecording) return
+        isRecording = true
+        tvVideoStatus.text = "Video felvétel aktív"
+        // Start CameraX video capture (no preview)
+        val cameraProviderFuture = androidx.camera.lifecycle.ProcessCameraProvider.getInstance(this)
+        cameraProviderFuture.addListener({
+            val cameraProvider = cameraProviderFuture.get()
+            val recorder = androidx.camera.video.Recorder.Builder()
+                .setQualitySelector(androidx.camera.video.QualitySelector.from(androidx.camera.video.Quality.HD))
+                .build()
+            videoCapture = androidx.camera.video.VideoCapture.withOutput(recorder)
+            val cameraSelector = androidx.camera.core.CameraSelector.DEFAULT_BACK_CAMERA
+            try {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    this,
+                    cameraSelector,
+                    videoCapture
+                )
+                val name = "VID_${System.currentTimeMillis()}.mp4"
+                val contentValues = android.content.ContentValues().apply {
+                    put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, name)
+                    put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
+                    put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/Camera")
+                }
+                val outputOptions = androidx.camera.video.OutputFileOptions.Builder(
+                    contentResolver,
+                    android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    contentValues
+                ).build()
+                recording = videoCapture?.output
+                    ?.prepareRecording(this, outputOptions)
+                    ?.withAudioEnabled()
+                    ?.start(ContextCompat.getMainExecutor(this)) { }
+            } catch (exc: Exception) {
+                tvVideoStatus.text = "Videó indítás hiba: ${exc.message}"
+            }
+        }, ContextCompat.getMainExecutor(this))
+    }
+
+    private fun stopVideoRecording() {
+        if (!isRecording) return
+        isRecording = false
+        tvVideoStatus.text = ""
+        try {
+            recording?.stop()
+            recording = null
+        } catch (_: Exception) {}
     }
 
     private fun updateRoadName(location: Location) {
@@ -124,5 +186,6 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         fusedLocationClient.removeLocationUpdates(locationCallback)
         coroutineScope.cancel()
+        stopVideoRecording()
     }
 }
