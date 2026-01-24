@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "dev": "vite"
+  },
   "dependencies": {
     "react-router-dom": "^7.9.5"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1"
   }
 }
