@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     private fun startClock() {
         coroutineScope.launch {
             while (true) {
-                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
                 tvTime.text = sdf.format(Date())
                 delay(1000)
             }
