@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace 'com.example.speedmonitor'
-    compileSdkVersion 34
+    compileSdkVersion 35
     defaultConfig {
         applicationId "com.example.speedmonitor"
         minSdkVersion 24
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 1
         versionName "1.0"
     }

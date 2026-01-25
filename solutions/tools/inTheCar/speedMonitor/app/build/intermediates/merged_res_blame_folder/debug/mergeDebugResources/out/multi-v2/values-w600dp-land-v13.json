@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.speedmonitor.app-mergeDebugResources-39:/values-w600dp-land-v13/values-w600dp-land-v13.xml",
+            "outputFile": "com.example.speedmonitor.app-mergeDebugResources-44:/values-w600dp-land-v13/values-w600dp-land-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\lol\\.gradle\\caches\\8.10.2\\transforms\\7177bf3c784715746b9762c0447f6da8\\transformed\\material-1.11.0\\res\\values-w600dp-land-v13\\values-w600dp-land-v13.xml",
+                    "source": "C:\\Users\\lol\\.gradle\\caches\\8.10.2\\transforms\\a937f4e5372193317b908ccf02693716\\transformed\\material-1.13.0\\res\\values-w600dp-land-v13\\values-w600dp-land-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

@@ -1,14 +1,14 @@
 [
     {
-        "merged": "com.example.speedmonitor.app-debug-41:/layout_activity_main.xml.flat",
-        "source": "com.example.speedmonitor.app-main-43:/layout/activity_main.xml"
+        "merged": "com.example.speedmonitor.app-debug-46:/mipmap_ic_launcher.xml.flat",
+        "source": "com.example.speedmonitor.app-main-48:/mipmap/ic_launcher.xml"
     },
     {
-        "merged": "com.example.speedmonitor.app-debug-41:/mipmap_ic_launcher_round.xml.flat",
-        "source": "com.example.speedmonitor.app-main-43:/mipmap/ic_launcher_round.xml"
+        "merged": "com.example.speedmonitor.app-debug-46:/mipmap_ic_launcher_round.xml.flat",
+        "source": "com.example.speedmonitor.app-main-48:/mipmap/ic_launcher_round.xml"
     },
     {
-        "merged": "com.example.speedmonitor.app-debug-41:/mipmap_ic_launcher.xml.flat",
-        "source": "com.example.speedmonitor.app-main-43:/mipmap/ic_launcher.xml"
+        "merged": "com.example.speedmonitor.app-debug-46:/layout_activity_main.xml.flat",
+        "source": "com.example.speedmonitor.app-main-48:/layout/activity_main.xml"
     }
 ]
