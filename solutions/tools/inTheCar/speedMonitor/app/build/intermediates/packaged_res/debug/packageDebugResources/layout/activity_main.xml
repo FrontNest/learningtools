@@ -45,6 +45,7 @@
         android:singleLine="false"
         android:maxLines="3"/>
 
+<!-- tvVideoStatus.text a MainActivity.kt-ben állítja a szöveget -->
     <TextView
         android:id="@+id/tvVideoStatus"
         android:layout_width="wrap_content"
