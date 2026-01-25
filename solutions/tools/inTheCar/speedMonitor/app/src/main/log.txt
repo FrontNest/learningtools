@@ -1,0 +1,992 @@
+--------- beginning of main
+--------- beginning of system
+---------------------------- PROCESS STARTED (6386) for package com.example.speedmonitor ----------------------------
+2026-01-25 13:46:25.756  6386-6386  nativeloader            com.example.speedmonitor             D  Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+2026-01-25 13:46:26.391  6386-6386  CompatChangeReporter    com.example.speedmonitor             D  Compat change id reported: 242716250; UID 10209; state: ENABLED
+2026-01-25 13:46:26.458  6386-6386  ziparchive              com.example.speedmonitor             W  Unable to open '/data/app/~~nf8AaF_QhJem7QfoR81rdg==/com.example.speedmonitor-Fu26uo5IwFU3x6rxjqenhA==/base.dm': No such file or directory
+2026-01-25 13:46:26.458  6386-6386  ziparchive              com.example.speedmonitor             W  Unable to open '/data/app/~~nf8AaF_QhJem7QfoR81rdg==/com.example.speedmonitor-Fu26uo5IwFU3x6rxjqenhA==/base.dm': No such file or directory
+2026-01-25 13:46:27.056  6386-6386  nativeloader            com.example.speedmonitor             D  Configuring clns-7 for other apk /data/app/~~nf8AaF_QhJem7QfoR81rdg==/com.example.speedmonitor-Fu26uo5IwFU3x6rxjqenhA==/base.apk. target_sdk_version=34, uses_libraries=, library_path=/data/app/~~nf8AaF_QhJem7QfoR81rdg==/com.example.speedmonitor-Fu26uo5IwFU3x6rxjqenhA==/lib/x86_64:/data/app/~~nf8AaF_QhJem7QfoR81rdg==/com.example.speedmonitor-Fu26uo5IwFU3x6rxjqenhA==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/com.example.speedmonitor
+2026-01-25 13:46:27.086  6386-6386  GraphicsEnvironment     com.example.speedmonitor             V  Currently set values for:
+2026-01-25 13:46:27.086  6386-6386  GraphicsEnvironment     com.example.speedmonitor             V    angle_gl_driver_selection_pkgs=[]
+2026-01-25 13:46:27.086  6386-6386  GraphicsEnvironment     com.example.speedmonitor             V    angle_gl_driver_selection_values=[]
+2026-01-25 13:46:27.086  6386-6386  GraphicsEnvironment     com.example.speedmonitor             V  Global.Settings values are invalid: number of packages: 0, number of values: 0
+2026-01-25 13:46:27.086  6386-6386  GraphicsEnvironment     com.example.speedmonitor             V  Neither updatable production driver nor prerelease driver is supported.
+2026-01-25 13:46:27.468  6386-6386  AppCompatDelegate       com.example.speedmonitor             D  Checking for metadata for AppLocalesMetadataHolderService : Service not found
+2026-01-25 13:46:27.618  6386-6386  le.speedmonitor         com.example.speedmonitor             W  Accessing hidden method Landroid/view/View;->computeFitSystemWindows(Landroid/graphics/Rect;Landroid/graphics/Rect;)Z (unsupported, reflection, allowed)
+2026-01-25 13:46:27.618  6386-6386  le.speedmonitor         com.example.speedmonitor             W  Accessing hidden method Landroid/view/ViewGroup;->makeOptionalFitsSystemWindows()V (unsupported, reflection, allowed)
+2026-01-25 13:46:27.817  6386-6386  HWUI                    com.example.speedmonitor             W  Unknown dataspace 0
+2026-01-25 13:46:27.820  6386-6418  CameraManagerGlobal     com.example.speedmonitor             I  Connecting to camera service
+2026-01-25 13:46:28.066  6386-6418  CameraRepository        com.example.speedmonitor             D  Added camera: 1
+2026-01-25 13:46:28.067  6386-6416  le.speedmonitor         com.example.speedmonitor             W  Verification of void com.google.android.gms.internal.common.zzb.<init>(java.lang.String) took 145.018ms (48.27 bytecodes/s) (2256B approximate peak alloc)
+2026-01-25 13:46:28.153  6386-6412  EGL_emulation           com.example.speedmonitor             I  Opening libGLESv1_CM_emulation.so
+2026-01-25 13:46:28.165  6386-6412  EGL_emulation           com.example.speedmonitor             I  Opening libGLESv2_emulation.so
+2026-01-25 13:46:28.240  6386-6412  HWUI                    com.example.speedmonitor             W  Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+2026-01-25 13:46:28.242  6386-6412  HWUI                    com.example.speedmonitor             W  Failed to initialize 101010-2 format, error = EGL_SUCCESS
+2026-01-25 13:46:28.298  6386-6418  Camera2CameraInfo       com.example.speedmonitor             I  Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_FULL
+2026-01-25 13:46:28.371  6386-6412  Gralloc4                com.example.speedmonitor             I  mapper 4.x is not supported
+2026-01-25 13:46:28.374  6386-6418  CameraRepository        com.example.speedmonitor             D  Added camera: 10
+2026-01-25 13:46:28.443  6386-6418  Camera2CameraInfo       com.example.speedmonitor             I  Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED
+2026-01-25 13:46:28.449  6386-6418  CameraValidator         com.example.speedmonitor             D  Verifying camera lens facing on emu64xa, lensFacingInteger: null
+2026-01-25 13:46:28.902  6386-6398  HWUI                    com.example.speedmonitor             I  Davey! duration=966ms; Flags=1, FrameTimelineVsyncId=30222, IntendedVsync=439907301771, Vsync=439990635101, InputEventId=0, HandleInputStart=439990882052, AnimationStart=439990892304, PerformTraversalsStart=439990901744, DrawStart=440413233545, FrameDeadline=439923968437, FrameInterval=439990736284, FrameStartTime=16666666, SyncQueued=440425341773, SyncStart=440443822376, IssueDrawCommandsStart=440453721055, SwapBuffers=440818792672, FrameCompleted=440892661584, DequeueBufferDuration=5472, QueueBufferDuration=670965, GpuCompleted=440892661584, SwapBuffersCompleted=440866629591, DisplayPresentTime=0, CommandSubmissionCompleted=440818792672, 
+2026-01-25 13:46:29.049  6386-6416  le.speedmonitor         com.example.speedmonitor             W  Verification of java.lang.Object com.google.android.gms.common.zzb.createFromParcel(android.os.Parcel) took 151.413ms (501.94 bytecodes/s) (3904B approximate peak alloc)
+2026-01-25 13:46:29.099  6386-6386  CameraOrientationUtil   com.example.speedmonitor             D  getRelativeImageRotation: destRotationDegrees=0, sourceRotationDegrees=90, isOppositeFacing=true, result=90
+2026-01-25 13:46:29.102  6386-6386  CameraOrientationUtil   com.example.speedmonitor             D  getRelativeImageRotation: destRotationDegrees=0, sourceRotationDegrees=90, isOppositeFacing=true, result=90
+2026-01-25 13:46:29.131  6386-6386  RecorderVi...pabilities com.example.speedmonitor             D  profiles = ImmutableEncoderProfilesProxy{defaultDurationSeconds=60, recommendedFileFormat=2, audioProfiles=[AudioProfileProxy{codec=1, mediaType=audio/3gpp, bitrate=12200, sampleRate=8000, channels=1, profile=-1}], videoProfiles=[VideoProfileProxy{codec=2, mediaType=video/avc, bitrate=1200000, frameRate=30, width=1280, height=720, profile=-1, bitDepth=8, chromaSubsampling=0, hdrFormat=0}]}
+2026-01-25 13:46:29.146  6386-6386  QualitySelector         com.example.speedmonitor             D  supportedQualities = [ConstantQuality{value=5, name=HD}]
+2026-01-25 13:46:29.146  6386-6386  VideoCapture            com.example.speedmonitor             D  Found selectedQualities [ConstantQuality{value=5, name=HD}] by QualitySelector{preferredQualities=[ConstantQuality{value=5, name=HD}], fallbackStrategy=RuleStrategy{fallbackQuality=ConstantQuality{value=-1, name=NONE}, fallbackRule=0}}
+2026-01-25 13:46:29.163  6386-6386  VideoCapture            com.example.speedmonitor             D  Set custom ordered resolutions = [1280x720]
+2026-01-25 13:46:29.235  6386-6386  RecorderVi...pabilities com.example.speedmonitor             D  profiles = ImmutableEncoderProfilesProxy{defaultDurationSeconds=60, recommendedFileFormat=2, audioProfiles=[AudioProfileProxy{codec=1, mediaType=audio/3gpp, bitrate=12200, sampleRate=8000, channels=1, profile=-1}], videoProfiles=[VideoProfileProxy{codec=2, mediaType=video/avc, bitrate=1200000, frameRate=30, width=1280, height=720, profile=-1, bitDepth=8, chromaSubsampling=0, hdrFormat=0}]}
+2026-01-25 13:46:29.248  6386-6386  QualitySelector         com.example.speedmonitor             D  supportedQualities = [ConstantQuality{value=5, name=HD}]
+2026-01-25 13:46:29.249  6386-6386  VideoCapture            com.example.speedmonitor             D  Found selectedQualities [ConstantQuality{value=5, name=HD}] by QualitySelector{preferredQualities=[ConstantQuality{value=5, name=HD}], fallbackStrategy=RuleStrategy{fallbackQuality=ConstantQuality{value=-1, name=NONE}, fallbackRule=0}}
+2026-01-25 13:46:29.258  6386-6386  VideoCapture            com.example.speedmonitor             D  Set custom ordered resolutions = [1280x720]
+2026-01-25 13:46:29.294  6386-6386  VideoCapture            com.example.speedmonitor             D  onSuggestedStreamSpecUpdated: StreamSpec{resolution=1280x720, dynamicRange=DynamicRange@e42d8f3{encoding=SDR, bitDepth=8}, expectedFrameRateRange=[0, 0], implementationOptions=androidx.camera.camera2.impl.Camera2ImplConfig@38f4029}
+2026-01-25 13:46:29.319  6386-6386  RecorderVi...pabilities com.example.speedmonitor             D  profiles = ImmutableEncoderProfilesProxy{defaultDurationSeconds=60, recommendedFileFormat=2, audioProfiles=[AudioProfileProxy{codec=1, mediaType=audio/3gpp, bitrate=12200, sampleRate=8000, channels=1, profile=-1}], videoProfiles=[VideoProfileProxy{codec=2, mediaType=video/avc, bitrate=1200000, frameRate=30, width=1280, height=720, profile=-1, bitDepth=8, chromaSubsampling=0, hdrFormat=0}]}
+2026-01-25 13:46:29.330  6386-6386  RecorderVi...pabilities com.example.speedmonitor             D  Using supported quality of ConstantQuality{value=5, name=HD} for size 1280x720
+2026-01-25 13:46:29.332  6386-6386  VideoConfigUtil         com.example.speedmonitor             D  MediaSpec video mime matches EncoderProfiles. Using EncoderProfiles to derive VIDEO settings [mime type: video/avc]
+2026-01-25 13:46:29.336  6386-6386  VidEncVdPrflRslvr       com.example.speedmonitor             D  Resolved frame rate 30fps [Video profile frame rate: 30fps, Expected operating range: <UNSPECIFIED>]
+2026-01-25 13:46:29.340  6386-6386  VidEncVdPrflRslvr       com.example.speedmonitor             D  Resolved VIDEO frame rate: 30fps
+2026-01-25 13:46:29.340  6386-6386  VidEncVdPrflRslvr       com.example.speedmonitor             D  Using resolved VIDEO bitrate from EncoderProfiles
+2026-01-25 13:46:29.343  6386-6386  VideoConfigUtil         com.example.speedmonitor             D  Base Bitrate(1200000bps) * Bit Depth Ratio (8 / 8) * Frame Rate Ratio(30 / 30) * Width Ratio(1280 / 1280) * Height Ratio(720 / 720) = 1200000
+2026-01-25 13:46:29.353  6386-6386  VideoConfigUtil         com.example.speedmonitor             W  Unsupported mime type video/avc or profile level -1. Data space is unspecified.
+2026-01-25 13:46:29.402  6386-6421  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Use case androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871 INACTIVE
+2026-01-25 13:46:29.404  6386-6421  UseCaseAttachState      com.example.speedmonitor             D  Active and attached use case: [] for camera: 10
+2026-01-25 13:46:29.874  6386-6434  CCodec                  com.example.speedmonitor             D  allocate(c2.android.avc.encoder)
+2026-01-25 13:46:29.888  6386-6434  Codec2Client            com.example.speedmonitor             I  Available Codec2 services: "default" "software"
+2026-01-25 13:46:29.898  6386-6434  CCodec                  com.example.speedmonitor             I  setting up 'default' as default (vendor) store
+2026-01-25 13:46:29.939  6386-6434  CCodec                  com.example.speedmonitor             I  Created component [c2.android.avc.encoder]
+2026-01-25 13:46:29.943  6386-6434  CCodecConfig            com.example.speedmonitor             D  read media type: video/avc
+2026-01-25 13:46:29.982  6386-6434  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.max-count.values
+2026-01-25 13:46:29.990  6386-6434  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.subscribed-indices.values
+2026-01-25 13:46:29.991  6386-6434  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: input.buffers.allocator-ids.values
+2026-01-25 13:46:29.992  6386-6434  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.allocator-ids.values
+2026-01-25 13:46:29.992  6386-6434  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.allocator-ids.values
+2026-01-25 13:46:29.993  6386-6434  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.pool-ids.values
+2026-01-25 13:46:29.996  6386-6434  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.pool-ids.values
+2026-01-25 13:46:30.021  6386-6434  ReflectedParamUpdater   com.example.speedmonitor             D  ignored struct field coding.gop.values
+2026-01-25 13:46:30.022  6386-6434  ReflectedParamUpdater   com.example.speedmonitor             D  ignored struct field coding.qp.values
+2026-01-25 13:46:30.026  6386-6434  CCodecConfig            com.example.speedmonitor             D  ignoring local param raw.color (0xc2001809) as it is already supported
+2026-01-25 13:46:30.030  6386-6434  CCodecConfig            com.example.speedmonitor             I  query failed after returning 13 values (BAD_INDEX)
+2026-01-25 13:46:30.030  6386-6434  CCodecConfig            com.example.speedmonitor             D  c2 config diff is Dict {
+                                                                                                      c2::u32 algo.bitrate-mode.value = 3
+                                                                                                      c2::i32 coded.average-qp.value = 0
+                                                                                                      c2::u32 coded.bitrate.value = 64000
+                                                                                                      c2::float coded.frame-rate.value = 1
+                                                                                                      c2::u32 coded.picture-type.value = 0
+                                                                                                      c2::u32 coded.pl.level = 20492
+                                                                                                      c2::u32 coded.pl.profile = 20481
+                                                                                                      c2::u32 coded.vui.color.matrix = 0
+                                                                                                      c2::u32 coded.vui.color.primaries = 0
+                                                                                                      c2::u32 coded.vui.color.range = 0
+                                                                                                      c2::u32 coded.vui.color.transfer = 0
+                                                                                                      c2::u32 coding.intra-refresh.mode = 0
+                                                                                                      c2::float coding.intra-refresh.period = 0
+                                                                                                      c2::u32 coding.request-sync-frame.value = 0
+                                                                                                      c2::i64 coding.sync-frame-interval.value = 1000000
+                                                                                                      c2::u32 input.delay.value = 0
+                                                                                                      string input.media-type.value = "video/raw"
+                                                                                                      string output.media-type.value = "video/avc"
+                                                                                                      c2::u32 raw.color.matrix = 0
+                                                                                                      c2::u32 raw.color.primaries = 0
+                                                                                                      c2::u32 raw.color.range = 0
+                                                                                                      c2::u32 raw.color.transfer = 0
+                                                                                                      c2::u32 raw.size.height = 16
+                                                                                                      c2::u32 raw.size.width = 16
+                                                                                                    }
+2026-01-25 13:46:30.031  6386-6434  ColorUtils              com.example.speedmonitor             W  expected specified color aspects (0:0:0:0)
+2026-01-25 13:46:30.080  6386-6434  hw-BpHwBinder           com.example.speedmonitor             I  onLastStrongRef automatically unlinking death recipients
+2026-01-25 13:46:30.084  6386-6386  CameraOrientationUtil   com.example.speedmonitor             D  getRelativeImageRotation: destRotationDegrees=0, sourceRotationDegrees=90, isOppositeFacing=true, result=90
+2026-01-25 13:46:30.098  6386-6386  VideoCapture            com.example.speedmonitor             D  camera timebase = UPTIME, processing timebase = UPTIME
+2026-01-25 13:46:30.114  6386-6386  DeferrableSurface       com.example.speedmonitor             D  Surface created[total_surfaces=1, used_surfaces=0](androidx.camera.core.processing.SurfaceEdge$SettableSurface@2b2b5e5}
+2026-01-25 13:46:30.127  6386-6386  DeferrableSurface       com.example.speedmonitor             D  Surface created[total_surfaces=2, used_surfaces=0](androidx.camera.core.SurfaceRequest$2@5ddcb61}
+2026-01-25 13:46:30.135  6386-6386  DeferrableSurface       com.example.speedmonitor             D  New surface in use[total_surfaces=2, used_surfaces=1](androidx.camera.core.SurfaceRequest$2@5ddcb61}
+2026-01-25 13:46:30.138  6386-6386  DeferrableSurface       com.example.speedmonitor             D  use count+1, useCount=1 androidx.camera.core.SurfaceRequest$2@5ddcb61
+2026-01-25 13:46:30.139  6386-6386  Recorder                com.example.speedmonitor             D  Surface is requested in state: CONFIGURING, Current surface: 0
+2026-01-25 13:46:30.144  6386-6386  CameraOrientationUtil   com.example.speedmonitor             D  getRelativeImageRotation: destRotationDegrees=0, sourceRotationDegrees=90, isOppositeFacing=true, result=90
+2026-01-25 13:46:30.177  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Use case androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871 ACTIVE
+2026-01-25 13:46:30.179  6386-6418  UseCaseAttachState      com.example.speedmonitor             D  Active and attached use case: [] for camera: 10
+2026-01-25 13:46:30.182  6386-6442  RecorderVi...pabilities com.example.speedmonitor             D  profiles = ImmutableEncoderProfilesProxy{defaultDurationSeconds=60, recommendedFileFormat=2, audioProfiles=[AudioProfileProxy{codec=1, mediaType=audio/3gpp, bitrate=12200, sampleRate=8000, channels=1, profile=-1}], videoProfiles=[VideoProfileProxy{codec=2, mediaType=video/avc, bitrate=1200000, frameRate=30, width=1280, height=720, profile=-1, bitDepth=8, chromaSubsampling=0, hdrFormat=0}]}
+2026-01-25 13:46:30.186  6386-6442  Recorder                com.example.speedmonitor             D  Using supported quality of ConstantQuality{value=5, name=HD} for surface size 1280x720
+2026-01-25 13:46:30.186  6386-6442  Recorder                com.example.speedmonitor             D  Try to safely release video encoder: null
+2026-01-25 13:46:30.195  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Use cases [androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871] now ATTACHED
+2026-01-25 13:46:30.198  6386-6442  Recorder                com.example.speedmonitor             D  Video source has transitioned to state: ACTIVE_NON_STREAMING
+2026-01-25 13:46:30.214  6386-6442  VideoEncoderSession     com.example.speedmonitor             D  Create VideoEncoderSession: VideoEncoderSession@105033822 for androidx.camera.core.SurfaceRequest@dc3eec8
+2026-01-25 13:46:30.218  6386-6386  Recorder                com.example.speedmonitor             D  Transitioning Recorder internal state: CONFIGURING --> PENDING_RECORDING
+2026-01-25 13:46:30.222  6386-6418  UseCaseAttachState      com.example.speedmonitor             D  All use case: [androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871] for camera: 10
+2026-01-25 13:46:30.240  6386-6418  MeteringRepeating       com.example.speedmonitor             D  MeteringSession SurfaceTexture size: 640x480
+2026-01-25 13:46:30.244  6386-6442  VideoConfigUtil         com.example.speedmonitor             D  MediaSpec video mime matches EncoderProfiles. Using EncoderProfiles to derive VIDEO settings [mime type: video/avc]
+2026-01-25 13:46:30.246  6386-6442  VidEncVdPrflRslvr       com.example.speedmonitor             D  Resolved frame rate 30fps [Video profile frame rate: 30fps, Expected operating range: <UNSPECIFIED>]
+2026-01-25 13:46:30.246  6386-6442  VidEncVdPrflRslvr       com.example.speedmonitor             D  Resolved VIDEO frame rate: 30fps
+2026-01-25 13:46:30.246  6386-6442  VidEncVdPrflRslvr       com.example.speedmonitor             D  Using resolved VIDEO bitrate from EncoderProfiles
+2026-01-25 13:46:30.258  6386-6386  VideoCapture            com.example.speedmonitor             D  Stream info update: old: StreamInfo{id=0, streamState=INACTIVE, inProgressTransformationInfo=null} new: StreamInfo{id=0, streamState=INACTIVE, inProgressTransformationInfo=null}
+2026-01-25 13:46:30.296  6386-6442  VideoConfigUtil         com.example.speedmonitor             D  Base Bitrate(1200000bps) * Bit Depth Ratio (8 / 8) * Frame Rate Ratio(30 / 30) * Width Ratio(1280 / 1280) * Height Ratio(720 / 720) = 1200000
+2026-01-25 13:46:30.310  6386-6418  DeferrableSurface       com.example.speedmonitor             D  Surface created[total_surfaces=3, used_surfaces=1](androidx.camera.core.impl.ImmediateSurface@b95e255}
+2026-01-25 13:46:30.311  6386-6442  VideoConfigUtil         com.example.speedmonitor             W  Unsupported mime type video/avc or profile level -1. Data space is unspecified.
+2026-01-25 13:46:30.366  6386-6442  VideoEncoder            com.example.speedmonitor             D  mInputTimebase = UPTIME
+2026-01-25 13:46:30.373  6386-6442  VideoEncoder            com.example.speedmonitor             D  mMediaFormat = {color-format=2130708361, i-frame-interval=1, mime=video/avc, width=1280, bitrate=1200000, frame-rate=30, height=720}
+2026-01-25 13:46:30.378  6386-6418  UseCaseAttachState      com.example.speedmonitor             D  Active and attached use case: [androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871, MeteringRepeating108948790] for camera: 10
+2026-01-25 13:46:30.418  6386-6447  CCodec                  com.example.speedmonitor             D  allocate(c2.android.avc.encoder)
+2026-01-25 13:46:30.431  6386-6447  CCodec                  com.example.speedmonitor             I  setting up 'default' as default (vendor) store
+2026-01-25 13:46:30.433  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Resetting Capture Session
+2026-01-25 13:46:30.436  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Releasing session in state INITIALIZED
+2026-01-25 13:46:30.444  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Attempting to force open the camera.
+2026-01-25 13:46:30.445  6386-6447  CCodec                  com.example.speedmonitor             I  Created component [c2.android.avc.encoder]
+2026-01-25 13:46:30.451  6386-6447  CCodecConfig            com.example.speedmonitor             D  read media type: video/avc
+2026-01-25 13:46:30.452  6386-6418  CameraStateRegistry     com.example.speedmonitor             D  tryOpenCamera(Camera@9f62ce4[id=10]) [Available Cameras: 1, Already Open: false (Previous state: null)] --> SUCCESS
+2026-01-25 13:46:30.461  6386-6418  CameraStateRegistry     com.example.speedmonitor             D  Recalculating open cameras:
+                                                                                                    Camera                                       State                 
+                                                                                                    -------------------------------------------------------------------
+                                                                                                    Camera@9f62ce4[id=10]                        OPENING               
+                                                                                                    Camera@6bccd9b[id=1]                         UNKNOWN               
+                                                                                                    -------------------------------------------------------------------
+                                                                                                    Open count: 1 (Max allowed: 1)
+2026-01-25 13:46:30.467  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Opening camera.
+2026-01-25 13:46:30.477  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Transitioning camera internal state: INITIALIZED --> OPENING
+2026-01-25 13:46:30.480  6386-6418  CameraStateMachine      com.example.speedmonitor             D  New public camera state CameraState{type=OPENING, error=null} from OPENING and null
+2026-01-25 13:46:30.480  6386-6418  CameraStateMachine      com.example.speedmonitor             D  Publishing new public camera state CameraState{type=OPENING, error=null}
+2026-01-25 13:46:30.484  6386-6418  UseCaseAttachState      com.example.speedmonitor             D  All use case: [androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871, MeteringRepeating108948790] for camera: 10
+2026-01-25 13:46:30.488  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.max-count.values
+2026-01-25 13:46:30.494  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.subscribed-indices.values
+2026-01-25 13:46:30.498  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: input.buffers.allocator-ids.values
+2026-01-25 13:46:30.501  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.allocator-ids.values
+2026-01-25 13:46:30.502  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.allocator-ids.values
+2026-01-25 13:46:30.502  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.pool-ids.values
+2026-01-25 13:46:30.503  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.pool-ids.values
+2026-01-25 13:46:30.544  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  ignored struct field coding.gop.values
+2026-01-25 13:46:30.545  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  ignored struct field coding.qp.values
+2026-01-25 13:46:30.548  6386-6447  CCodecConfig            com.example.speedmonitor             D  ignoring local param raw.color (0xc2001809) as it is already supported
+2026-01-25 13:46:30.551  6386-6447  CCodecConfig            com.example.speedmonitor             I  query failed after returning 13 values (BAD_INDEX)
+2026-01-25 13:46:30.551  6386-6447  CCodecConfig            com.example.speedmonitor             D  c2 config diff is Dict {
+                                                                                                      c2::u32 algo.bitrate-mode.value = 3
+                                                                                                      c2::i32 coded.average-qp.value = 0
+                                                                                                      c2::u32 coded.bitrate.value = 64000
+                                                                                                      c2::float coded.frame-rate.value = 1
+                                                                                                      c2::u32 coded.picture-type.value = 0
+                                                                                                      c2::u32 coded.pl.level = 20492
+                                                                                                      c2::u32 coded.pl.profile = 20481
+                                                                                                      c2::u32 coded.vui.color.matrix = 0
+                                                                                                      c2::u32 coded.vui.color.primaries = 0
+                                                                                                      c2::u32 coded.vui.color.range = 0
+                                                                                                      c2::u32 coded.vui.color.transfer = 0
+                                                                                                      c2::u32 coding.intra-refresh.mode = 0
+                                                                                                      c2::float coding.intra-refresh.period = 0
+                                                                                                      c2::u32 coding.request-sync-frame.value = 0
+                                                                                                      c2::i64 coding.sync-frame-interval.value = 1000000
+                                                                                                      c2::u32 input.delay.value = 0
+                                                                                                      string input.media-type.value = "video/raw"
+                                                                                                      string output.media-type.value = "video/avc"
+                                                                                                      c2::u32 raw.color.matrix = 0
+                                                                                                      c2::u32 raw.color.primaries = 0
+                                                                                                      c2::u32 raw.color.range = 0
+                                                                                                      c2::u32 raw.color.transfer = 0
+                                                                                                      c2::u32 raw.size.height = 16
+                                                                                                      c2::u32 raw.size.width = 16
+                                                                                                    }
+2026-01-25 13:46:30.553  6386-6447  ColorUtils              com.example.speedmonitor             W  expected specified color aspects (0:0:0:0)
+2026-01-25 13:46:30.580  6386-6442  VideoEncoder            com.example.speedmonitor             I  Selected encoder: c2.android.avc.encoder
+2026-01-25 13:46:30.605  6386-6447  hw-BpHwBinder           com.example.speedmonitor             I  onLastStrongRef automatically unlinking death recipients
+2026-01-25 13:46:30.619  6386-6447  CCodec                  com.example.speedmonitor             D  allocate(c2.android.avc.encoder)
+2026-01-25 13:46:30.636  6386-6447  CCodec                  com.example.speedmonitor             I  setting up 'default' as default (vendor) store
+2026-01-25 13:46:30.673  6386-6447  CCodec                  com.example.speedmonitor             I  Created component [c2.android.avc.encoder]
+2026-01-25 13:46:30.676  6386-6447  CCodecConfig            com.example.speedmonitor             D  read media type: video/avc
+2026-01-25 13:46:30.694  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Use case androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871 ACTIVE
+2026-01-25 13:46:30.695  6386-6418  UseCaseAttachState      com.example.speedmonitor             D  Active and attached use case: [androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871, MeteringRepeating108948790] for camera: 10
+2026-01-25 13:46:30.697  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.max-count.values
+2026-01-25 13:46:30.703  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.subscribed-indices.values
+2026-01-25 13:46:30.706  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} CameraDevice.onOpened()
+2026-01-25 13:46:30.708  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Transitioning camera internal state: OPENING --> OPENED
+2026-01-25 13:46:30.711  6386-6418  CameraStateRegistry     com.example.speedmonitor             D  Recalculating open cameras:
+                                                                                                    Camera                                       State                 
+                                                                                                    -------------------------------------------------------------------
+                                                                                                    Camera@9f62ce4[id=10]                        OPEN                  
+                                                                                                    Camera@6bccd9b[id=1]                         UNKNOWN               
+                                                                                                    -------------------------------------------------------------------
+                                                                                                    Open count: 1 (Max allowed: 1)
+2026-01-25 13:46:30.711  6386-6418  CameraStateMachine      com.example.speedmonitor             D  New public camera state CameraState{type=OPEN, error=null} from OPEN and null
+2026-01-25 13:46:30.711  6386-6418  CameraStateMachine      com.example.speedmonitor             D  Publishing new public camera state CameraState{type=OPEN, error=null}
+2026-01-25 13:46:30.712  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: input.buffers.allocator-ids.values
+2026-01-25 13:46:30.713  6386-6418  UseCaseAttachState      com.example.speedmonitor             D  All use case: [androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871, MeteringRepeating108948790] for camera: 10
+2026-01-25 13:46:30.717  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.allocator-ids.values
+2026-01-25 13:46:30.718  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.allocator-ids.values
+2026-01-25 13:46:30.719  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.pool-ids.values
+2026-01-25 13:46:30.719  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.pool-ids.values
+2026-01-25 13:46:30.728  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  ignored struct field coding.gop.values
+2026-01-25 13:46:30.729  6386-6418  UseCaseAttachState      com.example.speedmonitor             D  Active and attached use case: [androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871, MeteringRepeating108948790] for camera: 10
+2026-01-25 13:46:30.729  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  ignored struct field coding.qp.values
+2026-01-25 13:46:30.731  6386-6447  CCodecConfig            com.example.speedmonitor             D  ignoring local param raw.color (0xc2001809) as it is already supported
+2026-01-25 13:46:30.734  6386-6447  CCodecConfig            com.example.speedmonitor             I  query failed after returning 13 values (BAD_INDEX)
+2026-01-25 13:46:30.734  6386-6447  CCodecConfig            com.example.speedmonitor             D  c2 config diff is Dict {
+                                                                                                      c2::u32 algo.bitrate-mode.value = 3
+                                                                                                      c2::i32 coded.average-qp.value = 0
+                                                                                                      c2::u32 coded.bitrate.value = 64000
+                                                                                                      c2::float coded.frame-rate.value = 1
+                                                                                                      c2::u32 coded.picture-type.value = 0
+                                                                                                      c2::u32 coded.pl.level = 20492
+                                                                                                      c2::u32 coded.pl.profile = 20481
+                                                                                                      c2::u32 coded.vui.color.matrix = 0
+                                                                                                      c2::u32 coded.vui.color.primaries = 0
+                                                                                                      c2::u32 coded.vui.color.range = 0
+                                                                                                      c2::u32 coded.vui.color.transfer = 0
+                                                                                                      c2::u32 coding.intra-refresh.mode = 0
+                                                                                                      c2::float coding.intra-refresh.period = 0
+                                                                                                      c2::u32 coding.request-sync-frame.value = 0
+                                                                                                      c2::i64 coding.sync-frame-interval.value = 1000000
+                                                                                                      c2::u32 input.delay.value = 0
+                                                                                                      string input.media-type.value = "video/raw"
+                                                                                                      string output.media-type.value = "video/avc"
+                                                                                                      c2::u32 raw.color.matrix = 0
+                                                                                                      c2::u32 raw.color.primaries = 0
+                                                                                                      c2::u32 raw.color.range = 0
+                                                                                                      c2::u32 raw.color.transfer = 0
+                                                                                                      c2::u32 raw.size.height = 16
+                                                                                                      c2::u32 raw.size.width = 16
+                                                                                                    }
+2026-01-25 13:46:30.734  6386-6447  ColorUtils              com.example.speedmonitor             W  expected specified color aspects (0:0:0:0)
+2026-01-25 13:46:30.757  6386-6445  MediaCodec              com.example.speedmonitor             I  MediaCodec will operate in async mode
+2026-01-25 13:46:30.849  6386-6442  CodecSeeding            com.example.speedmonitor             D  Seed: codec c2.android.avc.encoder, mediatype video/avc, overrideable 1
+2026-01-25 13:46:30.849  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-target-bpp,0)
+2026-01-25 13:46:30.849  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-target-bpp-1080p,1.90)
+2026-01-25 13:46:30.849  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-target-bpp-720p,2.25)
+2026-01-25 13:46:30.849  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-target-bpp-540p,2.65)
+2026-01-25 13:46:30.849  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-target-bpp-480p,3.00)
+2026-01-25 13:46:30.849  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-target-bpp-320x240,0)
+2026-01-25 13:46:30.849  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-target-qpmax,-1)
+2026-01-25 13:46:30.849  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-target-qpmax-1080p,45)
+2026-01-25 13:46:30.849  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-target-qpmax-720p,43)
+2026-01-25 13:46:30.849  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-target-qpmax-540p,42)
+2026-01-25 13:46:30.849  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-target-qpmax-480p,38)
+2026-01-25 13:46:30.850  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-bitrate-phaseout,1.75)
+2026-01-25 13:46:30.850  6386-6442  CodecProperties         com.example.speedmonitor             D  setTuningValue(vq-boost-missing-qp,0.20)
+2026-01-25 13:46:30.850  6386-6442  CodecProperties         com.example.speedmonitor             D  setFeatureValue(intra-refresh,0)
+2026-01-25 13:46:30.850  6386-6442  CodecProperties         com.example.speedmonitor             D  setFeatureValue(qp-bounds,0)
+2026-01-25 13:46:30.850  6386-6442  CodecProperties         com.example.speedmonitor             D  setFeatureValue(_vq_eligible.device,1)
+2026-01-25 13:46:30.850  6386-6442  CodecProperties         com.example.speedmonitor             D  setFeatureValue(_quality.target,1)
+2026-01-25 13:46:30.850  6386-6442  CodecSeeding            com.example.speedmonitor             D  Seed: codec c2.android.avc.encoder, mediatype video/avc, overrideable 0
+2026-01-25 13:46:30.850  6386-6442  VQApply                 com.example.speedmonitor             D  raise bitrate: configured 1200000 to floor 2073600
+2026-01-25 13:46:30.851  6386-6442  VQApply                 com.example.speedmonitor             D  minquality by QP: inject video-qp-max=43
+2026-01-25 13:46:30.851  6386-6442  VQApply                 com.example.speedmonitor             D  minquality/target bitrate raised from 1200000 to 2073600 bps
+2026-01-25 13:46:30.851  6386-6442  MediaCodec              com.example.speedmonitor             D  shapeMediaFormat: deltas(6): AMessage(what = 0x00000000) = {
+                                                                                                        int32_t bitrate = 2073600
+                                                                                                        int32_t android._encoding-quality-level = 0
+                                                                                                        int32_t video-qp-max = 43
+                                                                                                        int32_t video-qp-i-max = 43
+                                                                                                        int32_t video-qp-p-max = 46
+                                                                                                        int32_t video-qp-b-max = 49
+                                                                                                      }
+2026-01-25 13:46:30.854  6386-6447  CCodec                  com.example.speedmonitor             D  [c2.android.avc.encoder] buffers are bound to CCodec for this session
+2026-01-25 13:46:30.859  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for color-format
+2026-01-25 13:46:30.861  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for video-qp-max
+2026-01-25 13:46:30.861  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for video-qp-i-max
+2026-01-25 13:46:30.861  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for video-qp-p-max
+2026-01-25 13:46:30.861  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for video-qp-b-max
+2026-01-25 13:46:30.861  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for flags
+2026-01-25 13:46:30.861  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for encoder
+2026-01-25 13:46:30.875  6386-6447  CCodecConfig            com.example.speedmonitor             D  c2 config diff is   c2::u32 coded.bitrate.value = 2073600
+                                                                                                      c2::float coded.frame-rate.value = 30
+                                                                                                      c2::u32 raw.size.height = 720
+                                                                                                      c2::u32 raw.size.width = 1280
+2026-01-25 13:46:30.875  6386-6447  ColorUtils              com.example.speedmonitor             W  expected specified color aspects (0:0:0:0)
+2026-01-25 13:46:30.880  6386-6447  CCodec                  com.example.speedmonitor             D  encoding statistics level = 0
+2026-01-25 13:46:30.882  6386-6447  CCodec                  com.example.speedmonitor             D  setup formats input: AMessage(what = 0x00000000) = {
+                                                                                                      Rect crop(0, 0, 1279, 719)
+                                                                                                      int32_t color-standard = 0
+                                                                                                      int32_t color-range = 0
+                                                                                                      int32_t color-transfer = 0
+                                                                                                      int32_t frame-rate = 30
+                                                                                                      int32_t height = 720
+                                                                                                      int32_t intra-refresh-period = 0
+                                                                                                      string mime = "video/raw"
+                                                                                                      int32_t video-qp-average = 0
+                                                                                                      int32_t width = 1280
+                                                                                                      int32_t android._dataspace = 0
+                                                                                                      int32_t using-sw-read-often = 1
+                                                                                                      int64_t android._C2MemoryUsage = 1
+                                                                                                      int32_t color-format = 2130708361
+                                                                                                      int32_t android._color-format = 2130708361
+                                                                                                    }
+2026-01-25 13:46:30.883  6386-6447  CCodec                  com.example.speedmonitor             D  setup formats output: AMessage(what = 0x00000000) = {
+                                                                                                      int32_t bitrate = 2073600
+                                                                                                      int32_t bitrate-mode = 1
+                                                                                                      Rect crop(0, 0, 1279, 719)
+                                                                                                      int32_t color-standard = 0
+                                                                                                      int32_t color-range = 0
+                                                                                                      int32_t color-transfer = 0
+                                                                                                      int32_t frame-rate = 30
+                                                                                                      int32_t height = 720
+                                                                                                      int32_t intra-refresh-period = 0
+                                                                                                      int32_t level = 4096
+                                                                                                      int32_t max-bitrate = 2073600
+                                                                                                      string mime = "video/avc"
+                                                                                                      int32_t profile = 65536
+                                                                                                      int32_t video-qp-average = 0
+                                                                                                      int32_t width = 1280
+                                                                                                    }
+2026-01-25 13:46:30.889  6386-6447  CCodecConfig            com.example.speedmonitor             I  query failed after returning 14 values (BAD_INDEX)
+2026-01-25 13:46:30.891  6386-6442  CCodec                  com.example.speedmonitor             D  hidl based PersistentSurface created
+2026-01-25 13:46:30.893  6386-6447  CCodec                  com.example.speedmonitor             D  input format changed to AMessage(what = 0x00000000) = {
+                                                                                                      Rect crop(0, 0, 1279, 719)
+                                                                                                      int32_t color-standard = 1
+                                                                                                      int32_t color-range = 2
+                                                                                                      int32_t color-transfer = 3
+                                                                                                      int32_t frame-rate = 30
+                                                                                                      int32_t height = 720
+                                                                                                      int32_t intra-refresh-period = 0
+                                                                                                      string mime = "video/raw"
+                                                                                                      int32_t video-qp-average = 0
+                                                                                                      int32_t width = 1280
+                                                                                                      int32_t android._dataspace = 260
+                                                                                                      int32_t using-sw-read-often = 1
+                                                                                                      int64_t android._C2MemoryUsage = 1
+                                                                                                      int32_t color-format = 2130708361
+                                                                                                      int32_t android._color-format = 2130708361
+                                                                                                    }
+2026-01-25 13:46:30.894  6386-6447  GraphicBufferSource     com.example.speedmonitor             D  setting dataspace: 0x104, acquired=0
+2026-01-25 13:46:30.894  6386-6447  CCodec                  com.example.speedmonitor             D  ISConfig not changed
+2026-01-25 13:46:30.895  6386-6442  VideoEncoder            com.example.speedmonitor             D  Transitioning encoder internal state: null --> CONFIGURED
+2026-01-25 13:46:30.903  6386-6442  VideoEncoderSession     com.example.speedmonitor             D  provide surface: Surface(name=null mNativeObject=132909021546432)/@0x51a8fe6
+2026-01-25 13:46:30.910  6386-6421  SyncCaptureSessionBase  com.example.speedmonitor             D  [androidx.camera.camera2.internal.SynchronizedCaptureSessionBaseImpl@1dd77d4] getSurface...done
+2026-01-25 13:46:30.911  6386-6421  CaptureSession          com.example.speedmonitor             D  Opening capture session.
+2026-01-25 13:46:30.913  6386-6442  Recorder                com.example.speedmonitor             D  VideoEncoder is created. androidx.camera.video.internal.encoder.EncoderImpl@7c6cd7d
+2026-01-25 13:46:30.913  6386-6442  Recorder                com.example.speedmonitor             D  Transitioning streamId: 0 --> 85626854
+2026-01-25 13:46:30.916  6386-6386  VideoCapture            com.example.speedmonitor             D  Stream info update: old: StreamInfo{id=0, streamState=INACTIVE, inProgressTransformationInfo=null} new: StreamInfo{id=85626854, streamState=INACTIVE, inProgressTransformationInfo=null}
+2026-01-25 13:46:30.918  6386-6442  Recorder                com.example.speedmonitor             D  Transitioning Recorder internal state: PENDING_RECORDING --> RECORDING
+2026-01-25 13:46:30.919  6386-6386  VideoCapture            com.example.speedmonitor             D  Stream info update: old: StreamInfo{id=85626854, streamState=INACTIVE, inProgressTransformationInfo=null} new: StreamInfo{id=85626854, streamState=ACTIVE, inProgressTransformationInfo=null}
+2026-01-25 13:46:30.924  6386-6386  VideoCapture            com.example.speedmonitor             D  A newer surface update is requested. Previous surface update cancelled.
+2026-01-25 13:46:30.934  6386-6421  DeferrableSurface       com.example.speedmonitor             D  New surface in use[total_surfaces=3, used_surfaces=2](androidx.camera.core.impl.ImmediateSurface@b95e255}
+2026-01-25 13:46:30.934  6386-6421  DeferrableSurface       com.example.speedmonitor             D  use count+1, useCount=1 androidx.camera.core.impl.ImmediateSurface@b95e255
+2026-01-25 13:46:30.935  6386-6421  DeferrableSurface       com.example.speedmonitor             D  use count+1, useCount=2 androidx.camera.core.SurfaceRequest$2@5ddcb61
+2026-01-25 13:46:30.955  6386-6442  AudioConfigUtil         com.example.speedmonitor             D  MediaSpec contains OUTPUT_FORMAT_AUTO. Using EncoderProfiles to derive AUDIO settings [mime type: audio/3gpp(profile: -1)]
+2026-01-25 13:46:30.961  6386-6442  AudioConfigUtil         com.example.speedmonitor             D  Using default AUDIO source: 5
+2026-01-25 13:46:30.961  6386-6442  AudioConfigUtil         com.example.speedmonitor             D  Using default AUDIO source format: 2
+2026-01-25 13:46:30.961  6386-6442  AudioSrcAdPrflRslvr     com.example.speedmonitor             D  Resolved AUDIO channel count from AudioProfile: 1
+2026-01-25 13:46:31.839  6386-6442  le.speedmonitor         com.example.speedmonitor             W  Verification of androidx.camera.video.internal.audio.AudioStream androidx.camera.video.internal.audio.AudioSource.getCurrentAudioStream() took 862.222ms (11.60 bytecodes/s) (2528B approximate peak alloc)
+2026-01-25 13:46:31.881  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=1507.31ms min=1471.24ms max=1543.37ms count=2
+2026-01-25 13:46:31.908  6386-6442  AudioSrcAdPrflRslvr     com.example.speedmonitor             D  Using resolved AUDIO sample rate or nearest supported from AudioProfile: 8000Hz. [AudioProfile sample rate: 8000Hz]
+2026-01-25 13:46:31.981  6386-6442  Recorder                com.example.speedmonitor             D  Set up new audio source: 0x40fed6c
+2026-01-25 13:46:31.982  6386-6442  AudioEncAdPrflRslvr     com.example.speedmonitor             D  Using resolved AUDIO bitrate from AudioProfile
+2026-01-25 13:46:31.982  6386-6442  AudioConfigUtil         com.example.speedmonitor             D  Base Bitrate(12200bps) * Channel Count Ratio(1 / 1) * Sample Rate Ratio(8000 / 8000) = 12200
+2026-01-25 13:46:31.984  6386-6442  AudioEncoder            com.example.speedmonitor             D  mInputTimebase = UPTIME
+2026-01-25 13:46:31.984  6386-6442  AudioEncoder            com.example.speedmonitor             D  mMediaFormat = {sample-rate=8000, mime=audio/3gpp, channel-count=1, bitrate=12200}
+2026-01-25 13:46:31.990  6386-6468  CCodec                  com.example.speedmonitor             D  allocate(c2.android.amrnb.encoder)
+2026-01-25 13:46:31.999  6386-6468  CCodec                  com.example.speedmonitor             I  setting up 'default' as default (vendor) store
+2026-01-25 13:46:32.011  6386-6468  CCodec                  com.example.speedmonitor             I  Created component [c2.android.amrnb.encoder]
+2026-01-25 13:46:32.016  6386-6468  CCodecConfig            com.example.speedmonitor             D  read media type: audio/3gpp
+2026-01-25 13:46:32.039  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.max-count.values
+2026-01-25 13:46:32.044  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.subscribed-indices.values
+2026-01-25 13:46:32.044  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: input.buffers.allocator-ids.values
+2026-01-25 13:46:32.046  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.allocator-ids.values
+2026-01-25 13:46:32.046  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.allocator-ids.values
+2026-01-25 13:46:32.049  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.pool-ids.values
+2026-01-25 13:46:32.053  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.pool-ids.values
+2026-01-25 13:46:32.070  6386-6468  CCodecConfig            com.example.speedmonitor             I  query failed after returning 8 values (BAD_INDEX)
+2026-01-25 13:46:32.071  6386-6468  CCodecConfig            com.example.speedmonitor             D  c2 config diff is Dict {
+                                                                                                      c2::u32 coded.bitrate.value = 4750
+                                                                                                      c2::u32 input.buffers.max-size.value = 8192
+                                                                                                      c2::u32 input.delay.value = 0
+                                                                                                      string input.media-type.value = "audio/raw"
+                                                                                                      c2::u32 output.large-frame.max-size = 0
+                                                                                                      c2::u32 output.large-frame.threshold-size = 0
+                                                                                                      string output.media-type.value = "audio/3gpp"
+                                                                                                      c2::u32 raw.channel-count.value = 1
+                                                                                                      c2::u32 raw.sample-rate.value = 8000
+                                                                                                    }
+2026-01-25 13:46:32.083  6386-6442  AudioEncoder            com.example.speedmonitor             I  Selected encoder: c2.android.amrnb.encoder
+2026-01-25 13:46:32.090  6386-6468  hw-BpHwBinder           com.example.speedmonitor             I  onLastStrongRef automatically unlinking death recipients
+2026-01-25 13:46:32.093  6386-6468  CCodec                  com.example.speedmonitor             D  allocate(c2.android.amrnb.encoder)
+2026-01-25 13:46:32.103  6386-6468  CCodec                  com.example.speedmonitor             I  setting up 'default' as default (vendor) store
+2026-01-25 13:46:32.115  6386-6468  CCodec                  com.example.speedmonitor             I  Created component [c2.android.amrnb.encoder]
+2026-01-25 13:46:32.118  6386-6468  CCodecConfig            com.example.speedmonitor             D  read media type: audio/3gpp
+2026-01-25 13:46:32.132  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.max-count.values
+2026-01-25 13:46:32.134  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.subscribed-indices.values
+2026-01-25 13:46:32.138  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: input.buffers.allocator-ids.values
+2026-01-25 13:46:32.138  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.allocator-ids.values
+2026-01-25 13:46:32.139  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.allocator-ids.values
+2026-01-25 13:46:32.139  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.pool-ids.values
+2026-01-25 13:46:32.141  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.pool-ids.values
+2026-01-25 13:46:32.147  6386-6468  CCodecConfig            com.example.speedmonitor             I  query failed after returning 8 values (BAD_INDEX)
+2026-01-25 13:46:32.147  6386-6468  CCodecConfig            com.example.speedmonitor             D  c2 config diff is Dict {
+                                                                                                      c2::u32 coded.bitrate.value = 4750
+                                                                                                      c2::u32 input.buffers.max-size.value = 8192
+                                                                                                      c2::u32 input.delay.value = 0
+                                                                                                      string input.media-type.value = "audio/raw"
+                                                                                                      c2::u32 output.large-frame.max-size = 0
+                                                                                                      c2::u32 output.large-frame.threshold-size = 0
+                                                                                                      string output.media-type.value = "audio/3gpp"
+                                                                                                      c2::u32 raw.channel-count.value = 1
+                                                                                                      c2::u32 raw.sample-rate.value = 8000
+                                                                                                    }
+2026-01-25 13:46:32.150  6386-6468  MediaCodec              com.example.speedmonitor             I  MediaCodec will operate in async mode
+2026-01-25 13:46:32.151  6386-6442  CodecSeeding            com.example.speedmonitor             D  Seed: codec c2.android.amrnb.encoder, mediatype audio/3gpp, overrideable 1
+2026-01-25 13:46:32.151  6386-6442  CodecProperties         com.example.speedmonitor             D  setFeatureValue(multiple-frames,0)
+2026-01-25 13:46:32.151  6386-6442  CodecProperties         com.example.speedmonitor             D  setFeatureValue(_vq_eligible.device,1)
+2026-01-25 13:46:32.151  6386-6442  CodecProperties         com.example.speedmonitor             D  setFeatureValue(_quality.target,1)
+2026-01-25 13:46:32.151  6386-6442  CodecSeeding            com.example.speedmonitor             D  Seed: codec c2.android.amrnb.encoder, mediatype audio/3gpp, overrideable 0
+2026-01-25 13:46:32.151  6386-6442  MediaCodec              com.example.speedmonitor             D  shapeMediaFormat: deltas(0): AMessage(what = 0x00000000) = {
+                                                                                                      }
+2026-01-25 13:46:32.152  6386-6468  CCodec                  com.example.speedmonitor             D  [c2.android.amrnb.encoder] buffers are bound to CCodec for this session
+2026-01-25 13:46:32.152  6386-6468  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for flags
+2026-01-25 13:46:32.152  6386-6468  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for encoder
+2026-01-25 13:46:32.153  6386-6468  CCodecConfig            com.example.speedmonitor             D  c2 config diff is   c2::u32 coded.bitrate.value = 12200
+2026-01-25 13:46:32.155  6386-6468  Codec2Client            com.example.speedmonitor             W  query -- param skipped: index = 1107298332.
+2026-01-25 13:46:32.155  6386-6468  CCodec                  com.example.speedmonitor             D  encoding statistics level = 0
+2026-01-25 13:46:32.155  6386-6468  CCodec                  com.example.speedmonitor             D  setup formats input: AMessage(what = 0x00000000) = {
+                                                                                                      int32_t channel-count = 1
+                                                                                                      int32_t max-input-size = 8192
+                                                                                                      string mime = "audio/raw"
+                                                                                                      int32_t sample-rate = 8000
+                                                                                                      int32_t android._config-pcm-encoding = 2
+                                                                                                    }
+2026-01-25 13:46:32.155  6386-6468  CCodec                  com.example.speedmonitor             D  setup formats output: AMessage(what = 0x00000000) = {
+                                                                                                      int32_t bitrate = 12200
+                                                                                                      int32_t buffer-batch-max-output-size = 0
+                                                                                                      int32_t buffer-batch-threshold-output-size = 0
+                                                                                                      int32_t channel-count = 1
+                                                                                                      int32_t max-bitrate = 12200
+                                                                                                      string mime = "audio/3gpp"
+                                                                                                      int32_t sample-rate = 8000
+                                                                                                    }
+2026-01-25 13:46:32.155  6386-6468  CCodecConfig            com.example.speedmonitor             I  query failed after returning 8 values (BAD_INDEX)
+2026-01-25 13:46:32.157  6386-6442  AudioEncoder            com.example.speedmonitor             D  Transitioning encoder internal state: null --> CONFIGURED
+2026-01-25 13:46:32.157  6386-6442  Recorder                com.example.speedmonitor             D  Transitioning audio state: INITIALIZING --> ENABLED
+2026-01-25 13:46:32.159  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Start
+2026-01-25 13:46:32.161  6386-6473  AudioSource             com.example.speedmonitor             D  Transitioning internal state: CONFIGURED --> STARTED
+2026-01-25 13:46:32.163  6386-6442  AudioEncoder            com.example.speedmonitor             D  Start on 00:07:24.158
+2026-01-25 13:46:32.163  6386-6442  MediaCodec              com.example.speedmonitor             D  keep callback message for reclaim
+2026-01-25 13:46:32.168  6386-6468  Codec2Client            com.example.speedmonitor             W  query -- param skipped: index = 1342179345.
+2026-01-25 13:46:32.168  6386-6468  Codec2Client            com.example.speedmonitor             W  query -- param skipped: index = 2415921170.
+2026-01-25 13:46:32.168  6386-6473  VideoEncoder            com.example.speedmonitor             D  Start on 00:07:24.158
+2026-01-25 13:46:32.168  6386-6468  Codec2Client            com.example.speedmonitor             W  query -- param skipped: index = 3254792206.
+2026-01-25 13:46:32.168  6386-6468  Codec2Client            com.example.speedmonitor             W  query -- param skipped: index = 3254792194.
+2026-01-25 13:46:32.169  6386-6468  C2Store                 com.example.speedmonitor             D  Using DMABUF Heaps
+2026-01-25 13:46:32.170  6386-6468  CCodecBufferChannel     com.example.speedmonitor             D  [c2.android.amrnb.encoder#62] Created input block pool with allocatorID 16 => poolID 17 - OK (0)
+2026-01-25 13:46:32.174  6386-6473  MediaCodec              com.example.speedmonitor             D  keep callback message for reclaim
+2026-01-25 13:46:32.175  6386-6468  CCodecBufferChannel     com.example.speedmonitor             I  [c2.android.amrnb.encoder#62] Created output block pool with allocatorID 16 => poolID 38 - OK
+2026-01-25 13:46:32.176  6386-6468  CCodecBufferChannel     com.example.speedmonitor             D  [c2.android.amrnb.encoder#62] Configured output block pool ids 38 => OK
+2026-01-25 13:46:32.178  6386-6468  DMABUFHEAPS             com.example.speedmonitor             I  Using DMA-BUF heap named: system
+2026-01-25 13:46:32.183  6386-6442  AudioEncoder            com.example.speedmonitor             D  Transitioning encoder internal state: CONFIGURED --> STARTED
+2026-01-25 13:46:32.184  6386-6442  AudioSource             com.example.speedmonitor             D  Receive BufferProvider state change: INACTIVE to ACTIVE
+2026-01-25 13:46:32.184  6386-6442  AudioSource             com.example.speedmonitor             D  startSendingAudio
+2026-01-25 13:46:32.216  6386-6447  Codec2Client            com.example.speedmonitor             W  query -- param skipped: index = 1342179345.
+2026-01-25 13:46:32.216  6386-6447  Codec2Client            com.example.speedmonitor             W  query -- param skipped: index = 2415921170.
+2026-01-25 13:46:32.225  6386-6447  CCodecBufferChannel     com.example.speedmonitor             D  [c2.android.avc.encoder#414] Using basic input block pool with poolID 1 => got 1 - OK (0)
+2026-01-25 13:46:32.228  6386-6447  CCodecBufferChannel     com.example.speedmonitor             I  [c2.android.avc.encoder#414] Created output block pool with allocatorID 16 => poolID 39 - OK
+2026-01-25 13:46:32.229  6386-6447  CCodecBufferChannel     com.example.speedmonitor             D  [c2.android.avc.encoder#414] Configured output block pool ids 39 => OK
+2026-01-25 13:46:32.234  6386-6473  VideoEncoder            com.example.speedmonitor             D  Transitioning encoder internal state: CONFIGURED --> STARTED
+2026-01-25 13:46:32.665  6386-6442  Recorder                com.example.speedmonitor             W  Audio source silenced transitions to the same state false
+2026-01-25 13:46:32.687  6386-6474  BufferedAudioStream     com.example.speedmonitor             D  Update buffer size from 2048 to 8192
+2026-01-25 13:46:32.750  6386-6473  AudioEncoder            com.example.speedmonitor             D  data timestampUs = 444242613, data timebase = UPTIME, current system uptimeMs = 444750, current system realtimeMs = 444750
+2026-01-25 13:46:32.756  6386-6473  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:32.791  6386-6421  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Use case androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871 UPDATED
+2026-01-25 13:46:32.799  6386-6473  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:32.812  6386-6473  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:32.812  6386-6421  UseCaseAttachState      com.example.speedmonitor             D  Active and attached use case: [androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871, MeteringRepeating108948790] for camera: 10
+2026-01-25 13:46:32.839  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:32.908  6386-6421  CaptureSession          com.example.speedmonitor             D  Attempting to send capture request onConfigured
+2026-01-25 13:46:32.908  6386-6421  CaptureSession          com.example.speedmonitor             D  Issuing request for session.
+2026-01-25 13:46:32.942  6386-6421  Camera2Cap...estBuilder com.example.speedmonitor             D  createCaptureRequest
+2026-01-25 13:46:32.947  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=1066.67ms min=1066.67ms max=1066.67ms count=1
+2026-01-25 13:46:32.974  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:32.993  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:33.012  6386-6421  CaptureSession          com.example.speedmonitor             D  CameraCaptureSession.onConfigured() mState=OPENED
+2026-01-25 13:46:33.110  6386-6473  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:33.111  6386-6421  CaptureSession          com.example.speedmonitor             D  CameraCaptureSession.onReady() OPENED
+2026-01-25 13:46:33.168  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:33.196  6386-6402  GraphicBufferSource     com.example.speedmonitor             D  got buffer with new dataSpace 0x8c20000
+2026-01-25 13:46:33.197  6386-6402  C2NodeImpl              com.example.speedmonitor             D  dataspace changed to 0x8c20000 pixel format: 0x23
+2026-01-25 13:46:33.236  6386-6478  ProfileInstaller        com.example.speedmonitor             D  Installing profile for com.example.speedmonitor
+2026-01-25 13:46:33.380  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:33.388  6386-6421  VideoCapture            com.example.speedmonitor             D  cameraCaptureResult timestampNs = 445026309293, current system uptimeMs = 445387, current system realtimeMs = 445387
+2026-01-25 13:46:33.393  6386-6473  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:33.452  6386-6442  Recorder                com.example.speedmonitor             D  Video source has transitioned to state: ACTIVE_STREAMING
+2026-01-25 13:46:33.536  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:33.752  6386-6473  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:33.813  6386-6473  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.087  6386-6473  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.141  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.254  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=1306.52ms min=1306.52ms max=1306.52ms count=1
+2026-01-25 13:46:34.275  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.280  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.393  6386-6473  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.534  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.536  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.663  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.665  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.682  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.813  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.843  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:34.986  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:35.045  6386-6473  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:35.206  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:35.305  6386-6447  CCodecConfig            com.example.speedmonitor             D  c2 config diff is   Buffer coded.init-data.value = {
+                                                                                                        00000000:  00 00 00 01 67 42 c0 29  8d 68 05 00 5b a4 60 a0  ....gB.).h..[.`.
+                                                                                                        00000010:  20 c0 f0 88 46 a0 00 00  00 01 68 ce 01 a8 35 c8   ...F.....h...5.
+                                                                                                      }
+2026-01-25 13:46:35.307  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:35.309  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:35.317  6386-6442  Recorder                com.example.speedmonitor             D  Cached audio data while we wait for video keyframe before starting muxer.
+2026-01-25 13:46:35.536  6386-6442  VideoEncoder            com.example.speedmonitor             D  Drop buffer by codec config.
+2026-01-25 13:46:35.688  6386-6442  VideoEncoder            com.example.speedmonitor             D  data timestampUs = 445026309, data timebase = UPTIME, current system uptimeMs = 447688, current system realtimeMs = 447688
+2026-01-25 13:46:35.690  6386-6442  Recorder                com.example.speedmonitor             D  Received video keyframe. Starting muxer...
+2026-01-25 13:46:35.763  6386-6483  TrafficStats            com.example.speedmonitor             D  tagSocket(199) with statsTag=0xffffffff, statsUid=-1
+2026-01-25 13:46:36.057  6386-6393  le.speedmonitor         com.example.speedmonitor             I  Background concurrent mark compact GC freed 4906KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 4568KB/9137KB, paused 13.323ms,14.970ms total 407.285ms
+2026-01-25 13:46:36.117  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=620.73ms min=203.84ms max=905.73ms count=3
+2026-01-25 13:46:36.258  6386-6485  TrafficStats            com.example.speedmonitor             D  tagSocket(117) with statsTag=0xffffffff, statsUid=-1
+2026-01-25 13:46:37.151  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=516.75ms min=108.58ms max=924.93ms count=2
+2026-01-25 13:46:37.342  6386-6442  MPEG4Writer             com.example.speedmonitor             D  PreAllocation enabled
+2026-01-25 13:46:37.370  6386-6442  Recorder                com.example.speedmonitor             D  Update stream transformation info: TransformationInfo{getCropRect=Rect(0, 0 - 1280, 720), getRotationDegrees=90, getTargetRotation=-1, hasCameraTransform=true, getSensorToBufferTransform=Matrix{[1.0, 0.0, 0.0][0.0, 1.0, 0.0][0.0, 0.0, 1.0]}, getMirroring=false}
+2026-01-25 13:46:37.371  6386-6386  VideoCapture            com.example.speedmonitor             D  Stream info update: old: StreamInfo{id=85626854, streamState=ACTIVE, inProgressTransformationInfo=null} new: StreamInfo{id=85626854, streamState=ACTIVE, inProgressTransformationInfo=TransformationInfo{getCropRect=Rect(0, 0 - 1280, 720), getRotationDegrees=90, getTargetRotation=-1, hasCameraTransform=true, getSensorToBufferTransform=Matrix{[1.0, 0.0, 0.0][0.0, 1.0, 0.0][0.0, 0.0, 1.0]}, getMirroring=false}}
+2026-01-25 13:46:37.372  6386-6442  MPEG4Writer             com.example.speedmonitor             D  fpathconf _PC_FILESIZEBITS:64
+2026-01-25 13:46:37.372  6386-6442  MPEG4Writer             com.example.speedmonitor             D  File size limit set to 4503599627370495 bytes implicitly
+2026-01-25 13:46:37.392  6386-6442  MPEG4Writer             com.example.speedmonitor             D  MP4WtrCtrlHlpLooper Started
+2026-01-25 13:46:37.396  6386-6442  MPEG4Writer             com.example.speedmonitor             I  limits: 4503599627370495/0 bytes/us, bit rate: -1 bps and the estimated moov size 3192 bytes
+2026-01-25 13:46:37.426  6386-6442  Recorder                com.example.speedmonitor             D  First video time: 445026309 (00:07:25.026)
+2026-01-25 13:46:37.445  6386-6528  MPEG4Writer             com.example.speedmonitor             I  setStartTimestampUs: 445026309
+2026-01-25 13:46:37.445  6386-6528  MPEG4Writer             com.example.speedmonitor             I  Earliest track starting time: 445026309
+2026-01-25 13:46:37.451  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:37.467  6386-6442  Recorder                com.example.speedmonitor             D  First audio time: 445062613 (00:07:25.062)
+2026-01-25 13:46:37.479  6386-6529  MPEG4Writer             com.example.speedmonitor             I  setStartTimestampUs: 445062613
+2026-01-25 13:46:37.588  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:37.600  6386-6468  BufferPoolAccessor2.0   com.example.speedmonitor             D  bufferpool2 0x78e18b01de28 : 5(40960 size) total buffers - 1(8192 size) used buffers - 35/40 (recycle/alloc) - 6/76 (fetch/transfer)
+2026-01-25 13:46:37.621  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:37.634  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:37.648  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:37.677  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:37.759  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:37.767  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:37.845  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:37.934  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:38.083  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:38.152  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=500.07ms min=248.38ms max=751.76ms count=2
+2026-01-25 13:46:38.382  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:38.406  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:38.686  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:38.713  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:38.910  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:39.051  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:39.164  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:39.207  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=527.25ms min=232.35ms max=822.16ms count=2
+2026-01-25 13:46:39.461  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:39.673  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:39.806  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:39.997  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:40.177  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:40.218  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=1007.77ms min=1007.77ms max=1007.77ms count=1
+2026-01-25 13:46:40.357  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:40.440  6386-6485  TrafficStats            com.example.speedmonitor             D  tagSocket(157) with statsTag=0xffffffff, statsUid=-1
+2026-01-25 13:46:40.563  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:40.787  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:41.071  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:41.273  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=263.80ms min=146.59ms max=365.35ms count=4
+2026-01-25 13:46:41.289  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:41.412  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:41.618  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:41.811  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:42.119  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:42.282  6386-6484  TrafficStats            com.example.speedmonitor             D  tagSocket(123) with statsTag=0xffffffff, statsUid=-1
+2026-01-25 13:46:42.318  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:42.326  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=350.91ms min=122.12ms max=704.14ms count=3
+2026-01-25 13:46:42.445  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:42.585  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:42.806  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:42.970  6386-6393  le.speedmonitor         com.example.speedmonitor             I  Background concurrent mark compact GC freed 4008KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 5340KB/10MB, paused 5.747ms,18.359ms total 340.508ms
+2026-01-25 13:46:42.999  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:43.026  6386-6468  BufferPoolAccessor2.0   com.example.speedmonitor             D  bufferpool2 0x78e18b01de28 : 5(40960 size) total buffers - 4(32768 size) used buffers - 144/149 (recycle/alloc) - 11/288 (fetch/transfer)
+2026-01-25 13:46:43.123  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:43.305  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:43.408  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=540.61ms min=391.46ms max=689.76ms count=2
+2026-01-25 13:46:43.535  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:43.542  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:43.665  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:43.910  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:44.215  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:44.309  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:44.416  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=1008.65ms min=1008.65ms max=1008.65ms count=1
+2026-01-25 13:46:44.695  6386-6392  le.speedmonitor         com.example.speedmonitor             I  Compiler allocated 4219KB to compile void android.widget.TextView.<init>(android.content.Context, android.util.AttributeSet, int, int)
+2026-01-25 13:46:44.707  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:44.835  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:45.157  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:45.353  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:45.437  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=340.26ms min=247.91ms max=418.86ms count=3
+2026-01-25 13:46:45.633  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:45.742  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:46.034  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:46.184  6386-6483  TrafficStats            com.example.speedmonitor             D  tagSocket(139) with statsTag=0xffffffff, statsUid=-1
+2026-01-25 13:46:46.369  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:46.462  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=512.38ms min=330.81ms max=693.95ms count=2
+2026-01-25 13:46:46.583  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:46.747  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:46.869  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:47.055  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:47.130  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:47.364  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:47.474  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=505.36ms min=303.52ms max=707.20ms count=2
+2026-01-25 13:46:47.619  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:47.697  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:47.867  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:48.026  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:48.241  6386-6468  BufferPoolAccessor2.0   com.example.speedmonitor             D  bufferpool2 0x78e18b01de28 : 5(40960 size) total buffers - 4(32768 size) used buffers - 244/249 (recycle/alloc) - 12/488 (fetch/transfer)
+2026-01-25 13:46:48.246  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:48.402  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:48.572  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=549.01ms min=413.51ms max=684.51ms count=2
+2026-01-25 13:46:48.632  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:48.815  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:48.996  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:49.284  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:49.445  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:49.626  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=1052.75ms min=1052.75ms max=1052.75ms count=1
+2026-01-25 13:46:49.730  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:49.843  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:49.971  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:50.357  6386-6483  TrafficStats            com.example.speedmonitor             D  tagSocket(141) with statsTag=0xffffffff, statsUid=-1
+2026-01-25 13:46:50.359  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:50.622  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:50.743  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:50.890  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:50.967  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=446.91ms min=304.26ms max=687.54ms count=3
+2026-01-25 13:46:51.110  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:51.234  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:51.533  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:51.769  6386-6392  le.speedmonitor         com.example.speedmonitor             I  Compiler allocated 5174KB to compile void android.view.ViewRootImpl.performTraversals()
+2026-01-25 13:46:51.773  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:51.870  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:52.053  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:52.200  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:52.290  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=658.54ms min=645.13ms max=671.95ms count=2
+2026-01-25 13:46:52.395  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:52.632  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:52.882  6386-6474  AudioRecord             com.example.speedmonitor             D  getTimestamp: retrograde position adjusting [2] current:164958 to previous:164994
+2026-01-25 13:46:52.923  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:53.169  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:53.305  6386-6393  le.speedmonitor         com.example.speedmonitor             I  Background concurrent mark compact GC freed 5419KB AllocSpace bytes, 12(240KB) LOS objects, 49% free, 4991KB/9983KB, paused 4.008ms,7.884ms total 577.045ms
+2026-01-25 13:46:53.422  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:53.460  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:53.653  6386-6468  BufferPoolAccessor2.0   com.example.speedmonitor             D  bufferpool2 0x78e18b01de28 : 5(40960 size) total buffers - 1(8192 size) used buffers - 324/329 (recycle/alloc) - 13/654 (fetch/transfer)
+2026-01-25 13:46:53.668  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:53.695  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=468.09ms min=165.44ms max=1033.53ms count=3
+2026-01-25 13:46:54.017  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:54.102  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:54.491  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:54.576  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:54.639  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:55.145  6386-6412  EGL_emulation           com.example.speedmonitor             D  app_time_stats: avg=1449.60ms min=1449.60ms max=1449.60ms count=1
+2026-01-25 13:46:55.159  6386-6386  VRI[MainActivity]       com.example.speedmonitor             D  visibilityChanged oldVisibility=true newVisibility=false
+2026-01-25 13:46:55.162  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:55.188  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:55.422  6386-6386  DeferrableSurface       com.example.speedmonitor             D  surface closed,  useCount=2 closed=true androidx.camera.core.SurfaceRequest$2@5ddcb61
+2026-01-25 13:46:55.422  6386-6386  DeferrableSurface       com.example.speedmonitor             D  surface closed,  useCount=0 closed=true androidx.camera.core.processing.SurfaceEdge$SettableSurface@2b2b5e5
+2026-01-25 13:46:55.423  6386-6386  DeferrableSurface       com.example.speedmonitor             D  Surface terminated[total_surfaces=2, used_surfaces=2](androidx.camera.core.processing.SurfaceEdge$SettableSurface@2b2b5e5}
+2026-01-25 13:46:55.423  6386-6386  DeferrableSurface       com.example.speedmonitor             D  use count-1,  useCount=1 closed=true androidx.camera.core.SurfaceRequest$2@5ddcb61
+2026-01-25 13:46:55.449  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Use cases [androidx.camera.video.VideoCapture-d685b24b-a501-4c3b-8cb0-06c40d35f97c177974871] now DETACHED for camera
+2026-01-25 13:46:55.455  6386-6442  Recorder                com.example.speedmonitor             D  Video source has transitioned to state: INACTIVE
+2026-01-25 13:46:55.455  6386-6442  Recorder                com.example.speedmonitor             D  Transitioning Recorder internal state: RECORDING --> STOPPING
+2026-01-25 13:46:55.455  6386-6473  AudioEncoder            com.example.speedmonitor             D  Transitioning encoder internal state: STARTED --> STOPPING
+2026-01-25 13:46:55.456  6386-6473  AudioEncoder            com.example.speedmonitor             D  Stop on 00:07:47.455
+2026-01-25 13:46:55.456  6386-6473  VideoEncoder            com.example.speedmonitor             D  Transitioning encoder internal state: STARTED --> STOPPING
+2026-01-25 13:46:55.458  6386-6418  UseCaseAttachState      com.example.speedmonitor             D  All use case: [MeteringRepeating108948790] for camera: 10
+2026-01-25 13:46:55.458  6386-6418  MeteringRepeating       com.example.speedmonitor             D  MeteringRepeating clear!
+2026-01-25 13:46:55.459  6386-6418  DeferrableSurface       com.example.speedmonitor             D  surface closed,  useCount=1 closed=true androidx.camera.core.impl.ImmediateSurface@b95e255
+2026-01-25 13:46:55.459  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Resetting Capture Session
+2026-01-25 13:46:55.468  6386-6473  VideoEncoder            com.example.speedmonitor             D  Stop on 00:07:47.455
+2026-01-25 13:46:55.482  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Releasing session in state OPENED
+2026-01-25 13:46:55.486  6386-6418  UseCaseAttachState      com.example.speedmonitor             D  Active and attached use case: [] for camera: 10
+2026-01-25 13:46:55.497  6386-6418  UseCaseAttachState      com.example.speedmonitor             D  Active and attached use case: [] for camera: 10
+2026-01-25 13:46:55.543  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:55.575  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Closing camera.
+2026-01-25 13:46:55.575  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Transitioning camera internal state: OPENED --> CLOSING
+2026-01-25 13:46:55.577  6386-6418  CameraStateRegistry     com.example.speedmonitor             D  Recalculating open cameras:
+                                                                                                    Camera                                       State                 
+                                                                                                    -------------------------------------------------------------------
+                                                                                                    Camera@9f62ce4[id=10]                        CLOSING               
+                                                                                                    Camera@6bccd9b[id=1]                         UNKNOWN               
+                                                                                                    -------------------------------------------------------------------
+                                                                                                    Open count: 1 (Max allowed: 1)
+2026-01-25 13:46:55.577  6386-6418  CameraStateMachine      com.example.speedmonitor             D  New public camera state CameraState{type=CLOSING, error=null} from CLOSING and null
+2026-01-25 13:46:55.578  6386-6418  CameraStateMachine      com.example.speedmonitor             D  Publishing new public camera state CameraState{type=CLOSING, error=null}
+2026-01-25 13:46:55.578  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Resetting Capture Session
+2026-01-25 13:46:55.580  6386-6418  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Releasing session in state CLOSING
+2026-01-25 13:46:55.595  6386-6418  CaptureSession          com.example.speedmonitor             D  onSessionFinished()
+2026-01-25 13:46:55.711  6386-6484  TrafficStats            com.example.speedmonitor             D  tagSocket(121) with statsTag=0xffffffff, statsUid=-1
+2026-01-25 13:46:55.755  6386-6418  GraphicBufferSource     com.example.speedmonitor             W  released unpopulated slots: [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63]
+2026-01-25 13:46:55.771  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:55.778  6386-6418  UseCaseAttachState      com.example.speedmonitor             D  Active and attached use case: [] for camera: 10
+2026-01-25 13:46:55.799  6386-6421  DeferrableSurface       com.example.speedmonitor             D  use count-1,  useCount=0 closed=true androidx.camera.core.impl.ImmediateSurface@b95e255
+2026-01-25 13:46:55.799  6386-6421  DeferrableSurface       com.example.speedmonitor             D  Surface no longer in use[total_surfaces=2, used_surfaces=1](androidx.camera.core.impl.ImmediateSurface@b95e255}
+2026-01-25 13:46:55.800  6386-6421  DeferrableSurface       com.example.speedmonitor             D  Surface terminated[total_surfaces=1, used_surfaces=1](androidx.camera.core.impl.ImmediateSurface@b95e255}
+2026-01-25 13:46:55.801  6386-6421  DeferrableSurface       com.example.speedmonitor             D  use count-1,  useCount=0 closed=true androidx.camera.core.SurfaceRequest$2@5ddcb61
+2026-01-25 13:46:55.801  6386-6421  DeferrableSurface       com.example.speedmonitor             D  Surface no longer in use[total_surfaces=1, used_surfaces=0](androidx.camera.core.SurfaceRequest$2@5ddcb61}
+2026-01-25 13:46:55.801  6386-6421  DeferrableSurface       com.example.speedmonitor             D  Surface terminated[total_surfaces=0, used_surfaces=0](androidx.camera.core.SurfaceRequest$2@5ddcb61}
+2026-01-25 13:46:55.817  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:55.825  6386-6421  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} CameraDevice.onClosed()
+2026-01-25 13:46:55.830  6386-6421  Camera2CameraImpl       com.example.speedmonitor             D  {Camera@9f62ce4[id=10]} Transitioning camera internal state: CLOSING --> INITIALIZED
+2026-01-25 13:46:55.845  6386-6421  CameraStateRegistry     com.example.speedmonitor             D  Recalculating open cameras:
+                                                                                                    Camera                                       State                 
+                                                                                                    -------------------------------------------------------------------
+                                                                                                    Camera@9f62ce4[id=10]                        CLOSED                
+                                                                                                    Camera@6bccd9b[id=1]                         UNKNOWN               
+                                                                                                    -------------------------------------------------------------------
+                                                                                                    Open count: 0 (Max allowed: 1)
+2026-01-25 13:46:55.845  6386-6421  CameraStateMachine      com.example.speedmonitor             D  New public camera state CameraState{type=CLOSED, error=null} from CLOSED and null
+2026-01-25 13:46:55.845  6386-6421  CameraStateMachine      com.example.speedmonitor             D  Publishing new public camera state CameraState{type=CLOSED, error=null}
+2026-01-25 13:46:55.868  6386-6473  VideoEncoderSession     com.example.speedmonitor             D  Surface can be closed: 85626854
+2026-01-25 13:46:55.869  6386-6473  VideoEncoderSession     com.example.speedmonitor             D  closeInternal in READY state
+2026-01-25 13:46:55.888  6386-6473  Recorder                com.example.speedmonitor             D  VideoEncoder can be released: androidx.camera.video.internal.encoder.EncoderImpl@7c6cd7d
+2026-01-25 13:46:55.891  6386-6473  Recorder                com.example.speedmonitor             D  Transitioning streamId: 85626854 --> 0
+2026-01-25 13:46:55.892  6386-6473  Recorder                com.example.speedmonitor             D  Transitioning Recorder internal state: STOPPING --> RESETTING
+2026-01-25 13:46:55.911  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:55.987  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:56.056  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:56.077  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:56.090  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:56.151  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:56.245  6386-6442  AudioEncoder            com.example.speedmonitor             D  Drop buffer by not in start-stop range.
+2026-01-25 13:46:56.246  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:56.258  6386-6473  AudioSource             com.example.speedmonitor             D  Receive BufferProvider state change: ACTIVE to INACTIVE
+2026-01-25 13:46:56.258  6386-6473  AudioSource             com.example.speedmonitor             D  stopSendingAudio
+2026-01-25 13:46:56.269  6386-6473  AudioSource             com.example.speedmonitor             D  Unable to get input buffer, the BufferProvider could be transitioning to INACTIVE state.
+2026-01-25 13:46:56.309  6386-6473  AudioEncoder            com.example.speedmonitor             D  Drop buffer by not in start-stop range.
+2026-01-25 13:46:56.311  6386-6473  AudioEncoder            com.example.speedmonitor             D  Drop buffer by invalid buffer size.
+2026-01-25 13:46:56.315  6386-6468  CCodecBufferChannel     com.example.speedmonitor             D  [c2.android.amrnb.encoder#62] MediaCodec discarded an unknown buffer
+2026-01-25 13:46:56.315  6386-6468  CCodecBufferChannel     com.example.speedmonitor             D  [c2.android.amrnb.encoder#62] MediaCodec discarded an unknown buffer
+2026-01-25 13:46:56.315  6386-6468  CCodecBufferChannel     com.example.speedmonitor             D  [c2.android.amrnb.encoder#62] MediaCodec discarded an unknown buffer
+2026-01-25 13:46:56.322  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:56.336  6386-6468  hw-BpHwBinder           com.example.speedmonitor             I  onLastStrongRef automatically unlinking death recipients
+2026-01-25 13:46:56.436  6386-6468  CCodec                  com.example.speedmonitor             D  allocate(c2.android.amrnb.encoder)
+2026-01-25 13:46:56.447  6386-6468  CCodec                  com.example.speedmonitor             I  setting up 'default' as default (vendor) store
+2026-01-25 13:46:56.450  6386-6468  CCodec                  com.example.speedmonitor             I  Created component [c2.android.amrnb.encoder]
+2026-01-25 13:46:56.451  6386-6468  CCodecConfig            com.example.speedmonitor             D  read media type: audio/3gpp
+2026-01-25 13:46:56.460  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.max-count.values
+2026-01-25 13:46:56.461  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.subscribed-indices.values
+2026-01-25 13:46:56.462  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: input.buffers.allocator-ids.values
+2026-01-25 13:46:56.462  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.allocator-ids.values
+2026-01-25 13:46:56.463  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.allocator-ids.values
+2026-01-25 13:46:56.463  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.pool-ids.values
+2026-01-25 13:46:56.464  6386-6468  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.pool-ids.values
+2026-01-25 13:46:56.467  6386-6468  CCodecConfig            com.example.speedmonitor             I  query failed after returning 8 values (BAD_INDEX)
+2026-01-25 13:46:56.468  6386-6468  CCodecConfig            com.example.speedmonitor             D  c2 config diff is Dict {
+                                                                                                      c2::u32 coded.bitrate.value = 4750
+                                                                                                      c2::u32 input.buffers.max-size.value = 8192
+                                                                                                      c2::u32 input.delay.value = 0
+                                                                                                      string input.media-type.value = "audio/raw"
+                                                                                                      c2::u32 output.large-frame.max-size = 0
+                                                                                                      c2::u32 output.large-frame.threshold-size = 0
+                                                                                                      string output.media-type.value = "audio/3gpp"
+                                                                                                      c2::u32 raw.channel-count.value = 1
+                                                                                                      c2::u32 raw.sample-rate.value = 8000
+                                                                                                    }
+2026-01-25 13:46:56.471  6386-6442  VideoEncoder            com.example.speedmonitor             W  The data didn't reach the expected timestamp before timeout, stop the codec.
+2026-01-25 13:46:56.478  6386-6468  MediaCodec              com.example.speedmonitor             I  MediaCodec will operate in async mode
+2026-01-25 13:46:56.478  6386-6473  MediaCodec              com.example.speedmonitor             D  shapeMediaFormat: deltas(0): AMessage(what = 0x00000000) = {
+                                                                                                      }
+2026-01-25 13:46:56.479  6386-6468  CCodec                  com.example.speedmonitor             D  [c2.android.amrnb.encoder] buffers are bound to CCodec for this session
+2026-01-25 13:46:56.479  6386-6468  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for flags
+2026-01-25 13:46:56.479  6386-6468  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for encoder
+2026-01-25 13:46:56.482  6386-6468  CCodecConfig            com.example.speedmonitor             D  c2 config diff is   c2::u32 coded.bitrate.value = 12200
+2026-01-25 13:46:56.483  6386-6468  Codec2Client            com.example.speedmonitor             W  query -- param skipped: index = 1107298332.
+2026-01-25 13:46:56.483  6386-6468  CCodec                  com.example.speedmonitor             D  encoding statistics level = 0
+2026-01-25 13:46:56.483  6386-6468  CCodec                  com.example.speedmonitor             D  setup formats input: AMessage(what = 0x00000000) = {
+                                                                                                      int32_t channel-count = 1
+                                                                                                      int32_t max-input-size = 8192
+                                                                                                      string mime = "audio/raw"
+                                                                                                      int32_t sample-rate = 8000
+                                                                                                      int32_t android._config-pcm-encoding = 2
+                                                                                                    }
+2026-01-25 13:46:56.483  6386-6468  CCodec                  com.example.speedmonitor             D  setup formats output: AMessage(what = 0x00000000) = {
+                                                                                                      int32_t bitrate = 12200
+                                                                                                      int32_t buffer-batch-max-output-size = 0
+                                                                                                      int32_t buffer-batch-threshold-output-size = 0
+                                                                                                      int32_t channel-count = 1
+                                                                                                      int32_t max-bitrate = 12200
+                                                                                                      string mime = "audio/3gpp"
+                                                                                                      int32_t sample-rate = 8000
+                                                                                                    }
+2026-01-25 13:46:56.484  6386-6468  CCodecConfig            com.example.speedmonitor             I  query failed after returning 8 values (BAD_INDEX)
+2026-01-25 13:46:56.484  6386-6473  AudioEncoder            com.example.speedmonitor             D  Transitioning encoder internal state: STOPPING --> CONFIGURED
+2026-01-25 13:46:56.613  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:56.692  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:56.760  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:56.866  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:56.957  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:57.090  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:57.173  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:57.216  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:57.259  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:57.322  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:57.364  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:57.470  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:57.534  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:57.625  6386-6442  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Status
+2026-01-25 13:46:57.689  6386-6442  VideoEncoder            com.example.speedmonitor             D  Drop buffer by not in start-stop range.
+2026-01-25 13:46:57.689  6386-6442  VideoEncoder            com.example.speedmonitor             D  Drop buffer by already reach end of stream.
+2026-01-25 13:46:57.697  6386-6473  Recorder                com.example.speedmonitor             D  Encodings end successfully.
+2026-01-25 13:46:57.698  6386-6473  MPEG4Writer             com.example.speedmonitor             D  reset()
+2026-01-25 13:46:57.699  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Video track stopping. Stop source
+2026-01-25 13:46:57.699  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Video track source stopping
+2026-01-25 13:46:57.699  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Video track source stopped
+2026-01-25 13:46:57.699  6386-6529  MediaWriter             com.example.speedmonitor             V  Track event err/info msg:101, trackId:2, type:1000,val:-1011
+2026-01-25 13:46:57.699  6386-6529  MPEG4Writer             com.example.speedmonitor             I  Received total/0-length (350/0) buffers and encoded 350 frames. - Audio
+2026-01-25 13:46:57.702  6386-6528  MediaWriter             com.example.speedmonitor             V  Track event err/info msg:101, trackId:1, type:1000,val:-1011
+2026-01-25 13:46:57.702  6386-6528  MPEG4Writer             com.example.speedmonitor             I  Received total/0-length (123/0) buffers and encoded 123 frames. - Video
+2026-01-25 13:46:57.703  6386-6529  MPEG4Writer             com.example.speedmonitor             I  Audio track drift time: 0 us
+2026-01-25 13:46:57.707  6386-6447  hw-BpHwBinder           com.example.speedmonitor             I  onLastStrongRef automatically unlinking death recipients
+2026-01-25 13:46:57.709  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Video track stopped. Status:0. Stop source
+2026-01-25 13:46:57.709  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Audio track stopping. Stop source
+2026-01-25 13:46:57.709  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Audio track source stopping
+2026-01-25 13:46:57.709  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Audio track source stopped
+2026-01-25 13:46:57.709  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Audio track stopped. Status:0. Stop source
+2026-01-25 13:46:57.709  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Duration from tracks range is [22436304, 22553525] us
+2026-01-25 13:46:57.709  6386-6526  MPEG4Writer             com.example.speedmonitor             D  0 chunks are written in the last batch
+2026-01-25 13:46:57.710  6386-6473  MPEG4Writer             com.example.speedmonitor             D  WriterThread stopped. Status:0
+2026-01-25 13:46:57.710  6386-6473  MPEG4Writer             com.example.speedmonitor             I  Adjust the moov start time from 445026309 us -> 445026309 us
+2026-01-25 13:46:57.710  6386-6473  MPEG4Writer             com.example.speedmonitor             I  The mp4 file will not be streamable.
+2026-01-25 13:46:57.710  6386-6473  MPEG4Writer             com.example.speedmonitor             I  MOOV atom was written to the file
+2026-01-25 13:46:57.710  6386-6473  MPEG4Writer             com.example.speedmonitor             D  release()
+2026-01-25 13:46:57.710  6386-6473  MPEG4Writer             com.example.speedmonitor             D  ftruncate mPreAllocateFileEndOffset:1036199 mOffset:1035214 mMdatEndOffset:1029503 diff:985
+2026-01-25 13:46:57.762  6386-6473  MPEG4Writer             com.example.speedmonitor             D  final fsync() takes 52 ms, file size 1035214
+2026-01-25 13:46:57.771  6386-6473  MPEG4Writer             com.example.speedmonitor             D  MP4WtrCtrlHlpLooper stopped
+2026-01-25 13:46:57.772  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Top 5 write durations(microseconds): #1:2218 #2:2587 #3:3163 #4:3430 #5:3549
+2026-01-25 13:46:57.773  6386-6473  MPEG4Writer             com.example.speedmonitor             D  reset()
+2026-01-25 13:46:57.773  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Video track stopping. Stop source
+2026-01-25 13:46:57.773  6386-6473  MPEG4Writer             com.example.speedmonitor             E  Stop() called but track is not started or stopped
+2026-01-25 13:46:57.773  6386-6473  MPEG4Writer             com.example.speedmonitor             D  Audio track stopping. Stop source
+2026-01-25 13:46:57.773  6386-6473  MPEG4Writer             com.example.speedmonitor             E  Stop() called but track is not started or stopped
+2026-01-25 13:46:57.777  6386-6447  CCodec                  com.example.speedmonitor             D  allocate(c2.android.avc.encoder)
+2026-01-25 13:46:57.792  6386-6447  CCodec                  com.example.speedmonitor             I  setting up 'default' as default (vendor) store
+2026-01-25 13:46:57.813  6386-6447  CCodec                  com.example.speedmonitor             I  Created component [c2.android.avc.encoder]
+2026-01-25 13:46:57.819  6386-6447  CCodecConfig            com.example.speedmonitor             D  read media type: video/avc
+2026-01-25 13:46:57.917  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.max-count.values
+2026-01-25 13:46:57.919  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.subscribed-indices.values
+2026-01-25 13:46:57.920  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: input.buffers.allocator-ids.values
+2026-01-25 13:46:57.921  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.allocator-ids.values
+2026-01-25 13:46:57.921  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.allocator-ids.values
+2026-01-25 13:46:57.922  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: output.buffers.pool-ids.values
+2026-01-25 13:46:57.923  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  extent() != 1 for single value type: algo.buffers.pool-ids.values
+2026-01-25 13:46:58.036  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  ignored struct field coding.gop.values
+2026-01-25 13:46:58.037  6386-6447  ReflectedParamUpdater   com.example.speedmonitor             D  ignored struct field coding.qp.values
+2026-01-25 13:46:58.056  6386-6447  CCodecConfig            com.example.speedmonitor             D  ignoring local param raw.color (0xc2001809) as it is already supported
+2026-01-25 13:46:58.058  6386-6447  CCodecConfig            com.example.speedmonitor             I  query failed after returning 13 values (BAD_INDEX)
+2026-01-25 13:46:58.059  6386-6447  CCodecConfig            com.example.speedmonitor             D  c2 config diff is Dict {
+                                                                                                      c2::u32 algo.bitrate-mode.value = 3
+                                                                                                      c2::i32 coded.average-qp.value = 0
+                                                                                                      c2::u32 coded.bitrate.value = 64000
+                                                                                                      c2::float coded.frame-rate.value = 1
+                                                                                                      c2::u32 coded.picture-type.value = 0
+                                                                                                      c2::u32 coded.pl.level = 20492
+                                                                                                      c2::u32 coded.pl.profile = 20481
+                                                                                                      c2::u32 coded.vui.color.matrix = 0
+                                                                                                      c2::u32 coded.vui.color.primaries = 0
+                                                                                                      c2::u32 coded.vui.color.range = 0
+                                                                                                      c2::u32 coded.vui.color.transfer = 0
+                                                                                                      c2::u32 coding.intra-refresh.mode = 0
+                                                                                                      c2::float coding.intra-refresh.period = 0
+                                                                                                      c2::u32 coding.request-sync-frame.value = 0
+                                                                                                      c2::i64 coding.sync-frame-interval.value = 1000000
+                                                                                                      c2::u32 input.delay.value = 0
+                                                                                                      string input.media-type.value = "video/raw"
+                                                                                                      string output.media-type.value = "video/avc"
+                                                                                                      c2::u32 raw.color.matrix = 0
+                                                                                                      c2::u32 raw.color.primaries = 0
+                                                                                                      c2::u32 raw.color.range = 0
+                                                                                                      c2::u32 raw.color.transfer = 0
+                                                                                                      c2::u32 raw.size.height = 16
+                                                                                                      c2::u32 raw.size.width = 16
+                                                                                                    }
+2026-01-25 13:46:58.059  6386-6447  ColorUtils              com.example.speedmonitor             W  expected specified color aspects (0:0:0:0)
+2026-01-25 13:46:58.089  6386-6445  MediaCodec              com.example.speedmonitor             I  MediaCodec will operate in async mode
+2026-01-25 13:46:58.090  6386-6442  VQApply                 com.example.speedmonitor             D  raise bitrate: configured 1200000 to floor 2073600
+2026-01-25 13:46:58.090  6386-6442  VQApply                 com.example.speedmonitor             D  minquality by QP: inject video-qp-max=43
+2026-01-25 13:46:58.090  6386-6442  VQApply                 com.example.speedmonitor             D  minquality/target bitrate raised from 1200000 to 2073600 bps
+2026-01-25 13:46:58.090  6386-6442  MediaCodec              com.example.speedmonitor             D  shapeMediaFormat: deltas(6): AMessage(what = 0x00000000) = {
+                                                                                                        int32_t bitrate = 2073600
+                                                                                                        int32_t android._encoding-quality-level = 0
+                                                                                                        int32_t video-qp-max = 43
+                                                                                                        int32_t video-qp-i-max = 43
+                                                                                                        int32_t video-qp-p-max = 46
+                                                                                                        int32_t video-qp-b-max = 49
+                                                                                                      }
+2026-01-25 13:46:58.093  6386-6447  CCodec                  com.example.speedmonitor             D  [c2.android.avc.encoder] buffers are bound to CCodec for this session
+2026-01-25 13:46:58.099  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for color-format
+2026-01-25 13:46:58.099  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for video-qp-max
+2026-01-25 13:46:58.099  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for video-qp-i-max
+2026-01-25 13:46:58.099  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for video-qp-p-max
+2026-01-25 13:46:58.099  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for video-qp-b-max
+2026-01-25 13:46:58.099  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for flags
+2026-01-25 13:46:58.099  6386-6447  CCodecConfig            com.example.speedmonitor             D  no c2 equivalents for encoder
+2026-01-25 13:46:58.106  6386-6447  CCodecConfig            com.example.speedmonitor             D  c2 config diff is   c2::u32 coded.bitrate.value = 2073600
+                                                                                                      c2::float coded.frame-rate.value = 30
+                                                                                                      c2::u32 raw.size.height = 720
+                                                                                                      c2::u32 raw.size.width = 1280
+2026-01-25 13:46:58.107  6386-6447  ColorUtils              com.example.speedmonitor             W  expected specified color aspects (0:0:0:0)
+2026-01-25 13:46:58.111  6386-6447  CCodec                  com.example.speedmonitor             D  encoding statistics level = 0
+2026-01-25 13:46:58.111  6386-6447  CCodec                  com.example.speedmonitor             D  setup formats input: AMessage(what = 0x00000000) = {
+                                                                                                      Rect crop(0, 0, 1279, 719)
+                                                                                                      int32_t color-standard = 0
+                                                                                                      int32_t color-range = 0
+                                                                                                      int32_t color-transfer = 0
+                                                                                                      int32_t frame-rate = 30
+                                                                                                      int32_t height = 720
+                                                                                                      int32_t intra-refresh-period = 0
+                                                                                                      string mime = "video/raw"
+                                                                                                      int32_t video-qp-average = 0
+                                                                                                      int32_t width = 1280
+                                                                                                      int32_t android._dataspace = 0
+                                                                                                      int32_t using-sw-read-often = 1
+                                                                                                      int64_t android._C2MemoryUsage = 1
+                                                                                                      int32_t color-format = 2130708361
+                                                                                                      int32_t android._color-format = 2130708361
+                                                                                                    }
+2026-01-25 13:46:58.111  6386-6447  CCodec                  com.example.speedmonitor             D  setup formats output: AMessage(what = 0x00000000) = {
+                                                                                                      int32_t bitrate = 2073600
+                                                                                                      int32_t bitrate-mode = 1
+                                                                                                      Rect crop(0, 0, 1279, 719)
+                                                                                                      int32_t color-standard = 0
+                                                                                                      int32_t color-range = 0
+                                                                                                      int32_t color-transfer = 0
+                                                                                                      int32_t frame-rate = 30
+                                                                                                      int32_t height = 720
+                                                                                                      int32_t intra-refresh-period = 0
+                                                                                                      int32_t level = 4096
+                                                                                                      int32_t max-bitrate = 2073600
+                                                                                                      string mime = "video/avc"
+                                                                                                      int32_t profile = 65536
+                                                                                                      int32_t video-qp-average = 0
+                                                                                                      int32_t width = 1280
+                                                                                                    }
+2026-01-25 13:46:58.113  6386-6447  CCodecConfig            com.example.speedmonitor             I  query failed after returning 14 values (BAD_INDEX)
+2026-01-25 13:46:58.118  6386-6447  CCodec                  com.example.speedmonitor             D  input format changed to AMessage(what = 0x00000000) = {
+                                                                                                      Rect crop(0, 0, 1279, 719)
+                                                                                                      int32_t color-standard = 1
+                                                                                                      int32_t color-range = 2
+                                                                                                      int32_t color-transfer = 3
+                                                                                                      int32_t frame-rate = 30
+                                                                                                      int32_t height = 720
+                                                                                                      int32_t intra-refresh-period = 0
+                                                                                                      string mime = "video/raw"
+                                                                                                      int32_t video-qp-average = 0
+                                                                                                      int32_t width = 1280
+                                                                                                      int32_t android._dataspace = 260
+                                                                                                      int32_t using-sw-read-often = 1
+                                                                                                      int64_t android._C2MemoryUsage = 1
+                                                                                                      int32_t color-format = 2130708361
+                                                                                                      int32_t android._color-format = 2130708361
+                                                                                                    }
+2026-01-25 13:46:58.121  6386-6447  GraphicBufferSource     com.example.speedmonitor             D  setting dataspace: 0x104, acquired=0
+2026-01-25 13:46:58.121  6386-6447  CCodec                  com.example.speedmonitor             D  ISConfig not changed
+2026-01-25 13:46:58.131  6386-6442  VideoEncoder            com.example.speedmonitor             D  Transitioning encoder internal state: STOPPING --> CONFIGURED
+2026-01-25 13:46:58.448  6386-6473  Recorder                com.example.speedmonitor             D  Sending VideoRecordEvent Finalize [error: ERROR_SOURCE_INACTIVE]
+2026-01-25 13:46:58.449  6386-6473  Recorder                com.example.speedmonitor             D  Update stream transformation info: null
+2026-01-25 13:46:58.449  6386-6473  Recorder                com.example.speedmonitor             D  Transitioning audio state: ENABLED --> IDLING
+2026-01-25 13:46:58.454  6386-6442  AudioSource             com.example.speedmonitor             D  Transitioning internal state: STARTED --> CONFIGURED
+2026-01-25 13:46:58.454  6386-6473  Recorder                com.example.speedmonitor             D  Releasing audio encoder.
+2026-01-25 13:46:58.455  6386-6473  Recorder                com.example.speedmonitor             D  Releasing audio source: 0x40fed6c
+2026-01-25 13:46:58.459  6386-6468  hw-BpHwBinder           com.example.speedmonitor             I  onLastStrongRef automatically unlinking death recipients
+2026-01-25 13:46:58.460  6386-6442  AudioEncoder            com.example.speedmonitor             D  Transitioning encoder internal state: CONFIGURED --> RELEASED
+2026-01-25 13:46:58.461  6386-6442  AudioSource             com.example.speedmonitor             D  Transitioning internal state: CONFIGURED --> RELEASED
+2026-01-25 13:46:58.466  6386-6473  Recorder                com.example.speedmonitor             D  Released audio source successfully: 0x40fed6c
+2026-01-25 13:46:58.466  6386-6473  Recorder                com.example.speedmonitor             D  Transitioning audio state: IDLING --> INITIALIZING
+2026-01-25 13:46:58.466  6386-6473  Recorder                com.example.speedmonitor             D  Releasing video encoder.
+2026-01-25 13:46:58.467  6386-6473  Recorder                com.example.speedmonitor             D  Releasing video encoder: androidx.camera.video.internal.encoder.EncoderImpl@7c6cd7d
+2026-01-25 13:46:58.467  6386-6473  VideoEncoderSession     com.example.speedmonitor             D  VideoEncoder is releasing: androidx.camera.video.internal.encoder.EncoderImpl@7c6cd7d
+2026-01-25 13:46:58.468  6386-6473  Recorder                com.example.speedmonitor             D  Transitioning Recorder internal state: RESETTING --> CONFIGURING
+2026-01-25 13:46:58.476  6386-6473  VideoEncoder            com.example.speedmonitor             D  Transitioning encoder internal state: CONFIGURED --> RELEASED
+2026-01-25 13:46:58.482  6386-6447  hw-BpHwBinder           com.example.speedmonitor             I  onLastStrongRef automatically unlinking death recipients
+2026-01-25 13:47:01.443  6386-6437  BufferPoolAccessor2.0   com.example.speedmonitor             D  bufferpool2 0x78e18b01de28 : 0(0 size) total buffers - 0(0 size) used buffers - 364/369 (recycle/alloc) - 14/730 (fetch/transfer)
+2026-01-25 13:47:01.444  6386-6437  BufferPoolAccessor2.0   com.example.speedmonitor             D  evictor expired: 1, evicted: 1

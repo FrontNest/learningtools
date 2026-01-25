@@ -41,6 +41,10 @@ class MainActivity : AppCompatActivity() {
     private val client = OkHttpClient()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -59,15 +63,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun requestLocationPermissionAndMaybeStart() {
         val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val coarseGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        if (!fineGranted && !coarseGranted) {
+        if (!fineGranted) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                100
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
             )
         } else {
             startLocationUpdates()
@@ -76,13 +76,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 100) {
-            val fineGranted = permissions.indexOf(Manifest.permission.ACCESS_FINE_LOCATION).let { i -> i >= 0 && grantResults.getOrNull(i) == PackageManager.PERMISSION_GRANTED }
-            val coarseGranted = permissions.indexOf(Manifest.permission.ACCESS_COARSE_LOCATION).let { i -> i >= 0 && grantResults.getOrNull(i) == PackageManager.PERMISSION_GRANTED }
-            if (fineGranted || coarseGranted) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startLocationUpdates()
             } else {
-                tvAddress.text = "Hely engedély szükséges!"
+                android.widget.Toast.makeText(this, "Helyadat szükséges a sebességhez", android.widget.Toast.LENGTH_LONG).show()
             }
         }
     }
