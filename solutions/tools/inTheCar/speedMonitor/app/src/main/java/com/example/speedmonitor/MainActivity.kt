@@ -104,8 +104,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Ezt a régit már nem használjuk
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
