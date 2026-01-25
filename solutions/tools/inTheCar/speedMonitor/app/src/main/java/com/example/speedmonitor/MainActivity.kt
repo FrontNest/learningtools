@@ -184,7 +184,7 @@ class MainActivity : AppCompatActivity() {
                     cameraSelector,
                     videoCapture
                 )
-                val name = "VID_${System.currentTimeMillis()}.mp4"
+                val name = "DaschCamSPeedMonitor_${System.currentTimeMillis()}.mp4"
                 val contentValues = android.content.ContentValues().apply {
                     put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, name)
                     put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
