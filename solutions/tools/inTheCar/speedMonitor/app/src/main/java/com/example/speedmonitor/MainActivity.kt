@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         requestCameraAndAudioPermissions()
         startClock()
         requestLocationPermissionAndMaybeStart()
+        startVideoRecording()
     }
 
     private fun requestLocationPermissionAndMaybeStart() {
@@ -162,11 +163,9 @@ class MainActivity : AppCompatActivity() {
         }
         tvSpeed.setTextColor(color)
 
-        // Video recording logic
-        if (speedKmh > 10 && !isRecording) {
-            startVideoRecording()
-        } else if (speedKmh <= 10 && isRecording) {
-            stopVideoRecording()
+        // A videó státusz mindig látható, amíg a felvétel tart
+        if (isRecording) {
+            tvVideoStatus.text = "Video felvétel aktív"
         }
     }
 
