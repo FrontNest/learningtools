@@ -51,8 +51,26 @@ class MainActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         requestCameraAndAudioPermissions()
         startClock()
-        startLocationUpdates()
+        requestLocationPermissionAndMaybeStart()
+    }
 
+    private fun requestLocationPermissionAndMaybeStart() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 100)
+        } else {
+            startLocationUpdates()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 100) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startLocationUpdates()
+            } else {
+                tvAddress.text = "Hely engedély szükséges!"
+            }
+        }
     }
 
     private fun requestCameraAndAudioPermissions() {
@@ -95,10 +113,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            tvAddress.text = "Hely engedély szükséges!"
             return
         }
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+        try {
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+        } catch (e: SecurityException) {
+            tvAddress.text = "Hely engedély hiba!"
+        }
     }
 
     private fun updateSpeed(location: Location) {
