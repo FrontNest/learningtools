@@ -54,58 +54,58 @@ class MainActivity : AppCompatActivity() {
         tvAddress = findViewById(R.id.tvAddress)
         tvVideoStatus = findViewById(R.id.tvVideoStatus)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        requestCameraAndAudioPermissions()
         startClock()
-        requestLocationPermissionAndMaybeStart()
-        startVideoRecording()
+        requestLocationPermissionFirst()
         // Keep screen on while app is running
         window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
-    private fun requestLocationPermissionAndMaybeStart() {
+    // Új permission flow: először location, majd kamera, majd audio
+    private fun requestLocationPermissionFirst() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED
         ) {
             startLocationUpdates()
-            return
-        }
-        // Ha a user már elutasította és "Don't ask again"-t választott, csak akkor irányítsuk a Settings-be
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            && wasPermissionRequestedBefore()
-        ) {
-            android.app.AlertDialog.Builder(this)
-                .setTitle("Helyhozzáférés szükséges")
-                .setMessage("Engedélyezd a helyadatokat a Beállításokban.")
-                .setPositiveButton("Beállítások") { _, _ ->
-                    val intent = android.content.Intent(
-                        android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                    )
-                    intent.data = android.net.Uri.fromParts("package", packageName, null)
-                    startActivity(intent)
-                }
-                .setNegativeButton("Mégse", null)
-                .show()
+            requestCameraPermission()
         } else {
-            // Első kéréskor vagy sima elutasításnál mindig a natív dialogot dobjuk fel
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 LOCATION_PERMISSION_REQUEST_CODE
             )
-            // NEM állítjuk be itt a flaget!
         }
     }
 
-    // Segédfüggvények a permission kérés állapotának tárolásához
-    private fun wasPermissionRequestedBefore(): Boolean {
-        val prefs = getSharedPreferences("perm_prefs", Context.MODE_PRIVATE)
-        return prefs.getBoolean("location_permission_requested", false)
+    private fun requestCameraPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            requestAudioPermission()
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                2002
+            )
+        }
     }
 
-    private fun setPermissionRequestedFlag() {
-        val prefs = getSharedPreferences("perm_prefs", Context.MODE_PRIVATE)
-        prefs.edit().putBoolean("location_permission_requested", true).apply()
+    private fun requestAudioPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            startVideoRecording()
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.RECORD_AUDIO),
+                2003
+            )
+        }
     }
+
+    // Ezt a régit már nem használjuk
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -113,53 +113,71 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startLocationUpdates()
-            } else {
-                setPermissionRequestedFlag() // Csak most állítjuk be, ha tényleg elutasította
-                // Ha "Don't ask again"-t választott, Settings-be irányítjuk
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(
-            startClock()
-            requestLocationPermission()
-            // Keep screen on while app is running
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    )
-                ) {
-                    android.app.AlertDialog.Builder(this)
-                        .setTitle("Helyhozzáférés szükséges")
-                        .setMessage("Engedélyezd a helyadatokat a Beállításokban.")
-                        .setPositiveButton("Beállítások") { _, _ ->
-                            val intent = android.content.Intent(
-                                android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                            )
-                            intent.data = android.net.Uri.fromParts("package", packageName, null)
-                            startActivity(intent)
-                        }
-                        .setNegativeButton("Mégse", null)
-                        .show()
+        when (requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startLocationUpdates()
+                    requestCameraPermission()
                 } else {
-                    android.widget.Toast.makeText(this, "Helyadat szükséges a sebességhez", android.widget.Toast.LENGTH_LONG).show()
+                    // Ha "Don't ask again"-t választott, Settings-be irányítjuk
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(
+                            this,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        )
+                    ) {
+                        android.app.AlertDialog.Builder(this)
+                            .setTitle("Helyhozzáférés szükséges")
+                            .setMessage("Ez az alkalmazás csak helyhozzáféréssel működik. Engedélyezd a helyadatokat a Beállításokban!")
+                            .setPositiveButton("Beállítások") { _, _ ->
+                                val intent = android.content.Intent(
+                                    android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                                )
+                                intent.data = android.net.Uri.fromParts("package", packageName, null)
+                                startActivity(intent)
+                            }
+                            .setNegativeButton("Kilépés") { _, _ -> finish() }
+                            .setCancelable(false)
+                            .show()
+                    } else {
+                        android.app.AlertDialog.Builder(this)
+                            .setTitle("Helyhozzáférés szükséges")
+                            .setMessage("Ez az alkalmazás csak helyhozzáféréssel működik. Kérlek, engedélyezd a helyadatokat!")
+                            .setPositiveButton("OK") { _, _ -> requestLocationPermissionFirst() }
+                            .setNegativeButton("Kilépés") { _, _ -> finish() }
+                            .setCancelable(false)
+                            .show()
+                    }
+                }
+            }
+            2002 -> { // Camera
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    requestAudioPermission()
+                } else {
+                    android.app.AlertDialog.Builder(this)
+                        .setTitle("Kamera engedély szükséges")
+                        .setMessage("A kamera engedélyezése nélkül nem tudod használni az alkalmazást.")
+                        .setPositiveButton("OK") { _, _ -> requestCameraPermission() }
+                        .setNegativeButton("Kilépés") { _, _ -> finish() }
+                        .setCancelable(false)
+                        .show()
+                }
+            }
+            2003 -> { // Audio
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startVideoRecording()
+                } else {
+                    android.app.AlertDialog.Builder(this)
+                        .setTitle("Hang engedély szükséges")
+                        .setMessage("A hang engedélyezése nélkül nem tudod használni az alkalmazást.")
+                        .setPositiveButton("OK") { _, _ -> requestAudioPermission() }
+                        .setNegativeButton("Kilépés") { _, _ -> finish() }
+                        .setCancelable(false)
+                        .show()
                 }
             }
         }
     }
 
-    private fun requestCameraAndAudioPermissions() {
-        val permissions = mutableListOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO
-        )
-        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.P) {
-            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
-        val notGranted = permissions.filter {
-            ActivityCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
-        }
-        if (notGranted.isNotEmpty()) {
-            ActivityCompat.requestPermissions(this, notGranted.toTypedArray(), 2)
-        }
-    }
 
     private fun startClock() {
         coroutineScope.launch {
