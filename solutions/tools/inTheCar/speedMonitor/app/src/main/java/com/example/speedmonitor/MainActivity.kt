@@ -110,6 +110,7 @@ class MainActivity : AppCompatActivity() {
                     it.setSurfaceProvider(previewView.surfaceProvider)
                 }
                 val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+                // Csak preview use case bindolása (ha még nincs video)
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     this,
@@ -120,6 +121,36 @@ class MainActivity : AppCompatActivity() {
                 onPreviewStarted?.invoke()
             } catch (exc: Exception) {
                 android.util.Log.e("CameraX", "Camera preview failed: ${exc.message}", exc)
+            }
+        }, ContextCompat.getMainExecutor(this))
+    }
+
+    private fun startCameraPreviewAndVideo(onPreviewAndVideoStarted: (() -> Unit)? = null) {
+        android.util.Log.d("CameraX", "startCameraPreviewAndVideo called")
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        cameraProviderFuture.addListener({
+            try {
+                val cameraProvider = cameraProviderFuture.get()
+                android.util.Log.d("CameraX", "cameraProvider.get() succeeded (preview+video)")
+                val preview = androidx.camera.core.Preview.Builder().build().also {
+                    it.setSurfaceProvider(previewView.surfaceProvider)
+                }
+                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+                val recorder = Recorder.Builder()
+                    .setQualitySelector(QualitySelector.from(Quality.HD))
+                    .build()
+                videoCapture = VideoCapture.withOutput(recorder)
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    this,
+                    cameraSelector,
+                    preview,
+                    videoCapture
+                )
+                android.util.Log.d("CameraX", "Camera preview+video started successfully")
+                onPreviewAndVideoStarted?.invoke()
+            } catch (exc: Exception) {
+                android.util.Log.e("CameraX", "Camera preview+video failed: ${exc.message}", exc)
             }
         }, ContextCompat.getMainExecutor(this))
     }
@@ -279,46 +310,29 @@ class MainActivity : AppCompatActivity() {
         if (isRecording) return
         isRecording = true
         tvVideoStatus.text = "🔴 RECORDING"
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-        cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
-            val recorder = Recorder.Builder()
-                .setQualitySelector(QualitySelector.from(Quality.HD))
-                .build()
-            videoCapture = VideoCapture.withOutput(recorder)
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-            try {
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
-                    this,
-                    cameraSelector,
-                    videoCapture
-                )
-                val name = "DaschCamSPeedMonitor_${System.currentTimeMillis()}.mp4"
-                val contentValues = android.content.ContentValues().apply {
-                    put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, name)
-                    put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
-                    put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/Camera")
-                }
-                val outputOptions = MediaStoreOutputOptions.Builder(
-                    contentResolver,
-                    android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                )
-                    .setContentValues(contentValues)
-                    .build()
-                val recordingPre = videoCapture?.output
-                    ?.prepareRecording(this, outputOptions)
-                // withAudioEnabled() only if RECORD_AUDIO permission granted
-                val hasAudio = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-                recording = if (hasAudio) {
-                    recordingPre?.withAudioEnabled()?.start(ContextCompat.getMainExecutor(this)) { }
-                } else {
-                    recordingPre?.start(ContextCompat.getMainExecutor(this)) { }
-                }
-            } catch (exc: Exception) {
-                tvVideoStatus.text = "Recording error: ${exc.message}"
+        startCameraPreviewAndVideo {
+            val name = "DaschCamSPeedMonitor_${System.currentTimeMillis()}.mp4"
+            val contentValues = android.content.ContentValues().apply {
+                put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, name)
+                put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
+                put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/Camera")
             }
-        }, ContextCompat.getMainExecutor(this))
+            val outputOptions = MediaStoreOutputOptions.Builder(
+                contentResolver,
+                android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            )
+                .setContentValues(contentValues)
+                .build()
+            val recordingPre = videoCapture?.output
+                ?.prepareRecording(this, outputOptions)
+            // withAudioEnabled() only if RECORD_AUDIO permission granted
+            val hasAudio = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+            recording = if (hasAudio) {
+                recordingPre?.withAudioEnabled()?.start(ContextCompat.getMainExecutor(this)) { }
+            } else {
+                recordingPre?.start(ContextCompat.getMainExecutor(this)) { }
+            }
+        }
     }
 
     private fun stopVideoRecording() {
