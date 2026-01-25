@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private var isRecording = false
     private var videoCapture: VideoCapture<Recorder>? = null
     private var recording: Recording? = null
+    private lateinit var previewView: androidx.camera.view.PreviewView
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private lateinit var tvTime: TextView
@@ -53,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         tvSpeed = findViewById(R.id.tvSpeed)
         tvAddress = findViewById(R.id.tvAddress)
         tvVideoStatus = findViewById(R.id.tvVideoStatus)
+        previewView = findViewById(R.id.previewView)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         startClock()
         requestLocationPermissionFirst()
@@ -80,6 +82,7 @@ class MainActivity : AppCompatActivity() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
             == PackageManager.PERMISSION_GRANTED
         ) {
+            startCameraPreview()
             requestAudioPermission()
         } else {
             ActivityCompat.requestPermissions(
@@ -88,6 +91,25 @@ class MainActivity : AppCompatActivity() {
                 2002
             )
         }
+    }
+
+    private fun startCameraPreview() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        cameraProviderFuture.addListener({
+            val cameraProvider = cameraProviderFuture.get()
+            val preview = androidx.camera.core.Preview.Builder().build().also {
+                it.setSurfaceProvider(previewView.surfaceProvider)
+            }
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            try {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    this,
+                    cameraSelector,
+                    preview
+                )
+            } catch (_: Exception) {}
+        }, ContextCompat.getMainExecutor(this))
     }
 
     private fun requestAudioPermission() {

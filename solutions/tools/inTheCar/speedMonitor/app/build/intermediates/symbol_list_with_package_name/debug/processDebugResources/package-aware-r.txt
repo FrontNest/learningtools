@@ -4067,6 +4067,7 @@ id pin
 id position
 id postLayout
 id pressed
+id previewView
 id progress_circular
 id progress_horizontal
 id radio
