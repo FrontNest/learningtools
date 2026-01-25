@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 LOCATION_PERMISSION_REQUEST_CODE
             )
-            setPermissionRequestedFlag()
+            // NEM állítjuk be itt a flaget!
         }
     }
 
@@ -117,6 +117,7 @@ class MainActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startLocationUpdates()
             } else {
+                setPermissionRequestedFlag() // Csak most állítjuk be, ha tényleg elutasította
                 // Ha "Don't ask again"-t választott, Settings-be irányítjuk
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(
                         this,
