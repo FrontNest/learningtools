@@ -57,6 +57,8 @@ class MainActivity : AppCompatActivity() {
         startClock()
         requestLocationPermissionAndMaybeStart()
         startVideoRecording()
+        // Keep screen on while app is running
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun requestLocationPermissionAndMaybeStart() {
@@ -249,5 +251,7 @@ class MainActivity : AppCompatActivity() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
         coroutineScope.cancel()
         stopVideoRecording()
+        // Allow screen to turn off again
+        window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 }
