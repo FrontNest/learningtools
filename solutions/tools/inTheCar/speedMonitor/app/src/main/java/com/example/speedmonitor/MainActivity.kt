@@ -79,11 +79,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestCameraPermission() {
+        android.util.Log.d("CameraX", "requestCameraPermission called")
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
             == PackageManager.PERMISSION_GRANTED
         ) {
-            startCameraPreview()
-            requestAudioPermission()
+            startCameraPreviewAndThenAudio()
         } else {
             ActivityCompat.requestPermissions(
                 this,
@@ -93,7 +93,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun startCameraPreview() {
+    private fun startCameraPreviewAndThenAudio() {
+        startCameraPreview {
+            requestAudioPermission()
+        }
+    }
+
+    private fun startCameraPreview(onPreviewStarted: (() -> Unit)? = null) {
         android.util.Log.d("CameraX", "startCameraPreview called")
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
@@ -111,6 +117,7 @@ class MainActivity : AppCompatActivity() {
                     preview
                 )
                 android.util.Log.d("CameraX", "Camera preview started successfully")
+                onPreviewStarted?.invoke()
             } catch (exc: Exception) {
                 android.util.Log.e("CameraX", "Camera preview failed: ${exc.message}", exc)
             }
@@ -176,7 +183,7 @@ class MainActivity : AppCompatActivity() {
             }
             2002 -> { // Camera
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    requestAudioPermission()
+                    startCameraPreviewAndThenAudio()
                 } else {
                     android.app.AlertDialog.Builder(this)
                         .setTitle("Kamera engedély szükséges")
