@@ -13,6 +13,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Az eszközök kötelezőek-e? -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <queries>
         <intent>
@@ -35,6 +39,7 @@
         android:label="SpeedMonitor"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:testOnly="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         <activity
             android:name="com.example.speedmonitor.MainActivity"
