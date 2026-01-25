@@ -1,4 +1,4 @@
-#Sun Jan 25 13:40:03 CET 2026
+#Sun Jan 25 14:56:32 CET 2026
 base.0=C\:\\Users\\lol\\______ORSI\\GitHub\\FrontnestStudio\\solutions\\tools\\inTheCar\\speedMonitor\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeProjectDexDebugAndroidTest\\0\\classes.dex
 path.0=0/classes.dex
 renamed.0=classes.dex
