@@ -29,6 +29,7 @@ import androidx.camera.video.Recorder
 import androidx.camera.video.MediaStoreOutputOptions
 
 class MainActivity : AppCompatActivity() {
+
     private var isRecording = false
     private var videoCapture: VideoCapture<Recorder>? = null
     private var recording: Recording? = null
@@ -255,6 +256,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+        override fun onPause() {
+            super.onPause()
+            stopVideoRecording()
+            window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+        
     override fun onDestroy() {
         super.onDestroy()
         fusedLocationClient.removeLocationUpdates(locationCallback)
