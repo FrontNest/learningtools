@@ -167,14 +167,14 @@ class MainActivity : AppCompatActivity() {
 
         // A videó státusz mindig látható, amíg a felvétel tart
         if (isRecording) {
-            tvVideoStatus.text = "Video felvétel aktív"
+            tvVideoStatus.text = "🔴 RECORDING"
         }
     }
 
     private fun startVideoRecording() {
         if (isRecording) return
         isRecording = true
-        tvVideoStatus.text = "Video felvétel aktív"
+        tvVideoStatus.text = "🔴 RECORDING"
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
@@ -212,7 +212,7 @@ class MainActivity : AppCompatActivity() {
                     recordingPre?.start(ContextCompat.getMainExecutor(this)) { }
                 }
             } catch (exc: Exception) {
-                tvVideoStatus.text = "Videó indítás hiba: ${exc.message}"
+                tvVideoStatus.text = "Recording error: ${exc.message}"
             }
         }, ContextCompat.getMainExecutor(this))
     }
