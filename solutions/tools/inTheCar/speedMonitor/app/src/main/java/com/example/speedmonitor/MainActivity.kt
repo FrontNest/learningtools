@@ -120,7 +120,9 @@ class MainActivity : AppCompatActivity() {
                 setPermissionRequestedFlag() // Csak most állítjuk be, ha tényleg elutasította
                 // Ha "Don't ask again"-t választott, Settings-be irányítjuk
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                        this,
+            startClock()
+            requestLocationPermission()
+            // Keep screen on while app is running
                         Manifest.permission.ACCESS_FINE_LOCATION
                     )
                 ) {
