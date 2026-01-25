@@ -69,12 +69,42 @@ class MainActivity : AppCompatActivity() {
             startLocationUpdates()
             return
         }
-        // Mindig kérünk permissiont, ha nincs meg
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            LOCATION_PERMISSION_REQUEST_CODE
-        )
+        // Ha a user már elutasította és "Don't ask again"-t választott, csak akkor irányítsuk a Settings-be
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            && wasPermissionRequestedBefore()
+        ) {
+            android.app.AlertDialog.Builder(this)
+                .setTitle("Helyhozzáférés szükséges")
+                .setMessage("Engedélyezd a helyadatokat a Beállításokban.")
+                .setPositiveButton("Beállítások") { _, _ ->
+                    val intent = android.content.Intent(
+                        android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    )
+                    intent.data = android.net.Uri.fromParts("package", packageName, null)
+                    startActivity(intent)
+                }
+                .setNegativeButton("Mégse", null)
+                .show()
+        } else {
+            // Első kéréskor vagy sima elutasításnál mindig a natív dialogot dobjuk fel
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+            setPermissionRequestedFlag()
+        }
+    }
+
+    // Segédfüggvények a permission kérés állapotának tárolásához
+    private fun wasPermissionRequestedBefore(): Boolean {
+        val prefs = getSharedPreferences("perm_prefs", Context.MODE_PRIVATE)
+        return prefs.getBoolean("location_permission_requested", false)
+    }
+
+    private fun setPermissionRequestedFlag() {
+        val prefs = getSharedPreferences("perm_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("location_permission_requested", true).apply()
     }
 
     override fun onRequestPermissionsResult(
