@@ -1,10 +1,6 @@
-
 package com.example.speedmonitor
-
 import android.content.Context
 import android.location.LocationManager
-
-
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
