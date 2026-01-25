@@ -63,40 +63,51 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestLocationPermissionAndMaybeStart() {
-        val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        if (!fineGranted) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // Magyarázat után újra kérjük az engedélyt
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    LOCATION_PERMISSION_REQUEST_CODE
-                )
-            } else {
-                // Véglegesen megtagadva: Settings-be irányítjuk a user-t
-                android.app.AlertDialog.Builder(this)
-                    .setTitle("Helyhozzáférés szükséges")
-                    .setMessage("A helyadatok engedélyezéséhez nyisd meg a beállításokat.")
-                    .setPositiveButton("Beállítások") { _, _ ->
-                        val intent = android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                        intent.data = android.net.Uri.fromParts("package", packageName, null)
-                        startActivity(intent)
-                    }
-                    .setNegativeButton("Mégse", null)
-                    .show()
-            }
-        } else {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             startLocationUpdates()
+            return
         }
+        // Mindig kérünk permissiont, ha nincs meg
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startLocationUpdates()
             } else {
-                android.widget.Toast.makeText(this, "Helyadat szükséges a sebességhez", android.widget.Toast.LENGTH_LONG).show()
+                // Ha "Don't ask again"-t választott, Settings-be irányítjuk
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                ) {
+                    android.app.AlertDialog.Builder(this)
+                        .setTitle("Helyhozzáférés szükséges")
+                        .setMessage("Engedélyezd a helyadatokat a Beállításokban.")
+                        .setPositiveButton("Beállítások") { _, _ ->
+                            val intent = android.content.Intent(
+                                android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                            )
+                            intent.data = android.net.Uri.fromParts("package", packageName, null)
+                            startActivity(intent)
+                        }
+                        .setNegativeButton("Mégse", null)
+                        .show()
+                } else {
+                    android.widget.Toast.makeText(this, "Helyadat szükséges a sebességhez", android.widget.Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -261,7 +272,7 @@ class MainActivity : AppCompatActivity() {
             stopVideoRecording()
             window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
-        
+
     override fun onDestroy() {
         super.onDestroy()
         fusedLocationClient.removeLocationUpdates(locationCallback)
