@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvVideoStatus: TextView
     private val client = OkHttpClient()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
-
+ 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
     }
