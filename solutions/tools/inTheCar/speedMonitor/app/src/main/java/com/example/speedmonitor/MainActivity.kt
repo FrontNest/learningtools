@@ -64,11 +64,26 @@ class MainActivity : AppCompatActivity() {
     private fun requestLocationPermissionAndMaybeStart() {
         val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         if (!fineGranted) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Magyarázat után újra kérjük az engedélyt
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    LOCATION_PERMISSION_REQUEST_CODE
+                )
+            } else {
+                // Véglegesen megtagadva: Settings-be irányítjuk a user-t
+                android.app.AlertDialog.Builder(this)
+                    .setTitle("Helyhozzáférés szükséges")
+                    .setMessage("A helyadatok engedélyezéséhez nyisd meg a beállításokat.")
+                    .setPositiveButton("Beállítások") { _, _ ->
+                        val intent = android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        intent.data = android.net.Uri.fromParts("package", packageName, null)
+                        startActivity(intent)
+                    }
+                    .setNegativeButton("Mégse", null)
+                    .show()
+            }
         } else {
             startLocationUpdates()
         }
