@@ -55,8 +55,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestLocationPermissionAndMaybeStart() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 100)
+        val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val coarseGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        if (!fineGranted && !coarseGranted) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                100
+            )
         } else {
             startLocationUpdates()
         }
@@ -65,7 +74,9 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 100) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            val fineGranted = permissions.indexOf(Manifest.permission.ACCESS_FINE_LOCATION).let { i -> i >= 0 && grantResults.getOrNull(i) == PackageManager.PERMISSION_GRANTED }
+            val coarseGranted = permissions.indexOf(Manifest.permission.ACCESS_COARSE_LOCATION).let { i -> i >= 0 && grantResults.getOrNull(i) == PackageManager.PERMISSION_GRANTED }
+            if (fineGranted || coarseGranted) {
                 startLocationUpdates()
             } else {
                 tvAddress.text = "Hely engedély szükséges!"
@@ -112,7 +123,9 @@ class MainActivity : AppCompatActivity() {
                 updateRoadName(location)
             }
         }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val coarseGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        if (!fineGranted && !coarseGranted) {
             tvAddress.text = "Hely engedély szükséges!"
             return
         }
