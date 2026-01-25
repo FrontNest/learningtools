@@ -94,21 +94,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startCameraPreview() {
+        android.util.Log.d("CameraX", "startCameraPreview called")
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
-            val preview = androidx.camera.core.Preview.Builder().build().also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
-            }
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             try {
+                val cameraProvider = cameraProviderFuture.get()
+                android.util.Log.d("CameraX", "cameraProvider.get() succeeded")
+                val preview = androidx.camera.core.Preview.Builder().build().also {
+                    it.setSurfaceProvider(previewView.surfaceProvider)
+                }
+                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     this,
                     cameraSelector,
                     preview
                 )
-            } catch (_: Exception) {}
+                android.util.Log.d("CameraX", "Camera preview started successfully")
+            } catch (exc: Exception) {
+                android.util.Log.e("CameraX", "Camera preview failed: ${exc.message}", exc)
+            }
         }, ContextCompat.getMainExecutor(this))
     }
 
