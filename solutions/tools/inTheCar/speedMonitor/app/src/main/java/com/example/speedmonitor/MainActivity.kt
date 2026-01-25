@@ -1,4 +1,8 @@
+
 package com.example.speedmonitor
+
+import android.content.Context
+import android.location.LocationManager
 
 
 import android.Manifest
@@ -111,6 +115,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startLocationUpdates() {
+                // Check if location services are enabled
+                val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+                if (!isGpsEnabled && !isNetworkEnabled) {
+                    tvAddress.text = "Helyszolgáltatások ki vannak kapcsolva!"
+                    return
+                }
         val locationRequest = LocationRequest.create().apply {
             interval = 2000
             fastestInterval = 1000
