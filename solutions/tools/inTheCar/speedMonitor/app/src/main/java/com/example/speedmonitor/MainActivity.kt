@@ -292,11 +292,18 @@ class MainActivity : AppCompatActivity() {
         tvSpeed.text = "%.0f".format(speedKmh)
         // A sebesség értékétől függően állítja be a szöveg színét:
         val color = when {
-            speedKmh < 30 -> 0xffebf709.toInt()
-            speedKmh < 50 -> 0xfff7a409.toInt()
-            speedKmh < 90 -> 0xfff75809.toInt()
-            speedKmh < 110 -> 0xfff71109.toInt()
-            speedKmh <= 140 -> 0xffff0000.toInt()
+            speedKmh == 30.0 -> 0xff9c030d.toInt()
+            speedKmh < 30.0 -> 0xff09c7f7.toInt()
+            speedKmh == 50.0 -> 0xfff73909.toInt()
+            speedKmh < 50.0 -> 0xff02fd98.toInt()
+            speedKmh == 60.0 -> 0xffdbf709.toInt()
+            speedKmh < 60.0 -> 0xff22ff00.toInt()
+            speedKmh == 90.0 -> 0xff22ff00.toInt()
+            speedKmh < 90.0 -> 0xffdbf709.toInt()
+            speedKmh == 110.0 -> 0xff02fd98.toInt()
+            speedKmh < 110.0 -> 0xfff73909.toInt()
+            speedKmh == 140.0 -> 0xff09c7f7.toInt()
+            speedKmh < 140.0 -> 0xff9c030d.toInt()
             else -> 0xffff0000.toInt()
         }
         tvSpeed.setTextColor(color)

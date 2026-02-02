@@ -41,6 +41,10 @@
         android:textColor="#767668"
         android:background="@android:color/transparent"
         android:textStyle="bold"
+        android:shadowColor="#FF000000"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="6"
         android:layout_centerInParent="true"/>
 
     <TextView
@@ -52,6 +56,10 @@
         android:textColor="#43d40a"
         android:background="@android:color/transparent"
         android:textStyle="bold"
+        android:shadowColor="#FF000000"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="6"
         android:layout_below="@id/tvSpeed"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
@@ -68,6 +76,10 @@
         android:textColor="#FF0000"
         android:background="@android:color/transparent"
         android:textStyle="bold"
+        android:shadowColor="#FF000000"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="6"
         android:layout_below="@id/tvAddress"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
