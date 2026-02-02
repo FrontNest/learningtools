@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         tvAddress = findViewById(R.id.tvAddress)
         tvVideoStatus = findViewById(R.id.tvVideoStatus)
         previewView = findViewById(R.id.previewView)
+        previewView.keepScreenOn = true
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         startClock()
         requestLocationPermissionFirst()
