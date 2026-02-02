@@ -1,37 +1,177 @@
-        val color = when {
-            speedKmh = 30 -> 0xff9c030d.toInt()
-            speedKmh < 30 -> 0xff09c7f7.toInt()
-            speedKmh = 50 -> 0xfff73909.toInt()
-            speedKmh < 50 -> 0xff02fd98.toInt()
-            speedKmh = 60 -> 0xffdbf709.toInt()
-            speedKmh < 60 -> 0xff22ff00.toInt()
-            speedKmh = 90 -> 0xff22ff00.toInt()
-            speedKmh < 90 -> 0xffdbf709.toInt()
-            speedKmh = 110 -> 0xff02fd98.toInt()
-            speedKmh < 110 -> 0xfff73909.toInt()
-            speedKmh = 140 -> 0xff09c7f7.toInt()
-            speedKmh < 140 -> 0xff9c030d.toInt()
-            else -> 0xffff0000.toInt()
-<html>
+Szuper döntés 👍 az OSM tényleg passzol a HUD appodhoz. Menjünk **konkrétan, lépésről lépésre**, hogy *ne kelljen órákat fórumokon túrnod* 🙂
 
-           
-<style>
-body {
-  color: #09c7f7;  
-  color: #02fd98;
-  color: #22ff00;
-  color: #dbf709;
-  color: #ffa200;
-  color: #f73909;
-  color: #9c030d;
+---
 
+## 🗺️ 1️⃣ Honnan lehet letölteni az OpenStreetMap adatokat?
 
-  color: #9c030d;
+### 🔹 **Geofabrik – a legjobb kiindulópont (ajánlott)**
 
+👉 [https://download.geofabrik.de](https://download.geofabrik.de)
 
+**Miért ez a legjobb?**
 
+* országokra bontott
+* friss (naponta frissül)
+* stabil
+* pont azt adja, amire szükséged van
 
-}
-    
-</style>
-</html>             
+📍 **Magyarország adatfájl:**
+
+```
+hungary-latest.osm.pbf
+```
+
+Ez tartalmaz:
+
+* az összes utat (`highway`)
+* a `maxspeed` tageket
+* településhatárokat, övezeteket stb.
+
+📦 Méret:
+➡️ kb. **120–150 MB** (PBF tömörítés)
+
+---
+
+## 🧩 2️⃣ Milyen formátumban?
+
+### ✅ **.osm.pbf** (ajánlott)
+
+* bináris, tömörített
+* gyors feldolgozás
+* minden komoly OSM tool ezt használja
+
+❌ `.osm.xml` → nagy és lassú
+❌ online tile API → nem erre való
+
+---
+
+## ⚙️ 3️⃣ Mit csinálsz vele technikailag?
+
+### Tipikus pipeline (HUD apphoz ideális):
+
+```
+OSM PBF fájl
+   ↓
+Előfeldolgozás (PC / szerver)
+   ↓
+Útszakasz + maxspeed kivonat
+   ↓
+Optimalizált adatfájl (pl. SQLite / FlatBuffers)
+   ↓
+Mobil app (offline)
+```
+
+👉 **nem** az appban parsolod a PBF-et, hanem **előre**.
+
+---
+
+## 🛠️ 4️⃣ Feldolgozó eszközök (konkrét ajánlás)
+
+### 🔹 **osmium-tool** (CLI, brutál gyors)
+
+👉 [https://osmcode.org/osmium-tool/](https://osmcode.org/osmium-tool/)
+
+Példa: csak az utak és sebességek kivágása:
+
+```bash
+osmium tags-filter hungary-latest.osm.pbf \
+  w/highway \
+  -o roads.osm.pbf
+```
+
+### 🔹 **Osmosis** (régebbi, de használható)
+
+* Java alapú
+* kicsit lassabb
+
+### 🔹 **GraphHopper** (ha routing is lesz)
+
+* eleve feldolgozza a maxspeed-et
+* Androidon is működik
+* offline ready
+
+---
+
+## 🚦 5️⃣ Hogyan nyered ki a sebességhatárt?
+
+OSM út (way) példa:
+
+```text
+highway=primary
+maxspeed=90
+```
+
+Speciális esetek:
+
+```text
+maxspeed=50
+maxspeed:conditional=30 @ (school_hours)
+zone:maxspeed=hu:urban
+```
+
+👉 A logikád kb.:
+
+1. `maxspeed`
+2. `maxspeed:conditional` (ha értelmezed)
+3. `zone:maxspeed`
+4. fallback magyar KRESZ szerint
+
+---
+
+## 🇭🇺 6️⃣ Magyarország-specifikus fallback (fontos!)
+
+Ha **nincs maxspeed**:
+
+```text
+motorway        → 130
+trunk           → 110
+primary/secondary → 90
+residential     → 50
+living_street   → 20
+```
+
+Ezt **te kódolod**, nem az OSM.
+
+---
+
+## 📱 7️⃣ Mobilos használat – hogyan?
+
+### Két bevált irány:
+
+### 🅰️ Teljesen offline
+
+* SQLite / Realm / saját bináris formátum
+* GPS → nearest road segment
+* sebességhatár azonnal
+
+### 🅱️ Fél-online (ritkán frissít)
+
+* havi 1 adatfrissítés
+* háttérben letölt
+* új OSM snapshot
+
+💡 HUD appnál az **A verzió** a király.
+
+---
+
+## ⚖️ 8️⃣ Licenc – mit NE felejts el!
+
+Appban (pl. About / Settings):
+
+> „Térképadatok: © OpenStreetMap közreműködők”
+
+Ennyi elég ✔
+
+---
+
+## 🎯 Következő lépések – segíthetek tovább
+
+Ha szeretnéd, következő körben:
+
+* 🧑‍💻 adok **konkrét feldolgozó scriptet** (pl. Python / Kotlin)
+* 🗂️ megmondom, **milyen adatstruktúra a leggyorsabb HUD-hoz**
+* 📐 lerajzolom az **offline architektúrát**
+
+Mondd meg:
+👉 **Android / iOS / cross-platform?**
+👉 kell-e routing vagy *csak* aktuális sebességhatár?
