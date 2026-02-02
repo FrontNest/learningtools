@@ -4195,6 +4195,9 @@ id transition_scene_layoutid_cache
 id transition_transform
 id triangle
 id tvAddress
+id tvAppLicense
+id tvMaxspeed
+id tvOsmLicense
 id tvSpeed
 id tvTime
 id tvVideoStatus
