@@ -103,7 +103,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvOsmLicense: TextView
     private lateinit var tvAppLicense: TextView
     private val client = OkHttpClient()
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val activityJob = SupervisorJob()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + activityJob)
     private var roadsDb: SQLiteDatabase? = null
  
     companion object {
@@ -348,8 +349,10 @@ class MainActivity : AppCompatActivity() {
 
                 // Legközelebbi útszakasz lekérdezése háttérszálon
                 val db = roadsDb
-                if (db != null) {
+                if (db != null && activityJob.isActive) {
                     coroutineScope.launch(Dispatchers.IO) {
+                        // Double-check DB is still open before querying
+                        if (roadsDb == null) return@launch
                         val road = getNearestRoad(location.latitude, location.longitude, db)
                         withContext(Dispatchers.Main) {
                             if (road != null) {
@@ -485,10 +488,13 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         fusedLocationClient.removeLocationUpdates(locationCallback)
-        coroutineScope.cancel()
+        // Cancel all coroutines before closing DB
+        activityJob.cancel()
         stopVideoRecording()
-        // Adatbázis lezárása
-        roadsDb?.close()
+        // Set DB to null before closing to prevent use-after-close
+        val db = roadsDb
+        roadsDb = null
+        db?.close()
         // Allow screen to turn off again
         window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
