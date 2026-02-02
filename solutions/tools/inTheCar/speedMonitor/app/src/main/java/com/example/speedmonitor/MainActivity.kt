@@ -346,6 +346,7 @@ class MainActivity : AppCompatActivity() {
             override fun onLocationResult(locationResult: LocationResult) {
                 val location = locationResult.lastLocation ?: return
                 updateSpeed(location)
+                updateRoadName(location)
 
                 // Legközelebbi útszakasz lekérdezése háttérszálon
                 val db = roadsDb
@@ -365,17 +366,14 @@ class MainActivity : AppCompatActivity() {
                                 } else {
                                     "$maxspeedValue"
                                 }
-                                tvAddress.text = road.name ?: "(nincs utcanév)"
                                 tvMaxspeed.text = maxspeedText
                             } else {
                                 lastMaxspeed = null
-                                tvAddress.text = "Nincs találat az adatbázisban."
                             }
                         }
                     }
                 } else {
                     lastMaxspeed = null
-                    tvAddress.text = "Adatbázis nem elérhető."
                 }
             }
         }
