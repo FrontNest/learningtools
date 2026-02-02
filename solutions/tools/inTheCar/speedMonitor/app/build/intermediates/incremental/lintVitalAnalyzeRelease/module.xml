@@ -1,0 +1,19 @@
+<lint-module
+    format="1"
+    dir="C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\speedMonitor\app"
+    name=":app"
+    type="APP"
+    maven="speedMonitor:app:unspecified"
+    agpVersion="8.8.0"
+    buildFolder="build"
+    bootClassPath="C:\Users\lol\AppData\Local\Android\Sdk\platforms\android-35\android.jar;C:\Users\lol\AppData\Local\Android\Sdk\build-tools\35.0.0\core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-35"
+    neverShrinking="true">
+  <lintOptions
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>

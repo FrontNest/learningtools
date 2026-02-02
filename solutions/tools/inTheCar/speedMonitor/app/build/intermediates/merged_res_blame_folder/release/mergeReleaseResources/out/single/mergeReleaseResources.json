@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.example.speedmonitor.app-release-46:/layout_activity_main.xml.flat",
+        "source": "com.example.speedmonitor.app-main-47:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.speedmonitor.app-release-46:/mipmap_ic_launcher_round.xml.flat",
+        "source": "com.example.speedmonitor.app-main-47:/mipmap/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.speedmonitor.app-release-46:/mipmap_ic_launcher.xml.flat",
+        "source": "com.example.speedmonitor.app-main-47:/mipmap/ic_launcher.xml"
+    }
+]
