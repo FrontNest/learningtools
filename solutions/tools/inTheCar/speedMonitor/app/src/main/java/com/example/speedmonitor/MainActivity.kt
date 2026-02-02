@@ -28,6 +28,55 @@ import androidx.camera.video.QualitySelector
 import androidx.camera.video.Recorder
 import androidx.camera.video.MediaStoreOutputOptions
 
+import android.database.sqlite.SQLiteDatabase
+// Road adatosztály a lekérdezéshez
+data class Road(
+    val id: Long,
+    val name: String?,
+    val highway: String?,
+    val maxspeed: String?,
+    val lon: Double,
+    val lat: Double
+)
+
+// Adatbázis másolása assets-ből, ha még nincs a belső storage-ban
+fun copyDatabaseIfNeeded(context: Context, dbName: String) {
+    val dbPath = context.getDatabasePath(dbName)
+    if (!dbPath.exists()) {
+        dbPath.parentFile?.mkdirs()
+        context.assets.open(dbName).use { input ->
+            dbPath.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+    }
+}
+
+// Legközelebbi útszakasz lekérdezése
+fun getNearestRoad(lat: Double, lon: Double, db: SQLiteDatabase): Road? {
+    val sql = """
+        SELECT id, name, highway, maxspeed, lon, lat,
+        ((lat-?) * (lat-?) + (lon-?) * (lon-?)) AS dist
+        FROM roads
+        WHERE lat IS NOT NULL AND lon IS NOT NULL
+        ORDER BY dist ASC
+        LIMIT 1
+    """.trimIndent()
+    val cursor = db.rawQuery(sql, arrayOf(lat, lat, lon, lon).map { it.toString() }.toTypedArray())
+    val road = if (cursor.moveToFirst()) {
+        Road(
+            id = cursor.getLong(0),
+            name = cursor.getString(1),
+            highway = cursor.getString(2),
+            maxspeed = cursor.getString(3),
+            lon = cursor.getDouble(4),
+            lat = cursor.getDouble(5)
+        )
+    } else null
+    cursor.close()
+    return road
+}
+
 class MainActivity : AppCompatActivity() {
 
     private var isRecording = false
@@ -42,6 +91,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvVideoStatus: TextView
     private val client = OkHttpClient()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private var roadsDb: SQLiteDatabase? = null
  
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
@@ -61,6 +111,14 @@ class MainActivity : AppCompatActivity() {
         requestLocationPermissionFirst()
         // Keep screen on while app is running
         window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        // Adatbázis másolása és megnyitása
+        copyDatabaseIfNeeded(this, "roads.sqlite")
+        roadsDb = SQLiteDatabase.openDatabase(
+            getDatabasePath("roads.sqlite").absolutePath,
+            null,
+            SQLiteDatabase.OPEN_READONLY
+        )
     }
 
     // Új permission flow: először location, majd kamera, majd audio
@@ -254,14 +312,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startLocationUpdates() {
-                // Check if location services are enabled
-                val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-                if (!isGpsEnabled && !isNetworkEnabled) {
-                    tvAddress.text = "Helyszolgáltatások ki vannak kapcsolva!"
-                    return
-                }
+        // Check if location services are enabled
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        if (!isGpsEnabled && !isNetworkEnabled) {
+            tvAddress.text = "Helyszolgáltatások ki vannak kapcsolva!"
+            return
+        }
         val locationRequest = LocationRequest.create().apply {
             interval = 2000
             fastestInterval = 1000
@@ -271,11 +329,29 @@ class MainActivity : AppCompatActivity() {
             override fun onLocationResult(locationResult: LocationResult) {
                 val location = locationResult.lastLocation ?: return
                 updateSpeed(location)
-                updateRoadName(location)
+                // updateRoadName(location) -- ezt most az OSM-ből jövő név helyett az adatbázis alapján írjuk ki
+
+                // Legközelebbi útszakasz lekérdezése
+                val db = roadsDb
+                if (db != null) {
+                    val road = getNearestRoad(location.latitude, location.longitude, db)
+                    if (road != null) {
+                        // Itt kiírhatod a maxspeed-et vagy az utca nevét
+                        val maxspeedText = if (!road.maxspeed.isNullOrBlank()) {
+                            "Sebességhatár: ${road.maxspeed}"
+                        } else {
+                            "Sebességhatár: (nincs adat)"
+                        }
+                        tvAddress.text = "${road.name ?: "(nincs utcanév)"}\n$maxspeedText"
+                    } else {
+                        tvAddress.text = "Nincs találat az adatbázisban."
+                    }
+                } else {
+                    tvAddress.text = "Adatbázis nem elérhető."
+                }
             }
         }
         val fineGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        // val coarseGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         if (!fineGranted) {
             tvAddress.text = "Hely engedély szükséges!"
             return
@@ -383,6 +459,8 @@ class MainActivity : AppCompatActivity() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
         coroutineScope.cancel()
         stopVideoRecording()
+        // Adatbázis lezárása
+        roadsDb?.close()
         // Allow screen to turn off again
         window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
