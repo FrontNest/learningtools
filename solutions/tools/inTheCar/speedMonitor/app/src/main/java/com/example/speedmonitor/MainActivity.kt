@@ -77,6 +77,18 @@ fun getNearestRoad(lat: Double, lon: Double, db: SQLiteDatabase): Road? {
     return road
 }
 
+// Magyar KRESZ szerinti sebességhatár fallback logika
+fun getDefaultMaxspeed(highway: String?): Int {
+    return when (highway) {
+        "motorway" -> 130
+        "trunk" -> 110
+        "primary", "secondary" -> 90
+        "residential" -> 50
+        "living_street" -> 20
+        else -> 50 // általános alapértelmezett
+    }
+}
+
 class MainActivity : AppCompatActivity() {
 
     private var isRecording = false
@@ -336,11 +348,13 @@ class MainActivity : AppCompatActivity() {
                 if (db != null) {
                     val road = getNearestRoad(location.latitude, location.longitude, db)
                     if (road != null) {
-                        // Itt kiírhatod a maxspeed-et vagy az utca nevét
-                        val maxspeedText = if (!road.maxspeed.isNullOrBlank()) {
-                            "Sebességhatár: ${road.maxspeed}"
+                        // Maxspeed fallback logika
+                        val maxspeedValue = road.maxspeed?.toIntOrNull()
+                            ?: getDefaultMaxspeed(road.highway)
+                        val maxspeedText = if (road.maxspeed.isNullOrBlank()) {
+                            "Sebességhatár (KRESZ): $maxspeedValue"
                         } else {
-                            "Sebességhatár: (nincs adat)"
+                            "Sebességhatár: $maxspeedValue"
                         }
                         tvAddress.text = "${road.name ?: "(nincs utcanév)"}\n$maxspeedText"
                     } else {
@@ -363,26 +377,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private var lastMaxspeed: Int? = null
+
     private fun updateSpeed(location: Location) {
         val speedKmh = location.speed * 3.6
         tvSpeed.text = "%.0f".format(speedKmh)
-        // A sebesség értékétől függően állítja be a szöveg színét:
-        val color = when {
-            speedKmh == 30.0 -> 0xff9c030d.toInt()
-            speedKmh < 30.0 -> 0xff09c7f7.toInt()
-            speedKmh == 50.0 -> 0xfff73909.toInt()
-            speedKmh < 50.0 -> 0xff02fd98.toInt()
-            speedKmh == 60.0 -> 0xffdbf709.toInt()
-            speedKmh < 60.0 -> 0xff22ff00.toInt()
-            speedKmh == 90.0 -> 0xff22ff00.toInt()
-            speedKmh < 90.0 -> 0xffdbf709.toInt()
-            speedKmh == 110.0 -> 0xff02fd98.toInt()
-            speedKmh < 110.0 -> 0xfff73909.toInt()
-            speedKmh == 140.0 -> 0xff09c7f7.toInt()
-            speedKmh < 140.0 -> 0xff9c030d.toInt()
-            else -> 0xffff0000.toInt()
+
+        // A legutóbbi maxspeed-et használjuk, ha van
+        val maxspeed = lastMaxspeed
+        if (maxspeed != null) {
+            if (speedKmh >= maxspeed) {
+                // Piros árnyék, vastagabb szöveg
+                tvSpeed.setShadowLayer(6f, 0f, 0f, 0xFFFF0000.toInt())
+                tvSpeed.setTextColor(0xFFFF0000.toInt())
+            } else {
+                // Normál árnyék, zöld szín
+                tvSpeed.setShadowLayer(6f, 0f, 0f, 0xFF000000.toInt())
+                tvSpeed.setTextColor(0xFF22FF00.toInt())
+            }
+        } else {
+            // Ha nincs maxspeed, alap szín
+            tvSpeed.setShadowLayer(6f, 0f, 0f, 0xFF000000.toInt())
+            tvSpeed.setTextColor(0xFF767668.toInt())
         }
-        tvSpeed.setTextColor(color)
 
         // A videó státusz mindig látható, amíg a felvétel tart
         if (isRecording) {
