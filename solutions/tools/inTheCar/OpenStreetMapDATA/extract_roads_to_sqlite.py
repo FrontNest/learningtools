@@ -26,6 +26,7 @@
 #      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf
 #      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.txt
 #      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.sqlite
+# 8. Az sqlite file-t másold a speedMonitor/app/src/main/assets mappába
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 import osmium # pyright: ignore[reportMissingImports] Ubuntu alól fut
