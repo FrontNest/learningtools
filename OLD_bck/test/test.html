@@ -1,3 +1,59 @@
+1. OSM adat pipeline és feldolgozás
+a) Adatletöltés és frissítés
+
+App indításakor ellenőrizd, hogy a helyi OSM adatfájl régebbi-e, mint a Geofabrik-féle (HTTP HEAD request, Last-Modified header).
+Ha régi, töltsd le a https://download.geofabrik.de/europe/hungary-latest.osm.pbf fájlt (csak WiFi-n, háttérben).
+b) Feldolgozás (PC-n vagy szerveren, nem mobilon!)
+
+OSMIUM-TOOL a leggyorsabb, legkönnyebben automatizálható (ajánlott).
+Pipeline:
+OSMIUM-mal kiszűröd az összes utat (highway) és a maxspeed tageket.
+Ebből SQLite vagy FlatBuffers adatbázist készítesz, amit az app használ.
+Ezt az optimalizált adatfájlt töltöd le az appba (nem a teljes PBF-et!).
+c) Alternatívák
+
+Osmosis: lassabb, de Java, könnyebb integrálni, ha Java környezeted van.
+GraphHopper: ha routing is kell, de csak maxspeedhez overkill.
+2. App oldali logika
+a) Adatbetöltés
+
+App induláskor betölti a feldolgozott SQLite/FlatBuffers adatbázist.
+b) Helymeghatározás
+
+GPS-ből lekérdezed a pozíciót.
+Megkeresed a legközelebbi útszakaszt az adatbázisban (spatial index, pl. R-Tree).
+c) Sebességhatár lekérdezése
+
+Az útszakaszhoz tartozó maxspeed értéket kiolvasod.
+Ha nincs, fallback a magyar KRESZ szerint (út típusa alapján).
+d) Kijelzés
+
+A maxspeed értéket kiírod a képernyőre (pl. a sebesség mellé pirossal).
+Ha a mért sebesség >= maxspeed, akkor:
+A sebesség szöveg árnyékát pirosra állítod, 3px vastagra.
+Esetleg rezgés, hang, vagy animáció (ha szeretnéd).
+e) Licenc és forrás feltüntetése
+
+Bal alsó sarok: „Contributors ©OpenStreetMap”
+Jobb alsó sarok: „©FrontNest Studio”
+3. UI/UX
+A maxspeed mindig látható, piros színnel.
+Ha átléped, a sebesség árnyéka piros, vastagabb.
+Kijelző sarkokban a licenc szövegek.
+4. Frissítés és karbantartás
+Havi/hetente automatikus adatfrissítés (csak ha van új).
+Adatbázis csere, ha újabb OSM snapshot érhető el.
+Összefoglaló lépések
+OSM adatok letöltése és előfeldolgozása PC-n (osmium-tool, SQLite export).
+Optimalizált adatbázis feltöltése szerverre.
+App indításkor frissítés ellenőrzése, letöltés, betöltés.
+GPS → legközelebbi útszakasz → maxspeed lekérdezése.
+Maxspeed kijelzése, átlépés esetén vizuális figyelmeztetés.
+Licenc szövegek elhelyezése a UI-ban.
+Ha szeretnéd, részletesen is leírom a feldolgozó pipeline-t (osmium parancsok, SQLite szerkezet, Android oldali lekérdezés), vagy segítek a UI/UX megvalósításban is!
+
+Igen, pontosan! Az osmium-tool-lal a teljes OSM PBF-ből PC-n vagy szerveren előre kell kinyerni és optimalizálni az adatokat (pl. SQLite vagy más gyors formátumba). Ezt az optimalizált adatbázist kell feltölteni egy szerverre, ahonnan az app (akár mobilneten is) letöltheti.
+===============================================
 Szuper döntés 👍 az OSM tényleg passzol a HUD appodhoz. Menjünk **konkrétan, lépésről lépésre**, hogy *ne kelljen órákat fórumokon túrnod* 🙂
 
 ---
@@ -16,7 +72,7 @@ Szuper döntés 👍 az OSM tényleg passzol a HUD appodhoz. Menjünk **konkrét
 * pont azt adja, amire szükséged van
 
 📍 **Magyarország adatfájl:**
-
+https://download.geofabrik.de/europe/hungary-latest.osm.pbf
 ```
 hungary-latest.osm.pbf
 ```
