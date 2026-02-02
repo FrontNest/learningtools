@@ -101,6 +101,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvSpeed: TextView
     private lateinit var tvAddress: TextView
     private lateinit var tvVideoStatus: TextView
+    private lateinit var tvMaxspeed: TextView
+    private lateinit var tvOsmLicense: TextView
+    private lateinit var tvAppLicense: TextView
     private val client = OkHttpClient()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private var roadsDb: SQLiteDatabase? = null
@@ -116,6 +119,9 @@ class MainActivity : AppCompatActivity() {
         tvSpeed = findViewById(R.id.tvSpeed)
         tvAddress = findViewById(R.id.tvAddress)
         tvVideoStatus = findViewById(R.id.tvVideoStatus)
+        tvMaxspeed = findViewById(R.id.tvMaxspeed)
+        tvOsmLicense = findViewById(R.id.tvOsmLicense)
+        tvAppLicense = findViewById(R.id.tvAppLicense)
         previewView = findViewById(R.id.previewView)
         previewView.keepScreenOn = true
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -357,7 +363,8 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             "Sebességhatár: $maxspeedValue"
                         }
-                        tvAddress.text = "${road.name ?: "(nincs utcanév)"}\n$maxspeedText"
+                        tvAddress.text = road.name ?: "(nincs utcanév)"
+                        tvMaxspeed.text = maxspeedText
                     } else {
                         lastMaxspeed = null
                         tvAddress.text = "Nincs találat az adatbázisban."

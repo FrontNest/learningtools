@@ -84,4 +84,50 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
 
+    <!-- Maxspeed kiemelt kijelzése -->
+    <TextView
+        android:id="@+id/tvMaxspeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="--"
+        android:textSize="48sp"
+        android:textColor="#FF0000"
+        android:background="@android:color/transparent"
+        android:textStyle="bold"
+        android:shadowColor="#FF000000"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="6"
+        android:layout_below="@id/tvTime"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"/>
+
+    <!-- Bal alsó sarok: OSM licenc -->
+    <TextView
+        android:id="@+id/tvOsmLicense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contributors ©OpenStreetMap"
+        android:textSize="12sp"
+        android:textColor="#CCCCCC"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"/>
+
+    <!-- Jobb alsó sarok: saját licenc -->
+    <TextView
+        android:id="@+id/tvAppLicense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="©FrontNest Studio"
+        android:textSize="12sp"
+        android:textColor="#CCCCCC"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"/>
 </RelativeLayout>
