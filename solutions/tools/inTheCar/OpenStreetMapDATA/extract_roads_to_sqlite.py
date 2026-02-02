@@ -1,8 +1,31 @@
 # OSM feldolgozó pipeline script (Python + osmium)
 # Ez a script kiszűri az összes útszakaszt és a maxspeed tageket egy OSM PBF-ből,
 # majd SQLite adatbázisba menti a szükséges adatokat.
-# Futtatás: A windows-on meg kell nyitni az Ubuntu-t
-# /mnt/c/Users/lol/______ORSI/GitHub/FrontnestStudio/solutions/tools/inTheCar/OpenStreetMapDATA$ python3 extract_roads_to_sqlite.py /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/hungary-260201.osm.pbf roads.sqlite
+# Futtatás:
+# OSM Hungary maxspeed pipeline – Lépésről lépésre (2026)
+# 1. Legfrissebb OSM Hungary letöltése
+#    Töltsd le a legfrissebb hungary-latest.osm.pbf fájlt innen:
+#    https://download.geofabrik.de/europe/hungary.html
+#    Helyezd el például:
+#    C:\Users\lol\______ORSI\GitHubBCK\inTheCar\OpenStreetMapDATAfiles\hungary-YYYYMMDD.osm.pbf
+# 2. Ubuntu/WSL megnyitása Windows-on (F3p...)
+# 3. Csak utak (way-ek) kiszűrése highway tag alapján (eredmény=.pbf):
+#    osmium tags-filter /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/hungary-YYYYMMDD.osm.pbf w/highway -o /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf
+# 4. Exportálás LINESTRING-ként (csak way, nem node!) (eredmény=.txt):
+#    osmium export /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf --geometry-types=linestring -f text -o /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.txt
+# 5. SQLite generálás Python scripttel (CSV lépés kihagyható!)(eredmény=.sqlite):
+#    python3 roads_txt_to_sqlite.py /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.txt /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.sqlite
+#    (Ha CSV is kell: python3 roads_txt_to_csv_v2.py ...)
+# 6. Ellenőrzés:
+#    A roads.sqlite-ben most már lesznek highway, name, maxspeed, lon, lat adatok.
+# 7. Fájlok helye
+#    Bemenet:
+#      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/hungary-YYYYMMDD.osm.pbf
+#    Kimenet:
+#      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf
+#      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.txt
+#      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.sqlite
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 import osmium # pyright: ignore[reportMissingImports] Ubuntu alól fut
 import sqlite3
