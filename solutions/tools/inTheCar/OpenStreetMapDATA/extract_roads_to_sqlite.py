@@ -14,6 +14,7 @@
 # 4. Exportálás LINESTRING-ként (csak way, nem node!) (eredmény=.txt):
 #    osmium export /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf --geometry-types=linestring -f text -o /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.txt
 # 5. SQLite generálás Python scripttel (CSV lépés kihagyható!)(eredmény=.sqlite):
+#    cd /mnt/c/Users/lol/______ORSI/GitHub/FrontnestStudio/solutions/tools/inTheCar/OpenStreetMapDATA
 #    python3 roads_txt_to_sqlite.py /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.txt /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.sqlite
 #    (Ha CSV is kell: python3 roads_txt_to_csv_v2.py ...)
 # 6. Ellenőrzés:
