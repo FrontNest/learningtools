@@ -31,7 +31,6 @@ import androidx.camera.video.MediaStoreOutputOptions
 import android.database.sqlite.SQLiteDatabase
 // Road adatosztály a lekérdezéshez
 data class Road(
-    val id: Long,
     val name: String?,
     val highway: String?,
     val maxspeed: String?,
@@ -55,7 +54,7 @@ fun copyDatabaseIfNeeded(context: Context, dbName: String) {
 // Legközelebbi útszakasz lekérdezése
 fun getNearestRoad(lat: Double, lon: Double, db: SQLiteDatabase): Road? {
     val sql = """
-        SELECT id, name, highway, maxspeed, lon, lat,
+        SELECT name, highway, maxspeed, lon, lat,
         ((lat-?) * (lat-?) + (lon-?) * (lon-?)) AS dist
         FROM roads
         WHERE lat IS NOT NULL AND lon IS NOT NULL
@@ -65,12 +64,11 @@ fun getNearestRoad(lat: Double, lon: Double, db: SQLiteDatabase): Road? {
     val cursor = db.rawQuery(sql, arrayOf(lat, lat, lon, lon).map { it.toString() }.toTypedArray())
     val road = if (cursor.moveToFirst()) {
         Road(
-            id = cursor.getLong(0),
-            name = cursor.getString(1),
-            highway = cursor.getString(2),
-            maxspeed = cursor.getString(3),
-            lon = cursor.getDouble(4),
-            lat = cursor.getDouble(5)
+            name = cursor.getString(0),
+            highway = cursor.getString(1),
+            maxspeed = cursor.getString(2),
+            lon = cursor.getDouble(3),
+            lat = cursor.getDouble(4)
         )
     } else null
     cursor.close()
