@@ -311,7 +311,7 @@ class MainActivity : AppCompatActivity() {
         isRecording = true
         tvVideoStatus.text = "🔴 RECORDING"
         startCameraPreviewAndVideo {
-            val name = "DaschCamSPeedMonitor_${System.currentTimeMillis()}.mp4"
+            val name = "SPeedMonitorDascam_${System.currentTimeMillis()}.mp4"
             val contentValues = android.content.ContentValues().apply {
                 put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, name)
                 put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "video/mp4")

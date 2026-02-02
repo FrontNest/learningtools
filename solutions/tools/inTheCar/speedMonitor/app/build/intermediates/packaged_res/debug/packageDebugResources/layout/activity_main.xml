@@ -64,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textSize="28sp"
+        android:textSize="14sp"
         android:textColor="#FF0000"
         android:background="@android:color/transparent"
         android:textStyle="bold"
