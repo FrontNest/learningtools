@@ -345,27 +345,30 @@ class MainActivity : AppCompatActivity() {
             override fun onLocationResult(locationResult: LocationResult) {
                 val location = locationResult.lastLocation ?: return
                 updateSpeed(location)
-                // updateRoadName(location) -- ezt most az OSM-ből jövő név helyett az adatbázis alapján írjuk ki
 
-                // Legközelebbi útszakasz lekérdezése
+                // Legközelebbi útszakasz lekérdezése háttérszálon
                 val db = roadsDb
                 if (db != null) {
-                    val road = getNearestRoad(location.latitude, location.longitude, db)
-                    if (road != null) {
-                        // Maxspeed fallback logika
-                        val maxspeedValue = road.maxspeed?.toIntOrNull()
-                            ?: getDefaultMaxspeed(road.highway)
-                        lastMaxspeed = maxspeedValue
-                        val maxspeedText = if (road.maxspeed.isNullOrBlank()) {
-                            "Sebességhatár (KRESZ): $maxspeedValue"
-                        } else {
-                            "Sebességhatár: $maxspeedValue"
+                    coroutineScope.launch(Dispatchers.IO) {
+                        val road = getNearestRoad(location.latitude, location.longitude, db)
+                        withContext(Dispatchers.Main) {
+                            if (road != null) {
+                                // Maxspeed fallback logika
+                                val maxspeedValue = road.maxspeed?.toIntOrNull()
+                                    ?: getDefaultMaxspeed(road.highway)
+                                lastMaxspeed = maxspeedValue
+                                val maxspeedText = if (road.maxspeed.isNullOrBlank()) {
+                                    "S: $maxspeedValue"
+                                } else {
+                                    "$maxspeedValue"
+                                }
+                                tvAddress.text = road.name ?: "(nincs utcanév)"
+                                tvMaxspeed.text = maxspeedText
+                            } else {
+                                lastMaxspeed = null
+                                tvAddress.text = "Nincs találat az adatbázisban."
+                            }
                         }
-                        tvAddress.text = road.name ?: "(nincs utcanév)"
-                        tvMaxspeed.text = maxspeedText
-                    } else {
-                        lastMaxspeed = null
-                        tvAddress.text = "Nincs találat az adatbázisban."
                     }
                 } else {
                     lastMaxspeed = null
