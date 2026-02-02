@@ -351,6 +351,7 @@ class MainActivity : AppCompatActivity() {
                         // Maxspeed fallback logika
                         val maxspeedValue = road.maxspeed?.toIntOrNull()
                             ?: getDefaultMaxspeed(road.highway)
+                        lastMaxspeed = maxspeedValue
                         val maxspeedText = if (road.maxspeed.isNullOrBlank()) {
                             "Sebességhatár (KRESZ): $maxspeedValue"
                         } else {
@@ -358,9 +359,11 @@ class MainActivity : AppCompatActivity() {
                         }
                         tvAddress.text = "${road.name ?: "(nincs utcanév)"}\n$maxspeedText"
                     } else {
+                        lastMaxspeed = null
                         tvAddress.text = "Nincs találat az adatbázisban."
                     }
                 } else {
+                    lastMaxspeed = null
                     tvAddress.text = "Adatbázis nem elérhető."
                 }
             }
