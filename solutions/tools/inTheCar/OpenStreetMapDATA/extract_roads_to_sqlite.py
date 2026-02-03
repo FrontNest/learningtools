@@ -3,30 +3,41 @@
 # majd SQLite adatbázisba menti a szükséges adatokat.
 # Futtatás:
 # OSM Hungary maxspeed pipeline – Lépésről lépésre (2026)
-# 1. Legfrissebb OSM Hungary letöltése
+# 1. Legfrissebb OSM Hungary letöltése (https://download.geofabrik.de/europe/hungary.html)
 #    Töltsd le a legfrissebb hungary-latest.osm.pbf fájlt innen:
-#    https://download.geofabrik.de/europe/hungary.html
-#    Helyezd el például:
-#    C:\Users\lol\______ORSI\GitHubBCK\inTheCar\OpenStreetMapDATAfiles\hungary-YYYYMMDD.osm.pbf
-# 2. Ubuntu/WSL megnyitása Windows-on (F3p...)
+#    https://download.geofabrik.de/europe/hungary-latest.osm.pbf
+#    Helyezd el (A mentendő file-t NEVEZD ÁT ERRE,ha már van ilyen file, írd felül: 
+#    hungary-latest.osm.pbf):
+#    C:\Users\lol\______ORSI\GitHubBCK\inTheCar\OpenStreetMapDATAfiles\hungary-latest.osm.pbf
+
+# 2. Ubuntu/WSL megnyitása Terminálban /Új terminál WSL vagy Ubuntu/ (F3p...)
+#    cd /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/
+
 # 3. Csak utak (way-ek) kiszűrése highway tag alapján (eredmény=.pbf):
-#    osmium tags-filter /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/hungary-YYYYMMDD.osm.pbf w/highway -o /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf
+#    osmium tags-filter /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/hungary-latest.osm.pbf w/highway -o /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf
+
 # 4. Exportálás LINESTRING-ként (csak way, nem node!) (eredmény=.txt):
 #    osmium export /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf --geometry-types=linestring -f text -o /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.txt
-# 5. SQLite generálás Python scripttel (CSV lépés kihagyható!)(eredmény=.sqlite):
+
+# 5. SQLite generálás Python scripttel (eredmény=.sqlite):
 #    cd /mnt/c/Users/lol/______ORSI/GitHub/FrontnestStudio/solutions/tools/inTheCar/OpenStreetMapDATA
 #    python3 roads_txt_to_sqlite.py /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.txt /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.sqlite
-#    (Ha CSV is kell: python3 roads_txt_to_csv_v2.py ...)
+
 # 6. Ellenőrzés:
 #    A roads.sqlite-ben most már lesznek highway, name, maxspeed, lon, lat adatok.
+
 # 7. Fájlok helye
 #    Bemenet:
-#      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/hungary-YYYYMMDD.osm.pbf
+#      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/hungary-latest.osm.pbf
 #    Kimenet:
 #      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf
 #      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.txt
 #      /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.sqlite
+
 # 8. Az sqlite file-t másold a speedMonitor/app/src/main/assets mappába
+# 9. Android Studioban build APK --> az APK-t másold a 
+#    C:\Users\lol\______ORSI\GitHub\FrontnestStudio\solutions\tools\inTheCar\downloadPage mappába
+#    A solutions\tools\inTheCar\downloadPage\ARspeedMonitorDownload.html file-ban létre kell hozni egy új linket a sorban (desc)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 import osmium # pyright: ignore[reportMissingImports] Ubuntu alól fut
