@@ -7,13 +7,9 @@ A végén az elkészült .sqlite fájlt átmásolja a speedMonitor/app/src/main/
 
 Használat:
 1. Győződj meg róla, hogy az osmium-tool telepítve van WSL/Ubuntu alatt.
-2. A scriptet WSL/Ubuntu terminálban futtasd a 
-   cd /mnt/c/Users/lol/______ORSI/GitHub/FrontnestStudio/solutions/tools/inTheCar/OpenStreetMapDATA
-   mappából:
-   $ bash osm_pipeline.sh
-3. Ha szükséges, add meg a jelszavad a letöltéshez vagy másoláshoz.
-
-A script minden lépést automatikusan elvégez, a hibákat kiírja.
+2. A scriptet WSL/Ubuntu terminálban futtasd:
+cd /mnt/c/Users/lol/______ORSI/GitHub/FrontnestStudio/solutions/tools/inTheCar/OpenStreetMapDATA
+bash osm_pipeline.sh
 """
 
 set -e
@@ -29,10 +25,10 @@ mv -f "$TMP_FILE" "$TARGET_FILE"
 echo "Letöltés kész: $TARGET_FILE"
 
 # 2. Csak utak kiszűrése
-osmium tags-filter "$TARGET_FILE" w/highway -o "$TARGET_DIR/roads.pbf" --overwrite
+osmium tags-filter "$TARGET_FILE" w/highway -o "$TARGET_DIR/roads.pbf"
 echo "Utak kiszűrve: $TARGET_DIR/roads.pbf"
 
-osmium export "$TARGET_DIR/roads.pbf" --geometry-types=linestring -f text -o "$TARGET_DIR/roads.txt" --overwrite
+osmium export "$TARGET_DIR/roads.pbf" --geometry-types=linestring -f text -o "$TARGET_DIR/roads.txt"
 echo "Export kész: $TARGET_DIR/roads.txt"
 
 # 4. SQLite generálás Python scripttel
