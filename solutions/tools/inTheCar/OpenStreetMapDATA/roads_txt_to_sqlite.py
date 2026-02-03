@@ -49,22 +49,22 @@ with open(input_file, 'r', encoding='utf-8') as fin:
             cur.execute('INSERT INTO roads (name, highway, maxspeed, lon, lat) VALUES (?, ?, ?, ?, ?)',
                         (name, highway, maxspeed, lon, lat))
 
-# R-Tree index létrehozása és feltöltése
-cur.execute('''
-CREATE VIRTUAL TABLE IF NOT EXISTS roads_index USING rtree(
-    id,        -- sorazonosító
-    minLat, maxLat,
-    minLon, maxLon
-)
-''')
-# Töröld az előző indexet, ha újratöltöd az adatokat
-cur.execute('DELETE FROM roads_index')
+# # R-Tree index létrehozása és feltöltése
+# cur.execute('''
+# CREATE VIRTUAL TABLE IF NOT EXISTS roads_index USING rtree(
+#     id,        -- sorazonosító
+#     minLat, maxLat,
+#     minLon, maxLon
+# )
+# ''')
+# # Töröld az előző indexet, ha újratöltöd az adatokat
+# cur.execute('DELETE FROM roads_index')
 
-# Feltöltés: minden sorhoz az id a rowid (vagy ha van id oszlop, azt használd), minLat=maxLat=lat, minLon=maxLon=lon
-cur.execute('SELECT rowid, lat, lon FROM roads WHERE lat IS NOT NULL AND lon IS NOT NULL')
-for rowid, lat, lon in cur.fetchall():
-    cur.execute('INSERT INTO roads_index (id, minLat, maxLat, minLon, maxLon) VALUES (?, ?, ?, ?, ?)',
-                (rowid, lat, lat, lon, lon))
+# # Feltöltés: minden sorhoz az id a rowid (vagy ha van id oszlop, azt használd), minLat=maxLat=lat, minLon=maxLon=lon
+# cur.execute('SELECT rowid, lat, lon FROM roads WHERE lat IS NOT NULL AND lon IS NOT NULL')
+# for rowid, lat, lon in cur.fetchall():
+#     cur.execute('INSERT INTO roads_index (id, minLat, maxLat, minLon, maxLon) VALUES (?, ?, ?, ?, ?)',
+#                 (rowid, lat, lat, lon, lon))
 
 db.commit()
 db.close()

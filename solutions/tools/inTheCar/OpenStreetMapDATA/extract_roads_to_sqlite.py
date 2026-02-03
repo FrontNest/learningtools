@@ -14,10 +14,10 @@
 #    cd /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/
 
 # 3. Csak utak (way-ek) kiszűrése highway tag alapján (eredmény=.pbf):
-#    osmium tags-filter /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/hungary-latest.osm.pbf w/highway -o /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf
+#    osmium tags-filter /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/hungary-latest.osm.pbf w/highway -o /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf --overwrite
 
 # 4. Exportálás LINESTRING-ként (csak way, nem node!) (eredmény=.txt):
-#    osmium export /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf --geometry-types=linestring -f text -o /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.txt
+#    osmium export /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.pbf --geometry-types=linestring -f text -o /mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/OpenStreetMapDATAfiles/roads.txt --overwrite
 
 # 5. SQLite generálás Python scripttel (eredmény=.sqlite):
 #    cd /mnt/c/Users/lol/______ORSI/GitHub/FrontnestStudio/solutions/tools/inTheCar/OpenStreetMapDATA

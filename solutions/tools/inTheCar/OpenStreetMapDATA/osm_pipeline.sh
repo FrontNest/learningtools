@@ -42,7 +42,7 @@ python3 roads_txt_to_sqlite.py "$TARGET_DIR/roads.txt" "$TARGET_DIR/roads.sqlite
 echo "SQLite kész: $TARGET_DIR/roads.sqlite"
 
 # 5. Másolás a speedMonitor app assets mappába
-ASSETS_DIR="/mnt/c/Users/lol/______ORSI/GitHubBCK/inTheCar/speedMonitor/app/src/main/assets"
+ASSETS_DIR="/mnt/c/Users/lol/______ORSI/GitHub/FrontnestStudio/solutions/tools/inTheCar/speedMonitor/app/src/main/assets/"
 mkdir -p "$ASSETS_DIR"
 cp -f "$TARGET_DIR/roads.sqlite" "$ASSETS_DIR/roads.sqlite"
 echo "Másolás kész: $ASSETS_DIR/roads.sqlite"
