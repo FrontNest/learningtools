@@ -60,6 +60,48 @@ document.addEventListener("DOMContentLoaded", function () {
             draggingHand = "hour";
         }
     });
+        // Touch support for analog clock (main)
+        clockCanvas.addEventListener("touchstart", function (event) {
+            if (event.touches.length !== 1) return;
+            let rect = clockCanvas.getBoundingClientRect();
+            let x = event.touches[0].clientX - rect.left - 100;
+            let y = event.touches[0].clientY - rect.top - 100;
+            let angle = Math.atan2(y, x) + Math.PI / 2;
+            let min = Math.round((angle / (Math.PI * 2)) * 60) % 60;
+            let minuteDiff = Math.abs(min - minutes);
+            if (minuteDiff < 5 || minuteDiff > 55) {
+                draggingHand = "minute";
+            } else {
+                draggingHand = "hour";
+            }
+            event.preventDefault();
+        }, { passive: false });
+
+        clockCanvas.addEventListener("touchmove", function (event) {
+            if (!draggingHand || event.touches.length !== 1) return;
+            let rect = clockCanvas.getBoundingClientRect();
+            let x = event.touches[0].clientX - rect.left - 100;
+            let y = event.touches[0].clientY - rect.top - 100;
+            let angle = Math.atan2(y, x) + Math.PI / 2;
+            if (draggingHand === "minute") {
+                let newMinutes = Math.round((angle / (Math.PI * 2)) * 60) % 60;
+                if (newMinutes < 0) newMinutes += 60;
+                if (newMinutes < minutes && minutes - newMinutes > 30) hours = (hours + 1) % 24;
+                if (newMinutes > minutes && newMinutes - minutes > 30) hours = (hours - 1 + 24) % 24;
+                minutes = newMinutes;
+            } else {
+                let newHours = Math.round((angle / (Math.PI * 2)) * 12) % 12;
+                if (newHours < 0) newHours += 12;
+                hours = newHours;
+            }
+            updateDigitalClock();
+            drawClock();
+            event.preventDefault();
+        }, { passive: false });
+
+        clockCanvas.addEventListener("touchend", function () {
+            draggingHand = null;
+        });
 
     clockCanvas.addEventListener("mousemove", function (event) {
         if (!draggingHand) return;
@@ -274,6 +316,39 @@ function setupAnalogClockInteraction(canvasId) {
         drawTestClock(userHours, userMinutes, canvasId);
     });
     canvas.addEventListener("mouseup", function() {
+        draggingHand = null;
+    });
+    // Touch events for mobile
+    canvas.addEventListener("touchstart", function(event) {
+        if (event.touches.length !== 1) return;
+        let rect = canvas.getBoundingClientRect();
+        let x = event.touches[0].clientX - rect.left - 100;
+        let y = event.touches[0].clientY - rect.top - 100;
+        let distance = Math.sqrt(x*x + y*y);
+        if (distance < 50) {
+            draggingHand = "hour";
+        } else {
+            draggingHand = "minute";
+        }
+        event.preventDefault();
+    }, { passive: false });
+    canvas.addEventListener("touchmove", function(event) {
+        if (!draggingHand || event.touches.length !== 1) return;
+        let rect = canvas.getBoundingClientRect();
+        let x = event.touches[0].clientX - rect.left - 100;
+        let y = event.touches[0].clientY - rect.top - 100;
+        let angle = Math.atan2(y, x) + Math.PI / 2;
+        if (draggingHand === "minute") {
+            userMinutes = Math.round((angle / (Math.PI * 2)) * 60) % 60;
+            if (userMinutes < 0) userMinutes += 60;
+        } else {
+            userHours = Math.round((angle / (Math.PI * 2)) * 12) % 12;
+            if (userHours < 0) userHours += 12;
+        }
+        drawTestClock(userHours, userMinutes, canvasId);
+        event.preventDefault();
+    }, { passive: false });
+    canvas.addEventListener("touchend", function() {
         draggingHand = null;
     });
     
