@@ -1,0 +1,120 @@
+Tartalomjegyzék
+Fogalomtár és rövidítések jegyzéke 6
+1. A szolgálati Idő
+2. A szolgálati idő elismerése 9
+2.1. A nyilvántartási adatok értékelése 10
+2.2. Hiányos személyadatú nyilvántartások azonosítása  11
+2.3. A munkaviszony létesítéséhez szükséges életkort el nem érő személyek munkavégzésének időtartama nyugdíjra jogosító szolgálati időként 11
+2.4. Szolgálati idő elismerése társadalombiztosítási nyilvántartó lapról 13
+2.5. Szolgálati idő számítása bélyeglapról, pótbélyeglapról  14
+3. Szolgálati idő elismerése munkakönyvből  16
+4. Szolgálati idő elismerése okiratból  16
+4.1. Egykorú okirat  16
+4.2. Közokirat  17
+4.3. Magánokirat 17
+5. Szolgálati idő elismerése munkáltató, vagy jogutódja által az eredeti nyilvántartások alapján kiállított igazolás alapján  18
+6. Egyéb hitelt érdemlő módon történő bizonyítás  18
+7. Fizetés nélküli szabadság harminc napot meghaladó időtartamának elismerése 19
+8. Tartozással érintett időszakok elismerése egyéni vállalkozó, társas vállalkozás tagja esetében 19
+9. Saját jogú nyugellátás mellett létesített biztosítási kötelezettséggel járó jogviszony alapján szolgálati idő elismerése 20
+10. Az elévülési idő figyelmen kívül hagyására irányuló eljárással érintett szolgálati idő elismerése 21
+11. A munkaviszonyban eltöltött idő figyelembe vétele 21
+11.1. A szerződéses üzemeltetésű üzlet vezetője 23
+11.2. A nyári szünetben végzett diákmunka 23
+12. A mezőgazdasági termelőszövetkezeti, szakszövetkezeti tag, szakcsoport tag, segítő családtag szolgálati ideje, társadalombiztosítási nyilvántartás hiánya esetén az igazolás módjára vonatkozó eljárás 24
+12.1. A mezőgazdasági szövetkezetek átalányelszámolásos részlegében történő munkavégzés elismerése 28
+12.2. A szociális szövetkezeti tagok szolgálati idejének elismerésére vonatkozó szabályozás 29
+13. Az átmeneti törvényben foglaltak szerinti járulékfizetési könnyítés 2020-ban 30
+14. Egyéni vállalkozóként eltöltött idő figyelembe vétele 31
+14.1. Szolgálati idő elismerése 2010. január 1-je előtt elévült tartozás esetén 32
+14.2. Szolgálati idő elismerése 2009. december 31-e után elévült tartozás esetén  32
+14.3. Példák nyugdíjjárulék tartozás kezelésére:  33
+15. Társas vállalkozás tagjaként eltöltött idő figyelembevétele  33
+15.1. Példa a nyugdíjjárulék tartozás kezelésére:    33
+15.2. A járulékfizetési könnyítéssel érintett időszakok időtartamának figyelembe vétele egyéni és társas vállalkozó esetében 2020-ban  34
+16. A kisiparos, a magánkereskedő, az egyéni vállalkozó, a gazdasági munkaközösségi tag, gazdasági társaság természetes személy tagja (társas vállalkozó) segítő családtagja  34
+17. Az ügyvéd szolgálati 1deje  35
+18. A főállású kisadózó, kisadózó vállalkozó szolgálati idejének számítása  36
+18.1. A főállású kisadózó szolgálati idejének számítása 2013. január 1-je és 2022. augusztus 31-e közötti időtartamra vonatkozóan 36
+18.2. A mentesített tevékenységet folytató főállású kisadózó szolgálati idejének figyelembe vétele 38
+18.3. Kisadózó vállalkozók szolgálati idejének számítása 2022. augusztus 31-ét követően  38
+19. A mezőgazdasági őstermelők szolgálati ideje  39
+19.1. A 2007. január 1-jétől 2011. december 31-ig terjedő időszak elismerése  42
+19.2. A 2011. december 31-ét követő időszak elismerése  43
+19.3. Az értékesítési betétlap érvényesítésére vonatkozó szabályozás 2020-ban   43
+19.4. Az őstermelő járulékfizetésére vonatkozó szabályok 43
+19.5. Mezőgazdasági őstermelő járuléktartozása  44
+20. Az arányosan elismerhető szolgálati idő    44
+20.1 Az arányos szolgálati idő számításának menete  46
+20.2. Járulékfizetési alsó hafár  48
+20.3. Az "átfedő" jogviszonyok kezelése az arányos szolgálati idő számítása során   48
+20.3.1. Példák  51
+20.4. Mezőgazdasági őstermelő arányos szolgálati idejének kiszámítása  52
+20.5. A főállású kisadózó, a kisadózó vállalkozó arányos szolgálati idejének számítása  53
+20.5.1. Példák a főállású kisadózó arányos szolgálati idő számításához   56
+20.6. Ekho-ból származó jövedelem figyelembe vétele az arányos szolgálati idő kiszámításánál 56
+21. Alkalmi munkavállalói könyvvel történő foglalkoztatás időtartamának szolgálati időként történő elismerése 57
+22. Szolgálati idő elismerése egyszerűsített foglalkoztatás esetén  57
+22.1. A 2020-as évre vonatkozó eltérő szabályozás  58
+22.2. A 2022. július 1-jétől érvényes szabályok  58
+23. Egyházi személyek és szerzetesrendi tagok szolgálati ideje  59
+24. A köztársasági elnök szolgálati ideje  59
+25. A köztársasági elnök házastársának szolgálati ideje   60
+26. A munkaviszonyban nem álló előadóművészek szolgálati ideje  60
+27. A szellemi szabadfoglalkozást folytató személyek szolgálati ideje   60
+28. Az elismerési díj 61
+29. A MÁV-nál és a GYSEV-nél eltöltött szolgálati idő igazoltatása   61
+30. Gyermekgondozással, neveléssel, ápolással töltött időtartamok elismerése  62
+30.1. A GYED folyósítási idejének elismerése 62
+30.2. A GYES-re való jogosultság feltételei (1967. 01. 01.-1998.12.31.)   63
+30.2.1. A GYES-ben részesülő személy szolgálati ideje   67
+30.2.2. Példa a GYES szolgálati időként történő elismerésére   68
+30.2.3. Hallgatói jogviszony fennállása alatti GYES  69
+30.3. Gyermeknevelési támogatás   69
+30.4. Örökbefogadói díj 70
+30.5. Ápolási díj, gyermekek otthongondozási díja  70
+30.6. A szociális biztonsági rendszerek koordinálásáról szóló 883/2004/EK rendelet 68. §-a alapján különbözetként folyósított GYED, örökbefogadói díj ellátás időtartama 71
+31. Megváltozott munkaképességű személyek ellátása folyósítási idejének elismerése szolgálati időként 71
+32. A rehabilitációs járadék folyósítási időtartamának szolgálati időként történő elismerése   72
+33. Munka-rehabilitációs díj, illetve fejlesztési foglalkoztatási díj  72
+34. Rendvédelmi, illetve honvédelmi egészségkárosodási kereset-kiegészítés és járadék   73
+35. Munkanélküli ellátások, álláskeresési támogatások   73
+35.1. Munkanélküli járadék  73
+35.2. Pályakezdők munkanélküli segélye  73
+35.3. Nyugdíj előtti munkanélküli segély  73
+35.4. Álláskeresést ösztönző juttatás   74
+35.5. Munkanélküli segély  74
+35.6. Átmeneti munkanélküli járadék  74
+35.7. Átképzési támogatás   74
+35.8. Elhelyezkedési támogatás  74
+36. Végkielégítés   75
+37. A külföldi munkavégzés, illetve tartózkodás beszámításának esetei 75
+38. A Német Demokratikus Köztársaságban eltöltött szakmai gyakorlat szolgálati időként történő elismerése 77
+39. A tanuló idő és a tanulmányi idő szolgálati időként történő beszámítása  78
+39.1. Szakmunkástanuló-viszony alapján biztosításban töltött idő  78
+39.1.1. 1961. október - 1995. március 31. közötti szakmunkástanuló viszony 78
+39.1.2. 1995. április 1 - 1995. december 31. közötti ösztöndíjas szakmunkástanuló viszony 80
+39.1.3. 1996. január 1-jétől tanulószerződés alapján szakképző iskolai tanulóként biztosításban töltött idő  80
+39.1.4. A szakképzésre vonatkozó 2020. szeptember 1-jétől hatályos szabályozás  81
+39.1.5. A szakmunkástanulók kötelező nyári gyakorlata  82
+39.1.6. Beszámoltató rendszerű oktatásban részt vevő szakmunkás tanuló jogviszony elismerése 83
+39.1.7. A szakmunkástanuló-viszony alapján, illetve a tanulószerződés alapján szakképző iskolai tanulóként biztosításban töltött idő igazolása  84
+39.1.8. Példák a szakmunkástanuló idő figyelembe vételéhez:  84
+39.2. Szakiskolai tanulmányok  85
+39.2.1. Egészségügyi szakiskolában folytatott tanulmányok  85
+39.2.2. Mezőgazdasági szakiskolai tanulmányok  86
+39.2.3. Szakközépiskolai tanulmányi idő  86
+39.3. Rendőr szakközépiskolákban folytatott tanulmányi idő  88
+39.4. A honvédség hivatásos tiszthelyettesi képzése 89
+39.5. Felsőfokú nappali tagozatos tanulmányok beszámítása  90
+39.5.1. Felsőfokú technikumi, felsőfokú szakiskolai tanulmányok elismerése  95
+39.5.2. A tanító és óvónőképzésen folytatott tanulmányok  95
+39.5.3. Felsőfokú oktatási intézménynek minősített szakiskolák  96
+39.5.4. A Politikai Főiskolán folytatott tanulmányok 96
+39.6. Külföldön folytatott nappali tagozatos tanulmányok időtartama  96
+39.7. A doktori (PhD.) képzésre vonatkozó szabályok  98
+39.7.1. A külföldön folytatott doktori képzés  99
+39.8. Ösztöndíjas aspiráns és ösztöndíjas doktori képzés  100
+40. A katonai szolgálatban töltött idő igazolása 102
+41. A módszertani útmutatóban nem szereplő időszakok, jogviszonyok elbírálása  103
+Mellékletek: 104
