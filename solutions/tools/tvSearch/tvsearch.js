@@ -38,9 +38,9 @@ function searchChapters() {
   const resultsDiv = document.getElementById('results');
   let found = [];
   for (const [chapter, chapterObj] of Object.entries(ocrData)) {
-    if (!query) {
-      found.push({ chapter, title: chapterObj.title });
-      continue;
+      if (!query) { 
+        found.push({ chapter, title: chapterObj.title }); 
+        continue; 
     }
     // Keresés a címben vagy a teljes szövegben
     const inTitle = chapterObj.title && chapterObj.title.toLowerCase().includes(query.toLowerCase());
@@ -53,6 +53,21 @@ function searchChapters() {
     resultsDiv.innerHTML = '<span style="color:#a00">Nincs találat.</span>';
     return;
   }
+    // Természetes sorrend szerinti rendezés (pl. 2, 2.1, 10, 11)
+    function chapterSortKey(chapter) {
+      // Pl. '12.3.1' -> [12,3,1]
+      return chapter.split('.').map(x => parseInt(x, 10));
+    }
+    found.sort((a, b) => {
+      const ak = chapterSortKey(a.chapter);
+      const bk = chapterSortKey(b.chapter);
+      for (let i = 0; i < Math.max(ak.length, bk.length); ++i) {
+        const ai = ak[i] || 0;
+        const bi = bk[i] || 0;
+        if (ai !== bi) return ai - bi;
+      }
+      return 0;
+    });
   resultsDiv.innerHTML = found.map((res, idx) =>
     `<div class="result-block" style="cursor:pointer" onclick="expandChapter('${res.chapter}',${idx})">
       <div class="page"><b>${res.chapter}</b>${res.title ? ". " + highlight(res.title, query) : ''}</div>
