@@ -1,6 +1,18 @@
 body {
     margin-bottom: 100px;
 }
+
+.container {
+    display: flex;
+    flex-direction: row;
+}
+    .toc {
+        width: 40%;
+    }
+    .note {
+        width: auto;
+    }
+
 th { 
     font-weight: bold;
     color: white;
