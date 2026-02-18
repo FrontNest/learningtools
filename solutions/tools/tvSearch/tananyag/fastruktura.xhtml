@@ -11,258 +11,378 @@
   <body>
 <pre>  
 NYUGELLÁTÁS IRÁNTI IGÉNY
-    |
-    +--> Saját jogú nyugellátás?
-    |       |
-    |       +--> Igen
-    |       |       |
-    |       |       v
-    |       |   Melyik ellátástípus?
-    |       |       |
-    |       |       +--> Öregségi nyugdíj
-    |       |       |        |
-    |       |       |        +--> Korhatár betöltve?
-    |       |       |        |        |
-    |       |       |        |        +--> Nem → NEM JOGOSULT
-    |       |       |        |        |
-    |       |       |        |        +--> Igen
-    |       |       |        |
-    |       |       |        +--> Szolgálati idő megállapítható?
-    |       |       |        |        |
-    |       |       |        |        +--> Nem → NEM JOGOSULT (hiányzó igazolás)
-    |       |       |        |        |
-    |       |       |        |        +--> Igen
-    |       |       |        |
-    |       |       |        +--> Szolgálati idő ≥ 20 év?
-    |       |       |        |        |
-    |       |       |        |        +--> Nem → Résznyugdíj vizsgálata
-    |       |       |        |        |
-    |       |       |        |        +--> Igen
-    |       |       |        |
-    |       |       |        +--> Van kizáró időszak?
-    |       |       |        |        |
-    |       |       |        |        +--> Igen → NEM JOGOSULT
-    |       |       |        |        |
-    |       |       |        |        +--> Nem
-    |       |       |        |
-    |       |       |        +--> Biztosítási jogviszony fennáll?
-    |       |       |                 |
-    |       |       |                 +--> Igen → Megszüntetés szükséges → NEM JOGOSULT, amíg fennáll
-    |       |       |                 |
-    |       |       |                 +--> Nem → JOGOSULT (megállapítható)
-    |       |       |
-    |       |       +--> Nők 40
-    |       |       |        |
-    |       |       |        +--> Jogosító idő megállapítható?
-    |       |       |        |        |
-    |       |       |        |        +--> Nem → NEM JOGOSULT
-    |       |       |        |        |
-    |       |       |        |        +--> Igen
-    |       |       |        |
-    |       |       |        +--> Jogosító idő ≥ 40 év?
-    |       |       |        |        |
-    |       |       |        |        +--> Nem → NEM JOGOSULT
-    |       |       |        |        |
-    |       |       |        |        +--> Igen
-    |       |       |        |
-    |       |       |        +--> Keresőtevékenység ≥ 32 év?
-    |       |       |        |        |
-    |       |       |        |        +--> Nem → NEM JOGOSULT
-    |       |       |        |        |
-    |       |       |        |        +--> Igen
-    |       |       |        |
-    |       |       |        +--> Van kizáró körülmény?
-    |       |       |                 |
-    |       |       |                 +--> Igen → NEM JOGOSULT
-    |       |       |                 |
-    |       |       |                 +--> Nem → JOGOSULT (megállapítható)
-    |       |       |
-    |       |       +--> Résznyugdíj
-    |       |                |
-    |       |                +--> Korhatár betöltve?
-    |       |                |        |
-    |       |                |        +--> Nem → NEM JOGOSULT
-    |       |                |        |
-    |       |                |        +--> Igen
-    |       |                |
-    |       |                +--> Szolgálati idő megállapítható?
-    |       |                |        |
-    |       |                |        +--> Nem → NEM JOGOSULT
-    |       |                |        |
-    |       |                |        +--> Igen
-    |       |                |
-    |       |                +--> Szolgálati idő 15–19 év?
-    |       |                |        |
-    |       |                |        +--> Nem → NEM JOGOSULT
-    |       |                |        |
-    |       |                |        +--> Igen
-    |       |                |
-    |       |                +--> Van kizáró körülmény?
-    |       |                         |
-    |       |                         +--> Igen → NEM JOGOSULT
-    |       |                         |
-    |       |                         +--> Nem → JOGOSULT (megállapítható)
-    |       |
-    |       +--> Nem
-    |               |
-    |               v
-    +--> Hozzátartozói nyugellátás?
-    |       |
-    |       +--> Igen
-    |       |       |
-    |       |       v
-    |       |   Melyik ellátástípus?
-    |       |       |
-    |       |       +--> Özvegyi nyugdíj
-    |       |       |        |
-    |       |       |        +--> Elhunyt szolgálati ideje megfelelő?
-    |       |       |        |        |
-    |       |       |        |        +--> Nem → NEM JOGOSULT
-    |       |       |        |        |
-    |       |       |        |        +--> Igen
-    |       |       |        |
-    |       |       |        +--> Házastársi kapcsolat fennállt?
-    |       |       |        |        |
-    |       |       |        |        +--> Nem → NEM JOGOSULT
-    |       |       |        |        |
-    |       |       |        |        +--> Igen
-    |       |       |        |
-    |       |       |        +--> Ideiglenes özvegyi feltételei fennállnak?
-    |       |       |        |        |
-    |       |       |        |        +--> Igen → JOGOSULT (ideiglenes)
-    |       |       |        |        |
-    |       |       |        |        +--> Nem → Végleges vizsgálata
-    |       |       |        |
-    |       |       |        +--> Végleges özvegyi feltételei fennállnak?
-    |       |       |                 |
-    |       |       |                 +--> Nem → NEM JOGOSULT
-    |       |       |                 |
-    |       |       |                 +--> Igen → JOGOSULT
-    |       |       |
-    |       |       +--> Árvaellátás
-    |       |       |        |
-    |       |       |        +--> Elhunyt szolgálati ideje megfelelő?
-    |       |       |        |        |
-    |       |       |        |        +--> Nem → NEM JOGOSULT
-    |       |       |        |        |
-    |       |       |        |        +--> Igen
-    |       |       |        |
-    |       |       |        +--> Gyermek 16 év alatt?
-    |       |       |        |        |
-    |       |       |        |        +--> Igen → JOGOSULT
-    |       |       |        |        |
-    |       |       |        |        +--> Nem
-    |       |       |        |
-    |       |       |        +--> Tanul 25 éves korig?
-    |       |       |        |        |
-    |       |       |        |        +--> Igen → JOGOSULT
-    |       |       |        |        |
-    |       |       |        |        +--> Nem
-    |       |       |        |
-    |       |       |        +--> Tartósan megváltozott munkaképességű?
-    |       |       |                 |
-    |       |       |                 +--> Igen → JOGOSULT
-    |       |       |                 |
-    |       |       |                 +--> Nem → NEM JOGOSULT
-    |       |       |
-    |       |       +--> Szülői nyugdíj
-    |       |                |
-    |       |                +--> Tartás fennállt?
-    |       |                |        |
-    |       |                |        +--> Nem → NEM JOGOSULT
-    |       |                |        |
-    |       |                |        +--> Igen
-    |       |                |
-    |       |                +--> Rászorultság fennáll?
-    |       |                |        |
-    |       |                |        +--> Nem → NEM JOGOSULT
-    |       |                |        |
-    |       |                |        +--> Igen
-    |       |                |
-    |       |                +--> Elhunyt szolgálati ideje megfelelő?
-    |       |                         |
-    |       |                         +--> Nem → NEM JOGOSULT
-    |       |                         |
-    |       |                         +--> Igen → JOGOSULT
-    |       |
-    |       +--> Nem
-    |               |
-    |               v
-    +--> Egyéb ellátások?
-            |
-            +--> Igen
-            |       |
-            |       v
-            |   Melyik ellátástípus?
-            |       |
-            |       +--> Baleseti járadék
-            |       |        |
-            |       |        +--> Baleseti eredet igazolt?
-            |       |        |        |
-            |       |        |        +--> Nem → NEM JOGOSULT
-            |       |        |        |
-            |       |        |        +--> Igen
-            |       |        |
-            |       |        +--> Maradandó egészségkárosodás?
-            |       |        |        |
-            |       |        |        +--> Nem → NEM JOGOSULT
-            |       |        |        |
-            |       |        |        +--> Igen
-            |       |        |
-            |       |        +--> Mérték eléri a jogosultsági szintet?
-            |       |                 |
-            |       |                 +--> Nem → NEM JOGOSULT
-            |       |                 |
-            |       |                 +--> Igen → JOGOSULT
-            |       |
-            |       +--> Rehabilitációs ellátás
-            |       |        |
-            |       |        +--> Komplex minősítés?
-            |       |        |        |
-            |       |        |        +--> Nem → NEM JOGOSULT
-            |       |        |        |
-            |       |        |        +--> Igen
-            |       |        |
-            |       |        +--> Rehabilitálható?
-            |       |        |        |
-            |       |        |        +--> Nem → Rokkantsági ellátás vizsgálata
-            |       |        |        |
-            |       |        |        +--> Igen
-            |       |        |
-            |       |        +--> Egészségkárosodás megfelel?
-            |       |                 |
-            |       |                 +--> Nem → NEM JOGOSULT
-            |       |                 |
-            |       |                 +--> Igen → JOGOSULT
-            |       |
-            |       +--> Rokkantsági ellátás
-            |                |
-            |                +--> Komplex minősítés?
-            |                |        |
-            |                |        +--> Nem → NEM JOGOSULT
-            |                |        |
-            |                |        +--> Igen
-            |                |
-            |                +--> Egészségkárosodás eléri a rokkantsági szintet?
-            |                |        |
-            |                |        +--> Nem → NEM JOGOSULT
-            |                |        |
-            |                |        +--> Igen
-            |                |
-            |                +--> Önellátási képesség csökkent?
-            |                         |
-            |                         +--> Nem → NEM JOGOSULT
-            |                         |
-            |                         +--> Igen → JOGOSULT
-            |
-            +--> Nem
-                    |
-                    v
-                Nincs további ellátás → NEM JOGOSULT
+  |
+  <a href="#d1">+--&gt; Saját jogú nyugellátás?</a>
+  |       |
+  |       <a href="#d2">+--&gt; Igen</a>
+  |       |       |
+  |       |       v
+  |       |   <a href="#d3">Melyik ellátástípus?</a>
+  |       |       |
+  |       |       <a href="#d4">+--&gt; Öregségi nyugdíj</a>
+  |       |       |        |
+  |       |       |        <a href="#d5">+--&gt; Korhatár betöltve?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d6">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d7">+--&gt; Igen</a>
+  |       |       |        |
+  |       |       |        <a href="#d8">+--&gt; Szolgálati idő megállapítható?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d9">+--&gt; Nem → NEM JOGOSULT (hiányzó igazolás)</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d10">+--&gt; Igen</a>
+  |       |       |        |
+  |       |       |        <a href="#d11">+--&gt; Szolgálati idő ≥ 20 év?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d12">+--&gt; Nem → Résznyugdíj vizsgálata</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d13">+--&gt; Igen</a>
+  |       |       |        |
+  |       |       |        <a href="#d14">+--&gt; Van kizáró időszak?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d15">+--&gt; Igen → NEM JOGOSULT</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d16">+--&gt; Nem</a>
+  |       |       |        |
+  |       |       |        <a href="#d17">+--&gt; Biztosítási jogviszony fennáll?</a>
+  |       |       |                 |
+  |       |       |                 <a href="#d18">+--&gt; Igen → Megszüntetés szükséges → NEM JOGOSULT, amíg fennáll</a>
+  |       |       |                 |
+  |       |       |                 <a href="#d19">+--&gt; Nem → JOGOSULT (megállapítható)</a>
+  |       |       |
+  |       |       <a href="#d20">+--&gt; Nők 40</a>
+  |       |       |        |
+  |       |       |        <a href="#d21">+--&gt; Jogosító idő megállapítható?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d22">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d23">+--&gt; Igen</a>
+  |       |       |        |
+  |       |       |        <a href="#d24">+--&gt; Jogosító idő ≥ 40 év?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d25">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d26">+--&gt; Igen</a>
+  |       |       |        |
+  |       |       |        <a href="#d27">+--&gt; Keresőtevékenység ≥ 32 év?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d28">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d29">+--&gt; Igen</a>
+  |       |       |        |
+  |       |       |        <a href="#d30">+--&gt; Van kizáró körülmény?</a>
+  |       |       |                 |
+  |       |       |                 <a href="#d31">+--&gt; Igen → NEM JOGOSULT</a>
+  |       |       |                 |
+  |       |       |                 <a href="#d32">+--&gt; Nem → JOGOSULT (megállapítható)</a>
+  |       |       |
+  |       |       <a href="#d33">+--&gt; Résznyugdíj</a>
+  |       |                |
+  |       |                <a href="#d34">+--&gt; Korhatár betöltve?</a>
+  |       |                |        |
+  |       |                |        <a href="#d35">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |                |        |
+  |       |                |        <a href="#d36">+--&gt; Igen</a>
+  |       |                |
+  |       |                <a href="#d37">+--&gt; Szolgálati idő megállapítható?</a>
+  |       |                |        |
+  |       |                |        <a href="#d38">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |                |        |
+  |       |                |        <a href="#d39">+--&gt; Igen</a>
+  |       |                |
+  |       |                <a href="#d40">+--&gt; Szolgálati idő 15–19 év?</a>
+  |       |                |        |
+  |       |                |        <a href="#d41">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |                |        |
+  |       |                |        <a href="#d42">+--&gt; Igen</a>
+  |       |                |
+  |       |                <a href="#d43">+--&gt; Van kizáró körülmény?</a>
+  |       |                         |
+  |       |                         <a href="#d44">+--&gt; Igen → NEM JOGOSULT</a>
+  |       |                         |
+  |       |                         <a href="#d45">+--&gt; Nem → JOGOSULT (megállapítható)</a>
+  |       |
+  |       <a href="#d46">+--&gt; Nem</a>
+  |               |
+  |               v
+  <a href="#d47">+--&gt; Hozzátartozói nyugellátás?</a>
+  |       |
+  |       <a href="#d48">+--&gt; Igen</a>
+  |       |       |
+  |       |       v
+  |       |   <a href="#d49">Melyik ellátástípus?</a>
+  |       |       |
+  |       |       <a href="#d50">+--&gt; Özvegyi nyugdíj</a>
+  |       |       |        |
+  |       |       |        <a href="#d51">+--&gt; Elhunyt szolgálati ideje megfelelő?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d52">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d53">+--&gt; Igen</a>
+  |       |       |        |
+  |       |       |        <a href="#d54">+--&gt; Házastársi kapcsolat fennállt?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d55">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d56">+--&gt; Igen</a>
+  |       |       |        |
+  |       |       |        <a href="#d57">+--&gt; Ideiglenes özvegyi feltételei fennállnak?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d58">+--&gt; Igen → JOGOSULT (ideiglenes)</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d59">+--&gt; Nem → Végleges vizsgálata</a>
+  |       |       |        |
+  |       |       |        <a href="#d60">+--&gt; Végleges özvegyi feltételei fennállnak?</a>
+  |       |       |                 |
+  |       |       |                 <a href="#d61">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |       |                 |
+  |       |       |                 <a href="#d62">+--&gt; Igen → JOGOSULT</a>
+  |       |       |
+  |       |       <a href="#d63">+--&gt; Árvaellátás</a>
+  |       |       |        |
+  |       |       |        <a href="#d64">+--&gt; Elhunyt szolgálati ideje megfelelő?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d65">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d66">+--&gt; Igen</a>
+  |       |       |        |
+  |       |       |        <a href="#d67">+--&gt; Gyermek 16 év alatt?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d68">+--&gt; Igen → JOGOSULT</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d69">+--&gt; Nem</a>
+  |       |       |        |
+  |       |       |        <a href="#d70">+--&gt; Tanul 25 éves korig?</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d71">+--&gt; Igen → JOGOSULT</a>
+  |       |       |        |        |
+  |       |       |        |        <a href="#d72">+--&gt; Nem</a>
+  |       |       |        |
+  |       |       |        <a href="#d73">+--&gt; Tartósan megváltozott munkaképességű?</a>
+  |       |       |                 |
+  |       |       |                 <a href="#d74">+--&gt; Igen → JOGOSULT</a>
+  |       |       |                 |
+  |       |       |                 <a href="#d75">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |       |
+  |       |       <a href="#d76">+--&gt; Szülői nyugdíj</a>
+  |       |                |
+  |       |                <a href="#d77">+--&gt; Tartás fennállt?</a>
+  |       |                |        |
+  |       |                |        <a href="#d78">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |                |        |
+  |       |                |        <a href="#d79">+--&gt; Igen</a>
+  |       |                |
+  |       |                <a href="#d80">+--&gt; Rászorultság fennáll?</a>
+  |       |                |        |
+  |       |                |        <a href="#d81">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |                |        |
+  |       |                |        <a href="#d82">+--&gt; Igen</a>
+  |       |                |
+  |       |                <a href="#d83">+--&gt; Elhunyt szolgálati ideje megfelelő?</a>
+  |       |                         |
+  |       |                         <a href="#d84">+--&gt; Nem → NEM JOGOSULT</a>
+  |       |                         |
+  |       |                         <a href="#d85">+--&gt; Igen → JOGOSULT</a>
+  |       |
+  |       <a href="#d86">+--&gt; Nem</a>
+  |               |
+  |               v
+  <a href="#d87">+--&gt; Egyéb ellátások?</a>
+      |
+      <a href="#d88">+--&gt; Igen</a>
+      |       |
+      |       v
+      |   <a href="#d89">Melyik ellátástípus?</a>
+      |       |
+      |       <a href="#d90">+--&gt; Baleseti járadék</a>
+      |       |        |
+      |       |        <a href="#d91">+--&gt; Baleseti eredet igazolt?</a>
+      |       |        |        |
+      |       |        |        <a href="#d92">+--&gt; Nem → NEM JOGOSULT</a>
+      |       |        |        |
+      |       |        |        <a href="#d93">+--&gt; Igen</a>
+      |       |        |
+      |       |        <a href="#d94">+--&gt; Maradandó egészségkárosodás?</a>
+      |       |        |        |
+      |       |        |        <a href="#d95">+--&gt; Nem → NEM JOGOSULT</a>
+      |       |        |        |
+      |       |        |        <a href="#d96">+--&gt; Igen</a>
+      |       |        |
+      |       |        <a href="#d97">+--&gt; Mérték eléri a jogosultsági szintet?</a>
+      |       |                 |
+      |       |                 <a href="#d98">+--&gt; Nem → NEM JOGOSULT</a>
+      |       |                 |
+      |       |                 <a href="#d99">+--&gt; Igen → JOGOSULT</a>
+      |       |
+      |       <a href="#d100">+--&gt; Rehabilitációs ellátás</a>
+      |       |        |
+      |       |        <a href="#d101">+--&gt; Komplex minősítés?</a>
+      |       |        |        |
+      |       |        |        <a href="#d102">+--&gt; Nem → NEM JOGOSULT</a>
+      |       |        |        |
+      |       |        |        <a href="#d103">+--&gt; Igen</a>
+      |       |        |
+      |       |        <a href="#d104">+--&gt; Rehabilitálható?</a>
+      |       |        |        |
+      |       |        |        <a href="#d105">+--&gt; Nem → Rokkantsági ellátás vizsgálata</a>
+      |       |        |        |
+      |       |        |        <a href="#d106">+--&gt; Igen</a>
+      |       |        |
+      |       |        <a href="#d107">+--&gt; Egészségkárosodás megfelel?</a>
+      |       |                 |
+      |       |                 <a href="#d108">+--&gt; Nem → NEM JOGOSULT</a>
+      |       |                 |
+      |       |                 <a href="#d109">+--&gt; Igen → JOGOSULT</a>
+      |       |
+      |       <a href="#d110">+--&gt; Rokkantsági ellátás</a>
+      |                |
+      |                <a href="#d111">+--&gt; Komplex minősítés?</a>
+      |                |        |
+      |                |        <a href="#d112">+--&gt; Nem → NEM JOGOSULT</a>
+      |                |        |
+      |                |        <a href="#d113">+--&gt; Igen</a>
+      |                |
+      |                <a href="#d114">+--&gt; Egészségkárosodás eléri a rokkantsági szintet?</a>
+      |                |        |
+      |                |        <a href="#d115">+--&gt; Nem → NEM JOGOSULT</a>
+      |                |        |
+      |                |        <a href="#d116">+--&gt; Igen</a>
+      |                |
+      |                <a href="#d117">+--&gt; Önellátási képesség csökkent?</a>
+      |                         |
+      |                         <a href="#d118">+--&gt; Nem → NEM JOGOSULT</a>
+      |                         |
+      |                         <a href="#d119">+--&gt; Igen → JOGOSULT</a>
+      |
+      <a href="#d120">+--&gt; Nem</a>
+          |
+          v
+        Nincs további ellátás → NEM JOGOSULT
 </pre> 
 <p>_______________________________________________________________________</p>
 
-RÉSZLETES
+
+<div id="d1">Saját jogú nyugellátás? (RÉSZLETES)</div>
+<div id="d2">Igen (RÉSZLETES)</div>
+<div id="d3">Melyik ellátástípus? (RÉSZLETES)</div>
+<div id="d4">Öregségi nyugdíj (RÉSZLETES)</div>
+<div id="d5">Korhatár betöltve? (RÉSZLETES)</div>
+<div id="d6">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d7">Igen (RÉSZLETES)</div>
+<div id="d8">Szolgálati idő megállapítható? (RÉSZLETES)</div>
+<div id="d9">Nem → NEM JOGOSULT (hiányzó igazolás) (RÉSZLETES)</div>
+<div id="d10">Igen (RÉSZLETES)</div>
+<div id="d11">Szolgálati idő ≥ 20 év? (RÉSZLETES)</div>
+<div id="d12">Nem → Résznyugdíj vizsgálata (RÉSZLETES)</div>
+<div id="d13">Igen (RÉSZLETES)</div>
+<div id="d14">Van kizáró időszak? (RÉSZLETES)</div>
+<div id="d15">Igen → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d16">Nem (RÉSZLETES)</div>
+<div id="d17">Biztosítási jogviszony fennáll? (RÉSZLETES)</div>
+<div id="d18">Igen → Megszüntetés szükséges → NEM JOGOSULT, amíg fennáll (RÉSZLETES)</div>
+<div id="d19">Nem → JOGOSULT (megállapítható) (RÉSZLETES)</div>
+<div id="d20">Nők 40 (RÉSZLETES)</div>
+<div id="d21">Jogosító idő megállapítható? (RÉSZLETES)</div>
+<div id="d22">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d23">Igen (RÉSZLETES)</div>
+<div id="d24">Jogosító idő ≥ 40 év? (RÉSZLETES)</div>
+<div id="d25">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d26">Igen (RÉSZLETES)</div>
+<div id="d27">Keresőtevékenység ≥ 32 év? (RÉSZLETES)</div>
+<div id="d28">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d29">Igen (RÉSZLETES)</div>
+<div id="d30">Van kizáró körülmény? (RÉSZLETES)</div>
+<div id="d31">Igen → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d32">Nem → JOGOSULT (megállapítható) (RÉSZLETES)</div>
+<div id="d33">Résznyugdíj (RÉSZLETES)</div>
+<div id="d34">Korhatár betöltve? (RÉSZLETES)</div>
+<div id="d35">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d36">Igen (RÉSZLETES)</div>
+<div id="d37">Szolgálati idő megállapítható? (RÉSZLETES)</div>
+<div id="d38">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d39">Igen (RÉSZLETES)</div>
+<div id="d40">Szolgálati idő 15–19 év? (RÉSZLETES)</div>
+<div id="d41">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d42">Igen (RÉSZLETES)</div>
+<div id="d43">Van kizáró körülmény? (RÉSZLETES)</div>
+<div id="d44">Igen → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d45">Nem → JOGOSULT (megállapítható) (RÉSZLETES)</div>
+<div id="d46">Nem (RÉSZLETES)</div>
+<div id="d47">Hozzátartozói nyugellátás? (RÉSZLETES)</div>
+<div id="d48">Igen (RÉSZLETES)</div>
+<div id="d49">Melyik ellátástípus? (RÉSZLETES)</div>
+<div id="d50">Özvegyi nyugdíj (RÉSZLETES)</div>
+<div id="d51">Elhunyt szolgálati ideje megfelelő? (RÉSZLETES)</div>
+<div id="d52">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d53">Igen (RÉSZLETES)</div>
+<div id="d54">Házastársi kapcsolat fennállt? (RÉSZLETES)</div>
+<div id="d55">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d56">Igen (RÉSZLETES)</div>
+<div id="d57">Ideiglenes özvegyi feltételei fennállnak? (RÉSZLETES)</div>
+<div id="d58">Igen → JOGOSULT (ideiglenes) (RÉSZLETES)</div>
+<div id="d59">Nem → Végleges vizsgálata (RÉSZLETES)</div>
+<div id="d60">Végleges özvegyi feltételei fennállnak? (RÉSZLETES)</div>
+<div id="d61">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d62">Igen → JOGOSULT (RÉSZLETES)</div>
+<div id="d63">Árvaellátás (RÉSZLETES)</div>
+<div id="d64">Elhunyt szolgálati ideje megfelelő? (RÉSZLETES)</div>
+<div id="d65">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d66">Igen (RÉSZLETES)</div>
+<div id="d67">Gyermek 16 év alatt? (RÉSZLETES)</div>
+<div id="d68">Igen → JOGOSULT (RÉSZLETES)</div>
+<div id="d69">Nem (RÉSZLETES)</div>
+<div id="d70">Tanul 25 éves korig? (RÉSZLETES)</div>
+<div id="d71">Igen → JOGOSULT (RÉSZLETES)</div>
+<div id="d72">Nem (RÉSZLETES)</div>
+<div id="d73">Tartósan megváltozott munkaképességű? (RÉSZLETES)</div>
+<div id="d74">Igen → JOGOSULT (RÉSZLETES)</div>
+<div id="d75">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d76">Szülői nyugdíj (RÉSZLETES)</div>
+<div id="d77">Tartás fennállt? (RÉSZLETES)</div>
+<div id="d78">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d79">Igen (RÉSZLETES)</div>
+<div id="d80">Rászorultság fennáll? (RÉSZLETES)</div>
+<div id="d81">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d82">Igen (RÉSZLETES)</div>
+<div id="d83">Elhunyt szolgálati ideje megfelelő? (RÉSZLETES)</div>
+<div id="d84">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d85">Igen → JOGOSULT (RÉSZLETES)</div>
+<div id="d86">Nem (RÉSZLETES)</div>
+<div id="d87">Egyéb ellátások? (RÉSZLETES)</div>
+<div id="d88">Igen (RÉSZLETES)</div>
+<div id="d89">Melyik ellátástípus? (RÉSZLETES)</div>
+<div id="d90">Baleseti járadék (RÉSZLETES)</div>
+<div id="d91">Baleseti eredet igazolt? (RÉSZLETES)</div>
+<div id="d92">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d93">Igen (RÉSZLETES)</div>
+<div id="d94">Maradandó egészségkárosodás? (RÉSZLETES)</div>
+<div id="d95">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d96">Igen (RÉSZLETES)</div>
+<div id="d97">Mérték eléri a jogosultsági szintet? (RÉSZLETES)</div>
+<div id="d98">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d99">Igen → JOGOSULT (RÉSZLETES)</div>
+<div id="d100">Rehabilitációs ellátás (RÉSZLETES)</div>
+<div id="d101">Komplex minősítés? (RÉSZLETES)</div>
+<div id="d102">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d103">Igen (RÉSZLETES)</div>
+<div id="d104">Rehabilitálható? (RÉSZLETES)</div>
+<div id="d105">Nem → Rokkantsági ellátás vizsgálata (RÉSZLETES)</div>
+<div id="d106">Igen (RÉSZLETES)</div>
+<div id="d107">Egészségkárosodás megfelel? (RÉSZLETES)</div>
+<div id="d108">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d109">Igen → JOGOSULT (RÉSZLETES)</div>
+<div id="d110">Rokkantsági ellátás (RÉSZLETES)</div>
+<div id="d111">Komplex minősítés? (RÉSZLETES)</div>
+<div id="d112">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d113">Igen (RÉSZLETES)</div>
+<div id="d114">Egészségkárosodás eléri a rokkantsági szintet? (RÉSZLETES)</div>
+<div id="d115">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d116">Igen (RÉSZLETES)</div>
+<div id="d117">Önellátási képesség csökkent? (RÉSZLETES)</div>
+<div id="d118">Nem → NEM JOGOSULT (RÉSZLETES)</div>
+<div id="d119">Igen → JOGOSULT (RÉSZLETES)</div>
+<div id="d120">Nem (RÉSZLETES)</div>
 
 
 
