@@ -16,16 +16,25 @@ fetch(JSON_PATH)
     document.getElementById('results').innerHTML = '<span style="color:red">Nem sikerült betölteni a szövegfájlt.</span>';
   });
 
+
 document.getElementById('searchBtn').addEventListener('click', searchChapters);
 document.getElementById('searchInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') searchChapters();
 });
 
+// Új gomb: összes fejezet listázása
+document.getElementById('listAllBtn').addEventListener('click', function() {
+  document.getElementById('searchInput').value = '';
+  searchChapters();
+});
+
 function highlight(text, query) {
-  if (!query) return text;
-  const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const re = new RegExp(safeQuery, 'gi');
-  let highlighted = text.replace(re, match => `<span class="highlight">${match}</span>`);
+  let highlighted = text;
+  if (query) {
+    const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(safeQuery, 'gi');
+    highlighted = highlighted.replace(re, match => `<span class="highlight">${match}</span>`);
+  }
   highlighted = highlighted.replace(/\n\n/g, '<hr>');
   highlighted = highlighted.replace(/\n/g, '<br>');
   return highlighted;
@@ -89,8 +98,25 @@ window.expandChapter = function(chapter, idx) {
   const query = document.getElementById('searchInput').value.trim();
   const chapterObj = ocrData[chapter];
   let text = chapterObj.text;
-  // Ha van keresőszó, emeljük ki a találatokat a teljes fejezetben
   let html = highlight(text, query);
-  document.getElementById('expand_' + idx).innerHTML = `<div class="result-block" style="background:#fffbe6;border-left:4px solid #28f109;margin-top:8px;">${html}</div>`;
+  // Táblázat renderelése, ha van
+  let tableHtml = '';
+  if (chapterObj.table) {
+    tableHtml = `<div class="responsive-table">${renderTable(chapterObj.table)}</div>`;
+  }
+  document.getElementById('expand_' + idx).innerHTML = `<div class="result-block" style="background:#fffbe6;border-left:4px solid #28f109;margin-top:8px;">${html}${tableHtml}</div>`;
+}
+
+function renderTable(tableObj) {
+  let html = '<table style="margin-top:16px;width:100%;border-collapse:collapse;background:#fff"><thead><tr>';
+  tableObj.headers.forEach(h => html += `<th style="border:1px solid #bbb;padding:6px 8px;background:#f2f6fa;color:#2a3a4a;font-weight:bold">${h}</th>`);
+  html += '</tr></thead><tbody>';
+  tableObj.rows.forEach(row => {
+    html += '<tr>';
+    row.forEach(cell => html += `<td style="border:1px solid #bbb;padding:6px 8px;vertical-align:top">${cell.replace(/\n/g,'<br>')}</td>`);
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
 }
 
