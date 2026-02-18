@@ -8,3 +8,7 @@ th {
     color: white;
     background-color: black;
 }
+
+tr {
+    border: 1px solid grey;
+}
