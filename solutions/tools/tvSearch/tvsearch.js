@@ -1,3 +1,7 @@
+// Fejezetek természetes sorrendben rendező kulcs
+function chapterSortKey(chapter) {
+  return chapter.split('.').map(x => parseInt(x, 10));
+}
 // Feltételezzük, hogy a json file neve: Szolgalati_ido_2024_ocr.json
 // és a sources mappában van
 // const JSON_PATH = 'sources/Szolgalati_ido_2024_ocr.json';
@@ -35,16 +39,15 @@ document.getElementById('findYearsBtn').addEventListener('click', function() {
 function findYearBlocks() {
   const resultsDiv = document.getElementById('results');
   let found = [];
-  const yearRegex = /\b(1[89][0-9]{2}|20[0-9]{2})\b/;
+  const yearRegex = /\b(1[89][0-9]{2}|20[0-9]{2})\b/g;
   for (const [chapter, chapterObj] of Object.entries(ocrData)) {
     if (!chapterObj.text) continue;
-    // Szöveg blokkokra bontása \n\n mentén
     const blocks = chapterObj.text.split(/\n\n+/);
     blocks.forEach((block, i) => {
-      const match = block.match(yearRegex);
-      if (match) {
-        // Az első évszámot mentsük el a sortoláshoz
-        found.push({ chapter, title: chapterObj.title, block, blockIdx: i, year: parseInt(match[0], 10) });
+      let match;
+      // Minden évszámot kigyűjtünk a blokkban
+      while ((match = yearRegex.exec(block)) !== null) {
+        found.push({ year: parseInt(match[0], 10), chapter, title: chapterObj.title, block, blockIdx: i });
       }
     });
   }
@@ -52,15 +55,57 @@ function findYearBlocks() {
     resultsDiv.innerHTML = '<span style="color:#a00">Nincs évszámot tartalmazó rész.</span>';
     return;
   }
-  // Találatok rendezése: évszám szerint növekvő, majd fejezetcím szerint
-  found.sort((a, b) => {
-    if (a.year !== b.year) return a.year - b.year;
-    // fejezetcím természetes sorrend
-    function chapterSortKey(chapter) {
-      return chapter.split('.').map(x => parseInt(x, 10));
+  // Csoportosítás: év -> fejezet -> blokkok
+  let grouped = {};
+  found.forEach(item => {
+    if (!grouped[item.year]) grouped[item.year] = {};
+    if (!grouped[item.year][item.chapter]) grouped[item.year][item.chapter] = { title: item.title, blocks: [] };
+    // Csak az adott blokkot tegyük be, ha még nincs benne (többszörös évszám esetén)
+    if (!grouped[item.year][item.chapter].blocks.some(b => b.blockIdx === item.blockIdx)) {
+      grouped[item.year][item.chapter].blocks.push({ block: item.block, blockIdx: item.blockIdx });
     }
-    const ak = chapterSortKey(a.chapter);
-    const bk = chapterSortKey(b.chapter);
+  });
+  // Csak olyan év maradjon, ahol tényleg van fejezet/blokk
+  const filteredYears = Object.keys(grouped)
+    .map(Number)
+    .filter(year => {
+      const chapters = grouped[year];
+      // Legalább egy fejezetben legalább egy blokk
+      return Object.values(chapters).some(ch => Array.isArray(ch.blocks) && ch.blocks.length > 0);
+    })
+    .sort((a, b) => a - b);
+// Fejezetek természetes sorrendben rendező kulcs
+function chapterSortKey(chapter) {
+  return chapter.split('.').map(x => parseInt(x, 10));
+}
+  // Kirenderelés
+  resultsDiv.innerHTML = filteredYears.map((year, yIdx) =>
+    `<div class="result-block" style="cursor:pointer" onclick="expandYearGroup(${yIdx})">
+      <div class="page"><b>${year}</b></div>
+    </div>
+    <div id="expand_yeargroup_${yIdx}"></div>`
+  ).join('<hr>');
+  window._yearGroupData = grouped;
+  window._yearGroupOrder = filteredYears;
+  window._expandedYearGroup = null;
+  window._expandedYearChapter = null;
+}
+
+window.expandYearGroup = function(yIdx) {
+  // Csukjunk be minden nyitott évcsoportot
+  document.querySelectorAll('[id^="expand_yeargroup_"]').forEach(div => div.innerHTML = '');
+  if (window._expandedYearGroup === yIdx) {
+    window._expandedYearGroup = null;
+    return;
+  }
+  window._expandedYearGroup = yIdx;
+  window._expandedYearChapter = null;
+  const year = window._yearGroupOrder[yIdx];
+  const chapters = window._yearGroupData[year];
+  // fejezetek természetes sorrendben
+  const sortedChapters = Object.keys(chapters).sort((a, b) => {
+    const ak = chapterSortKey(a);
+    const bk = chapterSortKey(b);
     for (let i = 0; i < Math.max(ak.length, bk.length); ++i) {
       const ai = ak[i] || 0;
       const bi = bk[i] || 0;
@@ -68,28 +113,39 @@ function findYearBlocks() {
     }
     return 0;
   });
-  // Új: minden találat külön sorban, évszám szerint
-  resultsDiv.innerHTML = found.map((item, idx) =>
-    `<div class="result-block" style="cursor:pointer" onclick="expandYearBlockSingle(${idx})">
-      <div class="page"><b>${item.chapter}</b>${item.title ? ". " + highlight(item.title, '') : ''} <span style="color:#888;font-size:0.95em;">(${item.year})</span></div>
+  document.getElementById('expand_yeargroup_' + yIdx).innerHTML = sortedChapters.map((chapter, cIdx) =>
+    `<div class="result-block" style="cursor:pointer;background:#f7f7f7" onclick="expandYearChapter(${yIdx},${cIdx},event)">
+      <div class="page"><b>${chapter}</b>${chapters[chapter].title ? '. ' + highlight(chapters[chapter].title, '') : ''}</div>
     </div>
-    <div id="expand_year_${idx}"></div>`
-  ).join('<hr>');
-  window._yearBlockFlat = found;
-  window._expandedYearBlock = null;
+    <div id="expand_yc_${yIdx}_${cIdx}"></div>`
+  ).join('');
 }
 
-window.expandYearBlockSingle = function(idx) {
-  // Csukjunk be minden nyitottat
-  document.querySelectorAll('[id^="expand_year_"]').forEach(div => div.innerHTML = '');
-  if (window._expandedYearBlock === idx) {
-    window._expandedYearBlock = null;
+window.expandYearChapter = function(yIdx, cIdx, event) {
+  // Ne triggerelje a yeargroup lenyitását
+  event.stopPropagation();
+  // Csukjunk be minden nyitott év-fejezet blokkot
+  document.querySelectorAll('[id^="expand_yc_"]').forEach(div => div.innerHTML = '');
+  if (window._expandedYearChapter && window._expandedYearChapter.yIdx === yIdx && window._expandedYearChapter.cIdx === cIdx) {
+    window._expandedYearChapter = null;
     return;
   }
-  window._expandedYearBlock = idx;
-  const item = window._yearBlockFlat[idx];
-  let html = `<div style="margin-bottom:18px;background:#fffbe6;border-left:4px solid #28f109;padding:12px 10px;border-radius:4px;">${highlight(item.block, '')}</div>`;
-  document.getElementById('expand_year_' + idx).innerHTML = html;
+  window._expandedYearChapter = { yIdx, cIdx };
+  const year = window._yearGroupOrder[yIdx];
+  const chapters = window._yearGroupData[year];
+  const chapter = Object.keys(chapters).sort((a, b) => {
+    const ak = chapterSortKey(a);
+    const bk = chapterSortKey(b);
+    for (let i = 0; i < Math.max(ak.length, bk.length); ++i) {
+      const ai = ak[i] || 0;
+      const bi = bk[i] || 0;
+      if (ai !== bi) return ai - bi;
+    }
+    return 0;
+  })[cIdx];
+  const blocks = chapters[chapter].blocks;
+  let html = blocks.map(b => `<div style="margin-bottom:18px;background:#fffbe6;border-left:4px solid #28f109;padding:12px 10px;border-radius:4px;">${highlight(b.block, '')}</div>`).join('');
+  document.getElementById('expand_yc_' + yIdx + '_' + cIdx).innerHTML = html;
 }
 function highlight(text, query) {
   let highlighted = text;
