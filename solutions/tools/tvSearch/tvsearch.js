@@ -28,6 +28,69 @@ document.getElementById('listAllBtn').addEventListener('click', function() {
   searchChapters();
 });
 
+document.getElementById('findYearsBtn').addEventListener('click', function() {
+  findYearBlocks();
+});
+
+function findYearBlocks() {
+  const resultsDiv = document.getElementById('results');
+  let found = [];
+  const yearRegex = /\b(1[89][0-9]{2}|20[0-9]{2})\b/;
+  for (const [chapter, chapterObj] of Object.entries(ocrData)) {
+    if (!chapterObj.text) continue;
+    // Szöveg blokkokra bontása \n\n mentén
+    const blocks = chapterObj.text.split(/\n\n+/);
+    blocks.forEach((block, i) => {
+      const match = block.match(yearRegex);
+      if (match) {
+        // Az első évszámot mentsük el a sortoláshoz
+        found.push({ chapter, title: chapterObj.title, block, blockIdx: i, year: parseInt(match[0], 10) });
+      }
+    });
+  }
+  if (found.length === 0) {
+    resultsDiv.innerHTML = '<span style="color:#a00">Nincs évszámot tartalmazó rész.</span>';
+    return;
+  }
+  // Találatok rendezése: évszám szerint növekvő, majd fejezetcím szerint
+  found.sort((a, b) => {
+    if (a.year !== b.year) return a.year - b.year;
+    // fejezetcím természetes sorrend
+    function chapterSortKey(chapter) {
+      return chapter.split('.').map(x => parseInt(x, 10));
+    }
+    const ak = chapterSortKey(a.chapter);
+    const bk = chapterSortKey(b.chapter);
+    for (let i = 0; i < Math.max(ak.length, bk.length); ++i) {
+      const ai = ak[i] || 0;
+      const bi = bk[i] || 0;
+      if (ai !== bi) return ai - bi;
+    }
+    return 0;
+  });
+  // Új: minden találat külön sorban, évszám szerint
+  resultsDiv.innerHTML = found.map((item, idx) =>
+    `<div class="result-block" style="cursor:pointer" onclick="expandYearBlockSingle(${idx})">
+      <div class="page"><b>${item.chapter}</b>${item.title ? ". " + highlight(item.title, '') : ''} <span style="color:#888;font-size:0.95em;">(${item.year})</span></div>
+    </div>
+    <div id="expand_year_${idx}"></div>`
+  ).join('<hr>');
+  window._yearBlockFlat = found;
+  window._expandedYearBlock = null;
+}
+
+window.expandYearBlockSingle = function(idx) {
+  // Csukjunk be minden nyitottat
+  document.querySelectorAll('[id^="expand_year_"]').forEach(div => div.innerHTML = '');
+  if (window._expandedYearBlock === idx) {
+    window._expandedYearBlock = null;
+    return;
+  }
+  window._expandedYearBlock = idx;
+  const item = window._yearBlockFlat[idx];
+  let html = `<div style="margin-bottom:18px;background:#fffbe6;border-left:4px solid #28f109;padding:12px 10px;border-radius:4px;">${highlight(item.block, '')}</div>`;
+  document.getElementById('expand_year_' + idx).innerHTML = html;
+}
 function highlight(text, query) {
   let highlighted = text;
   if (query) {
