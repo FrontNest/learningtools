@@ -22,7 +22,7 @@ document.getElementById('searchInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') searchChapters();
 });
 
-// Új gomb: összes fejezet listázása
+// Összes fejezet listázása gomb
 document.getElementById('listAllBtn').addEventListener('click', function() {
   document.getElementById('searchInput').value = '';
   searchChapters();
@@ -80,7 +80,7 @@ function searchChapters() {
   resultsDiv.innerHTML = found.map((res, idx) =>
     `<div class="result-block" style="cursor:pointer" onclick="expandChapter('${res.chapter}',${idx})">
       <div class="page"><b>${res.chapter}</b>${res.title ? ". " + highlight(res.title, query) : ''}</div>
-      ${query && ocrData[res.chapter].text.toLowerCase().includes(query.toLowerCase()) && !res.title.toLowerCase().includes(query.toLowerCase()) ? '<span style="color:#888;font-size:0.95em;">(találat a szövegben)</span>' : ''}
+      ${query && ocrData[res.chapter].text.toLowerCase().includes(query.toLowerCase()) && !res.title.toLowerCase().includes(query.toLowerCase()) ? '<span style="color:#888;font-size:0.95em;"></span>' : ''}
     </div>
     <div id="expand_${idx}"></div>`
   ).join('<hr>');
@@ -95,6 +95,11 @@ window.expandChapter = function(chapter, idx) {
     return;
   }
   expandedPage = idx;
+  // Scroll the chapter title into view
+  const resultBlocks = document.querySelectorAll('.result-block');
+  if (resultBlocks && resultBlocks[idx]) {
+    resultBlocks[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
   const query = document.getElementById('searchInput').value.trim();
   const chapterObj = ocrData[chapter];
   let text = chapterObj.text;
@@ -102,9 +107,9 @@ window.expandChapter = function(chapter, idx) {
   // Táblázat renderelése, ha van
   let tableHtml = '';
   if (chapterObj.table) {
-    tableHtml = `<div class="responsive-table">${renderTable(chapterObj.table)}</div>`;
+    tableHtml = `<div class=\"responsive-table\">${renderTable(chapterObj.table)}</div>`;
   }
-  document.getElementById('expand_' + idx).innerHTML = `<div class="result-block" style="background:#fffbe6;border-left:4px solid #28f109;margin-top:8px;">${html}${tableHtml}</div>`;
+  document.getElementById('expand_' + idx).innerHTML = `<div class=\"result-block\" style=\"background:#fffbe6;border-left:4px solid #28f109;margin-top:8px;\">${html}${tableHtml}</div>`;
 }
 
 function renderTable(tableObj) {
