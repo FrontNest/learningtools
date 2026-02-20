@@ -1,3 +1,12 @@
+// Stílus beszúrása a fejezet-linkekhez (csak egyszer)
+function ensureChapterLinkStyle() {
+  if (!document.getElementById('chapter-link-style')) {
+    const style = document.createElement('style');
+    style.id = 'chapter-link-style';
+    style.textContent = '.chapter-link { cursor:pointer; text-decoration:none; color:#111; transition:color .15s, text-decoration .15s; } .chapter-link:hover { color:#580202; text-decoration:underline; }';
+    document.head.appendChild(style);
+  }
+}
 // XHTML-kompatibilis highlight: sortörések DOM-módszerrel
 function highlightToDOM(text) {
   const root = document.createElement('div');
@@ -136,36 +145,70 @@ function highlight(text) {
 
 // Táblázat 3. oszlopának feldolgozása
 function enableTableHover() {
+    ensureChapterLinkStyle();
   const table = document.querySelector('table');
   if (!table) return;
   for (const row of table.rows) {
     if (row.cells.length < 3) continue;
     const cell = row.cells[2];
-    const match = cell.textContent.match(/^(\d+(?:\.\d+)*)(?=\.| )/);
-    if (!match) continue;
-    const chapterKey = match[1];
-    cell.style.cursor = 'pointer';
-    cell.addEventListener('mouseenter', function handler() {
-      if (document.getElementById('szolg-overlay')) return;
-      const chapter = szolgalatiData[chapterKey];
-      if (!chapter) return;
-      const contentFrag = document.createDocumentFragment();
-      const titleDiv = document.createElement('div');
-      titleDiv.setAttribute('style', 'font-size:1.25em;font-weight:bold;margin-bottom:10px;color:#20968c;');
-      titleDiv.textContent = chapterKey + '. ' + (stripHtml(chapter.title || ''));
-      contentFrag.appendChild(titleDiv);
-      const textDiv = document.createElement('div');
-      textDiv.setAttribute('style', 'font-size:1.08em;line-height:1.7;');
-      if (chapter.text) {
-        textDiv.appendChild(highlightToDOM(chapter.text));
+    // DOM-alapú sorbontás: minden <br> után új sor, minden szöveges node-ot feldolgozunk
+    const nodes = Array.from(cell.childNodes);
+    cell.textContent = '';
+    let currentLine = '';
+    function flushLine() {
+      if (currentLine === '') return;
+      const div = document.createElement('div');
+      const match = currentLine.match(/^(\d+(?:\.\d+)*)(?=\.|\s)/);
+      if (match) {
+        const chapterKey = match[1];
+        const rest = currentLine.slice(match[0].length);
+        const span = document.createElement('span');
+        span.textContent = match[0] + rest;
+        span.className = 'chapter-link';
+        span.addEventListener('click', function handler() {
+          if (document.getElementById('szolg-overlay')) return;
+          const chapter = szolgalatiData[chapterKey];
+          if (!chapter) return;
+          const contentFrag = document.createDocumentFragment();
+          const titleDiv = document.createElement('div');
+          titleDiv.setAttribute('style', 'font-size:1.25em;font-weight:bold;margin-bottom:10px;color:#20968c;');
+          titleDiv.textContent = chapterKey + '. ' + (stripHtml(chapter.title || ''));
+          contentFrag.appendChild(titleDiv);
+          const textDiv = document.createElement('div');
+          textDiv.setAttribute('style', 'font-size:1.08em;line-height:1.7;');
+          if (chapter.text) {
+            textDiv.appendChild(highlightToDOM(chapter.text));
+          }
+          contentFrag.appendChild(textDiv);
+          if (chapter.table) {
+            const tableElem = renderTableDOM(chapter.table);
+            contentFrag.appendChild(tableElem);
+          }
+          createOverlay(contentFrag);
+        });
+        div.appendChild(span);
+      } else {
+        div.textContent = currentLine;
       }
-      contentFrag.appendChild(textDiv);
-      if (chapter.table) {
-        const tableElem = renderTableDOM(chapter.table);
-        contentFrag.appendChild(tableElem);
+      cell.appendChild(div);
+      currentLine = '';
+    }
+    nodes.forEach(node => {
+      if (node.nodeType === Node.ELEMENT_NODE && node.tagName.toLowerCase() === 'br') {
+        flushLine();
+      } else if (node.nodeType === Node.TEXT_NODE) {
+        // Lehet több sor is egy text node-ban
+        const parts = node.textContent.split(/\n/);
+        for (let i = 0; i < parts.length; ++i) {
+          if (i > 0) flushLine();
+          currentLine += parts[i];
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        // Ha más elem, pl. <span>, akkor szövegként kezeljük
+        currentLine += node.textContent;
       }
-      createOverlay(contentFrag);
     });
+    flushLine();
   }
 }
 
