@@ -180,20 +180,19 @@ function highlight(text, query) {
     return `[[TAG${tagIdx++}]]`;
   });
 
-  // 2. Kiemelés: több szavas keresés támogatása tagek közötti átfedéssel
-  // A keresőkifejezést "szavakra" bontjuk
-  const words = query.trim().split(/\s+/).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-  if (words.length === 0) {
-    // üres keresés
+  // 2. Kiemelés: karakterenként engedjük a tageket a keresőkifejezésbe
+  // Pl. ösztöndíjas => o(?:[\s\[\]TAG\d]*)*s(?:[\s\[\]TAG\d]*)*z... stb.
+  const chars = Array.from(query);
+  if (chars.length === 0) {
     let highlighted = text;
     highlighted = highlighted.replace(/\n\n/g, '<hr>');
     highlighted = highlighted.replace(/\n/g, '<br>');
     return highlighted;
   }
-  // A helyőrzőket engedjük a szavak közé (akár több is lehet)
-  // pl. szolgálati idő => szolgálati(?:\\s*\\[\\[TAG\\d+\\]\\])* idő
+  // A helyőrzőket engedjük minden karakter közé
+  // [[TAG\d+]] lehet közte, whitespace is lehet
   const between = '(?:\\s*\\[\\[TAG\\d+\\]\\]\\s*)*';
-  const pattern = words.map(w => w).join(between);
+  const pattern = chars.map(c => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join(between);
   const re = new RegExp(pattern, 'gi');
   // 3. Kiemelés markerekkel
   textWithPlaceholders = textWithPlaceholders.replace(re, match => `[[HIGHLIGHT]]${match}[[ENDHIGHLIGHT]]`);
