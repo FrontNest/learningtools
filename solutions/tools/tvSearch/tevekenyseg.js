@@ -39,7 +39,11 @@ function renderTableDOM(tableObj) {
   tableObj.headers.forEach(h => {
     const th = document.createElement('th');
     th.setAttribute('style', 'border:1px solid #bbb;padding:6px 8px;background:#f2f6fa;color:#2a3a4a;font-weight:bold');
-    th.textContent = h;
+    if (h.indexOf('<') !== -1 && h.indexOf('>') !== -1) {
+      th.innerHTML = h;
+    } else {
+      th.textContent = h;
+    }
     trh.appendChild(th);
   });
   thead.appendChild(trh);
@@ -50,11 +54,17 @@ function renderTableDOM(tableObj) {
     row.forEach(cell => {
       const td = document.createElement('td');
       td.setAttribute('style', 'border:1px solid #bbb;padding:6px 8px;vertical-align:top');
-      const lines = cell.split(/\n/);
-      lines.forEach((line, idx) => {
-        if (idx > 0) td.appendChild(document.createElement('br'));
-        td.appendChild(document.createTextNode(line));
-      });
+      // Ha a cella tartalmaz HTML-t (pl. <span>), jelenítsük meg innerHTML-lel
+      // Egyébként sortörésnél <br>, ahogy eddig
+      if (cell.indexOf('<') !== -1 && cell.indexOf('>') !== -1) {
+        td.innerHTML = cell;
+      } else {
+        const lines = cell.split(/\n/);
+        lines.forEach((line, idx) => {
+          if (idx > 0) td.appendChild(document.createElement('br'));
+          td.appendChild(document.createTextNode(line));
+        });
+      }
       tr.appendChild(td);
     });
     tbody.appendChild(tr);
