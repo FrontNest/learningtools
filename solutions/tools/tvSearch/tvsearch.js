@@ -1,3 +1,18 @@
+// Globális highlight CSS beszúrása, ha még nincs
+function ensureHighlightStyle() {
+  if (!document.getElementById('highlight-style')) {
+    const style = document.createElement('style');
+    style.id = 'highlight-style';
+    style.innerHTML = `.highlight { display: inline-block !important; border-bottom: 4px solid red !important; border-left: none !important; border-right: none !important; border-top: none !important; background: inherit !important; color: inherit !important; padding: 0 !important; margin: 0 !important; }`;
+    document.head.appendChild(style);
+  }
+}
+
+// Segédfüggvény: HTML tagek eltávolítása kereséshez
+function stripHtml(html) {
+  if (!html) return '';
+  return html.replace(/<[^>]+>/g, '');
+}
 // Fejezetek természetes sorrendben rendező kulcs
 function chapterSortKey(chapter) {
   return chapter.split('.').map(x => parseInt(x, 10));
@@ -45,8 +60,9 @@ function findYearBlocks() {
     const blocks = chapterObj.text.split(/\n\n+/);
     blocks.forEach((block, i) => {
       let match;
-      // Minden évszámot kigyűjtünk a blokkban
-      while ((match = yearRegex.exec(block)) !== null) {
+      // HTML-mentes blokk a kereséshez
+      const plainBlock = stripHtml(block);
+      while ((match = yearRegex.exec(plainBlock)) !== null) {
         found.push({ year: parseInt(match[0], 10), chapter, title: chapterObj.title, block, blockIdx: i });
       }
     });
@@ -148,15 +164,46 @@ window.expandYearChapter = function(yIdx, cIdx, event) {
   document.getElementById('expand_yc_' + yIdx + '_' + cIdx).innerHTML = html;
 }
 function highlight(text, query) {
-  let highlighted = text;
-  if (query) {
-    const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const re = new RegExp(safeQuery, 'gi');
-    highlighted = highlighted.replace(re, match => `<span class="highlight">${match}</span>`);
+  ensureHighlightStyle();
+  if (!query) {
+    let highlighted = text;
+    highlighted = highlighted.replace(/\n\n/g, '<hr>');
+    highlighted = highlighted.replace(/\n/g, '<br>');
+    return highlighted;
   }
-  highlighted = highlighted.replace(/\n\n/g, '<hr>');
-  highlighted = highlighted.replace(/\n/g, '<br>');
-  return highlighted;
+  // 1. Cseréljük le az összes HTML taget egyedi helyőrzőre
+  const tagRegex = /<[^>]+>/g;
+  let tags = [];
+  let tagIdx = 0;
+  let textWithPlaceholders = text.replace(tagRegex, tag => {
+    tags.push(tag);
+    return `[[TAG${tagIdx++}]]`;
+  });
+
+  // 2. Kiemelés: karakterenként engedjük a tageket a keresőkifejezésbe
+  // Pl. ösztöndíjas => o(?:[\s\[\]TAG\d]*)*s(?:[\s\[\]TAG\d]*)*z... stb.
+  const chars = Array.from(query);
+  if (chars.length === 0) {
+    let highlighted = text;
+    highlighted = highlighted.replace(/\n\n/g, '<hr>');
+    highlighted = highlighted.replace(/\n/g, '<br>');
+    return highlighted;
+  }
+  // A helyőrzőket engedjük minden karakter közé
+  // [[TAG\d+]] lehet közte, whitespace is lehet
+  const between = '(?:\\s*\\[\\[TAG\\d+\\]\\]\\s*)*';
+  const pattern = chars.map(c => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join(between);
+  const re = new RegExp(pattern, 'gi');
+  // 3. Kiemelés markerekkel
+  textWithPlaceholders = textWithPlaceholders.replace(re, match => `[[HIGHLIGHT]]${match}[[ENDHIGHLIGHT]]`);
+  // 4. Visszahelyettesítjük a HTML tageket
+  let restored = textWithPlaceholders.replace(/\[\[TAG(\d+)\]\]/g, (m, n) => tags[parseInt(n, 10)]);
+  // 5. A highlight markereket span-ná alakítjuk
+  restored = restored.replace(/\[\[HIGHLIGHT\]\]/g, '<span class="highlight">').replace(/\[\[ENDHIGHLIGHT\]\]/g, '</span>');
+  // 6. sortörések kezelése
+  restored = restored.replace(/\n\n/g, '<hr>');
+  restored = restored.replace(/\n/g, '<br>');
+  return restored;
 }
 
 let expandedPage = null;
@@ -166,13 +213,15 @@ function searchChapters() {
   const resultsDiv = document.getElementById('results');
   let found = [];
   for (const [chapter, chapterObj] of Object.entries(ocrData)) {
-      if (!query) { 
-        found.push({ chapter, title: chapterObj.title }); 
-        continue; 
+    if (!query) {
+      found.push({ chapter, title: chapterObj.title });
+      continue;
     }
-    // Keresés a címben vagy a teljes szövegben
-    const inTitle = chapterObj.title && chapterObj.title.toLowerCase().includes(query.toLowerCase());
-    const inText = chapterObj.text && chapterObj.text.toLowerCase().includes(query.toLowerCase());
+    // Keresés a címben vagy a teljes szövegben, HTML-mentesítve
+    const plainTitle = stripHtml(chapterObj.title);
+    const plainText = stripHtml(chapterObj.text);
+    const inTitle = plainTitle && plainTitle.toLowerCase().includes(query.toLowerCase());
+    const inText = plainText && plainText.toLowerCase().includes(query.toLowerCase());
     if (inTitle || inText) {
       found.push({ chapter, title: chapterObj.title });
     }
