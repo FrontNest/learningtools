@@ -12,6 +12,32 @@
     <div class="container">
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
+          <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+            <legend>Özvegyi nyugdíj jogosultság</legend>
+            <label for="ozvegyTipus">Özvegy típusa:</label>
+            <select id="ozvegyTipus" name="ozvegyTipus">
+              <option value="">-- válassz --</option>
+              <option value="házastárs">Házastárs</option>
+              <option value="bejegyzett élettárs">Bejegyzett élettárs</option>
+              <option value="elvált">Elvált házastárs</option>
+              <option value="élettárs">Élettárs</option>
+            </select><br>
+            <input type="checkbox" id="ozvegyElettarsEgyuttel" name="ozvegyElettarsEgyuttel">
+            <label for="ozvegyElettarsEgyuttel">Élettárs: 10 év együttélés</label><br>
+            <input type="checkbox" id="ozvegyElettarsGyermek" name="ozvegyElettarsGyermek">
+            <label for="ozvegyElettarsGyermek">Élettárs: 1 év együttélés + gyermek</label><br>
+            <input type="checkbox" id="ozvegyElvaltTartasdij" name="ozvegyElvaltTartasdij">
+            <label for="ozvegyElvaltTartasdij">Elvált: tartásdíj igazolás</label><br>
+            <input type="checkbox" id="ozvegyKorhatar" name="ozvegyKorhatar">
+            <label for="ozvegyKorhatar">Betöltötte az öregségi nyugdíjkorhatárt</label><br>
+            <input type="checkbox" id="ozvegyMegvaltozott" name="ozvegyMegvaltozott">
+            <label for="ozvegyMegvaltozott">Megváltozott munkaképességű</label><br>
+            <input type="checkbox" id="ozvegyGyermek" name="ozvegyGyermek">
+            <label for="ozvegyGyermek">Árvaellátásra jogosult gyermek(ek) eltartása</label><br>
+            <label for="ozvegyIgazolas">Igazolások (pl. lakcímkártya, tartásdíj, gyermek, egészségi állapot):</label>
+            <input type="file" id="ozvegyIgazolas" name="ozvegyIgazolas" multiple accept=".pdf,.jpg,.png,.doc,.docx"><br>
+            <small>Csatold a szükséges igazolásokat: lakcímkártya, tartásdíj, gyermek születési anyakönyvi kivonat, egészségi állapot igazolás stb.</small>
+          </fieldset>
         <fieldset>
           <legend>Alapadatok</legend>
           <label for="birthYear">Születési év:</label>
