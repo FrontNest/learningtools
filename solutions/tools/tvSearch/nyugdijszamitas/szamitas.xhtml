@@ -13,6 +13,22 @@
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
           <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                    <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                      <legend>Árvaellátás jogosultság</legend>
+                      <label for="arvaGyermekNev">Gyermek neve:</label>
+                      <input type="text" id="arvaGyermekNev" name="arvaGyermekNev" /><br />
+                      <label for="arvaGyermekSzuletesiEv">Gyermek születési év:</label>
+                      <input type="number" id="arvaGyermekSzuletesiEv" name="arvaGyermekSzuletesiEv" min="1900" max="2026" /><br />
+                      <label for="arvaTanul">Tanulmányokat folytat:</label>
+                      <input type="checkbox" id="arvaTanul" name="arvaTanul" />
+                      <label for="arvaTanul">16 év felett tanulói jogviszony</label><br />
+                      <label for="arvaMegvaltozott">Megváltozott munkaképességű:</label>
+                      <input type="checkbox" id="arvaMegvaltozott" name="arvaMegvaltozott" />
+                      <label for="arvaMegvaltozott">Egészségi állapota legfeljebb 50%</label><br />
+                      <label for="arvaIgazolas">Igazolások (tanulmányi, egészségi állapot, gyámság, orvosi dokumentum):</label>
+                      <input type="file" id="arvaIgazolas" name="arvaIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                      <small>Csatold a szükséges igazolásokat: tanulmányi igazolás, egészségi állapot, gyámság, orvosi dokumentum stb.</small>
+                    </fieldset>
             <legend>Özvegyi nyugdíj jogosultság</legend>
             <label for="ozvegyTipus">Özvegy típusa:</label>
             <select id="ozvegyTipus" name="ozvegyTipus">

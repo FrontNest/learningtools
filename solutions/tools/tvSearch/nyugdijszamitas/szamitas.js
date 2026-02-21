@@ -255,6 +255,50 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                // Árvaellátás mezők kezelése
+                const arvaGyermekNev = document.getElementById('arvaGyermekNev') ? document.getElementById('arvaGyermekNev').value : '';
+                const arvaGyermekSzuletesiEv = document.getElementById('arvaGyermekSzuletesiEv') ? parseInt(document.getElementById('arvaGyermekSzuletesiEv').value) : null;
+                const arvaTanul = document.getElementById('arvaTanul') && document.getElementById('arvaTanul').checked;
+                const arvaMegvaltozott = document.getElementById('arvaMegvaltozott') && document.getElementById('arvaMegvaltozott').checked;
+                const arvaIgazolas = document.getElementById('arvaIgazolas') && document.getElementById('arvaIgazolas').files.length > 0;
+                let arvaMsg = '';
+                let arvaOsszeg = 0;
+                let arvaJogosult = false;
+                // Jogosultság: szülő nyugdíjas vagy megszerezte a szükséges szolgálati időt
+                if (arvaGyermekNev && arvaGyermekSzuletesiEv && arvaIgazolas) {
+                  // 16 év alatt automatikusan jogosult
+                  const currentYear = new Date().getFullYear();
+                  const arvaKor = currentYear - arvaGyermekSzuletesiEv;
+                  if (arvaKor < 16) arvaJogosult = true;
+                  // 16 év felett tanulmányok vagy megváltozott munkaképesség
+                  if (arvaKor >= 16 && arvaKor <= 25 && arvaTanul) arvaJogosult = true;
+                  if (arvaMegvaltozott) arvaJogosult = true;
+                }
+                // Árvaellátás összeg számítása
+                if (arvaJogosult) {
+                  arvaOsszeg = Math.round(nyugdijOsszeg * 0.3);
+                  arvaMsg = `Árvaellátás összege: ${arvaOsszeg.toLocaleString()} Ft (az elhunyt nyugdíjának 30%-a).`;
+                  // Mindkét szülő elhunyt vagy életben lévő szülő megváltozott munkaképességű: 60%
+                  if (arvaMegvaltozott) {
+                    arvaOsszeg = Math.round(nyugdijOsszeg * 0.6);
+                    arvaMsg = `Árvaellátás összege: ${arvaOsszeg.toLocaleString()} Ft (az elhunyt nyugdíjának 60%-a).`;
+                  }
+                  // Minimum összeg
+                  if (arvaOsszeg < 50000) {
+                    arvaOsszeg = 50000;
+                    arvaMsg += ' Árvaellátás legkisebb összege: 50 000 Ft.';
+                  }
+                  // Tanulmányok igazolása
+                  if (arvaTanul && arvaKor >= 16) {
+                    arvaMsg += ' Tanulmányi igazolás szükséges.';
+                  }
+                  // Megváltozott munkaképesség igazolása
+                  if (arvaMegvaltozott) {
+                    arvaMsg += ' Egészségi állapot igazolása szükséges.';
+                  }
+                } else {
+                  arvaMsg = 'Nem jogosult árvaellátásra. Feltételek: gyermek neve, születési év, igazolások csatolva, életkor, tanulmányok vagy megváltozott munkaképesség.';
+                }
               // Özvegyi nyugdíj mezők kezelése
               const ozvegyTipus = document.getElementById('ozvegyTipus') ? document.getElementById('ozvegyTipus').value : '';
               const ozvegyElettarsEgyuttel = document.getElementById('ozvegyElettarsEgyuttel') && document.getElementById('ozvegyElettarsEgyuttel').checked;
@@ -629,5 +673,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     (csaladiAdokedvMsg ? `<hr><b>Családi adókedvezmény érvényesítése:</b> ${csaladiAdokedvMsg}` : '') +
     `<hr><b>Átmeneti bányászjáradék jogosultság:</b> ${atmenetiBanyaszMsg}` +
     `<hr><b>Táncművészeti életjáradék jogosultság:</b> ${tancmuveszMsg}` +
-    `<hr><b>Özvegyi nyugdíj jogosultság:</b> ${ozvegyMsg}`;
+    `<hr><b>Özvegyi nyugdíj jogosultság:</b> ${ozvegyMsg}` +
+    `<hr><b>Árvaellátás jogosultság:</b> ${arvaMsg}`;
 });
