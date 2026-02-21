@@ -1,3 +1,48 @@
+.periods-table-container {
+  margin-bottom: 16px;
+}
+#periodsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  background: #f9f9f9;
+}
+#periodsTable th, #periodsTable td {
+  border: 1px solid #ddd;
+  padding: 6px;
+  text-align: center;
+}
+#periodsTable th {
+  background: #e6f0fa;
+}
+#periodsTable tr:nth-child(even) {
+  background: #f4f8fc;
+}
+#addPeriodBtn {
+  margin-top: 8px;
+  padding: 8px 16px;
+  border: none;
+  background: #0077cc;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+#addPeriodBtn:hover {
+  background: #005fa3;
+}
+.deletePeriodBtn {
+  padding: 4px 10px;
+  border: none;
+  background: #e74c3c;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.deletePeriodBtn:hover {
+  background: #c0392b;
+}
 body {
   font-family: Arial, sans-serif;
   background: #f4f8fc;

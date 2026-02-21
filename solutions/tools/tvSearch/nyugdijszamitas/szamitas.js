@@ -91,6 +91,80 @@ if (valorizacioEvSelect) {
   });
 }
 
+// Jogcímek listája
+const jogcimek = [
+  'Teljes munkaidő',
+  'Részmunkaidő',
+  'Közalkalmazotti szolgálat',
+  'Katonai szolgálat',
+  'Gyermeknevelés',
+  'Ápolási szabadság',
+  'Fizetés nélküli szabadság',
+  'Tanulmányi idő',
+  'Egyéb jogcímek'
+];
+
+// Dinamikus jogcímes időszakok kezelése
+const periodsTableBody = document.getElementById('periodsTableBody');
+const addPeriodBtn = document.getElementById('addPeriodBtn');
+let periods = [];
+
+function createPeriodRow(period, idx) {
+  const tr = document.createElement('tr');
+  // Jogcím legördülő
+  const jogcimTd = document.createElement('td');
+  const jogcimSelect = document.createElement('select');
+  jogcimSelect.name = 'jogcim_' + idx;
+  jogcimek.forEach(jc => {
+    const opt = document.createElement('option');
+    opt.value = jc;
+    opt.textContent = jc;
+    jogcimSelect.appendChild(opt);
+  });
+  jogcimSelect.value = period.jogcim || '';
+  jogcimTd.appendChild(jogcimSelect);
+  tr.appendChild(jogcimTd);
+  // Kezdő dátum
+  const kezdoTd = document.createElement('td');
+  kezdoTd.innerHTML = `<input type="number" min="1900" max="2026" placeholder="Év" value="${period.kezdoEv||''}" style="width:60px;" /> <input type="number" min="1" max="12" placeholder="Hó" value="${period.kezdoHonap||''}" style="width:40px;" /> <input type="number" min="1" max="31" placeholder="Nap" value="${period.kezdoNap||''}" style="width:40px;" />`;
+  tr.appendChild(kezdoTd);
+  // Befejező dátum
+  const vegeTd = document.createElement('td');
+  vegeTd.innerHTML = `<input type="number" min="1900" max="2026" placeholder="Év" value="${period.vegeEv||''}" style="width:60px;" /> <input type="number" min="1" max="12" placeholder="Hó" value="${period.vegeHonap||''}" style="width:40px;" /> <input type="number" min="1" max="31" placeholder="Nap" value="${period.vegeNap||''}" style="width:40px;" />`;
+  tr.appendChild(vegeTd);
+  // Átlagkereset
+  const keresetTd = document.createElement('td');
+  keresetTd.innerHTML = `<input type="number" min="0" placeholder="Ft" value="${period.kereset||''}" style="width:80px;" />`;
+  tr.appendChild(keresetTd);
+  // Művelet (törlés)
+  const muveletTd = document.createElement('td');
+  const delBtn = document.createElement('button');
+  delBtn.type = 'button';
+  delBtn.className = 'deletePeriodBtn';
+  delBtn.textContent = 'Törlés';
+  delBtn.onclick = () => {
+    periods.splice(idx, 1);
+    renderPeriodsTable();
+  };
+  muveletTd.appendChild(delBtn);
+  tr.appendChild(muveletTd);
+  return tr;
+}
+
+function renderPeriodsTable() {
+  periodsTableBody.innerHTML = '';
+  periods.forEach((period, idx) => {
+    periodsTableBody.appendChild(createPeriodRow(period, idx));
+  });
+}
+
+addPeriodBtn.onclick = function() {
+  periods.push({ jogcim: jogcimek[0], kereset: '', kezdoEv: '', kezdoHonap: '', kezdoNap: '', vegeEv: '', vegeHonap: '', vegeNap: '' });
+  renderPeriodsTable();
+};
+
+renderPeriodsTable();
+
 document.getElementById('valorizaciosTable').innerHTML = renderValorizaciosTable();
 document.getElementById('minimalberTable').innerHTML = renderMinimalberTable();
 document.getElementById('szolidoTable').innerHTML = renderSzolidoTable();
@@ -109,73 +183,82 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
   const birthYear = parseInt(document.getElementById('birthYear').value, 10);
   const birthMonth = parseInt(document.getElementById('birthMonth').value, 10);
   const birthDay = parseInt(document.getElementById('birthDay').value, 10);
-  const atlagKereset = parseFloat(document.getElementById('atlagKereset').value);
-  const szolEv = parseInt(document.getElementById('szolEv').value, 10);
-  const szolHonap = parseInt(document.getElementById('szolHonap').value, 10);
-  const szolNap = parseInt(document.getElementById('szolNap').value, 10);
-  const jogviszonyTipus = document.getElementById('jogviszonyTipus').value;
   const nyugdijEv = parseInt(document.getElementById('nyugdijEv').value, 10);
   const nyugdijHonap = parseInt(document.getElementById('nyugdijHonap').value, 10);
   const valorizacioEv = document.getElementById('valorizacioEv').value;
-  const gyermekneveles = document.getElementById('gyermekneveles').checked;
-  const katonaiido = document.getElementById('katonaiido').checked;
-  const minberalatt = document.getElementById('minberalatt').checked;
-  const egyebkedv = document.getElementById('egyebkedv').checked;
 
-  const formData = { birthYear, birthMonth, birthDay, atlagKereset, szolEv, szolHonap, szolNap, jogviszonyTipus, nyugdijEv, nyugdijHonap };
-  if (!validateForm(formData) || jogviszonyTipus === "") {
+  // Validáció
+  if (!birthYear || !birthMonth || !birthDay || !nyugdijEv || !nyugdijHonap) {
     document.getElementById('resultContainer').innerHTML = '<span style="color:red">Minden mező kitöltése kötelező!</span>';
     return;
   }
+  if (periods.length === 0) {
+    document.getElementById('resultContainer').innerHTML = '<span style="color:red">Legalább egy jogcímes időszakot adj meg!</span>';
+    return;
+  }
 
-  // Szolgálati idő módosítása kedvezmények szerint
-  let totalDays = szolEv * 365 + szolHonap * 30 + szolNap;
-  if (gyermekneveles) totalDays += 365 * 2; // pl. 2 év kedvezmény
-  if (katonaiido) totalDays += 365; // pl. 1 év kedvezmény
-  if (egyebkedv) totalDays += 180; // pl. 0.5 év kedvezmény
-  // Részmunkaidő: csak 70%-át számítjuk szolgálati időnek
-  if (jogviszonyTipus === "reszmunka") totalDays = Math.round(totalDays * 0.7);
+  // Jogcímes időszakok feldolgozása
+  let totalDays = 0;
+  let keresetSum = 0;
+  let keresetCount = 0;
+  let details = [];
+  for (let i = 0; i < periods.length; i++) {
+    const tr = periodsTableBody.children[i];
+    const jogcim = tr.children[0].querySelector('select').value;
+    const kezdoEv = parseInt(tr.children[1].children[0].value, 10);
+    const kezdoHonap = parseInt(tr.children[1].children[1].value, 10);
+    const kezdoNap = parseInt(tr.children[1].children[2].value, 10);
+    const vegeEv = parseInt(tr.children[2].children[0].value, 10);
+    const vegeHonap = parseInt(tr.children[2].children[1].value, 10);
+    const vegeNap = parseInt(tr.children[2].children[2].value, 10);
+    const kereset = parseFloat(tr.children[3].children[0].value);
+    // Validáció
+    if (!jogcim || !kezdoEv || !kezdoHonap || !kezdoNap || !vegeEv || !vegeHonap || !vegeNap) {
+      document.getElementById('resultContainer').innerHTML = '<span style="color:red">Minden időszak mező kitöltése kötelező!</span>';
+      return;
+    }
+    const startDate = new Date(kezdoEv, kezdoHonap - 1, kezdoNap);
+    const endDate = new Date(vegeEv, vegeHonap - 1, vegeNap);
+    if (endDate < startDate) {
+      document.getElementById('resultContainer').innerHTML = '<span style="color:red">Időszak vége nem lehet korábbi, mint a kezdete!</span>';
+      return;
+    }
+    // Napok számítása
+    const days = Math.floor((endDate - startDate) / (1000*60*60*24)) + 1;
+    let napok = days;
+    // Jogcím típusától függő beszámítás
+    if (jogcim === 'Részmunkaidő') napok = Math.round(napok * 0.7);
+    if (jogcim === 'Gyermeknevelés') napok = Math.round(napok * 1.0); // teljes beszámítás
+    if (jogcim === 'Katonai szolgálat') napok = Math.round(napok * 1.0);
+    if (jogcim === 'Ápolási szabadság' || jogcim === 'Fizetés nélküli szabadság' || jogcim === 'Tanulmányi idő') napok = Math.round(napok * 0.5);
+    // Kereset összesítés (csak ahol van kereset)
+    if (!isNaN(kereset) && kereset > 0) {
+      keresetSum += kereset * napok;
+      keresetCount += napok;
+    }
+    totalDays += napok;
+    details.push(`${jogcim}: ${napok} nap (${kezdoEv}.${kezdoHonap}.${kezdoNap} - ${vegeEv}.${vegeHonap}.${vegeNap})`);
+  }
 
   const totalYears = Math.floor(totalDays / 365);
-
-  // Szolgálati idő százalék
   let szazalek = szolidoSzazalek[totalYears];
   if (!szazalek) szazalek = 100.0;
+
+  // Átlagkereset számítása
+  let atlagKereset = keresetCount > 0 ? keresetSum / keresetCount : 0;
 
   // Valorizációs szorzó kiválasztása
   let valEv = valorizacioEv !== "" ? valorizacioEv : nyugdijEv;
   let valorizaciosSzam = valorizaciosSzorzok[valEv] || 1;
-
-  // Minimálbér alatti kereset korrekció
-  let kereset = atlagKereset;
-  if (minberalatt) {
-    // Nyugdíj kezdő évéhez tartozó minimálbér
-    let minber = 0;
-    for (let i = 0; i < minimalberData.length; i++) {
-      const row = minimalberData[i];
-      const ev = parseInt(row.start.split('-')[0], 10);
-      if (nyugdijEv >= ev) minber = row.wage;
-    }
-    if (kereset < minber) kereset = minber;
-  }
-
-  // Valorizáció alkalmazása
-  kereset = kereset * valorizaciosSzam;
+  atlagKereset = atlagKereset * valorizaciosSzam;
 
   // Nyugdíj összeg számítása
-  const haviAtlag = kereset * 30;
+  const haviAtlag = atlagKereset * 30;
   const nyugdijOsszeg = Math.round(haviAtlag * (szazalek / 100));
-
-  // Eredmény kiírása
-  let kedvStr = [];
-  if (gyermekneveles) kedvStr.push('gyermeknevelés');
-  if (katonaiido) kedvStr.push('katonai idő');
-  if (minberalatt) kedvStr.push('minimálbér alatti kereset');
-  if (egyebkedv) kedvStr.push('egyéb kedvezmény');
 
   document.getElementById('resultContainer').innerHTML =
     `Végső nyugdíj összege: <span style="color:green">${nyugdijOsszeg.toLocaleString()} Ft</span> <br />` +
-    `Szolgálati idő: ${totalYears} év (${totalDays} nap), százalék: ${szazalek}%<br />` +
-    `Jogviszony: ${jogviszonyTipus}, Nyugdíj kezdő időpont: ${nyugdijEv}. ${nyugdijHonap}. hó<br />` +
-    (kedvStr.length > 0 ? `Kedvezmények: ${kedvStr.join(', ')}` : '');
+    `Összes szolgálati idő: ${totalYears} év (${totalDays} nap), százalék: ${szazalek}%<br />` +
+    `Átlagkereset valorizációval: ${Math.round(atlagKereset).toLocaleString()} Ft<br />` +
+    `<ul><li>${details.join('</li><li>')}</li></ul>`;
 });
