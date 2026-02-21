@@ -255,6 +255,64 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                          // Tartós szabadságelvonás juttatás mezők kezelése
+                          const szabadsagNev = document.getElementById('szabadsagNev') ? document.getElementById('szabadsagNev').value : '';
+                          const szabadsagMagyar = document.getElementById('szabadsagMagyar') && document.getElementById('szabadsagMagyar').checked;
+                          const szabadsagLakhely = document.getElementById('szabadsagLakhely') && document.getElementById('szabadsagLakhely').checked;
+                          const szabadsagIdotartam = document.getElementById('szabadsagIdotartam') ? parseFloat(document.getElementById('szabadsagIdotartam').value) : null;
+                          const szabadsagHalalBuntetes = document.getElementById('szabadsagHalalBuntetes') && document.getElementById('szabadsagHalalBuntetes').checked;
+                          const szabadsagRokkant = document.getElementById('szabadsagRokkant') && document.getElementById('szabadsagRokkant').checked;
+                          const szabadsagNyugdijkorhatar = document.getElementById('szabadsagNyugdijkorhatar') && document.getElementById('szabadsagNyugdijkorhatar').checked;
+                          const szabadsagTulHazas = document.getElementById('szabadsagTulHazas') && document.getElementById('szabadsagTulHazas').checked;
+                          const szabadsagTulHazasOszvegyi = document.getElementById('szabadsagTulHazasOszvegyi') && document.getElementById('szabadsagTulHazasOszvegyi').checked;
+                          const szabadsagIgazolas = document.getElementById('szabadsagIgazolas') && document.getElementById('szabadsagIgazolas').files.length > 0;
+                          let szabadsagMsg = '';
+                          let szabadsagJogosult = false;
+                          let szabadsagOsszeg = 0;
+                          // Jogosultság: magyar állampolgár, magyarországi lakóhely, időtartam >= 1 év, igazolás, nyugdíjkorhatár vagy rokkant
+                          if (szabadsagNev && szabadsagMagyar && szabadsagLakhely && szabadsagIdotartam && szabadsagIdotartam >= 1 && szabadsagIgazolas && (szabadsagNyugdijkorhatar || szabadsagRokkant)) {
+                            szabadsagJogosult = true;
+                          }
+                          // Saját jogon juttatás összege
+                          if (szabadsagJogosult && !szabadsagTulHazas) {
+                            if (szabadsagHalalBuntetes) {
+                              szabadsagOsszeg = 100000;
+                              szabadsagMsg = 'Halálbüntetés, nem hajtották végre: havi 100 000 Ft.';
+                            } else if (szabadsagIdotartam >= 10) {
+                              szabadsagOsszeg = 80000;
+                              szabadsagMsg = '10 év vagy több szabadságelvonás: havi 80 000 Ft.';
+                            } else if (szabadsagIdotartam >= 5) {
+                              szabadsagOsszeg = 60000;
+                              szabadsagMsg = '5-10 év szabadságelvonás: havi 60 000 Ft.';
+                            } else if (szabadsagIdotartam >= 3) {
+                              szabadsagOsszeg = 40000;
+                              szabadsagMsg = '3-5 év szabadságelvonás: havi 40 000 Ft.';
+                            } else if (szabadsagIdotartam >= 1) {
+                              szabadsagOsszeg = 22500;
+                              szabadsagMsg = '1-3 év szabadságelvonás: havi 22 500 Ft.';
+                            }
+                            szabadsagMsg += ' Igazolás: szabadságelvonás, magyar állampolgárság, lakóhely, dokumentumok csatolva.';
+                          }
+                          // Túlélő házastárs juttatás összege
+                          if (szabadsagJogosult && szabadsagTulHazas) {
+                            if (szabadsagHalalBuntetes) {
+                              szabadsagOsszeg = szabadsagTulHazasOszvegyi ? 30000 : 50000;
+                              szabadsagMsg = `Halálbüntetés, nem hajtották végre: havi ${szabadsagOsszeg.toLocaleString()} Ft.`;
+                            } else if (szabadsagIdotartam >= 10) {
+                              szabadsagOsszeg = szabadsagTulHazasOszvegyi ? 24000 : 40000;
+                              szabadsagMsg = `10 év vagy több szabadságelvonás: havi ${szabadsagOsszeg.toLocaleString()} Ft.`;
+                            } else if (szabadsagIdotartam >= 5) {
+                              szabadsagOsszeg = szabadsagTulHazasOszvegyi ? 18000 : 30000;
+                              szabadsagMsg = `5-10 év szabadságelvonás: havi ${szabadsagOsszeg.toLocaleString()} Ft.`;
+                            } else if (szabadsagIdotartam >= 3) {
+                              szabadsagOsszeg = szabadsagTulHazasOszvegyi ? 12000 : 20000;
+                              szabadsagMsg = `3-5 év szabadságelvonás: havi ${szabadsagOsszeg.toLocaleString()} Ft.`;
+                            }
+                            szabadsagMsg += ' Igazolás: szabadságelvonás, magyar állampolgárság, lakóhely, dokumentumok csatolva.';
+                          }
+                          if (!szabadsagJogosult) {
+                            szabadsagMsg = 'Nem jogosult tartós szabadságelvonás juttatásra. Feltételek: magyar állampolgár, magyarországi lakóhely, időtartam >= 1 év, igazolás, nyugdíjkorhatár vagy rokkant.';
+                          }
                         // Rokkantsági járadék mezők kezelése
                         const rokkantsagiNev = document.getElementById('rokkantsagiNev') ? document.getElementById('rokkantsagiNev').value : '';
                         const rokkantsagiEletkor = document.getElementById('rokkantsagiEletkor') ? parseInt(document.getElementById('rokkantsagiEletkor').value) : null;
@@ -798,5 +856,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     `<hr><b>Szülői nyugdíj jogosultság:</b> ${szuloMsg}` +
     `<hr><b>Baleseti hozzátartozói nyugdíj jogosultság:</b> ${balesetiMsg}` +
     `<hr><b>Baleseti járadék jogosultság:</b> ${balesetiJaradekMsg}` +
-    `<hr><b>Rokkantsági járadék jogosultság:</b> ${rokkantsagiMsg}`;
+    `<hr><b>Rokkantsági járadék jogosultság:</b> ${rokkantsagiMsg}` +
+    `<hr><b>Tartós szabadságelvonás juttatás jogosultság:</b> ${szabadsagMsg}`;
 });
