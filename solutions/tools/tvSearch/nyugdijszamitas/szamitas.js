@@ -1,3 +1,58 @@
+// Nyugdíjkorhatár táblázat (bővíthető, jogszabály szerint)
+const korhatarTabla = [
+  { ev: 1952, korhatarEv: 62, korhatarHonap: 0 },
+  { ev: 1953, korhatarEv: 63, korhatarHonap: 0 },
+  { ev: 1954, korhatarEv: 63, korhatarHonap: 4 },
+  { ev: 1955, korhatarEv: 63, korhatarHonap: 8 },
+  { ev: 1956, korhatarEv: 64, korhatarHonap: 0 },
+  { ev: 1957, korhatarEv: 64, korhatarHonap: 6 },
+  { ev: 1958, korhatarEv: 64, korhatarHonap: 10 },
+  { ev: 1959, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1960, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1961, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1962, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1963, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1964, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1965, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1966, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1967, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1968, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1969, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1970, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1971, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1972, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1973, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1974, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1975, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1976, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1977, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1978, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1979, korhatarEv: 65, korhatarHonap: 0 },
+  { ev: 1980, korhatarEv: 65, korhatarHonap: 0 }
+];
+
+function getKorhatar(birthYear) {
+  let korhatar = korhatarTabla[korhatarTabla.length - 1];
+  for (let i = 0; i < korhatarTabla.length; i++) {
+    if (birthYear <= korhatarTabla[i].ev) {
+      korhatar = korhatarTabla[i];
+      break;
+    }
+  }
+  return korhatar;
+}
+
+function showKorhatar(birthYear) {
+  const korhatar = getKorhatar(birthYear);
+  const korhatarDiv = document.getElementById('korhatarInfo');
+  if (korhatarDiv) {
+    korhatarDiv.innerHTML = `Nyugdíjkorhatár: ${korhatar.korhatarEv} év${korhatar.korhatarHonap > 0 ? ' ' + korhatar.korhatarHonap + ' hónap' : ''}`;
+  }
+}
+
+document.getElementById('birthYear').addEventListener('input', function() {
+  showKorhatar(parseInt(this.value, 10));
+});
 // Valorizációs szorzók
 const valorizaciosSzorzok = {
   1950: 679.815, 1951: 636.620, 1952: 500.992, 1953: 471.765, 1954: 430.761, 1955: 409.701, 1956: 378.731, 1957: 325.273, 1958: 318.092, 1959: 305.039, 1960: 297.940, 1961: 293.949, 1962: 286.816, 1963: 275.995, 1964: 267.199, 1965: 266.270, 1966: 253.666, 1967: 245.820, 1968: 240.687, 1969: 230.688, 1970: 216.495, 1971: 206.971, 1972: 196.370, 1973: 183.006, 1974: 169.925, 1975: 159.405, 1976: 152.103, 1977: 141.492, 1978: 131.010, 1979: 124.535, 1980: 117.820, 1981: 110.628, 1982: 103.877, 1983: 99.403, 1984: 88.675, 1985: 81.131, 1986: 75.257, 1987: 69.299, 1988: 63.115, 1989: 53.990, 1990: 44.400, 1991: 35.378, 1992: 29.163, 1993: 24.782, 1994: 19.468, 1995: 17.287, 1996: 14.724, 1997: 11.867, 1998: 10.023, 1999: 8.893, 2000: 7.982, 2001: 6.871, 2002: 5.742, 2003: 5.028, 2004: 4.753, 2005: 4.318, 2006: 4.013, 2007: 3.894, 2008: 3.643, 2009: 3.576, 2010: 3.347, 2011: 3.146, 2012: 3.083, 2013: 2.938, 2014: 2.852, 2015: 2.735, 2016: 2.539, 2017: 2.248, 2018: 2.019, 2019: 1.813, 2020: 1.652, 2021: 1.520, 2022: 1.294, 2023: 1.133, 2024: 0.000, 2025: 0.000, 2026: 0.000, 2027: 0.000, 2028: 0.000, 2029: 0.000, 2030: 0.000, 2031: 0.000, 2032: 0.000, 2033: 0.000, 2034: 0.000, 2035: 0.000, 2036: 0.000, 2037: 0.000, 2038: 0.000 };
@@ -200,6 +255,9 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
   const nyugdijHonap = parseInt(document.getElementById('nyugdijHonap').value, 10);
   const valorizacioEv = document.getElementById('valorizacioEv').value;
 
+  // Nyugdíjkorhatár automatikus megjelenítése
+  showKorhatar(birthYear);
+
   // Validáció
   if (!birthYear || !birthMonth || !birthDay || !nyugdijEv || !nyugdijHonap) {
     document.getElementById('resultContainer').innerHTML = '<span style="color:red">Minden mező kitöltése kötelező!</span>';
@@ -260,8 +318,14 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
   // Szolgálati idő év+nap formátum
   const totalYears = Math.floor(totalDays / 365);
   const totalNap = totalDays % 365;
-  let szazalek = szolidoSzazalek[totalYears];
-  if (!szazalek) szazalek = 100.0;
+  let szazalek = 0;
+  if (totalYears < 15) {
+    szazalek = Math.max(0, Math.round((totalYears / 15) * 43)); // 15 év alatt arányos
+  } else if (totalYears >= 50) {
+    szazalek = 100.0;
+  } else {
+    szazalek = szolidoSzazalek[totalYears] || 100.0;
+  }
 
   // Átlagkereset jogszabály szerinti képlet
   let atlagKereset = keresetCount > 0 ? keresetSum / keresetCount : 0;
