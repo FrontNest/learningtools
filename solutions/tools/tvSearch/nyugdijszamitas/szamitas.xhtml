@@ -12,6 +12,38 @@
     <div class="container">
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
+                                                  <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                                                    <legend>Bányászok egészségkárosodási járadék jogosultság</legend>
+                                                    <label for="banyaszEgeszsegNev">Igénylő neve:</label>
+                                                    <input type="text" id="banyaszEgeszsegNev" name="banyaszEgeszsegNev" /><br />
+                                                    <label for="banyaszEgeszsegKar">Egészségkárosodás mértéke (%):</label>
+                                                    <input type="number" id="banyaszEgeszsegKar" name="banyaszEgeszsegKar" min="0" max="100" step="0.1" /><br />
+                                                    <label for="banyaszEgeszsegKeresetKieg">Korábbi keresetkiegészítés összege (Ft):</label>
+                                                    <input type="number" id="banyaszEgeszsegKeresetKieg" name="banyaszEgeszsegKeresetKieg" min="0" step="1" /><br />
+                                                    <input type="checkbox" id="banyaszEgeszsegOregsegi" name="banyaszEgeszsegOregsegi" />
+                                                    <label for="banyaszEgeszsegOregsegi">Öregségi nyugellátásra jogosult</label><br />
+                                                    <input type="checkbox" id="banyaszEgeszsegRendszeres" name="banyaszEgeszsegRendszeres" />
+                                                    <label for="banyaszEgeszsegRendszeres">Rendszeres pénzellátásban részesül</label><br />
+                                                    <input type="checkbox" id="banyaszEgeszsegKereset" name="banyaszEgeszsegKereset" />
+                                                    <label for="banyaszEgeszsegKereset">Keresetkiegészítésben, átmeneti keresetkiegészítésben, jövedelem-kiegészítésben részesül</label><br />
+                                                    <label for="banyaszEgeszsegBanyaszEv">Földalatti bányászati évek száma:</label>
+                                                    <input type="number" id="banyaszEgeszsegBanyaszEv" name="banyaszEgeszsegBanyaszEv" min="0" max="50" /><br />
+                                                    <input type="checkbox" id="banyaszEgeszsegRokkantsagi" name="banyaszEgeszsegRokkantsagi" />
+                                                    <label for="banyaszEgeszsegRokkantsagi">2011.12.31-én rokkantsági/baleseti rokkantsági nyugdíjban részesült</label><br />
+                                                    <label for="banyaszEgeszsegEllatas">Megváltozott munkaképességű személyek ellátásának összege (Ft):</label>
+                                                    <input type="number" id="banyaszEgeszsegEllatas" name="banyaszEgeszsegEllatas" min="0" step="1" /><br />
+                                                    <input type="checkbox" id="banyaszEgeszsegKomplex" name="banyaszEgeszsegKomplex" />
+                                                    <label for="banyaszEgeszsegKomplex">Komplex felülvizsgálat alapján</label><br />
+                                                    <input type="checkbox" id="banyaszEgeszsegEllatasMegszunt" name="banyaszEgeszsegEllatasMegszunt" />
+                                                    <label for="banyaszEgeszsegEllatasMegszunt">Ellátás megszűnése alapján</label><br />
+                                                    <input type="checkbox" id="banyaszEgeszsegOszvegyi" name="banyaszEgeszsegOszvegyi" />
+                                                    <label for="banyaszEgeszsegOszvegyi">Özvegyi nyugdíjra jogosult</label><br />
+                                                    <label for="banyaszEgeszsegOszvegyiNyugdij">Özvegyi nyugdíj összege (Ft):</label>
+                                                    <input type="number" id="banyaszEgeszsegOszvegyiNyugdij" name="banyaszEgeszsegOszvegyiNyugdij" min="0" step="1" /><br />
+                                                    <label for="banyaszEgeszsegIgazolas">Igazolások (bányászati jogviszony, egészségkárosodás, orvosi, ellátás, dokumentumok):</label>
+                                                    <input type="file" id="banyaszEgeszsegIgazolas" name="banyaszEgeszsegIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                                                    <small>Csatold a szükséges igazolásokat: bányászati jogviszony, egészségkárosodás, orvosi, ellátás, dokumentumok stb.</small>
+                                                  </fieldset>
                                           <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
                                             <legend>Szépkorúak jubileumi juttatás jogosultság</legend>
                                             <label for="szepkorNev">Igénylő neve:</label>

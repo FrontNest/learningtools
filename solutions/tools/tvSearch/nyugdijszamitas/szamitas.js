@@ -255,6 +255,55 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                                  // Bányászok egészségkárosodási járadék mezők kezelése
+                                  const banyaszEgeszsegNev = document.getElementById('banyaszEgeszsegNev') ? document.getElementById('banyaszEgeszsegNev').value : '';
+                                  const banyaszEgeszsegKar = document.getElementById('banyaszEgeszsegKar') ? parseFloat(document.getElementById('banyaszEgeszsegKar').value) : null;
+                                  const banyaszEgeszsegKeresetKieg = document.getElementById('banyaszEgeszsegKeresetKieg') ? parseFloat(document.getElementById('banyaszEgeszsegKeresetKieg').value) : null;
+                                  const banyaszEgeszsegOregsegi = document.getElementById('banyaszEgeszsegOregsegi') && document.getElementById('banyaszEgeszsegOregsegi').checked;
+                                  const banyaszEgeszsegRendszeres = document.getElementById('banyaszEgeszsegRendszeres') && document.getElementById('banyaszEgeszsegRendszeres').checked;
+                                  const banyaszEgeszsegKereset = document.getElementById('banyaszEgeszsegKereset') && document.getElementById('banyaszEgeszsegKereset').checked;
+                                  const banyaszEgeszsegBanyaszEv = document.getElementById('banyaszEgeszsegBanyaszEv') ? parseInt(document.getElementById('banyaszEgeszsegBanyaszEv').value) : null;
+                                  const banyaszEgeszsegRokkantsagi = document.getElementById('banyaszEgeszsegRokkantsagi') && document.getElementById('banyaszEgeszsegRokkantsagi').checked;
+                                  const banyaszEgeszsegEllatas = document.getElementById('banyaszEgeszsegEllatas') ? parseFloat(document.getElementById('banyaszEgeszsegEllatas').value) : null;
+                                  const banyaszEgeszsegKomplex = document.getElementById('banyaszEgeszsegKomplex') && document.getElementById('banyaszEgeszsegKomplex').checked;
+                                  const banyaszEgeszsegEllatasMegszunt = document.getElementById('banyaszEgeszsegEllatasMegszunt') && document.getElementById('banyaszEgeszsegEllatasMegszunt').checked;
+                                  const banyaszEgeszsegOszvegyi = document.getElementById('banyaszEgeszsegOszvegyi') && document.getElementById('banyaszEgeszsegOszvegyi').checked;
+                                  const banyaszEgeszsegOszvegyiNyugdij = document.getElementById('banyaszEgeszsegOszvegyiNyugdij') ? parseFloat(document.getElementById('banyaszEgeszsegOszvegyiNyugdij').value) : null;
+                                  const banyaszEgeszsegIgazolas = document.getElementById('banyaszEgeszsegIgazolas') && document.getElementById('banyaszEgeszsegIgazolas').files.length > 0;
+                                  let banyaszEgeszsegMsg = '';
+                                  let banyaszEgeszsegJogosult = false;
+                                  let banyaszEgeszsegOsszeg = 0;
+                                  // Első személyi kör: keresetkiegészítésben részesült, egészségkárosodás >= 29%, nem jogosult öregségi nyugdíjra, nem részesül rendszeres pénzellátásban, keresetkiegészítésben, keresőtevékenységet nem folytat
+                                  if (banyaszEgeszsegNev && banyaszEgeszsegKar >= 29 && !banyaszEgeszsegOregsegi && !banyaszEgeszsegRendszeres && !banyaszEgeszsegKereset && banyaszEgeszsegKeresetKieg > 0 && banyaszEgeszsegIgazolas) {
+                                    banyaszEgeszsegJogosult = true;
+                                    banyaszEgeszsegOsszeg = banyaszEgeszsegKeresetKieg;
+                                    if (banyaszEgeszsegOsszeg > 89950) banyaszEgeszsegOsszeg = 89950;
+                                    banyaszEgeszsegMsg = `Bányászok egészségkárosodási járadék összege: ${banyaszEgeszsegOsszeg.toLocaleString()} Ft (korábbi keresetkiegészítés alapján, max. 89 950 Ft).`;
+                                  }
+                                  // Második személyi kör: rokkantsági nyugdíjban részesült, 10 év földalatti bányász, egészségkárosodás >= 29%, nem jogosult öregségi nyugdíjra, nem részesül rendszeres pénzellátásban, keresetkiegészítésben
+                                  if (banyaszEgeszsegNev && banyaszEgeszsegRokkantsagi && banyaszEgeszsegBanyaszEv >= 10 && banyaszEgeszsegKar >= 29 && !banyaszEgeszsegOregsegi && !banyaszEgeszsegRendszeres && !banyaszEgeszsegKereset && banyaszEgeszsegEllatas > 0 && banyaszEgeszsegIgazolas) {
+                                    banyaszEgeszsegJogosult = true;
+                                    // Komplex felülvizsgálat alapján vagy ellátás megszűnése alapján
+                                    if (banyaszEgeszsegKomplex) {
+                                      banyaszEgeszsegOsszeg = banyaszEgeszsegEllatas;
+                                      banyaszEgeszsegMsg = `Bányászok egészségkárosodási járadék összege: ${banyaszEgeszsegOsszeg.toLocaleString()} Ft (komplex felülvizsgálat alapján).`;
+                                    } else if (banyaszEgeszsegEllatasMegszunt) {
+                                      banyaszEgeszsegOsszeg = banyaszEgeszsegEllatas;
+                                      banyaszEgeszsegMsg = `Bányászok egészségkárosodási járadék összege: ${banyaszEgeszsegOsszeg.toLocaleString()} Ft (ellátás megszűnése alapján).`;
+                                    }
+                                  }
+                                  // Özvegyi nyugdíj csökkentés: járadék 50%-a, vagy ha özvegyi nyugdíj + járadék < teljes járadék, akkor különbözet is jár
+                                  if (banyaszEgeszsegJogosult && banyaszEgeszsegOszvegyi && banyaszEgeszsegOszvegyiNyugdij > 0) {
+                                    let csokkentett = Math.round(banyaszEgeszsegOsszeg * 0.5);
+                                    if ((banyaszEgeszsegOszvegyiNyugdij + csokkentett) < banyaszEgeszsegOsszeg) {
+                                      csokkentett = banyaszEgeszsegOszvegyiNyugdij + (banyaszEgeszsegOsszeg - (banyaszEgeszsegOszvegyiNyugdij + csokkentett));
+                                    }
+                                    banyaszEgeszsegOsszeg = csokkentett;
+                                    banyaszEgeszsegMsg += ` Özvegyi nyugdíj mellett csökkentett járadék: ${banyaszEgeszsegOsszeg.toLocaleString()} Ft.`;
+                                  }
+                                  if (!banyaszEgeszsegJogosult) {
+                                    banyaszEgeszsegMsg = 'Nem jogosult bányászok egészségkárosodási járadékára. Feltételek: földalatti bányászati tevékenység, egészségkárosodás >= 29%, nem jogosult öregségi nyugdíjra, nem részesül rendszeres pénzellátásban, keresetkiegészítésben, keresőtevékenységet nem folytat, igazolás.';
+                                  }
                                 // Szépkorúak jubileumi juttatás mezők kezelése
                                 const szepkorNev = document.getElementById('szepkorNev') ? document.getElementById('szepkorNev').value : '';
                                 const szepkorMagyar = document.getElementById('szepkorMagyar') && document.getElementById('szepkorMagyar').checked;
@@ -958,6 +1007,8 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
       `A tényleges nyugdíjazáskor választható a rögzített nyugdíj évenkénti emelésekkel növelt összege, vagy az újabb szolgálati idővel számított tényleges nyugdíj.<br />`;
   }
   document.getElementById('resultContainer').innerHTML =
+  
+  `<hr><b>Bányászok egészségkárosodási járadék jogosultság:</b> ${banyaszEgeszsegMsg}`;
  
   `<hr><b>Szépkorúak jubileumi juttatás jogosultság:</b> ${szepkorMsg}`;
 
