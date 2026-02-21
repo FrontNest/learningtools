@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="FrontNest Studio" />
+    <meta name="description" content="Nyugdíjszámítás modell" />
+    <title>Nyugdíjszámítás</title>
+    <link rel="stylesheet" href="szamitas.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Nyugdíjszámítás modell</h2>
+      <form id="nyugdijForm">
+        <fieldset>
+          <legend>Alapadatok</legend>
+          <label for="birthYear">Születési év:</label>
+          <input type="number" id="birthYear" name="birthYear" min="1900" max="2026" required="required" placeholder="pl. 1955" />
+          <label for="birthMonth">Hónap:</label>
+          <input type="number" id="birthMonth" name="birthMonth" min="1" max="12" required="required" placeholder="pl. 6" />
+          <label for="birthDay">Nap:</label>
+          <input type="number" id="birthDay" name="birthDay" min="1" max="31" required="required" placeholder="pl. 15" />
+        </fieldset>
+        <fieldset>
+          <legend>Kereset és szolgálati idő</legend>
+          <label for="atlagKereset">Napi átlagkereset (Ft):</label>
+          <input type="number" id="atlagKereset" name="atlagKereset" min="0" required="required" placeholder="pl. 12000" />
+          <label for="szolEv">Szolgálati idő (év):</label>
+          <input type="number" id="szolEv" name="szolEv" min="0" max="80" required="required" placeholder="pl. 40" />
+          <label for="szolHonap">Hónap:</label>
+          <input type="number" id="szolHonap" name="szolHonap" min="0" max="11" required="required" placeholder="pl. 6" />
+          <label for="szolNap">Nap:</label>
+          <input type="number" id="szolNap" name="szolNap" min="0" max="30" required="required" placeholder="pl. 15" />
+        </fieldset>
+        <button type="submit">Számítás</button>
+      </form>
+      <div class="tables">
+        <details>
+          <summary>Valorizációs szorzók</summary>
+          <div id="valorizaciosTable"></div>
+        </details>
+        <details>
+          <summary>Minimálbér táblázat</summary>
+          <div id="minimalberTable"></div>
+        </details>
+        <details>
+          <summary>Szolgálati idő százalékok</summary>
+          <div id="szolidoTable"></div>
+        </details>
+      </div>
+      <div id="resultContainer"></div>
+      <div class="example">
+        <h3>Példa:</h3>
+        <ul>
+          <li>Születési év: 1955, hónap: 6, nap: 15</li>
+          <li>Napi átlagkereset: 12000 Ft</li>
+          <li>Szolgálati idő: 40 év, 6 hónap, 15 nap</li>
+        </ul>
+      </div>
+    </div>
+    <script src="szamitas.js"></script>
+  </body>
+</html>

@@ -1,0 +1,125 @@
+// Valorizációs szorzók
+const valorizaciosSzorzok = {
+  1950: 679.815, 1951: 636.620, 1952: 500.992, 1953: 471.765, 1954: 430.761, 1955: 409.701, 1956: 378.731, 1957: 325.273, 1958: 318.092, 1959: 305.039, 1960: 297.940, 1961: 293.949, 1962: 286.816, 1963: 275.995, 1964: 267.199, 1965: 266.270, 1966: 253.666, 1967: 245.820, 1968: 240.687, 1969: 230.688, 1970: 216.495, 1971: 206.971, 1972: 196.370, 1973: 183.006, 1974: 169.925, 1975: 159.405, 1976: 152.103, 1977: 141.492, 1978: 131.010, 1979: 124.535, 1980: 117.820, 1981: 110.628, 1982: 103.877, 1983: 99.403, 1984: 88.675, 1985: 81.131, 1986: 75.257, 1987: 69.299, 1988: 63.115, 1989: 53.990, 1990: 44.400, 1991: 35.378, 1992: 29.163, 1993: 24.782, 1994: 19.468, 1995: 17.287, 1996: 14.724, 1997: 11.867, 1998: 10.023, 1999: 8.893, 2000: 7.982, 2001: 6.871, 2002: 5.742, 2003: 5.028, 2004: 4.753, 2005: 4.318, 2006: 4.013, 2007: 3.894, 2008: 3.643, 2009: 3.576, 2010: 3.347, 2011: 3.146, 2012: 3.083, 2013: 2.938, 2014: 2.852, 2015: 2.735, 2016: 2.539, 2017: 2.248, 2018: 2.019, 2019: 1.813, 2020: 1.652, 2021: 1.520, 2022: 1.294, 2023: 1.133, 2024: 0.000, 2025: 0.000, 2026: 0.000, 2027: 0.000, 2028: 0.000, 2029: 0.000, 2030: 0.000, 2031: 0.000, 2032: 0.000, 2033: 0.000, 2034: 0.000, 2035: 0.000, 2036: 0.000, 2037: 0.000, 2038: 0.000 };
+
+// Minimálbér táblázat
+const minimalberData = [
+  { start: '1988-01-01', end: '1989-02-28', wage: 3000 },
+  { start: '1989-03-01', end: '1989-09-30', wage: 3700 },
+  { start: '1989-10-01', end: '1990-01-31', wage: 4000 },
+  { start: '1990-02-01', end: '1990-08-31', wage: 4800 },
+  { start: '1990-09-01', end: '1990-11-30', wage: 5600 },
+  { start: '1990-12-01', end: '1991-03-31', wage: 5800 },
+  { start: '1991-04-01', end: '1991-12-31', wage: 7000 },
+  { start: '1992-01-01', end: '1993-01-31', wage: 8000 },
+  { start: '1993-02-01', end: '1994-01-31', wage: 9000 },
+  { start: '1994-02-01', end: '1995-01-31', wage: 10500 },
+  { start: '1995-02-01', end: '1996-01-31', wage: 12200 },
+  { start: '1996-02-01', end: '1996-12-31', wage: 14500 },
+  { start: '1997-01-01', end: '1997-12-31', wage: 17000 },
+  { start: '1998-01-01', end: '1998-12-31', wage: 19500 },
+  { start: '1999-01-01', end: '1999-12-31', wage: 22500 },
+  { start: '2000-01-01', end: '2000-12-31', wage: 25500 },
+  { start: '2001-01-01', end: '2001-12-31', wage: 40000 },
+  { start: '2002-01-01', end: '2003-12-31', wage: 50000 },
+  { start: '2004-01-01', end: '2004-12-31', wage: 53000 },
+  { start: '2005-01-01', end: '2005-12-31', wage: 57000 },
+  { start: '2006-01-01', end: '2006-12-31', wage: 62500 },
+  { start: '2007-01-01', end: '2007-12-31', wage: 65500 },
+  { start: '2008-01-01', end: '2008-12-31', wage: 69000 },
+  { start: '2009-01-01', end: '2009-12-31', wage: 71500 },
+  { start: '2010-01-01', end: '2010-12-31', wage: 73500 },
+  { start: '2011-01-01', end: '2011-12-31', wage: 78000 },
+  { start: '2012-01-01', end: '2012-12-31', wage: 93000 },
+  { start: '2013-01-01', end: '2013-12-31', wage: 98000 },
+  { start: '2014-01-01', end: '2014-12-31', wage: 101500 },
+  { start: '2015-01-01', end: '2015-12-31', wage: 105000 },
+  { start: '2016-01-01', end: '2016-12-31', wage: 111000 },
+  { start: '2017-01-01', end: '2017-12-31', wage: 127500 },
+  { start: '2018-01-01', end: '2018-12-31', wage: 138000 },
+  { start: '2019-01-01', end: '2019-12-31', wage: 149000 },
+  { start: '2020-01-01', end: '2021-01-31', wage: 161000 },
+  { start: '2021-02-01', end: '2021-12-31', wage: 167400 },
+  { start: '2022-01-01', end: '2022-12-31', wage: 200000 },
+  { start: '2023-01-01', end: '2023-11-30', wage: 232000 },
+  { start: '2023-12-01', end: '2024-12-31', wage: 266800 },
+  { start: '2025-01-01', end: '2026-02-21', wage: 290800 }
+];
+
+// Szolgálati idő százalék táblázat
+const szolidoSzazalek = {
+  15: 43.0, 16: 45.0, 17: 47.0, 18: 49.0, 19: 51.0, 20: 53.0, 21: 55.0, 22: 57.0, 23: 59.0, 24: 61.0, 25: 63.0, 26: 64.0, 27: 65.0, 28: 66.0, 29: 67.0, 30: 68.0, 31: 69.0, 32: 70.0, 33: 71.0, 34: 72.0, 35: 73.0, 36: 74.0, 37: 75.5, 38: 77.0, 39: 78.5, 40: 80.0, 41: 82.0, 42: 84.0, 43: 86.0, 44: 88.0, 45: 90.0, 46: 92.0, 47: 94.0, 48: 96.0, 49: 98.0, 50: 100.0, 51: 100.0, 52: 100.0, 53: 100.0, 54: 100.0, 55: 100.0, 56: 100.0, 57: 100.0, 58: 100.0, 59: 100.0, 60: 100.0, 61: 100.0, 62: 100.0, 63: 100.0, 64: 100.0, 65: 100.0, 66: 100.0, 67: 100.0, 68: 100.0, 69: 100.0, 70: 100.0, 71: 100.0, 72: 100.0, 73: 100.0, 74: 100.0, 75: 100.0, 76: 100.0, 77: 100.0, 78: 100.0, 79: 100.0, 80: 100.0 };
+
+function renderValorizaciosTable() {
+  let html = '<table><thead><tr><th>Év</th><th>Szorzószám</th></tr></thead><tbody>';
+  for (const ev in valorizaciosSzorzok) {
+    html += `<tr><td>${ev}</td><td>${valorizaciosSzorzok[ev]}</td></tr>`;
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+function renderMinimalberTable() {
+  let html = '<table><thead><tr><th>Kezdet</th><th>Vége</th><th>Minimálbér (Ft)</th></tr></thead><tbody>';
+  minimalberData.forEach(row => {
+    html += `<tr><td>${row.start.replace(/-/g, ".")}</td><td>${row.end.replace(/-/g, ".")}</td><td>${row.wage.toLocaleString()}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+function renderSzolidoTable() {
+  let html = '<table><thead><tr><th>Szolgálati idő (év)</th><th>Százalék</th></tr></thead><tbody>';
+  for (const ev in szolidoSzazalek) {
+    html += `<tr><td>${ev}</td><td>${szolidoSzazalek[ev]}%</td></tr>`;
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+document.getElementById('valorizaciosTable').innerHTML = renderValorizaciosTable();
+document.getElementById('minimalberTable').innerHTML = renderMinimalberTable();
+document.getElementById('szolidoTable').innerHTML = renderSzolidoTable();
+
+function validateForm(data) {
+  for (const key in data) {
+    if (data[key] === '' || data[key] === null || isNaN(data[key])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const birthYear = parseInt(document.getElementById('birthYear').value, 10);
+  const birthMonth = parseInt(document.getElementById('birthMonth').value, 10);
+  const birthDay = parseInt(document.getElementById('birthDay').value, 10);
+  const atlagKereset = parseFloat(document.getElementById('atlagKereset').value);
+  const szolEv = parseInt(document.getElementById('szolEv').value, 10);
+  const szolHonap = parseInt(document.getElementById('szolHonap').value, 10);
+  const szolNap = parseInt(document.getElementById('szolNap').value, 10);
+
+  const formData = { birthYear, birthMonth, birthDay, atlagKereset, szolEv, szolHonap, szolNap };
+  if (!validateForm(formData)) {
+    document.getElementById('resultContainer').innerHTML = '<span style="color:red">Minden mező kitöltése kötelező!</span>';
+    return;
+  }
+
+  // Szolgálati idő összesítése napokban
+  const totalDays = szolEv * 365 + szolHonap * 30 + szolNap;
+  const totalYears = Math.floor(totalDays / 365);
+
+  // Szolgálati idő százalék
+  let szazalek = szolidoSzazalek[totalYears];
+  if (!szazalek) szazalek = 100.0;
+
+  // Nyugdíj összeg számítása
+  // Egyszerűsített modell: napi átlagkereset * 30 (havi) * százalék
+  const haviAtlag = atlagKereset * 30;
+  const nyugdijOsszeg = Math.round(haviAtlag * (szazalek / 100));
+
+  document.getElementById('resultContainer').innerHTML =
+    `Végső nyugdíj összege: <span style="color:green">${nyugdijOsszeg.toLocaleString()} Ft</span> <br />` +
+    `Szolgálati idő: ${totalYears} év (${totalDays} nap), százalék: ${szazalek}%`;
+});
