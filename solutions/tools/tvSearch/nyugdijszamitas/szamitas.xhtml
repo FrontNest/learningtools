@@ -12,6 +12,32 @@
     <div class="container">
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
+                                  <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                                    <legend>Özvegyi jogon nemzeti helytállásért pótlék jogosultság</legend>
+                                    <label for="helytallasOzvegyNev">Özvegy neve:</label>
+                                    <input type="text" id="helytallasOzvegyNev" name="helytallasOzvegyNev" /><br />
+                                    <input type="checkbox" id="helytallasOzvegyMagyar" name="helytallasOzvegyMagyar" />
+                                    <label for="helytallasOzvegyMagyar">Magyar állampolgár</label><br />
+                                    <input type="checkbox" id="helytallasOzvegyHazas" name="helytallasOzvegyHazas" />
+                                    <label for="helytallasOzvegyHazas">Házastárs (kitüntetésre jogosult személlyel házasságban élt)</label><br />
+                                    <input type="checkbox" id="helytallasOzvegyNyugdijkorhatar" name="helytallasOzvegyNyugdijkorhatar" />
+                                    <label for="helytallasOzvegyNyugdijkorhatar">Betöltötte az öregségi nyugdíjkorhatárt</label><br />
+                                    <label for="helytallasOzvegyNyugellatas">Nyugellátás összege (Ft):</label>
+                                    <input type="number" id="helytallasOzvegyNyugellatas" name="helytallasOzvegyNyugellatas" min="0" step="1" /><br />
+                                    <label for="helytallasOzvegyRendszeresEllatas">Rendszeres pénzbeli ellátás összege (Ft):</label>
+                                    <input type="number" id="helytallasOzvegyRendszeresEllatas" name="helytallasOzvegyRendszeresEllatas" min="0" step="1" /><br />
+                                    <input type="checkbox" id="helytallasOzvegyRokkant" name="helytallasOzvegyRokkant" />
+                                    <label for="helytallasOzvegyRokkant">Megváltozott munkaképességű (egészségi állapota legfeljebb 50%)</label><br />
+                                    <label for="helytallasOzvegyJovedelem">Keresőtevékenységből származó jövedelem (Ft):</label>
+                                    <input type="number" id="helytallasOzvegyJovedelem" name="helytallasOzvegyJovedelem" min="0" step="1" /><br />
+                                    <input type="checkbox" id="helytallasOzvegyEgyEv" name="helytallasOzvegyEgyEv" />
+                                    <label for="helytallasOzvegyEgyEv">Egy éves speciális pótlék (ha nem töltötte be a nyugdíjkorhatárt vagy nem rokkant)</label><br />
+                                    <label for="helytallasOzvegyElhunytPenz">Elhunyt pótlékának összege (Ft):</label>
+                                    <input type="number" id="helytallasOzvegyElhunytPenz" name="helytallasOzvegyElhunytPenz" min="0" step="1" /><br />
+                                    <label for="helytallasOzvegyIgazolas">Igazolások (magyar állampolgárság, házastárs, nyugdíjkorhatár, ellátás, jövedelem, dokumentumok):</label>
+                                    <input type="file" id="helytallasOzvegyIgazolas" name="helytallasOzvegyIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                                    <small>Csatold a szükséges igazolásokat: magyar állampolgárság, házastárs, nyugdíjkorhatár, ellátás, jövedelem, dokumentumok stb.</small>
+                                  </fieldset>
                           <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
                             <legend>Nemzeti helytállásért pótlék jogosultság</legend>
                             <label for="helytallasNev">Igénylő neve:</label>

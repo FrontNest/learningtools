@@ -255,6 +255,57 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                              // Özvegyi jogon nemzeti helytállásért pótlék mezők kezelése
+                              const helytallasOzvegyNev = document.getElementById('helytallasOzvegyNev') ? document.getElementById('helytallasOzvegyNev').value : '';
+                              const helytallasOzvegyMagyar = document.getElementById('helytallasOzvegyMagyar') && document.getElementById('helytallasOzvegyMagyar').checked;
+                              const helytallasOzvegyNyugdijkorhatar = document.getElementById('helytallasOzvegyNyugdijkorhatar') && document.getElementById('helytallasOzvegyNyugdijkorhatar').checked;
+                              const helytallasOzvegyNyugellatas = document.getElementById('helytallasOzvegyNyugellatas') ? parseFloat(document.getElementById('helytallasOzvegyNyugellatas').value) : null;
+                              const helytallasOzvegyRendszeresEllatas = document.getElementById('helytallasOzvegyRendszeresEllatas') ? parseFloat(document.getElementById('helytallasOzvegyRendszeresEllatas').value) : null;
+                              const helytallasOzvegyRokkant = document.getElementById('helytallasOzvegyRokkant') && document.getElementById('helytallasOzvegyRokkant').checked;
+                              const helytallasOzvegyJovedelem = document.getElementById('helytallasOzvegyJovedelem') ? parseFloat(document.getElementById('helytallasOzvegyJovedelem').value) : null;
+                              const helytallasOzvegyHazas = document.getElementById('helytallasOzvegyHazas') && document.getElementById('helytallasOzvegyHazas').checked;
+                              const helytallasOzvegyEgyEv = document.getElementById('helytallasOzvegyEgyEv') && document.getElementById('helytallasOzvegyEgyEv').checked;
+                              const helytallasOzvegyElhunytPenz = document.getElementById('helytallasOzvegyElhunytPenz') ? parseFloat(document.getElementById('helytallasOzvegyElhunytPenz').value) : null;
+                              const helytallasOzvegyIgazolas = document.getElementById('helytallasOzvegyIgazolas') && document.getElementById('helytallasOzvegyIgazolas').files.length > 0;
+                              let helytallasOzvegyMsg = '';
+                              let helytallasOzvegyJogosult = false;
+                              let helytallasOzvegyOsszeg = 0;
+                              // Jogosultság: magyar állampolgár, házastárs, nyugdíjkorhatár vagy nyugellátás vagy rokkant, igazolás
+                              if (helytallasOzvegyNev && helytallasOzvegyMagyar && helytallasOzvegyHazas && (helytallasOzvegyNyugdijkorhatar || helytallasOzvegyNyugellatas > 0 || helytallasOzvegyRokkant) && helytallasOzvegyIgazolas) {
+                                // Kizáró feltétel: keresőtevékenységből származó jövedelem
+                                if (!helytallasOzvegyJovedelem || helytallasOzvegyJovedelem === 0) {
+                                  // Jogosultság: nyugellátás/rendszeres ellátás < 322650 Ft vagy nincs nyugellátás/rendszeres ellátás és jövedelem
+                                  if ((helytallasOzvegyNyugellatas > 0 && helytallasOzvegyNyugellatas < 322650) || (helytallasOzvegyRendszeresEllatas > 0 && helytallasOzvegyRendszeresEllatas < 322650) || (!helytallasOzvegyNyugellatas && !helytallasOzvegyRendszeresEllatas && (!helytallasOzvegyJovedelem || helytallasOzvegyJovedelem === 0))) {
+                                    helytallasOzvegyJogosult = true;
+                                  }
+                                }
+                              }
+                              // Egy éves speciális pótlék: ha nem töltötte be a nyugdíjkorhatárt vagy nem rokkant, egy évig jár, összege az elhunyt pótlékának 50%-a
+                              if (helytallasOzvegyEgyEv && helytallasOzvegyElhunytPenz > 0) {
+                                helytallasOzvegyJogosult = true;
+                                helytallasOzvegyOsszeg = Math.round(helytallasOzvegyElhunytPenz * 0.5);
+                                helytallasOzvegyMsg = `Egy éves özvegyi jogon járó pótlék: ${helytallasOzvegyOsszeg.toLocaleString()} Ft (az elhunyt pótlékának 50%-a).`;
+                              }
+                              // Összegszámítás: maximális értékhatár 161335 Ft, minimum 500 Ft
+                              if (helytallasOzvegyJogosult && !helytallasOzvegyEgyEv) {
+                                if (!helytallasOzvegyNyugellatas && !helytallasOzvegyRendszeresEllatas && (!helytallasOzvegyJovedelem || helytallasOzvegyJovedelem === 0)) {
+                                  helytallasOzvegyOsszeg = 161335;
+                                  helytallasOzvegyMsg = 'Teljes összegű özvegyi jogon nemzeti helytállásért pótlék: havi 161 335 Ft.';
+                                } else {
+                                  let ellatas = Math.max(helytallasOzvegyNyugellatas || 0, helytallasOzvegyRendszeresEllatas || 0);
+                                  helytallasOzvegyOsszeg = 322650 - ellatas;
+                                  if (helytallasOzvegyOsszeg > 161335) helytallasOzvegyOsszeg = 161335;
+                                  if (helytallasOzvegyOsszeg < 500) helytallasOzvegyOsszeg = 500;
+                                  helytallasOzvegyMsg = `Özvegyi jogon nemzeti helytállásért pótlék: ${helytallasOzvegyOsszeg.toLocaleString()} Ft (max. 161 335 Ft, kiegészítés 322 650 Ft-ra).`;
+                                }
+                                helytallasOzvegyMsg += ' Igazolás: magyar állampolgárság, házastárs, nyugdíjkorhatár vagy nyugellátás vagy rokkant, ellátás, jövedelem, dokumentumok csatolva.';
+                              }
+                              if (!helytallasOzvegyJogosult) {
+                                helytallasOzvegyMsg = 'Nem jogosult özvegyi jogon nemzeti helytállásért pótlékra. Feltételek: magyar állampolgár, házastárs, nyugdíjkorhatár vagy nyugellátás vagy rokkant, ellátás/jövedelem, igazolás.';
+                                if (helytallasOzvegyJovedelem && helytallasOzvegyJovedelem > 0) {
+                                  helytallasOzvegyMsg += ' Keresőtevékenységből származó jövedelem kizáró feltétel.';
+                                }
+                              }
                             // Nemzeti helytállásért pótlék mezők kezelése
                             const helytallasNev = document.getElementById('helytallasNev') ? document.getElementById('helytallasNev').value : '';
                             const helytallasMagyar = document.getElementById('helytallasMagyar') && document.getElementById('helytallasMagyar').checked;
@@ -882,6 +933,8 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
       `A tényleges nyugdíjazáskor választható a rögzített nyugdíj évenkénti emelésekkel növelt összege, vagy az újabb szolgálati idővel számított tényleges nyugdíj.<br />`;
   }
   document.getElementById('resultContainer').innerHTML =
+
+  `<hr><b>Özvegyi jogon nemzeti helytállásért pótlék jogosultság:</b> ${helytallasOzvegyMsg}`;
 
       `<hr><b>Nemzeti helytállásért pótlék jogosultság:</b> ${helytallasMsg}`;
     `Végső nyugdíj összege: <span style="color:green">${nyugdijOsszeg.toLocaleString()} Ft</span> <br />` +
