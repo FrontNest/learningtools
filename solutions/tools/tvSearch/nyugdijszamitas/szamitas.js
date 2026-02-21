@@ -77,6 +77,20 @@ function renderSzolidoTable() {
   return html;
 }
 
+
+// Valorizációs év legördülő feltöltése
+const valorizacioEvSelect = document.getElementById('valorizacioEv');
+if (valorizacioEvSelect) {
+  Object.keys(valorizaciosSzorzok).forEach(ev => {
+    if (ev !== '0') {
+      const opt = document.createElement('option');
+      opt.value = ev;
+      opt.textContent = ev;
+      valorizacioEvSelect.appendChild(opt);
+    }
+  });
+}
+
 document.getElementById('valorizaciosTable').innerHTML = renderValorizaciosTable();
 document.getElementById('minimalberTable').innerHTML = renderMinimalberTable();
 document.getElementById('szolidoTable').innerHTML = renderSzolidoTable();
@@ -99,27 +113,69 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
   const szolEv = parseInt(document.getElementById('szolEv').value, 10);
   const szolHonap = parseInt(document.getElementById('szolHonap').value, 10);
   const szolNap = parseInt(document.getElementById('szolNap').value, 10);
+  const jogviszonyTipus = document.getElementById('jogviszonyTipus').value;
+  const nyugdijEv = parseInt(document.getElementById('nyugdijEv').value, 10);
+  const nyugdijHonap = parseInt(document.getElementById('nyugdijHonap').value, 10);
+  const valorizacioEv = document.getElementById('valorizacioEv').value;
+  const gyermekneveles = document.getElementById('gyermekneveles').checked;
+  const katonaiido = document.getElementById('katonaiido').checked;
+  const minberalatt = document.getElementById('minberalatt').checked;
+  const egyebkedv = document.getElementById('egyebkedv').checked;
 
-  const formData = { birthYear, birthMonth, birthDay, atlagKereset, szolEv, szolHonap, szolNap };
-  if (!validateForm(formData)) {
+  const formData = { birthYear, birthMonth, birthDay, atlagKereset, szolEv, szolHonap, szolNap, jogviszonyTipus, nyugdijEv, nyugdijHonap };
+  if (!validateForm(formData) || jogviszonyTipus === "") {
     document.getElementById('resultContainer').innerHTML = '<span style="color:red">Minden mező kitöltése kötelező!</span>';
     return;
   }
 
-  // Szolgálati idő összesítése napokban
-  const totalDays = szolEv * 365 + szolHonap * 30 + szolNap;
+  // Szolgálati idő módosítása kedvezmények szerint
+  let totalDays = szolEv * 365 + szolHonap * 30 + szolNap;
+  if (gyermekneveles) totalDays += 365 * 2; // pl. 2 év kedvezmény
+  if (katonaiido) totalDays += 365; // pl. 1 év kedvezmény
+  if (egyebkedv) totalDays += 180; // pl. 0.5 év kedvezmény
+  // Részmunkaidő: csak 70%-át számítjuk szolgálati időnek
+  if (jogviszonyTipus === "reszmunka") totalDays = Math.round(totalDays * 0.7);
+
   const totalYears = Math.floor(totalDays / 365);
 
   // Szolgálati idő százalék
   let szazalek = szolidoSzazalek[totalYears];
   if (!szazalek) szazalek = 100.0;
 
+  // Valorizációs szorzó kiválasztása
+  let valEv = valorizacioEv !== "" ? valorizacioEv : nyugdijEv;
+  let valorizaciosSzam = valorizaciosSzorzok[valEv] || 1;
+
+  // Minimálbér alatti kereset korrekció
+  let kereset = atlagKereset;
+  if (minberalatt) {
+    // Nyugdíj kezdő évéhez tartozó minimálbér
+    let minber = 0;
+    for (let i = 0; i < minimalberData.length; i++) {
+      const row = minimalberData[i];
+      const ev = parseInt(row.start.split('-')[0], 10);
+      if (nyugdijEv >= ev) minber = row.wage;
+    }
+    if (kereset < minber) kereset = minber;
+  }
+
+  // Valorizáció alkalmazása
+  kereset = kereset * valorizaciosSzam;
+
   // Nyugdíj összeg számítása
-  // Egyszerűsített modell: napi átlagkereset * 30 (havi) * százalék
-  const haviAtlag = atlagKereset * 30;
+  const haviAtlag = kereset * 30;
   const nyugdijOsszeg = Math.round(haviAtlag * (szazalek / 100));
+
+  // Eredmény kiírása
+  let kedvStr = [];
+  if (gyermekneveles) kedvStr.push('gyermeknevelés');
+  if (katonaiido) kedvStr.push('katonai idő');
+  if (minberalatt) kedvStr.push('minimálbér alatti kereset');
+  if (egyebkedv) kedvStr.push('egyéb kedvezmény');
 
   document.getElementById('resultContainer').innerHTML =
     `Végső nyugdíj összege: <span style="color:green">${nyugdijOsszeg.toLocaleString()} Ft</span> <br />` +
-    `Szolgálati idő: ${totalYears} év (${totalDays} nap), százalék: ${szazalek}%`;
+    `Szolgálati idő: ${totalYears} év (${totalDays} nap), százalék: ${szazalek}%<br />` +
+    `Jogviszony: ${jogviszonyTipus}, Nyugdíj kezdő időpont: ${nyugdijEv}. ${nyugdijHonap}. hó<br />` +
+    (kedvStr.length > 0 ? `Kedvezmények: ${kedvStr.join(', ')}` : '');
 });

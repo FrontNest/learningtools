@@ -32,6 +32,32 @@
           <label for="szolNap">Nap:</label>
           <input type="number" id="szolNap" name="szolNap" min="0" max="30" required="required" placeholder="pl. 15" />
         </fieldset>
+        <fieldset>
+          <legend>Jogviszony és kedvezmények</legend>
+          <label for="jogviszonyTipus">Jogviszony típusa:</label>
+          <select id="jogviszonyTipus" name="jogviszonyTipus" required="required">
+            <option value="">Válassz...</option>
+            <option value="teljes">Teljes munkaidő</option>
+            <option value="reszmunka">Részmunkaidő</option>
+            <option value="kozalkalmazott">Közalkalmazott</option>
+            <option value="katonai">Katonai szolgálat</option>
+            <option value="egyeb">Egyéb</option>
+          </select>
+          <label for="nyugdijEv">Nyugdíj kezdő év:</label>
+          <input type="number" id="nyugdijEv" name="nyugdijEv" min="1990" max="2026" required="required" placeholder="pl. 2026" />
+          <label for="nyugdijHonap">Hónap:</label>
+          <input type="number" id="nyugdijHonap" name="nyugdijHonap" min="1" max="12" required="required" placeholder="pl. 2" />
+          <label for="valorizacioEv">Valorizációs év (manuális korrekció):</label>
+          <select id="valorizacioEv" name="valorizacioEv">
+            <option value="">Automatikus</option>
+          </select>
+          <div class="checkboxes">
+            <label><input type="checkbox" id="gyermekneveles" name="gyermekneveles" /> Gyermeknevelési idő beszámítása</label>
+            <label><input type="checkbox" id="katonaiido" name="katonaiido" /> Katonai szolgálati idő beszámítása</label>
+            <label><input type="checkbox" id="minberalatt" name="minberalatt" /> Minimálbér alatti kifizetések figyelembevétele</label>
+            <label><input type="checkbox" id="egyebkedv" name="egyebkedv" /> Egyéb kedvezmény</label>
+          </div>
+        </fieldset>
         <button type="submit">Számítás</button>
       </form>
       <div class="tables">
@@ -55,6 +81,9 @@
           <li>Születési év: 1955, hónap: 6, nap: 15</li>
           <li>Napi átlagkereset: 12000 Ft</li>
           <li>Szolgálati idő: 40 év, 6 hónap, 15 nap</li>
+          <li>Jogviszony: Teljes munkaidő</li>
+          <li>Nyugdíj kezdő időpont: 2026. 2. hó</li>
+          <li>Kedvezmények: gyermeknevelés, katonai idő</li>
         </ul>
       </div>
     </div>
