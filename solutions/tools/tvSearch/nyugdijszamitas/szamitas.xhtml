@@ -12,6 +12,34 @@
     <div class="container">
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
+                          <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                            <legend>Nemzeti helytállásért pótlék jogosultság</legend>
+                            <label for="helytallasNev">Igénylő neve:</label>
+                            <input type="text" id="helytallasNev" name="helytallasNev" /><br />
+                            <input type="checkbox" id="helytallasMagyar" name="helytallasMagyar" />
+                            <label for="helytallasMagyar">Magyar állampolgár</label><br />
+                            <label for="helytallasKituntetes">Kitüntetés típusa:</label>
+                            <select id="helytallasKituntetes" name="helytallasKituntetes">
+                              <option value="">-- válassz --</option>
+                              <option value="1956osEmlekerem">1956-os Emlékérem</option>
+                              <option value="1956osEmleklap">1956-os Emléklap</option>
+                              <option value="NemzetiEllenallasEmleklap">Nemzeti Ellenállásért Emléklap</option>
+                              <option value="SzabadMagyarorszagEmleklap">Szabad Magyarországért Emléklap</option>
+                            </select><br />
+                            <input type="checkbox" id="helytallasNyugdijkorhatar" name="helytallasNyugdijkorhatar" />
+                            <label for="helytallasNyugdijkorhatar">Betöltötte az öregségi nyugdíjkorhatárt</label><br />
+                            <label for="helytallasNyugellatas">Nyugellátás összege (Ft):</label>
+                            <input type="number" id="helytallasNyugellatas" name="helytallasNyugellatas" min="0" step="1" /><br />
+                            <label for="helytallasRendszeresEllatas">Rendszeres pénzbeli ellátás összege (Ft):</label>
+                            <input type="number" id="helytallasRendszeresEllatas" name="helytallasRendszeresEllatas" min="0" step="1" /><br />
+                            <input type="checkbox" id="helytallasRokkant" name="helytallasRokkant" />
+                            <label for="helytallasRokkant">Megváltozott munkaképességű (egészségi állapota legfeljebb 50%)</label><br />
+                            <label for="helytallasJovedelem">Keresőtevékenységből származó jövedelem (Ft):</label>
+                            <input type="number" id="helytallasJovedelem" name="helytallasJovedelem" min="0" step="1" /><br />
+                            <label for="helytallasIgazolas">Igazolások (kitüntetés, magyar állampolgárság, nyugdíjkorhatár, ellátás, jövedelem, dokumentumok):</label>
+                            <input type="file" id="helytallasIgazolas" name="helytallasIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                            <small>Csatold a szükséges igazolásokat: kitüntetés, magyar állampolgárság, nyugdíjkorhatár, ellátás, jövedelem, dokumentumok stb.</small>
+                          </fieldset>
                   <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
                     <legend>Tartós szabadságelvonás juttatás jogosultság</legend>
                     <label for="szabadsagNev">Igénylő neve:</label>

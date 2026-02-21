@@ -255,6 +255,50 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                            // Nemzeti helytállásért pótlék mezők kezelése
+                            const helytallasNev = document.getElementById('helytallasNev') ? document.getElementById('helytallasNev').value : '';
+                            const helytallasMagyar = document.getElementById('helytallasMagyar') && document.getElementById('helytallasMagyar').checked;
+                            const helytallasKituntetes = document.getElementById('helytallasKituntetes') ? document.getElementById('helytallasKituntetes').value : '';
+                            const helytallasNyugdijkorhatar = document.getElementById('helytallasNyugdijkorhatar') && document.getElementById('helytallasNyugdijkorhatar').checked;
+                            const helytallasNyugellatas = document.getElementById('helytallasNyugellatas') ? parseFloat(document.getElementById('helytallasNyugellatas').value) : null;
+                            const helytallasRendszeresEllatas = document.getElementById('helytallasRendszeresEllatas') ? parseFloat(document.getElementById('helytallasRendszeresEllatas').value) : null;
+                            const helytallasRokkant = document.getElementById('helytallasRokkant') && document.getElementById('helytallasRokkant').checked;
+                            const helytallasJovedelem = document.getElementById('helytallasJovedelem') ? parseFloat(document.getElementById('helytallasJovedelem').value) : null;
+                            const helytallasIgazolas = document.getElementById('helytallasIgazolas') && document.getElementById('helytallasIgazolas').files.length > 0;
+                            let helytallasMsg = '';
+                            let helytallasJogosult = false;
+                            let helytallasOsszeg = 0;
+                            // Jogosultság: magyar állampolgár, kitüntetés, nyugdíjkorhatár vagy nyugellátás vagy rokkant, igazolás
+                            if (helytallasNev && helytallasMagyar && helytallasKituntetes && (helytallasNyugdijkorhatar || helytallasNyugellatas > 0 || helytallasRokkant) && helytallasIgazolas) {
+                              // Kizáró feltétel: keresőtevékenységből származó jövedelem
+                              if (!helytallasJovedelem || helytallasJovedelem === 0) {
+                                // Jogosultság: nyugellátás/rendszeres ellátás < 322650 Ft vagy nincs nyugellátás/rendszeres ellátás és jövedelem
+                                if ((helytallasNyugellatas > 0 && helytallasNyugellatas < 322650) || (helytallasRendszeresEllatas > 0 && helytallasRendszeresEllatas < 322650) || (!helytallasNyugellatas && !helytallasRendszeresEllatas && (!helytallasJovedelem || helytallasJovedelem === 0))) {
+                                  helytallasJogosult = true;
+                                }
+                              }
+                            }
+                            // Összegszámítás
+                            if (helytallasJogosult) {
+                              // Ha nincs nyugellátás/rendszeres ellátás és jövedelem, teljes összeg jár
+                              if (!helytallasNyugellatas && !helytallasRendszeresEllatas && (!helytallasJovedelem || helytallasJovedelem === 0)) {
+                                helytallasOsszeg = 322650;
+                                helytallasMsg = 'Teljes összegű nemzeti helytállásért pótlék: havi 322 650 Ft.';
+                              } else {
+                                // Kiegészítés 322650 Ft-ra, minimum 500 Ft
+                                let ellatas = Math.max(helytallasNyugellatas || 0, helytallasRendszeresEllatas || 0);
+                                helytallasOsszeg = 322650 - ellatas;
+                                if (helytallasOsszeg < 500) helytallasOsszeg = 500;
+                                helytallasMsg = `Nemzeti helytállásért pótlék: ${helytallasOsszeg.toLocaleString()} Ft (kiegészítés 322 650 Ft-ra).`;
+                              }
+                              helytallasMsg += ' Igazolás: kitüntetés, magyar állampolgárság, nyugdíjkorhatár vagy nyugellátás vagy rokkant, ellátás, jövedelem, dokumentumok csatolva.';
+                            }
+                            if (!helytallasJogosult) {
+                              helytallasMsg = 'Nem jogosult nemzeti helytállásért pótlékra. Feltételek: magyar állampolgár, kitüntetés, nyugdíjkorhatár vagy nyugellátás vagy rokkant, ellátás/jövedelem, igazolás.';
+                              if (helytallasJovedelem && helytallasJovedelem > 0) {
+                                helytallasMsg += ' Keresőtevékenységből származó jövedelem kizáró feltétel.';
+                              }
+                            }
                           // Tartós szabadságelvonás juttatás mezők kezelése
                           const szabadsagNev = document.getElementById('szabadsagNev') ? document.getElementById('szabadsagNev').value : '';
                           const szabadsagMagyar = document.getElementById('szabadsagMagyar') && document.getElementById('szabadsagMagyar').checked;
@@ -838,6 +882,8 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
       `A tényleges nyugdíjazáskor választható a rögzített nyugdíj évenkénti emelésekkel növelt összege, vagy az újabb szolgálati idővel számított tényleges nyugdíj.<br />`;
   }
   document.getElementById('resultContainer').innerHTML =
+
+      `<hr><b>Nemzeti helytállásért pótlék jogosultság:</b> ${helytallasMsg}`;
     `Végső nyugdíj összege: <span style="color:green">${nyugdijOsszeg.toLocaleString()} Ft</span> <br />` +
     `Összes szolgálati idő: ${totalYears} év ${totalNap} nap (${totalDays} nap), százalék: ${szazalek}%<br />` +
     `Átlagkereset valorizációval: ${Math.round(atlagKereset).toLocaleString()} Ft<br />` +
