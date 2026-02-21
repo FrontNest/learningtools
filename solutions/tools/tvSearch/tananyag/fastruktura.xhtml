@@ -121,18 +121,29 @@ NYUGELLÁTÁS IRÁNTI IGÉNY
   |       |       |                 <a href="#d75">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
   |       |       |
   |       |       <a href="#d76">+--&gt; Szülői nyugdíj</a>
-  |       |                |
-  |       |                <a href="#d77">+--&gt; Tartás fennállt?</a>
-  |       |                |        <a href="#d78">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
-  |       |                |        <a href="#d79">+--&gt; Igen</a>
-  |       |                |
-  |       |                <a href="#d80">+--&gt; Rászorultság fennáll?</a>
-  |       |                |        <a href="#d81">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
-  |       |                |        <a href="#d82">+--&gt; Igen</a>
-  |       |                |
-  |       |                <a href="#d83">+--&gt; Elhunyt szolgálati ideje megfelelő?</a>
-  |       |                         <a href="#d84">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
-  |       |                         <a href="#d85">+--&gt; Igen → JOGOSULT</a>
+  |       |       |        |
+  |       |       |        <a href="#d77">+--&gt; Tartás fennállt?</a>
+  |       |       |        |        <a href="#d78">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
+  |       |       |        |        <a href="#d79">+--&gt; Igen</a>
+  |       |       |        |
+  |       |       |        <a href="#d80">+--&gt; Rászorultság fennáll?</a>
+  |       |       |        |        <a href="#d81">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
+  |       |       |        |        <a href="#d82">+--&gt; Igen</a>
+  |       |       |        |
+  |       |       |        <a href="#d83">+--&gt; Elhunyt szolgálati ideje megfelelő?</a>
+  |       |       |                 <a href="#d84">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
+  |       |       |                 <a href="#d85">+--&gt; Igen → JOGOSULT</a>
+  |       |       |
+  |       |       x-- Baleseti hozzátartozói nyugellátás
+  |       |             x-- Baleseti eredet igazolt?
+  |       |             |     x-- Nem → NEM JOGOSULT
+  |       |             |     x-- Igen
+  |       |             x-- Hozzátartozói kapcsolat fennállt?
+  |       |             |     x-- Nem → NEM JOGOSULT
+  |       |             |     x-- Igen
+  |       |             x-- Elhunyt szolgálati ideje megfelelő?
+  |       |                   x-- Nem → NEM JOGOSULT
+  |       |                   x-- Igen → JOGOSULT
   |       |
   |       <a href="#d86">+--&gt; Nem</a>
   |               v
@@ -140,7 +151,6 @@ NYUGELLÁTÁS IRÁNTI IGÉNY
       |
       <a href="#d88">+--&gt; Igen</a>
       |       v
-      |   <a href="#d89">Melyik ellátástípus?</a>
       |       <a href="#d90">+--&gt; Baleseti járadék</a>
       |       |        |
       |       |        <a href="#d91">+--&gt; Baleseti eredet igazolt?</a>
@@ -170,23 +180,73 @@ NYUGELLÁTÁS IRÁNTI IGÉNY
       |       |                 <a href="#d109">+--&gt; Igen → JOGOSULT</a>
       |       |
       |       <a href="#d110">+--&gt; Rokkantsági ellátás</a>
-      |                |
-      |                <a href="#d111">+--&gt; Komplex minősítés?</a>
-      |                |        <a href="#d112">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
-      |                |        <a href="#d113">+--&gt; Igen</a>
-      |                |
-      |                <a href="#d114">+--&gt; Egészségkárosodás eléri a rokkantsági szintet?</a>
-      |                |        <a href="#d115">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
-      |                |        <a href="#d116">+--&gt; Igen</a>
-      |                |
-      |                <a href="#d117">+--&gt; Önellátási képesség csökkent?</a>
-      |                         <a href="#d118">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
-      |                         <a href="#d119">+--&gt; Igen → JOGOSULT</a>
+      |       |        |
+      |       |        <a href="#d111">+--&gt; Komplex minősítés?</a>
+      |       |        |        <a href="#d112">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
+      |       |        |        <a href="#d113">+--&gt; Igen</a>
+      |       |        |
+      |       |        <a href="#d114">+--&gt; Egészségkárosodás eléri a rokkantsági szintet?</a>
+      |       |        |        <a href="#d115">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
+      |       |        |        <a href="#d116">+--&gt; Igen</a>
+      |       |        |
+      |       |        <a href="#d117">+--&gt; Önellátási képesség csökkent?</a>
+      |       |                 <a href="#d118">+--&gt; Nem → <b><u>NEM JOGOSULT</u></b></a>
+      |       |                 <a href="#d119">+--&gt; Igen → JOGOSULT</a>
+      |       |
+      |       x-- Rokkantsági járadék
+      |       |     x-- 18 év alatt szerzett tartós egészségkárosodás?
+      |       |           x-- Nem → NEM JOGOSULT
+      |       |           x-- Igen → JOGOSULT
+      |       |
+      |       x-- Tartós szabadságelvonás juttatás
+      |       |     x-- Büntetés végrehajtása alatt állt?
+      |       |     |     x-- Nem → NEM JOGOSULT
+      |       |     |     x-- Igen
+      |       |     x-- Egyéb feltételek fennállnak?
+      |       |           x-- Nem → NEM JOGOSULT
+      |       |           x-- Igen → JOGOSULT
+      |       |
+      |       x-- Nemzeti helytállásért pótlék
+      |       |     x-- Jogosító esemény fennállt?
+      |       |           x-- Nem → NEM JOGOSULT
+      |       |           x-- Igen → JOGOSULT
+      |       |
+      |       x-- Szépkorúak jubileumi juttatás
+      |       |     x-- 90. életév betöltése?
+      |       |           x-- Nem → NEM JOGOSULT
+      |       |           x-- Igen → JOGOSULT
+      |       |
+      |       x-- Bányászok egészségkárosodási járadéka
+      |       |     x-- Bányászati jogviszony fennállt?
+      |       |     |     x-- Nem → NEM JOGOSULT
+      |       |     |     x-- Igen
+      |       |     x-- Egészségkárosodás mértéke megfelelő?
+      |       |           x-- Nem → NEM JOGOSULT
+      |       |           x-- Igen → JOGOSULT
+      |       |
+      |       x-- Tartós ápolást végzők időskori támogatása
+      |       |     x-- Tartós ápolás igazolt?
+      |       |     |     x-- Nem → NEM JOGOSULT
+      |       |     |     x-- Igen
+      |       |     x-- Egyéb feltételek fennállnak?
+      |       |           x-- Nem → NEM JOGOSULT
+      |       |           x-- Igen → JOGOSULT
+      |       |
+      |       x-- Művész járadékok
+      |       |     x-- Jogosító művészeti tevékenység fennállt?
+      |       |           x-- Nem → NEM JOGOSULT
+      |       |           x-- Igen → JOGOSULT
+      |       |
+      |       x-- Világbajnoki pótlék
+      |             x-- Világbajnoki cím igazolt?
+      |                   x-- Nem → NEM JOGOSULT
+      |                   x-- Igen → JOGOSULT      
       |
       <a href="#d120">+--&gt; Nem</a>
           |
           v
         Nincs további ellátás → <b><u>NEM JOGOSULT</u></b>
+ 
 </pre> 
 <p>_______________________________________________________________________</p>
 
