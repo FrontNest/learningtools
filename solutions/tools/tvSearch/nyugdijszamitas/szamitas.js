@@ -255,6 +255,24 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                        // Rokkantsági járadék mezők kezelése
+                        const rokkantsagiNev = document.getElementById('rokkantsagiNev') ? document.getElementById('rokkantsagiNev').value : '';
+                        const rokkantsagiEletkor = document.getElementById('rokkantsagiEletkor') ? parseInt(document.getElementById('rokkantsagiEletkor').value) : null;
+                        const rokkantsagiEgeszsegkar = document.getElementById('rokkantsagiEgeszsegkar') ? parseFloat(document.getElementById('rokkantsagiEgeszsegkar').value) : null;
+                        const rokkantsagiMagyar = document.getElementById('rokkantsagiMagyar') && document.getElementById('rokkantsagiMagyar').checked;
+                        const rokkantsagiIgazolas = document.getElementById('rokkantsagiIgazolas') && document.getElementById('rokkantsagiIgazolas').files.length > 0;
+                        let rokkantsagiMsg = '';
+                        let rokkantsagiJogosult = false;
+                        // Jogosultság: 18 év felett, magyar állampolgár, egészségkárosodás >= 70%, 25 év előtt keletkezett, igazolás, nem részesül nyugellátásban
+                        if (rokkantsagiNev && rokkantsagiEletkor && rokkantsagiEletkor >= 18 && rokkantsagiMagyar && rokkantsagiEgeszsegkar && rokkantsagiEgeszsegkar >= 70 && rokkantsagiIgazolas) {
+                          rokkantsagiJogosult = true;
+                        }
+                        // Rokkantsági járadék összeg
+                        if (rokkantsagiJogosult) {
+                          rokkantsagiMsg = 'Rokkantsági járadék jogosultság: Igen. Havi fix összeg: 63 915 Ft (2026. január 1-től). Igazolás: egészségkárosodás, magyar állampolgárság, orvosi dokumentumok.';
+                        } else {
+                          rokkantsagiMsg = 'Nem jogosult rokkantsági járadékra. Feltételek: 18 év felett, magyar állampolgár, egészségkárosodás >= 70%, 25 év előtt keletkezett, igazolás, nem részesül nyugellátásban.';
+                        }
                       // Baleseti járadék mezők kezelése
                       const balesetiJaradekNev = document.getElementById('balesetiJaradekNev') ? document.getElementById('balesetiJaradekNev').value : '';
                       const balesetiJaradekEgeszsegkar = document.getElementById('balesetiJaradekEgeszsegkar') ? parseFloat(document.getElementById('balesetiJaradekEgeszsegkar').value) : null;
@@ -779,5 +797,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     `<hr><b>Árvaellátás jogosultság:</b> ${arvaMsg}` +
     `<hr><b>Szülői nyugdíj jogosultság:</b> ${szuloMsg}` +
     `<hr><b>Baleseti hozzátartozói nyugdíj jogosultság:</b> ${balesetiMsg}` +
-    `<hr><b>Baleseti járadék jogosultság:</b> ${balesetiJaradekMsg}`;
+    `<hr><b>Baleseti járadék jogosultság:</b> ${balesetiJaradekMsg}` +
+    `<hr><b>Rokkantsági járadék jogosultság:</b> ${rokkantsagiMsg}`;
 });

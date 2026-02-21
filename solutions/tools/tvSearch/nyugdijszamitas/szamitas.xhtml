@@ -13,6 +13,20 @@
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
           <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                                                    <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                                                      <legend>Rokkantsági járadék jogosultság</legend>
+                                                      <label for="rokkantsagiNev">Igénylő neve:</label>
+                                                      <input type="text" id="rokkantsagiNev" name="rokkantsagiNev" /><br />
+                                                      <label for="rokkantsagiEletkor">Igénylő életkora:</label>
+                                                      <input type="number" id="rokkantsagiEletkor" name="rokkantsagiEletkor" min="18" max="120" /><br />
+                                                      <label for="rokkantsagiEgeszsegkar">Egészségkárosodás mértéke (%):</label>
+                                                      <input type="number" id="rokkantsagiEgeszsegkar" name="rokkantsagiEgeszsegkar" min="0" max="100" step="0.1" /><br />
+                                                      <input type="checkbox" id="rokkantsagiMagyar" name="rokkantsagiMagyar" />
+                                                      <label for="rokkantsagiMagyar">Magyar állampolgár</label><br />
+                                                      <label for="rokkantsagiIgazolas">Igazolások (orvosi, egészségkárosodás, dokumentumok):</label>
+                                                      <input type="file" id="rokkantsagiIgazolas" name="rokkantsagiIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                                                      <small>Csatold a szükséges igazolásokat: orvosi, egészségkárosodás, magyar állampolgárság, dokumentumok stb.</small>
+                                                    </fieldset>
                                             <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
                                               <legend>Baleseti járadék jogosultság</legend>
                                               <label for="balesetiJaradekNev">Igénylő neve:</label>
