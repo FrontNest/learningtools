@@ -13,6 +13,25 @@
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
           <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                                    <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                                      <legend>Baleseti hozzátartozói nyugdíj jogosultság</legend>
+                                      <label for="balesetiTipus">Baleseti nyugdíj típusa:</label>
+                                      <select id="balesetiTipus" name="balesetiTipus">
+                                        <option value="">-- válassz --</option>
+                                        <option value="özvegy">Baleseti özvegyi nyugdíj</option>
+                                        <option value="árva">Baleseti árvaellátás</option>
+                                        <option value="szülő">Baleseti szülői nyugdíj</option>
+                                      </select><br />
+                                      <label for="balesetiJogosultNev">Jogosult neve:</label>
+                                      <input type="text" id="balesetiJogosultNev" name="balesetiJogosultNev" /><br />
+                                      <input type="checkbox" id="balesetiBaleset" name="balesetiBaleset" />
+                                      <label for="balesetiBaleset">Üzemi baleset igazolva</label><br />
+                                      <input type="checkbox" id="balesetiMegbetegedes" name="balesetiMegbetegedes" />
+                                      <label for="balesetiMegbetegedes">Foglalkozási megbetegedés igazolva</label><br />
+                                      <label for="balesetiIgazolas">Igazolások (baleset/megbetegedés, dokumentumok):</label>
+                                      <input type="file" id="balesetiIgazolas" name="balesetiIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                                      <small>Csatold a szükséges igazolásokat: üzemi baleset, foglalkozási megbetegedés, dokumentumok stb.</small>
+                                    </fieldset>
                             <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
                               <legend>Szülői nyugdíj jogosultság</legend>
                               <label for="szuloNev">Szülő neve:</label>

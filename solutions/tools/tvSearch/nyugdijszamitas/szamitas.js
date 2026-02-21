@@ -255,6 +255,39 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                    // Baleseti hozzátartozói nyugdíj mezők kezelése
+                    const balesetiTipus = document.getElementById('balesetiTipus') ? document.getElementById('balesetiTipus').value : '';
+                    const balesetiJogosultNev = document.getElementById('balesetiJogosultNev') ? document.getElementById('balesetiJogosultNev').value : '';
+                    const balesetiBaleset = document.getElementById('balesetiBaleset') && document.getElementById('balesetiBaleset').checked;
+                    const balesetiMegbetegedes = document.getElementById('balesetiMegbetegedes') && document.getElementById('balesetiMegbetegedes').checked;
+                    const balesetiIgazolas = document.getElementById('balesetiIgazolas') && document.getElementById('balesetiIgazolas').files.length > 0;
+                    let balesetiMsg = '';
+                    let balesetiOsszeg = 0;
+                    let balesetiJogosult = false;
+                    // Jogosultság: üzemi baleset vagy foglalkozási megbetegedés igazolva, jogosult típus, igazolás
+                    if (balesetiTipus && balesetiJogosultNev && (balesetiBaleset || balesetiMegbetegedes) && balesetiIgazolas) {
+                      balesetiJogosult = true;
+                    }
+                    // Baleseti hozzátartozói nyugdíj összeg számítása
+                    if (balesetiJogosult) {
+                      // Az elhunyt átlagkereset 60%-a, növelve a szolgálati idő százalékával, de nem lehet több az átlagkeresetnél
+                      let balesetiAlap = Math.round(atlagKereset * 0.6);
+                      if (balesetiAlap > atlagKereset) balesetiAlap = atlagKereset;
+                      // Típus szerint: özvegy 60%, árva 30%, szülő 30%
+                      if (balesetiTipus === 'özvegy') {
+                        balesetiOsszeg = Math.round(balesetiAlap * 0.6);
+                        balesetiMsg = `Baleseti özvegyi nyugdíj összege: ${balesetiOsszeg.toLocaleString()} Ft.`;
+                      } else if (balesetiTipus === 'árva') {
+                        balesetiOsszeg = Math.round(balesetiAlap * 0.3);
+                        balesetiMsg = `Baleseti árvaellátás összege: ${balesetiOsszeg.toLocaleString()} Ft.`;
+                      } else if (balesetiTipus === 'szülő') {
+                        balesetiOsszeg = Math.round(balesetiAlap * 0.3);
+                        balesetiMsg = `Baleseti szülői nyugdíj összege: ${balesetiOsszeg.toLocaleString()} Ft.`;
+                      }
+                      balesetiMsg += ' Igazolás: üzemi baleset vagy foglalkozási megbetegedés, jogosult típus, dokumentumok csatolva.';
+                    } else {
+                      balesetiMsg = 'Nem jogosult baleseti hozzátartozói nyugdíjra. Feltételek: üzemi baleset vagy foglalkozási megbetegedés igazolva, jogosult típus, dokumentumok csatolva.';
+                    }
                   // Szülői nyugdíj mezők kezelése
                   const szuloNev = document.getElementById('szuloNev') ? document.getElementById('szuloNev').value : '';
                   const szuloTipus = document.getElementById('szuloTipus') ? document.getElementById('szuloTipus').value : '';
@@ -711,5 +744,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     `<hr><b>Táncművészeti életjáradék jogosultság:</b> ${tancmuveszMsg}` +
     `<hr><b>Özvegyi nyugdíj jogosultság:</b> ${ozvegyMsg}` +
     `<hr><b>Árvaellátás jogosultság:</b> ${arvaMsg}` +
-    `<hr><b>Szülői nyugdíj jogosultság:</b> ${szuloMsg}`;
+    `<hr><b>Szülői nyugdíj jogosultság:</b> ${szuloMsg}` +
+    `<hr><b>Baleseti hozzátartozói nyugdíj jogosultság:</b> ${balesetiMsg}`;
 });
