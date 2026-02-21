@@ -255,6 +255,52 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+              // Özvegyi nyugdíj mezők kezelése
+              const ozvegyTipus = document.getElementById('ozvegyTipus') ? document.getElementById('ozvegyTipus').value : '';
+              const ozvegyElettarsEgyuttel = document.getElementById('ozvegyElettarsEgyuttel') && document.getElementById('ozvegyElettarsEgyuttel').checked;
+              const ozvegyElettarsGyermek = document.getElementById('ozvegyElettarsGyermek') && document.getElementById('ozvegyElettarsGyermek').checked;
+              const ozvegyElvaltTartasdij = document.getElementById('ozvegyElvaltTartasdij') && document.getElementById('ozvegyElvaltTartasdij').checked;
+              const ozvegyKorhatar = document.getElementById('ozvegyKorhatar') && document.getElementById('ozvegyKorhatar').checked;
+              const ozvegyMegvaltozott = document.getElementById('ozvegyMegvaltozott') && document.getElementById('ozvegyMegvaltozott').checked;
+              const ozvegyGyermek = document.getElementById('ozvegyGyermek') && document.getElementById('ozvegyGyermek').checked;
+              const ozvegyIgazolas = document.getElementById('ozvegyIgazolas') && document.getElementById('ozvegyIgazolas').files.length > 0;
+              let ozvegyMsg = '';
+              let ozvegyiNyugdijOsszeg = 0;
+              // Jogosultság: házastárs, bejegyzett élettárs, elvált házastárs, élettárs, elhunyt nyugdíjas vagy megszerezte a szükséges szolgálati időt
+              let jogosultOzvegy = false;
+              if (ozvegyTipus && ozvegyIgazolas) {
+                // Élettárs: egy év együttélés + gyermek vagy 10 év együttélés
+                if (ozvegyTipus === 'élettárs' && (ozvegyElettarsGyermek || ozvegyElettarsEgyuttel)) jogosultOzvegy = true;
+                // Elvált: tartásdíj igazolás
+                if (ozvegyTipus === 'elvált' && ozvegyElvaltTartasdij) jogosultOzvegy = true;
+                // Házastárs, bejegyzett élettárs: igazolás
+                if (ozvegyTipus === 'házastárs' || ozvegyTipus === 'bejegyzett élettárs') jogosultOzvegy = true;
+              }
+              // Ideiglenes özvegyi nyugdíj: haláltól egy évig, vagy gyermek miatt tovább
+              if (jogosultOzvegy) {
+                ozvegyiNyugdijOsszeg = Math.round(nyugdijOsszeg * 0.6);
+                ozvegyMsg = `Ideiglenes özvegyi nyugdíj összege: ${ozvegyiNyugdijOsszeg.toLocaleString()} Ft (az elhunyt nyugdíjának 60%-a).`;
+                // Elvált: tartásdíj összegénél több nem lehet
+                if (ozvegyTipus === 'elvált' && ozvegyElvaltTartasdij) {
+                  ozvegyMsg += ' Az ideiglenes özvegyi nyugdíj a tartásdíj összegénél több nem lehet.';
+                }
+                // Gyermek miatt hosszabb ideig jár
+                if (ozvegyGyermek) {
+                  ozvegyMsg += ' Árvaellátásra jogosult gyermek miatt az ideiglenes özvegyi nyugdíj tovább jár.';
+                }
+                // Végleges özvegyi nyugdíj: korhatár, megváltozott munkaképesség, gyermek, 10 éven belül feltétel teljesül
+                if (ozvegyKorhatar || ozvegyMegvaltozott || ozvegyGyermek) {
+                  ozvegyiNyugdijOsszeg = Math.round(nyugdijOsszeg * 0.6);
+                  ozvegyMsg += ` Végleges özvegyi nyugdíj összege: ${ozvegyiNyugdijOsszeg.toLocaleString()} Ft (az elhunyt nyugdíjának 60%-a).`;
+                }
+                // Ha az özvegy maga nyugdíjas vagy ellátásban részesül, vagy gyermek miatt kapja, akkor 30%
+                if (ozvegyKorhatar || ozvegyMegvaltozott || ozvegyGyermek) {
+                  ozvegyiNyugdijOsszeg = Math.round(nyugdijOsszeg * 0.3);
+                  ozvegyMsg += ` 30%-os mértékű özvegyi nyugdíj: ${ozvegyiNyugdijOsszeg.toLocaleString()} Ft.`;
+                }
+              } else {
+                ozvegyMsg = 'Nem jogosult özvegyi nyugdíjra. Feltételek: házastárs, bejegyzett élettárs, elvált házastárs, élettárs, igazolások csatolva.';
+              }
             // Táncművészeti életjáradék mezők kezelése
             const tancmuveszIgazolas = document.getElementById('tancmuveszIgazolas') && document.getElementById('tancmuveszIgazolas').files.length > 0;
             const tancmuveszFofoglalkozasu = document.getElementById('tancmuveszFofoglalkozasu') && document.getElementById('tancmuveszFofoglalkozasu').checked;
@@ -582,5 +628,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     `<hr><b>Szolgálati járandóság jogosultság:</b> ${szolgalatiJarandMsg}` +
     (csaladiAdokedvMsg ? `<hr><b>Családi adókedvezmény érvényesítése:</b> ${csaladiAdokedvMsg}` : '') +
     `<hr><b>Átmeneti bányászjáradék jogosultság:</b> ${atmenetiBanyaszMsg}` +
-    `<hr><b>Táncművészeti életjáradék jogosultság:</b> ${tancmuveszMsg}`;
+    `<hr><b>Táncművészeti életjáradék jogosultság:</b> ${tancmuveszMsg}` +
+    `<hr><b>Özvegyi nyugdíj jogosultság:</b> ${ozvegyMsg}`;
 });
