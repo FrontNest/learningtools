@@ -147,6 +147,8 @@ if (valorizacioEvSelect) {
 }
 
 // Jogcímek beszámítási szabályok (bővíthető JSON)
+// Korkedvezményes, bányász, művész jogcímek hozzáadása
+// korkedvezmenyes: true, bányász: true, művész: true
 const jogcimSzabalyok = {
   'Teljes munkaidő': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false },
   'Részmunkaidő': { beszamitasiTenyezo: 0.7, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false },
@@ -156,7 +158,10 @@ const jogcimSzabalyok = {
   'Ápolási szabadság': { beszamitasiTenyezo: 0.5, maxNap: 365, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false }, // max 1 év, 50%
   'Fizetés nélküli szabadság': { beszamitasiTenyezo: 0.5, maxNap: 365, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false },
   'Tanulmányi idő': { beszamitasiTenyezo: 0.5, maxNap: 365, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false },
-  'Egyéb jogcímek': { beszamitasiTenyezo: 1, maxNap: null, egyedi: true, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false }
+  'Egyéb jogcímek': { beszamitasiTenyezo: 1, maxNap: null, egyedi: true, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false },
+  'Korkedvezményes munkakör': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false, korkedvezmenyes: true },
+  'Bányász': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false, banyasz: true },
+  'Művész': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false, muvesz: true }
 };
 const jogcimek = Object.keys(jogcimSzabalyok);
 
@@ -247,6 +252,15 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+    // Korkedvezményes időszakok számítása
+    let korkedvezmenyesNap = 0;
+    let banyaszNap = 0;
+    let muveszNap = 0;
+    let korkedvezmenyesEv = 0;
+    let banyaszEv = 0;
+    let muveszEv = 0;
+    let korkedvezmenyMérték = 0;
+    let korkedvezmenyMsg = '';
   e.preventDefault();
   const birthYear = parseInt(document.getElementById('birthYear').value, 10);
   const birthMonth = parseInt(document.getElementById('birthMonth').value, 10);
@@ -312,6 +326,10 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     if (szabaly.jogosultsagi) jogosultsagiNap += napok;
     if (szabaly.keresotevekenyseg) keresotevNap += napok;
     if (szabaly.gyermekneveles) gyermeknevelesNap += napok;
+    // Korkedvezményes, bányász, művész időszakok
+    if (szabaly.korkedvezmenyes && startDate < new Date(2015, 0, 1)) korkedvezmenyesNap += napok;
+    if (szabaly.banyasz) banyaszNap += napok;
+    if (szabaly.muvesz) muveszNap += napok;
     // Kereset összesítés (csak ahol van kereset)
     if (!isNaN(kereset) && kereset > 0) {
       keresetSum += kereset * napok;
@@ -319,6 +337,40 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     }
     totalDays += napok;
     details.push(`${jogcim}: ${napok} nap (${kezdoEv}.${kezdoHonap}.${kezdoNap} - ${vegeEv}.${vegeHonap}.${vegeNap})`);
+  }
+  // Korkedvezményes évek
+  korkedvezmenyesEv = Math.floor(korkedvezmenyesNap / 365);
+  banyaszEv = Math.floor(banyaszNap / 365);
+  muveszEv = Math.floor(muveszNap / 365);
+  // Korkedvezmény mértékének számítása (alap logika)
+  // Férfi: 10 év → 2 év, nő: 8 év → 2 év, további évek után extra kedvezmény
+  // (Nem: inputból nem olvassuk, bővíthető)
+  if (korkedvezmenyesEv >= 8) {
+    korkedvezmenyMérték = 2;
+    if (korkedvezmenyesEv > 8) {
+      korkedvezmenyMérték += Math.floor((korkedvezmenyesEv - 8) / 4);
+    }
+    korkedvezmenyMsg = `Korkedvezményes munkakörben eltöltött idő: ${korkedvezmenyesEv} év (${korkedvezmenyesNap} nap), korkedvezmény mértéke: ${korkedvezmenyMérték} év.`;
+  } else {
+    korkedvezmenyMsg = `Korkedvezményes munkakörben eltöltött idő: ${korkedvezmenyesEv} év (${korkedvezmenyesNap} nap), nem jogosult korkedvezményre.`;
+  }
+  // Korhatár előtti ellátás jogosultságának ellenőrzése
+  let korhatarElottiMsg = '';
+  let korhatarElottiJogosult = false;
+  // Korkedvezmény alapján
+  if (korkedvezmenyesEv >= 8 && totalYears >= 15 && nyugdijEv < birthYear + korhatar.korhatarEv) {
+    korhatarElottiJogosult = true;
+    korhatarElottiMsg = 'Jogosult korhatár előtti ellátásra korkedvezmény alapján.';
+  }
+  // Bányász
+  if (banyaszEv > 0 && nyugdijEv < birthYear + korhatar.korhatarEv) {
+    korhatarElottiJogosult = true;
+    korhatarElottiMsg = 'Jogosult korhatár előtti ellátásra bányász jogcím alapján.';
+  }
+  // Művész
+  if (muveszEv > 0 && nyugdijEv < birthYear + korhatar.korhatarEv) {
+    korhatarElottiJogosult = true;
+    korhatarElottiMsg = 'Jogosult korhatár előtti ellátásra művész jogcím alapján.';
   }
   // Nők kedvezményes öregségi nyugdíja feltételek ellenőrzése
   let nokKedvezmenyes = false;
@@ -425,5 +477,7 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     `<ul><li>${details.join('</li><li>')}</li></ul>` +
     `<hr><b>Nők kedvezményes nyugdíj jogosultság:</b> ${nokKedvMsg}<br />` +
     `Jogosultsági idő: ${jogosultsagiEv} év (${jogosultsagiNap} nap), ebből keresőtevékenység: ${keresotevEv} év (${keresotevNap} nap), gyermeknevelés: ${gyermeknevelesEv} év (${gyermeknevelesNap} nap)` +
-    rogzitettNyugdijMsg;
+    rogzitettNyugdijMsg +
+    `<hr><b>Korkedvezmény:</b> ${korkedvezmenyMsg}<br />` +
+    `<b>Korhatár előtti ellátás jogosultság:</b> ${korhatarElottiMsg}`;
 });
