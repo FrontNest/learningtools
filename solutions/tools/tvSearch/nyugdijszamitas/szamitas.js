@@ -255,6 +255,39 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                      // Baleseti járadék mezők kezelése
+                      const balesetiJaradekNev = document.getElementById('balesetiJaradekNev') ? document.getElementById('balesetiJaradekNev').value : '';
+                      const balesetiJaradekEgeszsegkar = document.getElementById('balesetiJaradekEgeszsegkar') ? parseFloat(document.getElementById('balesetiJaradekEgeszsegkar').value) : null;
+                      const balesetiJaradekBaleset = document.getElementById('balesetiJaradekBaleset') && document.getElementById('balesetiJaradekBaleset').checked;
+                      const balesetiJaradekMegbetegedes = document.getElementById('balesetiJaradekMegbetegedes') && document.getElementById('balesetiJaradekMegbetegedes').checked;
+                      const balesetiJaradekIgazolas = document.getElementById('balesetiJaradekIgazolas') && document.getElementById('balesetiJaradekIgazolas').files.length > 0;
+                      let balesetiJaradekMsg = '';
+                      let balesetiJaradekOsszeg = 0;
+                      let balesetiJaradekJogosult = false;
+                      // Jogosultság: üzemi baleset vagy foglalkozási megbetegedés, egészségkárosodás > 13%, igazolás
+                      if (balesetiJaradekNev && (balesetiJaradekBaleset || balesetiJaradekMegbetegedes) && balesetiJaradekEgeszsegkar && balesetiJaradekEgeszsegkar > 13 && balesetiJaradekIgazolas) {
+                        balesetiJaradekJogosult = true;
+                      }
+                      // Baleseti járadék összeg számítása
+                      if (balesetiJaradekJogosult) {
+                        // Egészségkárosodás mértéke alapján
+                        if (balesetiJaradekEgeszsegkar >= 14 && balesetiJaradekEgeszsegkar <= 20) {
+                          balesetiJaradekOsszeg = Math.round(atlagKereset * 0.08);
+                          balesetiJaradekMsg = `Baleseti járadék összege: ${balesetiJaradekOsszeg.toLocaleString()} Ft (14-20% egészségkárosodás, átlagkereset 8%-a).`;
+                        } else if (balesetiJaradekEgeszsegkar >= 21 && balesetiJaradekEgeszsegkar <= 28) {
+                          balesetiJaradekOsszeg = Math.round(atlagKereset * 0.10);
+                          balesetiJaradekMsg = `Baleseti járadék összege: ${balesetiJaradekOsszeg.toLocaleString()} Ft (21-28% egészségkárosodás, átlagkereset 10%-a).`;
+                        } else if (balesetiJaradekEgeszsegkar >= 29 && balesetiJaradekEgeszsegkar <= 39) {
+                          balesetiJaradekOsszeg = Math.round(atlagKereset * 0.15);
+                          balesetiJaradekMsg = `Baleseti járadék összege: ${balesetiJaradekOsszeg.toLocaleString()} Ft (29-39% egészségkárosodás, átlagkereset 15%-a).`;
+                        } else if (balesetiJaradekEgeszsegkar > 39) {
+                          balesetiJaradekOsszeg = Math.round(atlagKereset * 0.30);
+                          balesetiJaradekMsg = `Baleseti járadék összege: ${balesetiJaradekOsszeg.toLocaleString()} Ft (39% feletti egészségkárosodás, átlagkereset 30%-a).`;
+                        }
+                        balesetiJaradekMsg += ' Igazolás: üzemi baleset vagy foglalkozási megbetegedés, egészségkárosodás, dokumentumok csatolva.';
+                      } else {
+                        balesetiJaradekMsg = 'Nem jogosult baleseti járadékra. Feltételek: üzemi baleset vagy foglalkozási megbetegedés, egészségkárosodás > 13%, dokumentumok csatolva.';
+                      }
                     // Baleseti hozzátartozói nyugdíj mezők kezelése
                     const balesetiTipus = document.getElementById('balesetiTipus') ? document.getElementById('balesetiTipus').value : '';
                     const balesetiJogosultNev = document.getElementById('balesetiJogosultNev') ? document.getElementById('balesetiJogosultNev').value : '';
@@ -745,5 +778,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     `<hr><b>Özvegyi nyugdíj jogosultság:</b> ${ozvegyMsg}` +
     `<hr><b>Árvaellátás jogosultság:</b> ${arvaMsg}` +
     `<hr><b>Szülői nyugdíj jogosultság:</b> ${szuloMsg}` +
-    `<hr><b>Baleseti hozzátartozói nyugdíj jogosultság:</b> ${balesetiMsg}`;
+    `<hr><b>Baleseti hozzátartozói nyugdíj jogosultság:</b> ${balesetiMsg}` +
+    `<hr><b>Baleseti járadék jogosultság:</b> ${balesetiJaradekMsg}`;
 });
