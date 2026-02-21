@@ -376,11 +376,54 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
   const haviAtlag = atlagKereset;
   const nyugdijOsszeg = Math.round(haviAtlag * (szazalek / 100));
 
+  // Rögzített nyugdíj lehetősége
+  let rogzitettNyugdijMsg = '';
+  let rogzitettNyugdijOsszeg = null;
+  // 65. év betöltése és legalább 20 év szolgálati idő
+  const korhatar = getKorhatar(birthYear);
+  const korhatarEv = korhatar.korhatarEv;
+  const korhatarHonap = korhatar.korhatarHonap;
+  // Ellenőrzés: ténylegesen betöltötte-e a 65. évet
+  let betoltotte65 = false;
+  if (nyugdijEv > birthYear + 65 || (nyugdijEv === birthYear + 65 && nyugdijHonap >= birthMonth)) {
+    betoltotte65 = true;
+  }
+  if (betoltotte65 && totalYears >= 20) {
+    // Rögzített nyugdíj összege: a 65. év betöltésekor számított nyugdíj
+    // Számítsuk újra a 65. év betöltésekor
+    // Feltételezzük, hogy a szolgálati idő addig ugyanennyi (bővíthető)
+    let rogzitettNyugdijSzazalek = 0;
+    if (totalYears < 15) {
+      rogzitettNyugdijSzazalek = Math.max(0, Math.round((totalYears / 15) * 43));
+    } else if (totalYears >= 50) {
+      rogzitettNyugdijSzazalek = 100.0;
+    } else {
+      rogzitettNyugdijSzazalek = szolidoSzazalek[totalYears] || 100.0;
+    }
+    let rogzitettAtlagKereset = keresetCount > 0 ? keresetSum / keresetCount : 0;
+    // Minimálbér korlátozás
+    let rogzitettMinber = 0;
+    for (let i = 0; i < minimalberData.length; i++) {
+      const row = minimalberData[i];
+      const ev = parseInt(row.start.split('-')[0], 10);
+      if ((birthYear + 65) >= ev) rogzitettMinber = row.wage;
+    }
+    if (rogzitettAtlagKereset < rogzitettMinber) rogzitettAtlagKereset = rogzitettMinber;
+    // Valorizációs szorzó
+    let rogzitettValEv = birthYear + 65;
+    let rogzitettValSzam = valorizaciosSzorzok[rogzitettValEv] || 1;
+    rogzitettAtlagKereset = rogzitettAtlagKereset * rogzitettValSzam;
+    rogzitettNyugdijOsszeg = Math.round(rogzitettAtlagKereset * (rogzitettNyugdijSzazalek / 100));
+    rogzitettNyugdijMsg = `<hr><b>Rögzített nyugdíj lehetősége:</b> <span style="color:blue">${rogzitettNyugdijOsszeg.toLocaleString()} Ft</span> (a 65. év betöltésekor számított összeg)<br />` +
+      `A rögzített nyugdíj folyósítása nem indul meg automatikusan, keresőtevékenység folytatható, szolgálati idő gyarapítható.<br />` +
+      `A tényleges nyugdíjazáskor választható a rögzített nyugdíj évenkénti emelésekkel növelt összege, vagy az újabb szolgálati idővel számított tényleges nyugdíj.<br />`;
+  }
   document.getElementById('resultContainer').innerHTML =
     `Végső nyugdíj összege: <span style="color:green">${nyugdijOsszeg.toLocaleString()} Ft</span> <br />` +
     `Összes szolgálati idő: ${totalYears} év ${totalNap} nap (${totalDays} nap), százalék: ${szazalek}%<br />` +
     `Átlagkereset valorizációval: ${Math.round(atlagKereset).toLocaleString()} Ft<br />` +
     `<ul><li>${details.join('</li><li>')}</li></ul>` +
     `<hr><b>Nők kedvezményes nyugdíj jogosultság:</b> ${nokKedvMsg}<br />` +
-    `Jogosultsági idő: ${jogosultsagiEv} év (${jogosultsagiNap} nap), ebből keresőtevékenység: ${keresotevEv} év (${keresotevNap} nap), gyermeknevelés: ${gyermeknevelesEv} év (${gyermeknevelesNap} nap)`;
+    `Jogosultsági idő: ${jogosultsagiEv} év (${jogosultsagiNap} nap), ebből keresőtevékenység: ${keresotevEv} év (${keresotevNap} nap), gyermeknevelés: ${gyermeknevelesEv} év (${gyermeknevelesNap} nap)` +
+    rogzitettNyugdijMsg;
 });
