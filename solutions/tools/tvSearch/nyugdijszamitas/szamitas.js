@@ -255,6 +255,19 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+            // Táncművészeti életjáradék mezők kezelése
+            const tancmuveszIgazolas = document.getElementById('tancmuveszIgazolas') && document.getElementById('tancmuveszIgazolas').files.length > 0;
+            const tancmuveszFofoglalkozasu = document.getElementById('tancmuveszFofoglalkozasu') && document.getElementById('tancmuveszFofoglalkozasu').checked;
+            let tancmuveszMsg = '';
+            // Jogosultság: legalább 25 év főfoglalkozású táncművész szolgálati idő, nyugdíjkorhatár alatt, igazolás feltöltve
+            if (muveszEv >= 25 && nyugdijEv < birthYear + korhatar.korhatarEv && tancmuveszIgazolas && tancmuveszFofoglalkozasu) {
+              tancmuveszMsg = 'Jogosult táncművészeti életjáradékra.';
+              if (maganNyugdijpenztar) {
+                tancmuveszMsg += ' Magán-nyugdíjpénztári tagság miatt az életjáradék csökkentett összegben kerül megállapításra.';
+              }
+            } else {
+              tancmuveszMsg = 'Nem jogosult táncművészeti életjáradékra. Feltételek: legalább 25 év főfoglalkozású táncművész szolgálati idő, nyugdíjkorhatár alatt, igazolás csatolva.';
+            }
           // Átmeneti bányászjáradék mezők kezelése
           const banyaszMuszak = document.getElementById('banyaszMuszak') ? parseInt(document.getElementById('banyaszMuszak').value, 10) : 0;
           const banyaszIgazolas = document.getElementById('banyaszIgazolas') && document.getElementById('banyaszIgazolas').files.length > 0;
@@ -543,5 +556,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     `<b>Korhatár előtti ellátás jogosultság:</b> ${korhatarElottiMsg}` +
     `<hr><b>Szolgálati járandóság jogosultság:</b> ${szolgalatiJarandMsg}` +
     (csaladiAdokedvMsg ? `<hr><b>Családi adókedvezmény érvényesítése:</b> ${csaladiAdokedvMsg}` : '') +
-    `<hr><b>Átmeneti bányászjáradék jogosultság:</b> ${atmenetiBanyaszMsg}`;
+    `<hr><b>Átmeneti bányászjáradék jogosultság:</b> ${atmenetiBanyaszMsg}` +
+    `<hr><b>Táncművészeti életjáradék jogosultság:</b> ${tancmuveszMsg}`;
 });
