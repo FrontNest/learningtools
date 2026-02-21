@@ -13,6 +13,38 @@
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
                                                           <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                                                            <legend>Özvegyi jogon Kiváló Művész, Érdemes Művész, Népművészet Mestere járadék jogosultság</legend>
+                                                            <label for="muveszOzvegyJelleg">Kitüntető cím (elhunyt):</label>
+                                                            <select id="muveszOzvegyJelleg" name="muveszOzvegyJelleg">
+                                                              <option value="">-- válassz --</option>
+                                                              <option value="kivalo">Kiváló Művész</option>
+                                                              <option value="erdemes">Érdemes Művész</option>
+                                                              <option value="nepmuveszet">Népművészet Mestere</option>
+                                                            </select><br />
+                                                            <label for="muveszOzvegyKituntetesEv">Kitüntetés éve (elhunyt):</label>
+                                                            <input type="number" id="muveszOzvegyKituntetesEv" name="muveszOzvegyKituntetesEv" min="1900" max="2026" /><br />
+                                                            <input type="checkbox" id="muveszOzvegyHazastars" name="muveszOzvegyHazastars" />
+                                                            <label for="muveszOzvegyHazastars">Házastárs</label><br />
+                                                            <input type="checkbox" id="muveszOzvegyElettars" name="muveszOzvegyElettars" />
+                                                            <label for="muveszOzvegyElettars">Élettárs</label><br />
+                                                            <input type="checkbox" id="muveszOzvegyKozosHaztartas" name="muveszOzvegyKozosHaztartas" />
+                                                            <label for="muveszOzvegyKozosHaztartas">Halálakor közös háztartásban élt az elhunyttal</label><br />
+                                                            <input type="checkbox" id="muveszOzvegyKorhatar" name="muveszOzvegyKorhatar" />
+                                                            <label for="muveszOzvegyKorhatar">Elérte a reá irányadó öregségi nyugdíjkorhatárt</label><br />
+                                                            <label for="muveszOzvegyIgazolas">Igazolás (kitüntető cím, házastárs/élettárs, közös háztartás, nyugdíjkorhatár):</label>
+                                                            <input type="file" id="muveszOzvegyIgazolas" name="muveszOzvegyIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                                                            <label for="muveszOzvegyElhunytJelleg">Elhunyt járadék típusa:</label>
+                                                            <select id="muveszOzvegyElhunytJelleg" name="muveszOzvegyElhunytJelleg">
+                                                              <option value="">-- válassz --</option>
+                                                              <option value="kivalo">Kiváló Művész járadék</option>
+                                                              <option value="erdemes">Érdemes Művész járadék</option>
+                                                              <option value="nepmuveszet">Népművészet Mestere járadék</option>
+                                                            </select><br />
+                                                            <label for="muveszOzvegyElhunytJosszeg">Elhunyt járadék összege (Ft):</label>
+                                                            <input type="number" id="muveszOzvegyElhunytJosszeg" name="muveszOzvegyElhunytJosszeg" min="0" step="1" /><br />
+                                                            <small>Csatold a szükséges igazolásokat: kitüntető cím, házastárs/élettárs, közös háztartás, nyugdíjkorhatár, elhunyt járadék összege stb.</small>
+                                                          </fieldset>
+                                                          <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
                                                             <legend>Kiváló Művész, Érdemes Művész, Népművészet Mestere járadék jogosultság</legend>
                                                             <label for="muveszJelleg">Kitüntető cím:</label>
                                                             <select id="muveszJelleg" name="muveszJelleg">

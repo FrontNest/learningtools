@@ -255,6 +255,41 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                                                                                                  // Özvegyi jogon Kiváló Művész, Érdemes Művész, Népművészet Mestere járadék
+                                                                                                  const muveszOzvegyJelleg = document.getElementById('muveszOzvegyJelleg') ? document.getElementById('muveszOzvegyJelleg').value : '';
+                                                                                                  const muveszOzvegyKituntetesEv = document.getElementById('muveszOzvegyKituntetesEv') ? parseInt(document.getElementById('muveszOzvegyKituntetesEv').value) : null;
+                                                                                                  const muveszOzvegyHazastars = document.getElementById('muveszOzvegyHazastars') && document.getElementById('muveszOzvegyHazastars').checked;
+                                                                                                  const muveszOzvegyElettars = document.getElementById('muveszOzvegyElettars') && document.getElementById('muveszOzvegyElettars').checked;
+                                                                                                  const muveszOzvegyKozosHaztartas = document.getElementById('muveszOzvegyKozosHaztartas') && document.getElementById('muveszOzvegyKozosHaztartas').checked;
+                                                                                                  const muveszOzvegyKorhatar = document.getElementById('muveszOzvegyKorhatar') && document.getElementById('muveszOzvegyKorhatar').checked;
+                                                                                                  const muveszOzvegyIgazolas = document.getElementById('muveszOzvegyIgazolas') && document.getElementById('muveszOzvegyIgazolas').files.length > 0;
+                                                                                                  const muveszOzvegyElhunytJelleg = document.getElementById('muveszOzvegyElhunytJelleg') ? document.getElementById('muveszOzvegyElhunytJelleg').value : '';
+                                                                                                  const muveszOzvegyElhunytJosszeg = document.getElementById('muveszOzvegyElhunytJosszeg') ? parseInt(document.getElementById('muveszOzvegyElhunytJosszeg').value) : null;
+                                                                                                  let muveszOzvegyMsg = '';
+                                                                                                  let muveszOzvegyJogosult = false;
+                                                                                                  let muveszOzvegyOsszeg = 0;
+                                                                                                  // Jogosultság ellenőrzése
+                                                                                                  if (
+                                                                                                    muveszOzvegyJelleg &&
+                                                                                                    (
+                                                                                                      (muveszOzvegyJelleg === 'kivalo' && muveszOzvegyKituntetesEv && muveszOzvegyKituntetesEv < 1991) ||
+                                                                                                      (muveszOzvegyJelleg === 'erdemes' && muveszOzvegyKituntetesEv && muveszOzvegyKituntetesEv < 1991) ||
+                                                                                                      (muveszOzvegyJelleg === 'nepmuveszet' && muveszOzvegyKituntetesEv && muveszOzvegyKituntetesEv < 2005)
+                                                                                                    ) &&
+                                                                                                    (muveszOzvegyHazastars || muveszOzvegyElettars) &&
+                                                                                                    muveszOzvegyKozosHaztartas &&
+                                                                                                    muveszOzvegyKorhatar &&
+                                                                                                    muveszOzvegyIgazolas &&
+                                                                                                    muveszOzvegyElhunytJelleg &&
+                                                                                                    muveszOzvegyElhunytJosszeg
+                                                                                                  ) {
+                                                                                                    muveszOzvegyJogosult = true;
+                                                                                                    muveszOzvegyOsszeg = Math.round(muveszOzvegyElhunytJosszeg / 2);
+                                                                                                    muveszOzvegyMsg = `Özvegyi jogon művész járadék jogosultság: Igen. Havi összeg: ${muveszOzvegyOsszeg.toLocaleString()} Ft (elhunytat megillető járadék fele).`;
+                                                                                                  }
+                                                                                                  if (!muveszOzvegyJogosult) {
+                                                                                                    muveszOzvegyMsg = 'Nem jogosult özvegyi jogon művész járadékra. Feltételek: kitüntető cím (Kiváló/Érdemes Művész 1991.08.01. előtt, Népművészet Mestere 2005.01.01. előtt), házastárs vagy élettárs, közös háztartás, nyugdíjkorhatár, igazolás, elhunyt járadék összege.';
+                                                                                                  }
                                                                   // Kiváló Művész, Érdemes Művész, Népművészet Mestere járadék mezők kezelése
                                                                   const muveszJelleg = document.getElementById('muveszJelleg') ? document.getElementById('muveszJelleg').value : '';
                                                                   const muveszKituntetesEv = document.getElementById('muveszKituntetesEv') ? parseInt(document.getElementById('muveszKituntetesEv').value) : null;
@@ -1080,6 +1115,7 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
       `A tényleges nyugdíjazáskor választható a rögzített nyugdíj évenkénti emelésekkel növelt összege, vagy az újabb szolgálati idővel számított tényleges nyugdíj.<br />`;
   }
   document.getElementById('resultContainer').innerHTML =
+    `<hr><b>Özvegyi jogon művész járadék jogosultság:</b> ${muveszOzvegyMsg}` +
   
   `<hr><b>Kiváló Művész, Érdemes Művész, Népművészet Mestere járadék jogosultság:</b> ${muveszJMsg}` +
   `<hr><b>Tartós ápolást végzők időskori támogatása jogosultság:</b> ${tartosApolMsg}` +
