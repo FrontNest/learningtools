@@ -161,7 +161,10 @@ const jogcimSzabalyok = {
   'Egyéb jogcímek': { beszamitasiTenyezo: 1, maxNap: null, egyedi: true, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false },
   'Korkedvezményes munkakör': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false, korkedvezmenyes: true },
   'Bányász': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false, banyasz: true },
-  'Művész': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false, muvesz: true }
+  'Művész': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false, muvesz: true },
+  'Szolgálati nyugdíj': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false, szolgalatiNyugdij: true },
+  'Szolgálati rokkantsági nyugdíj': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false, szolgalatiRokkantsagi: true },
+  'Szolgálati baleseti rokkantsági nyugdíj': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false, szolgalatiBalesetiRokkantsagi: true }
 };
 const jogcimek = Object.keys(jogcimSzabalyok);
 
@@ -252,6 +255,10 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+      // Szolgálati járandóság jogosultság számítása
+      let szolgalatiNyugdijNap = 0;
+      let szolgalatiRokkantsagiNap = 0;
+      let szolgalatiBalesetiRokkantsagiNap = 0;
     // Korkedvezményes időszakok számítása
     let korkedvezmenyesNap = 0;
     let banyaszNap = 0;
@@ -330,6 +337,10 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     if (szabaly.korkedvezmenyes && startDate < new Date(2015, 0, 1)) korkedvezmenyesNap += napok;
     if (szabaly.banyasz) banyaszNap += napok;
     if (szabaly.muvesz) muveszNap += napok;
+    // Szolgálati nyugdíj, rokkantsági, baleseti rokkantsági
+    if (szabaly.szolgalatiNyugdij) szolgalatiNyugdijNap += napok;
+    if (szabaly.szolgalatiRokkantsagi) szolgalatiRokkantsagiNap += napok;
+    if (szabaly.szolgalatiBalesetiRokkantsagi) szolgalatiBalesetiRokkantsagiNap += napok;
     // Kereset összesítés (csak ahol van kereset)
     if (!isNaN(kereset) && kereset > 0) {
       keresetSum += kereset * napok;
@@ -337,6 +348,20 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     }
     totalDays += napok;
     details.push(`${jogcim}: ${napok} nap (${kezdoEv}.${kezdoHonap}.${kezdoNap} - ${vegeEv}.${vegeHonap}.${vegeNap})`);
+  }
+  // Szolgálati járandóság jogosultság ellenőrzése
+  let szolgalatiJarandMsg = '';
+  let szolgalatiJarandJogosult = false;
+  const szolgalatiNyugdijEv = Math.floor(szolgalatiNyugdijNap / 365);
+  const szolgalatiRokkantsagiEv = Math.floor(szolgalatiRokkantsagiNap / 365);
+  const szolgalatiBalesetiRokkantsagiEv = Math.floor(szolgalatiBalesetiRokkantsagiNap / 365);
+  // Jogosultság: 2011.12.31-én szolgálati nyugdíjban, rokkantsági nyugdíjban, baleseti rokkantsági nyugdíjban részesült, és a folyósítás időtartamával együtt legalább 25 év szolgálati időt szerzett
+  // (Rendszeres pénzellátás: nem részesül)
+  if ((szolgalatiNyugdijEv > 0 || szolgalatiRokkantsagiEv > 0 || szolgalatiBalesetiRokkantsagiEv > 0) && totalYears >= 25) {
+    szolgalatiJarandJogosult = true;
+    szolgalatiJarandMsg = 'Jogosult szolgálati járandóságra.';
+  } else {
+    szolgalatiJarandMsg = 'Nem jogosult szolgálati járandóságra.';
   }
   // Korkedvezményes évek
   korkedvezmenyesEv = Math.floor(korkedvezmenyesNap / 365);
@@ -479,5 +504,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     `Jogosultsági idő: ${jogosultsagiEv} év (${jogosultsagiNap} nap), ebből keresőtevékenység: ${keresotevEv} év (${keresotevNap} nap), gyermeknevelés: ${gyermeknevelesEv} év (${gyermeknevelesNap} nap)` +
     rogzitettNyugdijMsg +
     `<hr><b>Korkedvezmény:</b> ${korkedvezmenyMsg}<br />` +
-    `<b>Korhatár előtti ellátás jogosultság:</b> ${korhatarElottiMsg}`;
+    `<b>Korhatár előtti ellátás jogosultság:</b> ${korhatarElottiMsg}` +
+    `<hr><b>Szolgálati járandóság jogosultság:</b> ${szolgalatiJarandMsg}`;
 });
