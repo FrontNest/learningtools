@@ -148,15 +148,15 @@ if (valorizacioEvSelect) {
 
 // Jogcímek beszámítási szabályok (bővíthető JSON)
 const jogcimSzabalyok = {
-  'Teljes munkaidő': { beszamitasiTenyezo: 1, maxNap: null },
-  'Részmunkaidő': { beszamitasiTenyezo: 0.7, maxNap: null },
-  'Közalkalmazotti szolgálat': { beszamitasiTenyezo: 1, maxNap: null },
-  'Katonai szolgálat': { beszamitasiTenyezo: 1, maxNap: 365 }, // max 1 év
-  'Gyermeknevelés': { beszamitasiTenyezo: 1, maxNap: 730 }, // max 2 év
-  'Ápolási szabadság': { beszamitasiTenyezo: 0.5, maxNap: 365 }, // max 1 év, 50%
-  'Fizetés nélküli szabadság': { beszamitasiTenyezo: 0.5, maxNap: 365 },
-  'Tanulmányi idő': { beszamitasiTenyezo: 0.5, maxNap: 365 },
-  'Egyéb jogcímek': { beszamitasiTenyezo: 1, maxNap: null, egyedi: true }
+  'Teljes munkaidő': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false },
+  'Részmunkaidő': { beszamitasiTenyezo: 0.7, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false },
+  'Közalkalmazotti szolgálat': { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: true, keresotevekenyseg: true, gyermekneveles: false },
+  'Katonai szolgálat': { beszamitasiTenyezo: 1, maxNap: 365, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false }, // max 1 év
+  'Gyermeknevelés': { beszamitasiTenyezo: 1, maxNap: 730, jogosultsagi: true, keresotevekenyseg: false, gyermekneveles: true }, // max 2 év
+  'Ápolási szabadság': { beszamitasiTenyezo: 0.5, maxNap: 365, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false }, // max 1 év, 50%
+  'Fizetés nélküli szabadság': { beszamitasiTenyezo: 0.5, maxNap: 365, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false },
+  'Tanulmányi idő': { beszamitasiTenyezo: 0.5, maxNap: 365, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false },
+  'Egyéb jogcímek': { beszamitasiTenyezo: 1, maxNap: null, egyedi: true, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false }
 };
 const jogcimek = Object.keys(jogcimSzabalyok);
 
@@ -273,6 +273,10 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
   let keresetSum = 0;
   let keresetCount = 0;
   let details = [];
+  // Jogosultsági idő számítása
+  let jogosultsagiNap = 0;
+  let keresotevNap = 0;
+  let gyermeknevelesNap = 0;
   for (let i = 0; i < periods.length; i++) {
     const tr = periodsTableBody.children[i];
     const jogcim = tr.children[0].querySelector('select').value;
@@ -301,11 +305,13 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     // Napok számítása
     let days = Math.floor((endDate - startDate) / (1000*60*60*24)) + 1;
     // Jogcím szabály szerinti beszámítás
-    const szabaly = jogcimSzabalyok[jogcim] || { beszamitasiTenyezo: 1, maxNap: null };
+    const szabaly = jogcimSzabalyok[jogcim] || { beszamitasiTenyezo: 1, maxNap: null, jogosultsagi: false, keresotevekenyseg: false, gyermekneveles: false };
     let napok = Math.round(days * szabaly.beszamitasiTenyezo);
     if (szabaly.maxNap && napok > szabaly.maxNap) napok = szabaly.maxNap;
-    // Egyéb jogcímeknél egyedi feltételek (pl. maxNap input, beszamitasiTenyezo input)
-    // ... (bővíthető)
+    // Jogosultsági időbe számító napok
+    if (szabaly.jogosultsagi) jogosultsagiNap += napok;
+    if (szabaly.keresotevekenyseg) keresotevNap += napok;
+    if (szabaly.gyermekneveles) gyermeknevelesNap += napok;
     // Kereset összesítés (csak ahol van kereset)
     if (!isNaN(kereset) && kereset > 0) {
       keresetSum += kereset * napok;
@@ -313,6 +319,28 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     }
     totalDays += napok;
     details.push(`${jogcim}: ${napok} nap (${kezdoEv}.${kezdoHonap}.${kezdoNap} - ${vegeEv}.${vegeHonap}.${vegeNap})`);
+  }
+  // Nők kedvezményes öregségi nyugdíja feltételek ellenőrzése
+  let nokKedvezmenyes = false;
+  let nokKedvMsg = '';
+  const jogosultsagiEv = Math.floor(jogosultsagiNap / 365);
+  const keresotevEv = Math.floor(keresotevNap / 365);
+  const gyermeknevelesEv = Math.floor(gyermeknevelesNap / 365);
+  // 5+ gyermek esetén a keresőtevékenység feltétel csökkentése (példaként inputból nem olvassuk, bővíthető)
+  // Speciális jogcímek (gyermekek otthongondozási díja, ápolási díj) esetén min. 30 év keresőtevékenység
+  // Most csak alap logika: 40 év jogosultsági idő, ebből legalább 32 év keresőtevékenység, max. 8 év gyermeknevelés
+  if (jogosultsagiEv >= 40) {
+    if (keresotevEv >= 32 && gyermeknevelesEv <= 8) {
+      nokKedvezmenyes = true;
+      nokKedvMsg = 'Jogosult nők kedvezményes öregségi nyugdíjára.';
+    } else if (keresotevEv >= 40) {
+      nokKedvezmenyes = true;
+      nokKedvMsg = 'Jogosult nők kedvezményes öregségi nyugdíjára (40 év keresőtevékenység).';
+    } else {
+      nokKedvMsg = 'Nem teljesül a nők kedvezményes nyugdíj feltétele: legalább 40 év jogosultsági idő, ebből min. 32 év keresőtevékenység, max. 8 év gyermeknevelés.';
+    }
+  } else {
+    nokKedvMsg = 'Nem teljesül a nők kedvezményes nyugdíj feltétele: legalább 40 év jogosultsági idő.';
   }
 
   // Szolgálati idő év+nap formátum
@@ -352,5 +380,7 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     `Végső nyugdíj összege: <span style="color:green">${nyugdijOsszeg.toLocaleString()} Ft</span> <br />` +
     `Összes szolgálati idő: ${totalYears} év ${totalNap} nap (${totalDays} nap), százalék: ${szazalek}%<br />` +
     `Átlagkereset valorizációval: ${Math.round(atlagKereset).toLocaleString()} Ft<br />` +
-    `<ul><li>${details.join('</li><li>')}</li></ul>`;
+    `<ul><li>${details.join('</li><li>')}</li></ul>` +
+    `<hr><b>Nők kedvezményes nyugdíj jogosultság:</b> ${nokKedvMsg}<br />` +
+    `Jogosultsági idő: ${jogosultsagiEv} év (${jogosultsagiNap} nap), ebből keresőtevékenység: ${keresotevEv} év (${keresotevNap} nap), gyermeknevelés: ${gyermeknevelesEv} év (${gyermeknevelesNap} nap)`;
 });
