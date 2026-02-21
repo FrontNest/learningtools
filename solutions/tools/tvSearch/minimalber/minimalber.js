@@ -73,9 +73,11 @@ function renderTable(intervals) {
 
 document.getElementById('dateForm').addEventListener('submit', function(e) {
 	e.preventDefault();
-	const startDate = parseDate(document.getElementById('startDate').value);
-	const endDate = parseDate(document.getElementById('endDate').value);
-	if (!startDate || !endDate || endDate < startDate) {
+	const startDateInput = document.getElementById('startDate').value;
+	const endDateInput = document.getElementById('endDate').value;
+	const startDate = parseDate(startDateInput);
+	const endDate = parseDate(endDateInput);
+	if (!startDateInput || !endDateInput || !startDate || !endDate || endDate < startDate) {
 		document.getElementById('resultTableContainer').innerHTML = '<p>Hibás dátum intervallum!</p>';
 		return;
 	}
@@ -84,5 +86,10 @@ document.getElementById('dateForm').addEventListener('submit', function(e) {
 		document.getElementById('resultTableContainer').innerHTML = '<p>Nincs minimálbér adat az adott időszakra.</p>';
 		return;
 	}
-	document.getElementById('resultTableContainer').innerHTML = renderTable(intervals);
+	// Calculate days difference (inclusive)
+	const msPerDay = 24 * 60 * 60 * 1000;
+	const days = Math.floor((endDate - startDate) / msPerDay) + 1;
+	let html = renderTable(intervals);
+	html += `<div class="days-diff">Eltelt napok száma: <strong>${days}</strong></div>`;
+	document.getElementById('resultTableContainer').innerHTML = html;
 });
