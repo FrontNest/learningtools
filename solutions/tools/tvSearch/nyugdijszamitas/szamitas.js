@@ -255,6 +255,47 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                                                                  // Kiváló Művész, Érdemes Művész, Népművészet Mestere járadék mezők kezelése
+                                                                  const muveszJelleg = document.getElementById('muveszJelleg') ? document.getElementById('muveszJelleg').value : '';
+                                                                  const muveszKituntetesEv = document.getElementById('muveszKituntetesEv') ? parseInt(document.getElementById('muveszKituntetesEv').value) : null;
+                                                                  const muveszNyugdij = document.getElementById('muveszNyugdij') && document.getElementById('muveszNyugdij').checked;
+                                                                  const muveszKorhatartElotti = document.getElementById('muveszKorhatartElotti') && document.getElementById('muveszKorhatartElotti').checked;
+                                                                  const muveszSzolgalatiJarand = document.getElementById('muveszSzolgalatiJarand') && document.getElementById('muveszSzolgalatiJarand').checked;
+                                                                  const muveszBanyaszJaradek = document.getElementById('muveszBanyaszJaradek') && document.getElementById('muveszBanyaszJaradek').checked;
+                                                                  const muveszMegvaltozott = document.getElementById('muveszMegvaltozott') && document.getElementById('muveszMegvaltozott').checked;
+                                                                  const muveszKorhatar = document.getElementById('muveszKorhatar') && document.getElementById('muveszKorhatar').checked;
+                                                                  const muveszIgazolas = document.getElementById('muveszIgazolas') && document.getElementById('muveszIgazolas').files.length > 0;
+                                                                  let muveszJMsg = '';
+                                                                  let muveszJJogosult = false;
+                                                                  let muveszJOsszeg = 0;
+                                                                  // KSH nettó átlagkereset 2025: 413 000 Ft (példa, valós adatot KSH-ból kell beolvasni)
+                                                                  const kshNettoAtlag = 413000;
+                                                                  // Jogosultság ellenőrzése
+                                                                  if (
+                                                                    muveszJelleg &&
+                                                                    (
+                                                                      (muveszJelleg === 'kivalo' && muveszKituntetesEv && muveszKituntetesEv < 1991) ||
+                                                                      (muveszJelleg === 'erdemes' && muveszKituntetesEv && muveszKituntetesEv < 1991) ||
+                                                                      (muveszJelleg === 'nepmuveszet' && muveszKituntetesEv && muveszKituntetesEv < 2005)
+                                                                    ) &&
+                                                                    (muveszNyugdij || muveszKorhatartElotti || muveszSzolgalatiJarand || muveszBanyaszJaradek || muveszMegvaltozott || muveszKorhatar) &&
+                                                                    muveszIgazolas
+                                                                  ) {
+                                                                    muveszJJogosult = true;
+                                                                    if (muveszJelleg === 'kivalo') {
+                                                                      muveszJOsszeg = Math.round(kshNettoAtlag / 12);
+                                                                      muveszJMsg = `Kiváló Művész járadék jogosultság: Igen. Havi összeg: ${muveszJOsszeg.toLocaleString()} Ft (KSH nettó átlagkereset 1/12-e).`;
+                                                                    } else if (muveszJelleg === 'erdemes') {
+                                                                      muveszJOsszeg = Math.round((kshNettoAtlag / 12) * 0.6);
+                                                                      muveszJMsg = `Érdemes Művész járadék jogosultság: Igen. Havi összeg: ${muveszJOsszeg.toLocaleString()} Ft (Kiváló Művész járadék 60%-a).`;
+                                                                    } else if (muveszJelleg === 'nepmuveszet') {
+                                                                      muveszJOsszeg = Math.round((kshNettoAtlag / 12) * 0.5);
+                                                                      muveszJMsg = `Népművészet Mestere járadék jogosultság: Igen. Havi összeg: ${muveszJOsszeg.toLocaleString()} Ft (Kiváló Művész járadék 50%-a).`;
+                                                                    }
+                                                                  }
+                                                                  if (!muveszJJogosult) {
+                                                                    muveszJMsg = 'Nem jogosult Kiváló Művész, Érdemes Művész vagy Népművészet Mestere járadékra. Feltételek: kitüntető cím (Kiváló/Érdemes Művész 1991.08.01. előtt, Népművészet Mestere 2005.01.01. előtt), saját jogú nyugellátás, korhatár előtti ellátás, szolgálati járandóság, átmeneti bányászjáradék, megváltozott munkaképességű ellátás, vagy elérte a nyugdíjkorhatárt, igazolás.';
+                                                                  }
                                   // Tartós ápolást végzők időskori támogatása mezők kezelése
                                   const tartosApolNev = document.getElementById('tartosApolNev') ? document.getElementById('tartosApolNev').value : '';
                                   const tartosApolMagyar = document.getElementById('tartosApolMagyar') && document.getElementById('tartosApolMagyar').checked;
@@ -1040,6 +1081,7 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
   }
   document.getElementById('resultContainer').innerHTML =
   
+  `<hr><b>Kiváló Művész, Érdemes Művész, Népművészet Mestere járadék jogosultság:</b> ${muveszJMsg}` +
   `<hr><b>Tartós ápolást végzők időskori támogatása jogosultság:</b> ${tartosApolMsg}` +
   `<hr><b>Bányászok egészségkárosodási járadék jogosultság:</b> ${banyaszEgeszsegMsg}` +
   `<hr><b>Szépkorúak jubileumi juttatás jogosultság:</b> ${szepkorMsg}` +

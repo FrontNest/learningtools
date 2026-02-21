@@ -13,6 +13,33 @@
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
                                                           <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                                                            <legend>Kiváló Művész, Érdemes Művész, Népművészet Mestere járadék jogosultság</legend>
+                                                            <label for="muveszJelleg">Kitüntető cím:</label>
+                                                            <select id="muveszJelleg" name="muveszJelleg">
+                                                              <option value="">-- válassz --</option>
+                                                              <option value="kivalo">Kiváló Művész</option>
+                                                              <option value="erdemes">Érdemes Művész</option>
+                                                              <option value="nepmuveszet">Népművészet Mestere</option>
+                                                            </select><br />
+                                                            <label for="muveszKituntetesEv">Kitüntetés éve:</label>
+                                                            <input type="number" id="muveszKituntetesEv" name="muveszKituntetesEv" min="1900" max="2026" /><br />
+                                                            <input type="checkbox" id="muveszNyugdij" name="muveszNyugdij" />
+                                                            <label for="muveszNyugdij">Saját jogú nyugellátás</label><br />
+                                                            <input type="checkbox" id="muveszKorhatartElotti" name="muveszKorhatartElotti" />
+                                                            <label for="muveszKorhatartElotti">Korhatár előtti ellátás</label><br />
+                                                            <input type="checkbox" id="muveszSzolgalatiJarand" name="muveszSzolgalatiJarand" />
+                                                            <label for="muveszSzolgalatiJarand">Szolgálati járandóság</label><br />
+                                                            <input type="checkbox" id="muveszBanyaszJaradek" name="muveszBanyaszJaradek" />
+                                                            <label for="muveszBanyaszJaradek">Átmeneti bányászjáradék</label><br />
+                                                            <input type="checkbox" id="muveszMegvaltozott" name="muveszMegvaltozott" />
+                                                            <label for="muveszMegvaltozott">Megváltozott munkaképességű ellátás</label><br />
+                                                            <input type="checkbox" id="muveszKorhatar" name="muveszKorhatar" />
+                                                            <label for="muveszKorhatar">Elérte a nyugdíjkorhatárt</label><br />
+                                                            <label for="muveszIgazolas">Igazolás (miniszteri igazolás, kitüntető cím, ellátás, nyugdíjkorhatár):</label>
+                                                            <input type="file" id="muveszIgazolas" name="muveszIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                                                            <small>Csatold a szükséges igazolásokat: miniszteri igazolás, kitüntető cím, ellátás, nyugdíjkorhatár stb.</small>
+                                                          </fieldset>
+                                                          <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
                                                             <legend>Tartós ápolást végzők időskori támogatása jogosultság</legend>
                                                             <label for="tartosApolNev">Igénylő neve:</label>
                                                             <input type="text" id="tartosApolNev" name="tartosApolNev" /><br />
