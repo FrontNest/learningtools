@@ -159,6 +159,18 @@ function renderPeriodsTable() {
 }
 
 addPeriodBtn.onclick = function() {
+  // Mentsük el az aktuális sorok értékeit
+  for (let i = 0; i < periodsTableBody.children.length; i++) {
+    const tr = periodsTableBody.children[i];
+    periods[i].jogcim = tr.children[0].querySelector('select').value;
+    periods[i].kezdoEv = tr.children[1].children[0].value;
+    periods[i].kezdoHonap = tr.children[1].children[1].value;
+    periods[i].kezdoNap = tr.children[1].children[2].value;
+    periods[i].vegeEv = tr.children[2].children[0].value;
+    periods[i].vegeHonap = tr.children[2].children[1].value;
+    periods[i].vegeNap = tr.children[2].children[2].value;
+    periods[i].kereset = tr.children[3].children[0].value;
+  }
   periods.push({ jogcim: jogcimek[0], kereset: '', kezdoEv: '', kezdoHonap: '', kezdoNap: '', vegeEv: '', vegeHonap: '', vegeNap: '' });
   renderPeriodsTable();
 };
