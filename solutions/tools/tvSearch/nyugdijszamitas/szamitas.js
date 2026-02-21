@@ -255,6 +255,31 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                                // Szépkorúak jubileumi juttatás mezők kezelése
+                                const szepkorNev = document.getElementById('szepkorNev') ? document.getElementById('szepkorNev').value : '';
+                                const szepkorMagyar = document.getElementById('szepkorMagyar') && document.getElementById('szepkorMagyar').checked;
+                                const szepkorLakhely = document.getElementById('szepkorLakhely') && document.getElementById('szepkorLakhely').checked;
+                                const szepkorEGT = document.getElementById('szepkorEGT') && document.getElementById('szepkorEGT').checked;
+                                const szepkorSzabadMozgas = document.getElementById('szepkorSzabadMozgas') && document.getElementById('szepkorSzabadMozgas').checked;
+                                const szepkorEletkor = document.getElementById('szepkorEletkor') ? parseInt(document.getElementById('szepkorEletkor').value) : null;
+                                const szepkorVisszautasitas = document.getElementById('szepkorVisszautasitas') && document.getElementById('szepkorVisszautasitas').checked;
+                                const szepkorIgazolas = document.getElementById('szepkorIgazolas') && document.getElementById('szepkorIgazolas').files.length > 0;
+                                let szepkorMsg = '';
+                                let szepkorJogosult = false;
+                                let szepkorOsszeg = 0;
+                                // Jogosultság: magyar állampolgár vagy EGT állam lakóhellyel, vagy szabad mozgás jogával, életkor 90, 95, 100, 105, 110, 115, lakóhely, nem utasította vissza, igazolás
+                                if (szepkorNev && (szepkorMagyar || szepkorEGT || szepkorSzabadMozgas) && szepkorLakhely && szepkorEletkor && [90,95,100,105,110,115].includes(szepkorEletkor) && !szepkorVisszautasitas && szepkorIgazolas) {
+                                  szepkorJogosult = true;
+                                  // Összeg meghatározása
+                                  szepkorOsszeg = szepkorEletkor * 1000;
+                                  szepkorMsg = `Szépkorúak jubileumi juttatás összege: ${szepkorOsszeg.toLocaleString()} Ft (${szepkorEletkor}. életév betöltésekor). Emléklap és köszöntés jár.`;
+                                }
+                                if (!szepkorJogosult) {
+                                  szepkorMsg = 'Nem jogosult szépkorúak jubileumi juttatásra. Feltételek: magyar állampolgár vagy EGT állam lakóhellyel, vagy szabad mozgás jogával, lakóhely, 90/95/100/105/110/115. életév, nem utasította vissza, igazolás.';
+                                  if (szepkorVisszautasitas) {
+                                    szepkorMsg += ' A köszöntést vagy juttatást visszautasította.';
+                                  }
+                                }
                               // Özvegyi jogon nemzeti helytállásért pótlék mezők kezelése
                               const helytallasOzvegyNev = document.getElementById('helytallasOzvegyNev') ? document.getElementById('helytallasOzvegyNev').value : '';
                               const helytallasOzvegyMagyar = document.getElementById('helytallasOzvegyMagyar') && document.getElementById('helytallasOzvegyMagyar').checked;
@@ -933,6 +958,8 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
       `A tényleges nyugdíjazáskor választható a rögzített nyugdíj évenkénti emelésekkel növelt összege, vagy az újabb szolgálati idővel számított tényleges nyugdíj.<br />`;
   }
   document.getElementById('resultContainer').innerHTML =
+ 
+  `<hr><b>Szépkorúak jubileumi juttatás jogosultság:</b> ${szepkorMsg}`;
 
   `<hr><b>Özvegyi jogon nemzeti helytállásért pótlék jogosultság:</b> ${helytallasOzvegyMsg}`;
 

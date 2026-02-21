@@ -12,6 +12,26 @@
     <div class="container">
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
+                                          <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                                            <legend>Szépkorúak jubileumi juttatás jogosultság</legend>
+                                            <label for="szepkorNev">Igénylő neve:</label>
+                                            <input type="text" id="szepkorNev" name="szepkorNev" /><br />
+                                            <input type="checkbox" id="szepkorMagyar" name="szepkorMagyar" />
+                                            <label for="szepkorMagyar">Magyar állampolgár</label><br />
+                                            <input type="checkbox" id="szepkorEGT" name="szepkorEGT" />
+                                            <label for="szepkorEGT">EGT állam lakóhellyel</label><br />
+                                            <input type="checkbox" id="szepkorSzabadMozgas" name="szepkorSzabadMozgas" />
+                                            <label for="szepkorSzabadMozgas">Szabad mozgás és tartózkodás jogával rendelkező személy</label><br />
+                                            <input type="checkbox" id="szepkorLakhely" name="szepkorLakhely" />
+                                            <label for="szepkorLakhely">Magyarországi lakóhely</label><br />
+                                            <label for="szepkorEletkor">Betöltött életkor (90, 95, 100, 105, 110, 115):</label>
+                                            <input type="number" id="szepkorEletkor" name="szepkorEletkor" min="90" max="115" step="5" /><br />
+                                            <input type="checkbox" id="szepkorVisszautasitas" name="szepkorVisszautasitas" />
+                                            <label for="szepkorVisszautasitas">Köszöntést/juttatást visszautasította</label><br />
+                                            <label for="szepkorIgazolas">Igazolások (lakóhely, állampolgárság, életkor, EGT, szabad mozgás, dokumentumok):</label>
+                                            <input type="file" id="szepkorIgazolas" name="szepkorIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                                            <small>Csatold a szükséges igazolásokat: lakóhely, állampolgárság, életkor, EGT, szabad mozgás, dokumentumok stb.</small>
+                                          </fieldset>
                                   <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
                                     <legend>Özvegyi jogon nemzeti helytállásért pótlék jogosultság</legend>
                                     <label for="helytallasOzvegyNev">Özvegy neve:</label>
