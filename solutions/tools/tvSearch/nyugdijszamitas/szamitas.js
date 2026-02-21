@@ -255,7 +255,39 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
-                                  // Bányászok egészségkárosodási járadék mezők kezelése
+                                  // Tartós ápolást végzők időskori támogatása mezők kezelése
+                                  const tartosApolNev = document.getElementById('tartosApolNev') ? document.getElementById('tartosApolNev').value : '';
+                                  const tartosApolMagyar = document.getElementById('tartosApolMagyar') && document.getElementById('tartosApolMagyar').checked;
+                                  const tartosApolNyugdij = document.getElementById('tartosApolNyugdij') && document.getElementById('tartosApolNyugdij').checked;
+                                  const tartosApolEv = document.getElementById('tartosApolEv') ? parseInt(document.getElementById('tartosApolEv').value) : null;
+                                  const tartosApolGyermek = document.getElementById('tartosApolGyermek') ? document.getElementById('tartosApolGyermek').value : '';
+                                  const tartosApolFogyat = document.getElementById('tartosApolFogyat') && document.getElementById('tartosApolFogyat').checked;
+                                  const tartosApolBeteg = document.getElementById('tartosApolBeteg') && document.getElementById('tartosApolBeteg').checked;
+                                  const tartosApolKeresotev = document.getElementById('tartosApolKeresotev') ? parseFloat(document.getElementById('tartosApolKeresotev').value) : null;
+                                  const tartosApolOtthonMunka = document.getElementById('tartosApolOtthonMunka') && document.getElementById('tartosApolOtthonMunka').checked;
+                                  const tartosApolIgazolas = document.getElementById('tartosApolIgazolas') && document.getElementById('tartosApolIgazolas').files.length > 0;
+                                  const tartosApolHatározat = document.getElementById('tartosApolHatározat') && document.getElementById('tartosApolHatározat').files.length > 0;
+                                  let tartosApolMsg = '';
+                                  let tartosApolJogosult = false;
+                                  let tartosApolOsszeg = 0;
+                                  // Jogosultság ellenőrzése
+                                  if (
+                                    tartosApolNev &&
+                                    tartosApolMagyar &&
+                                    tartosApolNyugdij &&
+                                    tartosApolEv && tartosApolEv >= 20 &&
+                                    (tartosApolFogyat || tartosApolBeteg) &&
+                                    (tartosApolKeresotev === null || tartosApolKeresotev <= 4 || tartosApolOtthonMunka) &&
+                                    tartosApolIgazolas &&
+                                    (tartosApolHatározat || tartosApolIgazolas)
+                                  ) {
+                                    tartosApolJogosult = true;
+                                    tartosApolOsszeg = 50000;
+                                    tartosApolMsg = `Jogosult tartós ápolást végzők időskori támogatására. Havi összeg: 50 000 Ft.`;
+                                  }
+                                  if (!tartosApolJogosult) {
+                                    tartosApolMsg = 'Nem jogosult tartós ápolást végzők időskori támogatására. Feltételek: magyar állampolgár, öregségi nyugdíjban részesül, legalább 20 évig saját háztartásában ápolta súlyosan fogyatékos/tartósan beteg gyermekét, igazolás, max. napi 4 óra keresőtevékenység (vagy otthon végzett munka), ápolási idő nem átfedő, több gyermek is beszámítható.';
+                                  }
                                   const banyaszEgeszsegNev = document.getElementById('banyaszEgeszsegNev') ? document.getElementById('banyaszEgeszsegNev').value : '';
                                   const banyaszEgeszsegKar = document.getElementById('banyaszEgeszsegKar') ? parseFloat(document.getElementById('banyaszEgeszsegKar').value) : null;
                                   const banyaszEgeszsegKeresetKieg = document.getElementById('banyaszEgeszsegKeresetKieg') ? parseFloat(document.getElementById('banyaszEgeszsegKeresetKieg').value) : null;
@@ -1008,31 +1040,29 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
   }
   document.getElementById('resultContainer').innerHTML =
   
-  `<hr><b>Bányászok egészségkárosodási járadék jogosultság:</b> ${banyaszEgeszsegMsg}`;
- 
-  `<hr><b>Szépkorúak jubileumi juttatás jogosultság:</b> ${szepkorMsg}`;
-
-  `<hr><b>Özvegyi jogon nemzeti helytállásért pótlék jogosultság:</b> ${helytallasOzvegyMsg}`;
-
-      `<hr><b>Nemzeti helytállásért pótlék jogosultság:</b> ${helytallasMsg}`;
-    `Végső nyugdíj összege: <span style="color:green">${nyugdijOsszeg.toLocaleString()} Ft</span> <br />` +
-    `Összes szolgálati idő: ${totalYears} év ${totalNap} nap (${totalDays} nap), százalék: ${szazalek}%<br />` +
-    `Átlagkereset valorizációval: ${Math.round(atlagKereset).toLocaleString()} Ft<br />` +
-    `<ul><li>${details.join('</li><li>')}</li></ul>` +
-    `<hr><b>Nők kedvezményes nyugdíj jogosultság:</b> ${nokKedvMsg}<br />` +
-    `Jogosultsági idő: ${jogosultsagiEv} év (${jogosultsagiNap} nap), ebből keresőtevékenység: ${keresotevEv} év (${keresotevNap} nap), gyermeknevelés: ${gyermeknevelesEv} év (${gyermeknevelesNap} nap)` +
-    rogzitettNyugdijMsg +
-    `<hr><b>Korkedvezmény:</b> ${korkedvezmenyMsg}<br />` +
-    `<b>Korhatár előtti ellátás jogosultság:</b> ${korhatarElottiMsg}` +
-    `<hr><b>Szolgálati járandóság jogosultság:</b> ${szolgalatiJarandMsg}` +
-    (csaladiAdokedvMsg ? `<hr><b>Családi adókedvezmény érvényesítése:</b> ${csaladiAdokedvMsg}` : '') +
-    `<hr><b>Átmeneti bányászjáradék jogosultság:</b> ${atmenetiBanyaszMsg}` +
-    `<hr><b>Táncművészeti életjáradék jogosultság:</b> ${tancmuveszMsg}` +
-    `<hr><b>Özvegyi nyugdíj jogosultság:</b> ${ozvegyMsg}` +
-    `<hr><b>Árvaellátás jogosultság:</b> ${arvaMsg}` +
-    `<hr><b>Szülői nyugdíj jogosultság:</b> ${szuloMsg}` +
-    `<hr><b>Baleseti hozzátartozói nyugdíj jogosultság:</b> ${balesetiMsg}` +
-    `<hr><b>Baleseti járadék jogosultság:</b> ${balesetiJaradekMsg}` +
-    `<hr><b>Rokkantsági járadék jogosultság:</b> ${rokkantsagiMsg}` +
-    `<hr><b>Tartós szabadságelvonás juttatás jogosultság:</b> ${szabadsagMsg}`;
+  `<hr><b>Tartós ápolást végzők időskori támogatása jogosultság:</b> ${tartosApolMsg}` +
+  `<hr><b>Bányászok egészségkárosodási járadék jogosultság:</b> ${banyaszEgeszsegMsg}` +
+  `<hr><b>Szépkorúak jubileumi juttatás jogosultság:</b> ${szepkorMsg}` +
+  `<hr><b>Özvegyi jogon nemzeti helytállásért pótlék jogosultság:</b> ${helytallasOzvegyMsg}` +
+  `<hr><b>Nemzeti helytállásért pótlék jogosultság:</b> ${helytallasMsg}` +
+  `Végső nyugdíj összege: <span style="color:green">${nyugdijOsszeg.toLocaleString()} Ft</span> <br />` +
+  `Összes szolgálati idő: ${totalYears} év ${totalNap} nap (${totalDays} nap), százalék: ${szazalek}%<br />` +
+  `Átlagkereset valorizációval: ${Math.round(atlagKereset).toLocaleString()} Ft<br />` +
+  `<ul><li>${details.join('</li><li>')}</li></ul>` +
+  `<hr><b>Nők kedvezményes nyugdíj jogosultság:</b> ${nokKedvMsg}<br />` +
+  `Jogosultsági idő: ${jogosultsagiEv} év (${jogosultsagiNap} nap), ebből keresőtevékenység: ${keresotevEv} év (${keresotevNap} nap), gyermeknevelés: ${gyermeknevelesEv} év (${gyermeknevelesNap} nap)` +
+  rogzitettNyugdijMsg +
+  `<hr><b>Korkedvezmény:</b> ${korkedvezmenyMsg}<br />` +
+  `<b>Korhatár előtti ellátás jogosultság:</b> ${korhatarElottiMsg}` +
+  `<hr><b>Szolgálati járandóság jogosultság:</b> ${szolgalatiJarandMsg}` +
+  (csaladiAdokedvMsg ? `<hr><b>Családi adókedvezmény érvényesítése:</b> ${csaladiAdokedvMsg}` : '') +
+  `<hr><b>Átmeneti bányászjáradék jogosultság:</b> ${atmenetiBanyaszMsg}` +
+  `<hr><b>Táncművészeti életjáradék jogosultság:</b> ${tancmuveszMsg}` +
+  `<hr><b>Özvegyi nyugdíj jogosultság:</b> ${ozvegyMsg}` +
+  `<hr><b>Árvaellátás jogosultság:</b> ${arvaMsg}` +
+  `<hr><b>Szülői nyugdíj jogosultság:</b> ${szuloMsg}` +
+  `<hr><b>Baleseti hozzátartozói nyugdíj jogosultság:</b> ${balesetiMsg}` +
+  `<hr><b>Baleseti járadék jogosultság:</b> ${balesetiJaradekMsg}` +
+  `<hr><b>Rokkantsági járadék jogosultság:</b> ${rokkantsagiMsg}` +
+  `<hr><b>Tartós szabadságelvonás juttatás jogosultság:</b> ${szabadsagMsg}`;
 });

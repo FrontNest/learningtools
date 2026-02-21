@@ -12,6 +12,32 @@
     <div class="container">
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
+                                                          <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                                                            <legend>Tartós ápolást végzők időskori támogatása jogosultság</legend>
+                                                            <label for="tartosApolNev">Igénylő neve:</label>
+                                                            <input type="text" id="tartosApolNev" name="tartosApolNev" /><br />
+                                                            <input type="checkbox" id="tartosApolMagyar" name="tartosApolMagyar" />
+                                                            <label for="tartosApolMagyar">Magyar állampolgár</label><br />
+                                                            <input type="checkbox" id="tartosApolNyugdij" name="tartosApolNyugdij" />
+                                                            <label for="tartosApolNyugdij">Öregségi nyugdíjban részesül</label><br />
+                                                            <label for="tartosApolEv">Ápolási idő (év):</label>
+                                                            <input type="number" id="tartosApolEv" name="tartosApolEv" min="1" max="50" step="1" /><br />
+                                                            <label for="tartosApolGyermek">Ápolt gyermek(ek) neve:</label>
+                                                            <input type="text" id="tartosApolGyermek" name="tartosApolGyermek" /><br />
+                                                            <input type="checkbox" id="tartosApolFogyat" name="tartosApolFogyat" />
+                                                            <label for="tartosApolFogyat">Gyermek súlyosan fogyatékos</label><br />
+                                                            <input type="checkbox" id="tartosApolBeteg" name="tartosApolBeteg" />
+                                                            <label for="tartosApolBeteg">Gyermek tartósan beteg</label><br />
+                                                            <label for="tartosApolKeresotev">Otthonán kívül végzett keresőtevékenység (max. napi 4 óra):</label>
+                                                            <input type="number" id="tartosApolKeresotev" name="tartosApolKeresotev" min="0" max="4" step="0.1" /><br />
+                                                            <input type="checkbox" id="tartosApolOtthonMunka" name="tartosApolOtthonMunka" />
+                                                            <label for="tartosApolOtthonMunka">Otthonában végzett keresőtevékenység</label><br />
+                                                            <label for="tartosApolIgazolas">Igazolások (ápolási díj, GYOD, orvosi, gyermek ápolása, dokumentumok):</label>
+                                                            <input type="file" id="tartosApolIgazolas" name="tartosApolIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                                                            <label for="tartosApolHatározat">Határozatok, egyéb igazolások:</label>
+                                                            <input type="file" id="tartosApolHatározat" name="tartosApolHatározat" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                                                            <small>Csatold a szükséges igazolásokat: ápolási díj, GYOD, orvosi dokumentumok, gyermek ápolása, határozatok, egyéb igazolások stb.</small>
+                                                          </fieldset>
                                                   <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
                                                     <legend>Bányászok egészségkárosodási járadék jogosultság</legend>
                                                     <label for="banyaszEgeszsegNev">Igénylő neve:</label>
