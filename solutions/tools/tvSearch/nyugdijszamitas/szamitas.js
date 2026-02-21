@@ -255,6 +255,22 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                                                                                                                                  // Világbajnoki pótlék
+                                                                                                                                  const vbCim = document.getElementById('vbCim') && document.getElementById('vbCim').checked;
+                                                                                                                                  const vbCsapat = document.getElementById('vbCsapat') && document.getElementById('vbCsapat').checked;
+                                                                                                                                  const vbNyugdij = document.getElementById('vbNyugdij') && document.getElementById('vbNyugdij').checked;
+                                                                                                                                  const vbIgazolas = document.getElementById('vbIgazolas') && document.getElementById('vbIgazolas').files.length > 0;
+                                                                                                                                  let vbMsg = '';
+                                                                                                                                  let vbJogosult = false;
+                                                                                                                                  let vbOsszeg = 0;
+                                                                                                                                  if ((vbCim || vbCsapat) && vbNyugdij && vbIgazolas) {
+                                                                                                                                    vbJogosult = true;
+                                                                                                                                    vbOsszeg = 20505;
+                                                                                                                                    vbMsg = `Világbajnoki pótlék jogosultság: Igen. Havi összeg: ${vbOsszeg.toLocaleString()} Ft (SZJA mentes). A pótlékot a nyugdíjfolyósító szerv a nyugdíjjal együtt folyósítja.`;
+                                                                                                                                  }
+                                                                                                                                  if (!vbJogosult) {
+                                                                                                                                    vbMsg = 'Nem jogosult világbajnoki pótlékra. Feltételek: felnőtt világbajnokság egyéni/csapat versenyszámában világbajnoki cím, saját jogú nyugellátás, Honvédelmi Minisztérium igazolás, sportági szakszövetség igazolás, világbajnoki cím dokumentum.';
+                                                                                                                                  }
                                                                                                   // Özvegyi jogon Kiváló Művész, Érdemes Művész, Népművészet Mestere járadék
                                                                                                   const muveszOzvegyJelleg = document.getElementById('muveszOzvegyJelleg') ? document.getElementById('muveszOzvegyJelleg').value : '';
                                                                                                   const muveszOzvegyKituntetesEv = document.getElementById('muveszOzvegyKituntetesEv') ? parseInt(document.getElementById('muveszOzvegyKituntetesEv').value) : null;
@@ -1115,6 +1131,7 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
       `A tényleges nyugdíjazáskor választható a rögzített nyugdíj évenkénti emelésekkel növelt összege, vagy az újabb szolgálati idővel számított tényleges nyugdíj.<br />`;
   }
   document.getElementById('resultContainer').innerHTML =
+      `<hr><b>Világbajnoki pótlék jogosultság:</b> ${vbMsg}` +
     `<hr><b>Özvegyi jogon művész járadék jogosultság:</b> ${muveszOzvegyMsg}` +
   
   `<hr><b>Kiváló Művész, Érdemes Művész, Népművészet Mestere járadék jogosultság:</b> ${muveszJMsg}` +

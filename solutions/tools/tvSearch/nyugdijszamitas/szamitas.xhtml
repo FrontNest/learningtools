@@ -13,6 +13,18 @@
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
                                                           <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                                                            <legend>Világbajnoki pótlék jogosultság</legend>
+                                                            <input type="checkbox" id="vbCim" name="vbCim" />
+                                                            <label for="vbCim">Felnőtt világbajnokság egyéni versenyszámában világbajnoki címet szerzett</label><br />
+                                                            <input type="checkbox" id="vbCsapat" name="vbCsapat" />
+                                                            <label for="vbCsapat">Felnőtt világbajnokság csapat versenyszámában világbajnoki címet szerzett</label><br />
+                                                            <input type="checkbox" id="vbNyugdij" name="vbNyugdij" />
+                                                            <label for="vbNyugdij">Saját jogú nyugellátásban (öregségi nyugdíj, nők kedvezményes öregségi nyugdíja) részesül</label><br />
+                                                            <label for="vbIgazolas">Igazolás (Honvédelmi Minisztérium, sportági szakszövetség, világbajnoki cím):</label>
+                                                            <input type="file" id="vbIgazolas" name="vbIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                                                            <small>Csatold a szükséges igazolásokat: Honvédelmi Minisztérium igazolás, sportági szakszövetség versenyeredmény igazolása, világbajnoki cím dokumentum.</small>
+                                                          </fieldset>
+                                                          <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
                                                             <legend>Özvegyi jogon Kiváló Művész, Érdemes Művész, Népművészet Mestere járadék jogosultság</legend>
                                                             <label for="muveszOzvegyJelleg">Kitüntető cím (elhunyt):</label>
                                                             <select id="muveszOzvegyJelleg" name="muveszOzvegyJelleg">
