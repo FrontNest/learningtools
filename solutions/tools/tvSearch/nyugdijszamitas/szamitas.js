@@ -483,7 +483,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
 
   // Átlagkereset jogszabály szerinti képlet
   let atlagKereset = keresetCount > 0 ? keresetSum / keresetCount : 0;
-
   // Minimálbér korlátozás (ha előírt)
   let minber = 0;
   for (let i = 0; i < minimalberData.length; i++) {
@@ -491,16 +490,42 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     const ev = parseInt(row.start.split('-')[0], 10);
     if (nyugdijEv >= ev) minber = row.wage;
   }
-  if (atlagKereset < minber) atlagKereset = minber;
-
+  // Degresszió 372 000 Ft felett
+  let degresszaltKereset = atlagKereset;
+  if (atlagKereset > 372000) {
+    if (atlagKereset <= 421000) {
+      degresszaltKereset = 372000 + (atlagKereset - 372000) * 0.9;
+    } else {
+      degresszaltKereset = 372000 + (421000 - 372000) * 0.9 + (atlagKereset - 421000) * 0.8;
+    }
+  }
+  // Minimálbér szabály
+  if (degresszaltKereset < minber) degresszaltKereset = minber;
   // Valorizációs szorzó kiválasztása
   let valEv = valorizacioEv !== "" ? valorizacioEv : nyugdijEv;
   let valorizaciosSzam = valorizaciosSzorzok[valEv] || 1;
-  atlagKereset = atlagKereset * valorizaciosSzam;
-
+  degresszaltKereset = degresszaltKereset * valorizaciosSzam;
   // Nyugdíj összeg számítása
-  const haviAtlag = atlagKereset;
-  const nyugdijOsszeg = Math.round(haviAtlag * (szazalek / 100));
+  let nyugdijOsszeg = Math.round(degresszaltKereset * (szazalek / 100));
+  // Minimum nyugdíj szabály (teljes nyugdíj, legalább 20 év szolgálati idő)
+  const nyugdijMinimum = 28500;
+  if (totalYears >= 20 && degresszaltKereset >= nyugdijMinimum && nyugdijOsszeg < nyugdijMinimum) {
+    nyugdijOsszeg = nyugdijMinimum;
+  }
+  // Ha átlagkereset < minimum, akkor a nyugdíj = átlagkereset
+  if (totalYears >= 20 && degresszaltKereset < nyugdijMinimum) {
+    nyugdijOsszeg = Math.round(degresszaltKereset);
+  }
+  // Résznyugdíj: ha < 20 év szolgálati idő, nincs minimum
+  if (totalYears < 20) {
+    nyugdijOsszeg = Math.round(degresszaltKereset * (szazalek / 100));
+  }
+  // Nyugdíjnövelés: ha 65 év után legalább 30 nap további szolgálati idő, 0,5% növelés
+  let nyugdijNovelese = 0;
+  if (betoltotte65 && totalYears >= 20 && totalDays > 365 * 20 + 30) {
+    nyugdijNovelese = Math.round(nyugdijOsszeg * 0.005);
+    nyugdijOsszeg += nyugdijNovelese;
+  }
 
   // Rögzített nyugdíj lehetősége
   let rogzitettNyugdijMsg = '';
