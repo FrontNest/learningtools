@@ -255,6 +255,22 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+          // Átmeneti bányászjáradék mezők kezelése
+          const banyaszMuszak = document.getElementById('banyaszMuszak') ? parseInt(document.getElementById('banyaszMuszak').value, 10) : 0;
+          const banyaszIgazolas = document.getElementById('banyaszIgazolas') && document.getElementById('banyaszIgazolas').files.length > 0;
+          const maganNyugdijpenztar = document.getElementById('maganNyugdijpenztar') && document.getElementById('maganNyugdijpenztar').checked;
+          let atmenetiBanyaszMsg = '';
+          // Műszakok számának korrekciója (mecseki ércbányászat 1,67x, szénbányászat 1,25x - bővíthető)
+          let muszakKorrekcio = banyaszMuszak;
+          // Jogosultság: 25 év szolgálati idő vagy 5000 műszak, nyugdíjkorhatár alatt, igazolás feltöltve
+          if ((totalYears >= 25 || muszakKorrekcio >= 5000) && nyugdijEv < birthYear + korhatar.korhatarEv && banyaszIgazolas) {
+            atmenetiBanyaszMsg = 'Jogosult átmeneti bányászjáradékra.';
+            if (maganNyugdijpenztar) {
+              atmenetiBanyaszMsg += ' Magán-nyugdíjpénztári tagság miatt a járadék csökkentett összegben kerül megállapításra.';
+            }
+          } else {
+            atmenetiBanyaszMsg = 'Nem jogosult átmeneti bányászjáradékra. Feltételek: 25 év szolgálati idő vagy 5000 műszak, nyugdíjkorhatár alatt, igazolás csatolva.';
+          }
         // Családi adókedvezmény érvényesítése mezők kezelése
         const csaladiAdokedvezmeny = document.getElementById('csaladiAdokedvezmeny').checked;
         const magzatIgazolas = document.getElementById('magzatIgazolas').files.length > 0;
@@ -526,5 +542,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     `<hr><b>Korkedvezmény:</b> ${korkedvezmenyMsg}<br />` +
     `<b>Korhatár előtti ellátás jogosultság:</b> ${korhatarElottiMsg}` +
     `<hr><b>Szolgálati járandóság jogosultság:</b> ${szolgalatiJarandMsg}` +
-    (csaladiAdokedvMsg ? `<hr><b>Családi adókedvezmény érvényesítése:</b> ${csaladiAdokedvMsg}` : '');
+    (csaladiAdokedvMsg ? `<hr><b>Családi adókedvezmény érvényesítése:</b> ${csaladiAdokedvMsg}` : '') +
+    `<hr><b>Átmeneti bányászjáradék jogosultság:</b> ${atmenetiBanyaszMsg}`;
 });
