@@ -13,6 +13,29 @@
       <h2>Nyugdíjszámítás modell</h2>
       <form id="nyugdijForm">
           <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                            <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
+                              <legend>Szülői nyugdíj jogosultság</legend>
+                              <label for="szuloNev">Szülő neve:</label>
+                              <input type="text" id="szuloNev" name="szuloNev" /><br />
+                              <label for="szuloTipus">Szülő típusa:</label>
+                              <select id="szuloTipus" name="szuloTipus">
+                                <option value="">-- válassz --</option>
+                                <option value="szülő">Szülő</option>
+                                <option value="nagyszülő">Nagyszülő</option>
+                                <option value="nevelőszülő">Nevelőszülő</option>
+                              </select><br />
+                              <label for="szuloKor">Szülő életkora:</label>
+                              <input type="number" id="szuloKor" name="szuloKor" min="18" max="120" /><br />
+                              <input type="checkbox" id="szuloMegvaltozott" name="szuloMegvaltozott" />
+                              <label for="szuloMegvaltozott">Megváltozott munkaképességű (legfeljebb 50%)</label><br />
+                              <input type="checkbox" id="szuloEltartott" name="szuloEltartott" />
+                              <label for="szuloEltartott">Gyermek halála előtt túlnyomó részben eltartott</label><br />
+                              <label for="szuloJogosultakSzama">Jogosultak száma:</label>
+                              <input type="number" id="szuloJogosultakSzama" name="szuloJogosultakSzama" min="1" max="10" value="1" /><br />
+                              <label for="szuloIgazolas">Igazolások (családi kapcsolat, eltartás, egészségi állapot, halotti anyakönyvi kivonat):</label>
+                              <input type="file" id="szuloIgazolas" name="szuloIgazolas" multiple="multiple" accept=".pdf,.jpg,.png,.doc,.docx" /><br />
+                              <small>Csatold a szükséges igazolásokat: családi kapcsolat, eltartás, egészségi állapot, halotti anyakönyvi kivonat stb.</small>
+                            </fieldset>
                     <fieldset style="margin-top:2em;border:1px solid #aaa;padding:1em">
                       <legend>Árvaellátás jogosultság</legend>
                       <label for="arvaGyermekNev">Gyermek neve:</label>

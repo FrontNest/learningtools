@@ -255,6 +255,42 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+                  // Szülői nyugdíj mezők kezelése
+                  const szuloNev = document.getElementById('szuloNev') ? document.getElementById('szuloNev').value : '';
+                  const szuloTipus = document.getElementById('szuloTipus') ? document.getElementById('szuloTipus').value : '';
+                  const szuloKor = document.getElementById('szuloKor') ? parseInt(document.getElementById('szuloKor').value) : null;
+                  const szuloMegvaltozott = document.getElementById('szuloMegvaltozott') && document.getElementById('szuloMegvaltozott').checked;
+                  const szuloEltartott = document.getElementById('szuloEltartott') && document.getElementById('szuloEltartott').checked;
+                  const szuloJogosultakSzama = document.getElementById('szuloJogosultakSzama') ? parseInt(document.getElementById('szuloJogosultakSzama').value) : 1;
+                  const szuloIgazolas = document.getElementById('szuloIgazolas') && document.getElementById('szuloIgazolas').files.length > 0;
+                  let szuloMsg = '';
+                  let szuloNyugdijOsszeg = 0;
+                  let szuloJogosult = false;
+                  // Jogosultság: szülő/nagyszülő, megváltozott munkaképesség vagy 65 év felett, eltartott, igazolások
+                  if (szuloNev && szuloTipus && szuloIgazolas && szuloEltartott && (szuloMegvaltozott || (szuloKor && szuloKor >= 65))) {
+                    szuloJogosult = true;
+                  }
+                  // Szülői nyugdíj összeg számítása
+                  if (szuloJogosult) {
+                    // Saját jogú nyugdíjban nem részesül: 60%
+                    if (!szuloMegvaltozott && (!szuloKor || szuloKor < 65)) {
+                      szuloNyugdijOsszeg = Math.round(nyugdijOsszeg * 0.6);
+                      szuloMsg = `Szülői nyugdíj összege: ${szuloNyugdijOsszeg.toLocaleString()} Ft (az elhunyt nyugdíjának 60%-a).`;
+                    }
+                    // Saját jogú nyugdíjban részesül: 30%
+                    if (szuloMegvaltozott || (szuloKor && szuloKor >= 65)) {
+                      szuloNyugdijOsszeg = Math.round(nyugdijOsszeg * 0.3);
+                      szuloMsg = `Szülői nyugdíj összege: ${szuloNyugdijOsszeg.toLocaleString()} Ft (az elhunyt nyugdíjának 30%-a).`;
+                    }
+                    // Több jogosult esetén megosztás
+                    if (szuloJogosultakSzama > 1) {
+                      szuloNyugdijOsszeg = Math.floor(szuloNyugdijOsszeg / szuloJogosultakSzama);
+                      szuloMsg += ` Több jogosult esetén egyenlő arányban: ${szuloNyugdijOsszeg.toLocaleString()} Ft/fő.`;
+                    }
+                    szuloMsg += ' Igazolások: családi kapcsolat, eltartás, egészségi állapot, halotti anyakönyvi kivonat.';
+                  } else {
+                    szuloMsg = 'Nem jogosult szülői nyugdíjra. Feltételek: szülő/nagyszülő, megváltozott munkaképesség vagy 65 év felett, eltartott, igazolások csatolva.';
+                  }
                 // Árvaellátás mezők kezelése
                 const arvaGyermekNev = document.getElementById('arvaGyermekNev') ? document.getElementById('arvaGyermekNev').value : '';
                 const arvaGyermekSzuletesiEv = document.getElementById('arvaGyermekSzuletesiEv') ? parseInt(document.getElementById('arvaGyermekSzuletesiEv').value) : null;
@@ -674,5 +710,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     `<hr><b>Átmeneti bányászjáradék jogosultság:</b> ${atmenetiBanyaszMsg}` +
     `<hr><b>Táncművészeti életjáradék jogosultság:</b> ${tancmuveszMsg}` +
     `<hr><b>Özvegyi nyugdíj jogosultság:</b> ${ozvegyMsg}` +
-    `<hr><b>Árvaellátás jogosultság:</b> ${arvaMsg}`;
+    `<hr><b>Árvaellátás jogosultság:</b> ${arvaMsg}` +
+    `<hr><b>Szülői nyugdíj jogosultság:</b> ${szuloMsg}`;
 });
