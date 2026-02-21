@@ -53,6 +53,25 @@
           </select>
         </fieldset>
         <button type="submit">Számítás</button>
+            <fieldset>
+              <legend>Családi adókedvezmény érvényesítése</legend>
+              <label for="csaladiAdokedvezmeny">Fel nem használt családi adókedvezmény érvényesítése:</label>
+              <input type="checkbox" id="csaladiAdokedvezmeny" name="csaladiAdokedvezmeny" />
+              <div id="csaladiAdokedvezmenyFields" style="display:none;">
+                <label for="magzatIgazolas">Magzat igazolás feltöltése:</label>
+                <input type="file" id="magzatIgazolas" name="magzatIgazolas" accept=".pdf,.jpg,.png" />
+                <label for="hozzajaruloNyilatkozat">Hozzájáruló nyilatkozat feltöltése:</label>
+                <input type="file" id="hozzajaruloNyilatkozat" name="hozzajaruloNyilatkozat" accept=".pdf,.jpg,.png" />
+                <label for="halaleset">Ellátásban részesülő halála esetén:</label>
+                <input type="checkbox" id="halaleset" name="halaleset" />
+                <div id="halalesetFields" style="display:none;">
+                  <label for="orokosNev">Örökös/házastárs neve:</label>
+                  <input type="text" id="orokosNev" name="orokosNev" />
+                  <label for="orokosNyilatkozat">Örökös hozzájáruló nyilatkozat feltöltése:</label>
+                  <input type="file" id="orokosNyilatkozat" name="orokosNyilatkozat" accept=".pdf,.jpg,.png" />
+                </div>
+              </div>
+            </fieldset>
       </form>
       <div class="tables">
         <details>

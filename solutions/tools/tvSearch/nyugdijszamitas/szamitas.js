@@ -255,6 +255,26 @@ function validateForm(data) {
 }
 
 document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
+        // Családi adókedvezmény érvényesítése mezők kezelése
+        const csaladiAdokedvezmeny = document.getElementById('csaladiAdokedvezmeny').checked;
+        const magzatIgazolas = document.getElementById('magzatIgazolas').files.length > 0;
+        const hozzajaruloNyilatkozat = document.getElementById('hozzajaruloNyilatkozat').files.length > 0;
+        const halaleset = document.getElementById('halaleset').checked;
+        const orokosNev = document.getElementById('orokosNev') ? document.getElementById('orokosNev').value : '';
+        const orokosNyilatkozat = document.getElementById('orokosNyilatkozat') && document.getElementById('orokosNyilatkozat').files.length > 0;
+        let csaladiAdokedvMsg = '';
+        if (csaladiAdokedvezmeny) {
+          if (!hozzajaruloNyilatkozat) {
+            csaladiAdokedvMsg = 'A családi adókedvezmény érvényesítéséhez hozzájáruló nyilatkozat feltöltése szükséges.';
+          } else if (halaleset && (!orokosNev || !orokosNyilatkozat)) {
+            csaladiAdokedvMsg = 'Haláleset esetén az örökös/házastárs neve és hozzájáruló nyilatkozat feltöltése szükséges.';
+          } else {
+            csaladiAdokedvMsg = 'A családi adókedvezmény érvényesíthető, a szükséges iratok csatolva.';
+          }
+          if (magzatIgazolas) {
+            csaladiAdokedvMsg += ' Magzat igazolás csatolva.';
+          }
+        }
       // Szolgálati járandóság jogosultság számítása
       let szolgalatiNyugdijNap = 0;
       let szolgalatiRokkantsagiNap = 0;
@@ -505,5 +525,6 @@ document.getElementById('nyugdijForm').addEventListener('submit', function(e) {
     rogzitettNyugdijMsg +
     `<hr><b>Korkedvezmény:</b> ${korkedvezmenyMsg}<br />` +
     `<b>Korhatár előtti ellátás jogosultság:</b> ${korhatarElottiMsg}` +
-    `<hr><b>Szolgálati járandóság jogosultság:</b> ${szolgalatiJarandMsg}`;
+    `<hr><b>Szolgálati járandóság jogosultság:</b> ${szolgalatiJarandMsg}` +
+    (csaladiAdokedvMsg ? `<hr><b>Családi adókedvezmény érvényesítése:</b> ${csaladiAdokedvMsg}` : '');
 });
