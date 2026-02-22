@@ -1,29 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="hu">
   <head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="author" content="FrontNest Studio" />
-    <meta name="description" content="Nyuf jegyzet" />
-    <title> Minimálbér </title>
-   <link rel="stylesheet" href="minimalber.css" />
+    <title>Arányos szolgálati idő kalkulátor</title>
+    <link rel="stylesheet" type="text/css" href="minimalber.css" />
   </head>
   <body>
-
-
-    <div class="container">
-      <h2>Minimálbér kalkulátor, arányos szolgálati idő</h2>
-      <form id="dateForm">
-        <label for="startDate">Kezdő dátum:</label>
-        <input type="date" id="startDate" name="startDate" />
-        <label for="endDate">Vége dátum:</label>
-        <input type="date" id="endDate" name="endDate" />
-        <button type="submit">Számolás</button>
+    <div id="container">
+      <h1>Arányos szolgálati idő kalkulátor</h1>
+      <form id="kalkulatorForm" action="#" method="get">
+        <fieldset>
+          <legend>Bemeneti adatok</legend>
+          <div class="form-row">
+            <label for="datumKezdet">Időszak kezdete:</label>
+            <input type="date" id="datumKezdet" name="datumKezdet" required="required" />
+          </div>
+          <div class="form-row">
+            <label for="datumVeg">Időszak vége:</label>
+            <input type="date" id="datumVeg" name="datumVeg" required="required" />
+          </div>
+          <div class="form-row">
+            <label for="kereset">Járulékalapot képező éves kereset (Ft):</label>
+            <input type="number" id="kereset" name="kereset" min="0" step="1" required="required" />
+          </div>
+          <div class="form-row">
+            <label for="foglForma">Foglalkoztatási forma:</label>
+            <select id="foglForma" name="foglForma" required="required">
+              <option value="reszmunkaido">Részmunkaidő</option>
+              <option value="teljesmunkaido">Teljes munkaidő</option>
+              <option value="tobbesjogviszony">Többes jogviszony</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="minimalberEv">Minimálbér időszak kiválasztása:</label>
+            <select id="minimalberEv" name="minimalberEv" required="required"></select>
+          </div>
+          <div class="form-row">
+            <label>Szituáció:</label>
+            <span class="radio-group">
+              <input type="radio" id="szit1" name="szituacio" value="1" checked="checked" /><label for="szit1">1. Csak részmunkaidő</label>
+              <input type="radio" id="szit2" name="szituacio" value="2" /><label for="szit2">2. Részmunkaidő + teljes munkaidő</label>
+              <input type="radio" id="szit3" name="szituacio" value="3" /><label for="szit3">3. Több részmunkaidő</label>
+              <input type="radio" id="szit4" name="szituacio" value="4" /><label for="szit4">4. Teljes munkaidő</label>
+            </span>
+          </div>
+        </fieldset>
+        <div class="form-row">
+          <button type="submit" id="szamolBtn">Számítás</button>
+        </div>
       </form>
-      <div id="resultTableContainer">
-        <!-- Eredmény táblázat ide kerül -->
+      <div id="minimalberInfo">
+        <strong>Minimálbér harmincada:</strong> <span id="minimalberHarmincad">-</span> Ft
       </div>
+      <div id="eredmenyDoboz" class="eredmeny-doboz" aria-live="polite"></div>
     </div>
-    <script src="minimalber.js"></script>
+    <script type="text/javascript" src="minimalber.js"></script>
   </body>
 </html>
