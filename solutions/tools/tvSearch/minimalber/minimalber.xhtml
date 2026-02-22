@@ -34,8 +34,7 @@
             </select>
           </div>
           <div class="form-row">
-            <label for="minimalberEv">Minimálbér időszak kiválasztása:</label>
-            <select id="minimalberEv" name="minimalberEv" required="required"></select>
+            <!-- Minimálbér select mező eltávolítva, automatikus választás lesz -->
           </div>
           <div class="form-row">
             <label>Szituáció:</label>
@@ -50,11 +49,16 @@
         <div class="form-row">
           <button type="submit" id="szamolBtn">Számítás</button>
         </div>
+        <div id="munkaviszonyokContainer"></div>
+        <div class="form-row">
+          <button type="button" id="ujMunkaviszonyBtn">Új munkaviszony hozzáadása</button>
+        </div>
       </form>
       <div id="minimalberInfo">
         <strong>Minimálbér harmincada:</strong> <span id="minimalberHarmincad">-</span> Ft
       </div>
       <div id="eredmenyDoboz" class="eredmeny-doboz" aria-live="polite"></div>
+        <div id="eredmenyTablaContainer"></div>
     </div>
     <script type="text/javascript" src="minimalber.js"></script>
   </body>

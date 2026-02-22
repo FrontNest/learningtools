@@ -1,3 +1,92 @@
+/* Munkaviszony kártya stílusok */
+.munkaviszony-kartya {
+  background: #f8f8fc;
+  border: 1px solid #d0d0e0;
+  border-radius: 8px;
+  padding: 1em 1em 0.5em 1em;
+  margin-bottom: 1em;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  position: relative;
+}
+.munkaviszony-kartya .torles-btn {
+  position: absolute;
+  top: 0.7em;
+  right: 1em;
+  background: #e03a3a;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3em 0.8em;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.munkaviszony-kartya .torles-btn:hover {
+  background: #b00;
+}
+.munkaviszony-kartya label {
+  display: block;
+  margin-bottom: 0.3em;
+}
+.munkaviszony-kartya input[type="date"],
+.munkaviszony-kartya input[type="number"],
+.munkaviszony-kartya select {
+  width: 100%;
+  margin-bottom: 0.6em;
+  padding: 0.4em 0.5em;
+  border: 1px solid #b0b0c0;
+  border-radius: 4px;
+  font-size: 1em;
+  background: #fff;
+}
+.munkaviszony-kartya .radio-group {
+  margin-bottom: 0.6em;
+}
+
+/* Eredmény táblázat stílusok */
+#eredmenyTablaContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+  background: #fff;
+}
+#eredmenyTablaContainer th, #eredmenyTablaContainer td {
+  border: 1px solid #b0c4e0;
+  padding: 0.5em 0.7em;
+  text-align: left;
+}
+#eredmenyTablaContainer th {
+  background: #eaf2ff;
+  font-weight: bold;
+}
+#eredmenyTablaContainer tr:nth-child(even) td {
+  background: #f6faff;
+}
+
+/* Új munkaviszony gomb */
+#ujMunkaviszonyBtn {
+  background: #3a3a6a;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em 1.2em;
+  font-size: 1em;
+  cursor: pointer;
+  margin-bottom: 1em;
+  transition: background 0.2s;
+}
+#ujMunkaviszonyBtn:hover {
+  background: #23234a;
+}
+
+@media (max-width: 600px) {
+  .munkaviszony-kartya {
+    padding: 0.7em 0.3em 0.5em 0.3em;
+  }
+  #eredmenyTablaContainer table {
+    font-size: 0.95em;
+  }
+}
 .form-row.radio-group-row {
   display: block;
   margin-bottom: 0.5em;
