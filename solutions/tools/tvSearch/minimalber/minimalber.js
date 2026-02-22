@@ -88,7 +88,7 @@ document.getElementById('dateForm').addEventListener('submit', function(e) {
 	}
 	// Calculate days difference (inclusive)
 	const msPerDay = 24 * 60 * 60 * 1000;
-	const days = Math.floor((endDate - startDate) / msPerDay) + 1;
+	const days = Math.round(((endDate.getTime() + msPerDay) - startDate.getTime()) / msPerDay);
 	let html = renderTable(intervals);
 	html += `<div class="days-diff">Eltelt napok száma: <strong>${days}</strong></div>`;
 	document.getElementById('resultTableContainer').innerHTML = html;
