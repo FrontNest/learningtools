@@ -92,16 +92,20 @@ function ujMunkaviszonyKartya(index) {
   div.className = 'munkaviszony-kartya';
   div.setAttribute('data-index', index);
   div.innerHTML =
-    '<label>Kezdő dátum: <input type="date" name="kezdet_' + index + '" required="required" /></label>' +
-    '<label>Záró dátum: <input type="date" name="veg_' + index + '" required="required" /></label>' +
-    '<label>Éves kereset (Ft): <input type="number" name="kereset_' + index + '" min="0" step="1" required="required" /></label>' +
-    '<label>Foglalkoztatási forma: ' +
-      '<select name="foglForma_' + index + '" required="required">' +
-        '<option value="reszmunkaido">Részmunkaidő</option>' +
-        '<option value="teljesmunkaido">Teljes munkaidő</option>' +
-        '<option value="tobbesjogviszony">Többes jogviszony</option>' +
-      '</select>' +
-    '</label>' +
+    '<div class="kartya-sor">' +
+      '<label>Kezdő dátum: <input type="date" name="kezdet_' + index + '" required="required" /></label>' +
+      '<label>Záró dátum: <input type="date" name="veg_' + index + '" required="required" /></label>' +
+    '</div>' +
+    '<div class="kartya-sor">' +
+      '<label>Éves kereset (Ft): <input type="number" name="kereset_' + index + '" min="0" step="1" required="required" /></label>' +
+      '<label>Foglalkoztatási forma: ' +
+        '<select name="foglForma_' + index + '" required="required">' +
+          '<option value="reszmunkaido">Részmunkaidő</option>' +
+          '<option value="teljesmunkaido">Teljes munkaidő</option>' +
+          '<option value="tobbesjogviszony">Többes jogviszony</option>' +
+        '</select>' +
+      '</label>' +
+    '</div>' +
     '<button type="button" class="torles-btn">Törlés</button>';
   return div;
 }

@@ -1,3 +1,26 @@
+/* Form inputok vízszintesen egymás mellett */
+.input-sor {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.input-sor label {
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+
+/* Munkaviszony kártya inputok vízszintesen */
+.kartya-sor {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.kartya-sor label {
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+}
 /* Munkaviszony kártya stílusok */
 .munkaviszony-kartya {
   background: #f8f8fc;
@@ -55,15 +78,19 @@
   padding: 0.5em 0.7em;
   text-align: left;
 }
-#eredmenyTablaContainer th {
-  background: #eaf2ff;
-  font-weight: bold;
+/* Eredmény container szélesebb, hogy a táblázat ne lógjon ki */
+#eredmenyTablaContainer {
+  margin-top: 20px;
+  background: #f7faff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #eaf2ff;
+  min-height: 60px;
+  max-width: 1200px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
-#eredmenyTablaContainer tr:nth-child(even) td {
-  background: #f6faff;
-}
-
-/* Új munkaviszony gomb */
 #ujMunkaviszonyBtn {
   background: #3a3a6a;
   color: #fff;
@@ -108,12 +135,12 @@ body {
 }
 
 #container {
-  max-width: 540px;
-  margin: 2em auto;
+  max-width: 1200px;
+  margin: 0 auto;
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  padding: 2em 1.5em 2em 1.5em;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #eaf2ff;
 }
 
 h1 {
