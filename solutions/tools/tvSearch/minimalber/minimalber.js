@@ -48,10 +48,30 @@ function setupDateInputs() {
 	getJogviszonyDateInputs().forEach(addDateInputHandler);
 	// Jogviszony sor hozzáadásakor új mezőkre is handler és számítás
 	document.getElementById('addJogviszonyBtn').addEventListener('click', function() {
-		setTimeout(() => {
-			getJogviszonyDateInputs().forEach(addDateInputHandler);
-			setupJogviszonyCalcHandlers();
-		}, 100);
+		// Find jogviszony container
+		const container = document.getElementById('jogviszonyokContainer') || document.querySelector('.jogviszonyok-container');
+		// Create new jogviszony row
+		const row = document.createElement('div');
+		row.className = 'jogviszony-row';
+		row.innerHTML = `
+			<label>Kezdő dátum:</label>
+			<input type="text" name="jogviszonyStart[]" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="2003-01-01" maxlength="10" autocomplete="off" inputmode="numeric" />
+			<label>Vége dátum:</label>
+			<input type="text" name="jogviszonyEnd[]" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="2003-09-07" maxlength="10" autocomplete="off" inputmode="numeric" />
+			<label>Munkaidő:</label>
+			<select name="munkaido[]">
+				<option value="rész">Rész</option>
+				<option value="teljes">Teljes</option>
+			</select>
+			<label>Jövedelem (Ft):</label>
+			<input type="number" name="jovedelem[]" min="0" />
+			<label>Szünetelés/járuléköteles napok:</label>
+			<input type="number" name="szunetNap[]" min="0" value="0" />
+		`;
+		container.appendChild(row);
+		// Register handlers for new inputs
+		getJogviszonyDateInputs().forEach(addDateInputHandler);
+		setupJogviszonyCalcHandlers();
 	});
 
 	function setupJogviszonyCalcHandlers() {
