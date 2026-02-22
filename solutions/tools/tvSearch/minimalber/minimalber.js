@@ -43,10 +43,26 @@ const minimalberTabla = [
 ];
 
 // --- Segédfüggvények ---
+// --- Dátumkezelés ---
+function parseDateLocal(dateStr) {
+  var parts = dateStr.split('-');
+  return new Date(
+    parseInt(parts[0], 10),
+    parseInt(parts[1], 10) - 1,
+    parseInt(parts[2], 10)
+  );
+}
+
+function formatDateLocal(d) {
+  var y = d.getFullYear();
+  var m = String(d.getMonth() + 1).padStart(2, '0');
+  var day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
 function napokSzama(kezdet, veg) {
-  var d1 = new Date(kezdet);
-  var d2 = new Date(veg);
-  var diff = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+  var d1 = parseDateLocal(kezdet);
+  var d2 = parseDateLocal(veg);
+  var diff = (d2.getTime() - d1.getTime()) / 86400000;
   return diff >= 0 ? diff + 1 : 0;
 }
 
@@ -110,12 +126,13 @@ function osszesitettKeresetNapra(viszonyok) {
   var napok = {};
   viszonyok.forEach(function(v) {
     if (!v.kezdet || !v.veg || isNaN(v.kereset) || v.kereset < 0) return;
-    var d1 = new Date(v.kezdet);
-    var d2 = new Date(v.veg);
+    var d1 = parseDateLocal(v.kezdet);
     var napSzam = napokSzama(v.kezdet, v.veg);
     var napiKereset = v.kereset / napSzam;
-    for (var dt = new Date(d1); dt <= d2; dt.setDate(dt.getDate() + 1)) {
-      var napStr = dt.toISOString().slice(0, 10);
+    for (var i = 0; i < napSzam; i++) {
+      var dt = new Date(d1);
+      dt.setDate(d1.getDate() + i);
+      var napStr = formatDateLocal(dt);
       if (!napok[napStr]) napok[napStr] = { kereset: 0, foglForma: [] };
       napok[napStr].kereset += napiKereset;
       napok[napStr].foglForma.push(v.foglForma);
@@ -135,24 +152,27 @@ function szamolIntervallum(napok) {
       aktMb = mb;
       aktEv = mb.ev;
     }
-    if (mb.ev !== aktEv || idx === napokList.length - 1) {
-      // Intervallum vége
-      if (idx === napokList.length - 1) aktNapok.push(nap);
+    aktNapok.push(nap);
+    aktKereset += napok[nap].kereset;
+    aktFoglForma = aktFoglForma.concat(napok[nap].foglForma);
+    var isLast = idx === napokList.length - 1;
+    var isEvValtas = mb.ev !== aktEv;
+    if (isEvValtas || isLast) {
       var napSzam = aktNapok.length;
       var keresetSum = aktKereset;
       var minimalberEv = aktMb.osszeg * 12;
       var arany = aranySzam(keresetSum, minimalberEv);
-      var aranyosNap = Math.round((arany * napSzam) * 100) / 100;
+      var aranyosNap = Math.round(arany * napSzam);
       eredmeny.push({
         ev: aktEv,
         tol: aktMb.tol,
         ig: aktMb.ig,
-        napSzam,
+        napSzam: Math.round(napSzam),
         keresetSum: keresetSum.toFixed(2),
         minimalberEv,
         harmincad: minimalberHarmincad(aktMb.osszeg),
         arany: arany.toFixed(2),
-        aranyosNap,
+        aranyosNap: Math.round(aranyosNap),
       });
       aktEv = mb.ev;
       aktMb = mb;
@@ -160,9 +180,6 @@ function szamolIntervallum(napok) {
       aktKereset = 0;
       aktFoglForma = [];
     }
-    aktNapok.push(nap);
-    aktKereset += napok[nap].kereset;
-    aktFoglForma = aktFoglForma.concat(napok[nap].foglForma);
   });
   return eredmeny;
 }
@@ -178,9 +195,9 @@ function teljesSzolgIdoSzamitas(viszonyok) {
   });
   return {
     intervallumok,
-    osszesNap,
+    osszesNap: Math.round(osszesNap),
     osszesKereset: osszesKereset.toFixed(2),
-    osszesAranyosNap: osszesAranyosNap.toFixed(2)
+    osszesAranyosNap: Math.round(osszesAranyosNap)
   };
 }
 
@@ -201,7 +218,7 @@ function kiirEredmenyTabla(eredmeny) {
       '<td>' + i.minimalberEv.toLocaleString('hu-HU') + ' Ft</td>' +
       '<td>' + i.harmincad.toLocaleString('hu-HU', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' Ft</td>' +
       '<td>' + i.arany + '</td>' +
-      '<td>' + i.aranyosNap.toFixed(2) + '</td>' +
+      '<td>' + i.aranyosNap + '</td>' +
       '</tr>';
   });
   html += '<tr style="font-weight:bold;background:#eaf2ff;">' +
