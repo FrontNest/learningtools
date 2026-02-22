@@ -1,3 +1,15 @@
+.form-row.radio-group-row {
+  display: block;
+  margin-bottom: 0.5em;
+}
+.radio-group-row.radio-group {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+.radio-group-row.radio-group label {
+  margin-bottom: 0.1em;
+}
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background: #f7f7fa;
@@ -88,11 +100,16 @@ legend {
 .radio-group {
   display: flex;
   flex-direction: column;
-  gap: 0.2em;
 }
-
+.radio-group label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.05em;
+  font-weight: normal;
+}
 .radio-group input[type="radio"] {
-  margin-right: 0.3em;
+  margin-right: 0.5em;
+  margin-bottom: 0;
 }
 
 #minimalberInfo {
