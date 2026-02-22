@@ -12,12 +12,32 @@
 
 
     <div class="container">
-      <h2>Minimálbér kalkulátor</h2>
+      <h2>Minimálbér kalkulátor, arányos szolgálati idő</h2>
       <form id="dateForm">
         <label for="startDate">Kezdő dátum:</label>
         <input type="date" id="startDate" name="startDate" />
         <label for="endDate">Vége dátum:</label>
         <input type="date" id="endDate" name="endDate" />
+        <hr />
+        <div id="jogviszonyokContainer">
+          <h4>Jogviszonyok</h4>
+          <div class="jogviszony-row">
+            <label>Kezdő dátum:</label>
+            <input type="date" name="jogviszonyStart[]" />
+            <label>Vége dátum:</label>
+            <input type="date" name="jogviszonyEnd[]" />
+            <label>Munkaidő:</label>
+            <select name="munkaido[]">
+              <option value="teljes">Teljes</option>
+              <option value="rész">Rész</option>
+            </select>
+            <label>Jövedelem (Ft):</label>
+            <input type="number" name="jovedelem[]" min="0" />
+            <label>Szünetelés/járulékköteles napok:</label>
+            <input type="number" name="szunetNap[]" min="0" value="0" />
+          </div>
+        </div>
+        <button type="button" id="addJogviszonyBtn">+ Jogviszony hozzáadása</button>
         <button type="submit">Számolás</button>
       </form>
       <div id="resultTableContainer">

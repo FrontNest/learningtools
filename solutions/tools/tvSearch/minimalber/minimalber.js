@@ -86,10 +86,63 @@ document.getElementById('dateForm').addEventListener('submit', function(e) {
 		document.getElementById('resultTableContainer').innerHTML = '<p>Nincs minimálbér adat az adott időszakra.</p>';
 		return;
 	}
-	// Calculate days difference (inclusive)
 	const msPerDay = 24 * 60 * 60 * 1000;
 	const days = Math.round(((endDate.getTime() + msPerDay) - startDate.getTime()) / msPerDay);
 	let html = renderTable(intervals);
 	html += `<div class="days-diff">Eltelt napok száma: <strong>${days}</strong></div>`;
+
+	// Jogviszonyok összegyűjtése
+	const jogviszonyRows = document.querySelectorAll('.jogviszony-row');
+	const jogviszonyok = [];
+	jogviszonyRows.forEach(row => {
+		const s = row.querySelector('input[name="jogviszonyStart[]"]').value;
+		const e = row.querySelector('input[name="jogviszonyEnd[]"]').value;
+		const m = row.querySelector('select[name="munkaido[]"]').value;
+		const j = row.querySelector('input[name="jovedelem[]"]').value;
+		const sz = row.querySelector('input[name="szunetNap[]"]').value;
+		if (s && e && j) {
+			jogviszonyok.push({
+				start: parseDate(s),
+				end: parseDate(e),
+				munkaido: m,
+				jovedelem: Number(j),
+				szunetNap: Number(sz) || 0
+			});
+		}
+	});
+
+	if (jogviszonyok.length === 0) {
+		document.getElementById('resultTableContainer').innerHTML = html + '<p>Nincs jogviszony adat, csak napok és minimálbér.</p>';
+		return;
+	}
+
+	html += '<h4>Jogviszonyok arányos szolgálati idő számítása</h4>';
+	html += '<table class="szolgalati-table"><thead><tr><th>Kezdő dátum</th><th>Vége dátum</th><th>Munkaidő</th><th>Jövedelem</th><th>Szünetelés</th><th>Arány</th><th>Napok</th><th>Arányos szolgálati idő</th></tr></thead><tbody>';
+	jogviszonyok.forEach(jv => {
+		// Jogviszony napok
+		const jvDays = Math.round(((jv.end.getTime() + msPerDay) - jv.start.getTime()) / msPerDay);
+		// Szünetelés levonása
+		const napok = jvDays - jv.szunetNap;
+		// Minimálbér az adott időszakra
+		let minber = 0;
+		intervals.forEach(intv => {
+			const intvStart = parseDate(intv.start);
+			const intvEnd = parseDate(intv.end);
+			// Jogviszony átfedés az intervallummal
+			const overlapStart = jv.start > intvStart ? jv.start : intvStart;
+			const overlapEnd = jv.end < intvEnd ? jv.end : intvEnd;
+			if (overlapEnd >= overlapStart) {
+				const overlapDays = Math.round(((overlapEnd.getTime() + msPerDay) - overlapStart.getTime()) / msPerDay);
+				minber += intv.wage / 365 * overlapDays;
+			}
+		});
+		// Arány számítása
+		const arany = minber > 0 ? (jv.jovedelem / minber) : 0;
+		// Arányos szolgálati idő
+		const szolgalatiIdo = Math.round(arany * napok);
+		html += `<tr><td>${formatDate(jv.start)}</td><td>${formatDate(jv.end)}</td><td>${jv.munkaido}</td><td>${jv.jovedelem.toLocaleString()}</td><td>${jv.szunetNap}</td><td>${arany.toFixed(4)}</td><td>${napok}</td><td>${szolgalatiIdo}</td></tr>`;
+	});
+	html += '</tbody></table>';
+
 	document.getElementById('resultTableContainer').innerHTML = html;
-});
+	});
