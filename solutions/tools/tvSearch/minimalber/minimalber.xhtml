@@ -25,15 +25,15 @@
             <label>Kezdő dátum:</label>
             <input type="text" name="jogviszonyStart[]" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="2003-01-01" maxlength="10" autocomplete="off" inputmode="numeric" />
             <label>Vége dátum:</label>
-            <input type="text" name="jogviszonyEnd[]" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="2003-01-01" maxlength="10" autocomplete="off" inputmode="numeric" />
+            <input type="text" name="jogviszonyEnd[]" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="2003-01-01" maxlength="10" autocomplete="off" inputmode="numeric" /><br />
             <label>Munkaidő:</label>
             <select name="munkaido[]">
               <option value="teljes">Teljes</option>
               <option value="rész">Rész</option>
-            </select>
-            <label>Jövedelem (Ft):</label>
-            <input type="number" name="jovedelem[]" min="0" />
-            <label>Szünetelés/járulékköteles napok:</label>
+            </select><br />
+            <label>Jövedelem (Havi Br Ft):</label>
+            <input type="number" name="jovedelem[]" min="0" /><br />
+            <label>Szüneteltetés (nap):</label>
             <input type="number" name="szunetNap[]" min="0" value="0" />
           </div>
         </div>
