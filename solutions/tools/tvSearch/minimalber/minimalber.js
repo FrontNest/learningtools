@@ -260,8 +260,9 @@ document.addEventListener('DOMContentLoaded', function() {
     addMunkaviszonyKartya();
   });
 
-  // Kezdetben egy munkaviszony
+  // Kezdetben egy üres munkaviszony kártya
   addMunkaviszonyKartya();
+  // A fő form adatait nem másoljuk át a kártyára, minden input üresen indul
 
   document.getElementById('kalkulatorForm').addEventListener('submit', function(e) {
     e.preventDefault();
