@@ -1,9 +1,14 @@
 // Automatikus fókuszváltás év után hónapra, input validáció
 function setupDateInputs() {
-	const dateInputs = [document.getElementById('startDate'), document.getElementById('endDate')];
-	dateInputs.forEach(input => {
+	// Fő dátum mezők
+	const mainDateInputs = [document.getElementById('startDate'), document.getElementById('endDate')];
+	// Jogviszony dátum mezők
+	function getJogviszonyDateInputs() {
+		return Array.from(document.querySelectorAll('input[name="jogviszonyStart[]"], input[name="jogviszonyEnd[]"]'));
+	}
+	function addDateInputHandler(input) {
 		input.addEventListener('input', function(e) {
-			// Automatikus fókuszváltás év után
+			// Automatikus kötőjel év után
 			if (e.target.value.length === 4) {
 				if (!/^\d{4}$/.test(e.target.value)) {
 					e.target.value = '';
@@ -37,6 +42,73 @@ function setupDateInputs() {
 				}
 			}
 		});
+	}
+	mainDateInputs.forEach(addDateInputHandler);
+	// Jogviszony dátum mezők kezdetben
+	getJogviszonyDateInputs().forEach(addDateInputHandler);
+	// Jogviszony sor hozzáadásakor új mezőkre is handler és számítás
+	document.getElementById('addJogviszonyBtn').addEventListener('click', function() {
+		setTimeout(() => {
+			getJogviszonyDateInputs().forEach(addDateInputHandler);
+			setupJogviszonyCalcHandlers();
+		}, 100);
+	});
+
+	function setupJogviszonyCalcHandlers() {
+		const jogviszonyRows = document.querySelectorAll('.jogviszony-row');
+		jogviszonyRows.forEach(row => {
+			const inputs = row.querySelectorAll('input[name="jogviszonyStart[]"], input[name="jogviszonyEnd[]"], input[name="jovedelem[]"], select[name="munkaido[]"]');
+			inputs.forEach(input => {
+				input.addEventListener('input', function() {
+					calcJogviszony(row);
+				});
+			});
+		});
+	}
+
+	function calcJogviszony(row) {
+		const s = row.querySelector('input[name="jogviszonyStart[]"]').value;
+		const e = row.querySelector('input[name="jogviszonyEnd[]"]').value;
+		const m = row.querySelector('select[name="munkaido[]"]').value;
+		const j = row.querySelector('input[name="jovedelem[]"]').value;
+		const sz = row.querySelector('input[name="szunetNap[]"]').value;
+		const eredmenyDiv = row.querySelector('.jogviszony-eredmeny') || document.createElement('div');
+		eredmenyDiv.className = 'jogviszony-eredmeny';
+		let napok = '';
+		let minber = '';
+		let arany = '';
+		let szolgalatiIdo = '';
+		if (s && e) {
+			const start = parseDate(s);
+			const end = parseDate(e);
+			const msPerDay = 24 * 60 * 60 * 1000;
+			napok = Math.round(((end.getTime() + msPerDay) - start.getTime()) / msPerDay) - (Number(sz) || 0);
+			// Minimálbér az adott évre (csak az első év, ha a jogviszony nem több évre szól)
+			const ev = start.getFullYear();
+			const minberObj = minimalberData.find(mb => parseDate(mb.start).getFullYear() === ev);
+			minber = minberObj ? minberObj.wage : 0;
+		}
+		if (s && e && j) {
+			// Arány számítása
+			arany = minber > 0 ? (Number(j) / minber) : 0;
+			// Arányos szolgálati idő
+			szolgalatiIdo = Math.round(arany * napok);
+		}
+		eredmenyDiv.innerHTML = `<div class="jogviszony-calc">
+			<strong>Jogviszony számítás:</strong><br>
+			${napok !== '' ? `Napok száma: <b>${napok}</b><br>` : ''}
+			${minber !== '' ? `Minimálbér az időszakra: <b>${minber.toLocaleString()} Ft</b><br>` : ''}
+			${arany !== '' && arany !== 0 ? `Arány: <b>${arany.toFixed(4)}</b><br>` : ''}
+			${szolgalatiIdo !== '' && szolgalatiIdo !== 0 ? `Arányos szolgálati idő: <b>${szolgalatiIdo} nap</b>` : ''}
+		</div>`;
+		if (!row.querySelector('.jogviszony-eredmeny')) {
+			row.appendChild(eredmenyDiv);
+		}
+	}
+
+	window.addEventListener('DOMContentLoaded', () => {
+		setupDateInputs();
+		setupJogviszonyCalcHandlers();
 	});
 }
 
@@ -135,20 +207,21 @@ document.getElementById('dateForm').addEventListener('submit', function(e) {
 	html += `<div class="days-diff">Eltelt napok száma: <strong>${days}</strong></div>`;
 
 	// Jogviszonyok összegyűjtése
+	// Always get jogviszonyRows at submit time
 	const jogviszonyRows = document.querySelectorAll('.jogviszony-row');
 	const jogviszonyok = [];
 	jogviszonyRows.forEach(row => {
 		const s = row.querySelector('input[name="jogviszonyStart[]"]').value;
 		const e = row.querySelector('input[name="jogviszonyEnd[]"]').value;
 		const m = row.querySelector('select[name="munkaido[]"]').value;
-		const j = row.querySelector('input[name="jovedelem[]"]').value;
+		const jNum = Number(row.querySelector('input[name="jovedelem[]"]').value);
 		const sz = row.querySelector('input[name="szunetNap[]"]').value;
-		if (s && e && j) {
+		if (s && e && jNum > 0) {
 			jogviszonyok.push({
 				start: parseDate(s),
 				end: parseDate(e),
 				munkaido: m,
-				jovedelem: Number(j),
+				jovedelem: jNum,
 				szunetNap: Number(sz) || 0
 			});
 		}
@@ -161,29 +234,28 @@ document.getElementById('dateForm').addEventListener('submit', function(e) {
 
 	html += '<h4>Jogviszonyok arányos szolgálati idő számítása</h4>';
 	html += '<table class="szolgalati-table"><thead><tr><th>Kezdő dátum</th><th>Vége dátum</th><th>Munkaidő</th><th>Jövedelem</th><th>Szünetelés</th><th>Arány</th><th>Napok</th><th>Arányos szolgálati idő</th></tr></thead><tbody>';
-	jogviszonyok.forEach(jv => {
-		// Jogviszony napok
-		const jvDays = Math.round(((jv.end.getTime() + msPerDay) - jv.start.getTime()) / msPerDay);
-		// Szünetelés levonása
-		const napok = jvDays - jv.szunetNap;
-		// Minimálbér az adott időszakra
-		let minber = 0;
-		intervals.forEach(intv => {
-			const intvStart = parseDate(intv.start);
-			const intvEnd = parseDate(intv.end);
-			// Jogviszony átfedés az intervallummal
-			const overlapStart = jv.start > intvStart ? jv.start : intvStart;
-			const overlapEnd = jv.end < intvEnd ? jv.end : intvEnd;
-			if (overlapEnd >= overlapStart) {
-				const overlapDays = Math.round(((overlapEnd.getTime() + msPerDay) - overlapStart.getTime()) / msPerDay);
-				minber += intv.wage / 365 * overlapDays;
-			}
-		});
-		// Arány számítása
-		const arany = minber > 0 ? (jv.jovedelem / minber) : 0;
-		// Arányos szolgálati idő
-		const szolgalatiIdo = Math.round(arany * napok);
-		html += `<tr><td>${formatDate(jv.start)}</td><td>${formatDate(jv.end)}</td><td>${jv.munkaido}</td><td>${jv.jovedelem.toLocaleString()}</td><td>${jv.szunetNap}</td><td>${arany.toFixed(4)}</td><td>${napok}</td><td>${szolgalatiIdo}</td></tr>`;
+	jogviszonyRows.forEach(row => {
+		const s = row.querySelector('input[name="jogviszonyStart[]"]').value;
+		const e = row.querySelector('input[name="jogviszonyEnd[]"]').value;
+		const m = row.querySelector('select[name="munkaido[]"]').value;
+		const jNum = Number(row.querySelector('input[name="jovedelem[]"]').value);
+		const sz = row.querySelector('input[name="szunetNap[]"]').value;
+		if (s && e && jNum > 0) {
+			const start = parseDate(s);
+			const end = parseDate(e);
+			const napok = Math.round(((end.getTime() + msPerDay) - start.getTime()) / msPerDay) - (Number(sz) || 0);
+			// Find minimálbér interval where jogviszony start falls between start and end
+			const minberObj = minimalberData.find(mb => {
+				const mbStart = parseDate(mb.start);
+				const mbEnd = parseDate(mb.end);
+				return start >= mbStart && start <= mbEnd;
+			});
+			const minber = minberObj ? minberObj.wage : 0;
+			// Use full year minimálbér for arány calculation
+			const arany = minber > 0 ? (jNum / (minber * 12)) : 0;
+			const szolgalatiIdo = Math.round(arany * napok);
+			html += `<tr><td>${s}</td><td>${e}</td><td>${m}</td><td>${jNum.toLocaleString()}</td><td>${sz}</td><td>${arany.toFixed(4)}</td><td>${napok}</td><td>${szolgalatiIdo}</td></tr>`;
+		}
 	});
 	html += '</tbody></table>';
 

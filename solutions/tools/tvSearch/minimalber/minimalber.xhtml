@@ -15,17 +15,17 @@
       <h2>Minimálbér kalkulátor, arányos szolgálati idő</h2>
       <form id="dateForm">
         <label for="startDate">Kezdő dátum:</label>
-        <input type="text" id="startDate" name="startDate" pattern="\\d{4}-\\d{2}-\\d{2}" placeholder="ÉÉÉÉ-HH-NN" maxlength="10" autocomplete="off" inputmode="numeric" />
+        <input type="text" id="startDate" name="startDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="2003-01-01" maxlength="10" autocomplete="off" inputmode="numeric" />
         <label for="endDate">Vége dátum:</label>
-        <input type="text" id="endDate" name="endDate" pattern="\\d{4}-\\d{2}-\\d{2}" placeholder="ÉÉÉÉ-HH-NN" maxlength="10" autocomplete="off" inputmode="numeric" />
+        <input type="text" id="endDate" name="endDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="2003-01-01" maxlength="10" autocomplete="off" inputmode="numeric" />
         <hr />
         <div id="jogviszonyokContainer">
           <h4>Jogviszonyok</h4>
           <div class="jogviszony-row">
             <label>Kezdő dátum:</label>
-            <input type="date" name="jogviszonyStart[]" />
+            <input type="text" name="jogviszonyStart[]" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="2003-01-01" maxlength="10" autocomplete="off" inputmode="numeric" />
             <label>Vége dátum:</label>
-            <input type="date" name="jogviszonyEnd[]" />
+            <input type="text" name="jogviszonyEnd[]" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="2003-01-01" maxlength="10" autocomplete="off" inputmode="numeric" />
             <label>Munkaidő:</label>
             <select name="munkaido[]">
               <option value="teljes">Teljes</option>
