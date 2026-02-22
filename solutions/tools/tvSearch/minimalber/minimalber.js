@@ -93,3 +93,25 @@ document.getElementById('dateForm').addEventListener('submit', function(e) {
 	html += `<div class="days-diff">Eltelt napok száma: <strong>${days}</strong></div>`;
 	document.getElementById('resultTableContainer').innerHTML = html;
 });
+
+// Arányos szolgálati idő számítása
+function calculateAranyosSzolgaltatiIdo(jogviszonyok) {
+	const msPerDay = 24 * 60 * 60 * 1000;
+	let html = '<table class="aranyos-szolgaltati-table">';
+	html += '<thead><tr><th>Időszak kezdete</th><th>Időszak vége</th><th>Munkaidő</th><th>Jövedelem</th><th>Szunet nap</th><th>Arány</th><th>Napok</th><th>Szolgálati idő</th></tr></thead>';
+	html += '<tbody>';
+	jogviszonyok.forEach(jv => {
+		const napok = Math.round(((jv.end.getTime() + msPerDay) - jv.start.getTime()) / msPerDay) - (jv.szunetNap || 0);
+		// Minimálbér az adott évre
+		const ev = jv.start.getFullYear();
+		const minberObj = minimalberData.find(mb => parseDate(mb.start).getFullYear() === ev);
+		const minberHavi = minberObj ? minberObj.wage : 0;
+		const minberEves = minberHavi * 12;
+		const arany = minberEves > 0 ? (jv.jovedelem / minberEves) : 0;
+		const szolgalatiIdo = Math.round(arany * napok);
+		html += `<tr><td>${formatDate(jv.start)}</td><td>${formatDate(jv.end)}</td><td>${jv.munkaido}</td><td>${jv.jovedelem.toLocaleString()}</td><td>${jv.szunetNap}</td><td>${arany.toFixed(4)}</td><td>${napok}</td><td>${szolgalatiIdo}</td></tr>`;
+		html += `<tr><td colspan="8" style="text-align:left;color:#333;">Éves minimálbér: <b>${minberEves.toLocaleString()} Ft</b></td></tr>`;
+	});
+	html += '</tbody></table>';
+	return html;
+}
