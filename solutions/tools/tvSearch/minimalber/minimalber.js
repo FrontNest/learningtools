@@ -1,3 +1,46 @@
+// Automatikus fókuszváltás év után hónapra, input validáció
+function setupDateInputs() {
+	const dateInputs = [document.getElementById('startDate'), document.getElementById('endDate')];
+	dateInputs.forEach(input => {
+		input.addEventListener('input', function(e) {
+			// Automatikus fókuszváltás év után
+			if (e.target.value.length === 4) {
+				if (!/^\d{4}$/.test(e.target.value)) {
+					e.target.value = '';
+					return;
+				}
+				e.target.value += '-';
+			}
+			// Automatikus kötőjel hónap után
+			if (e.target.value.length === 7) {
+				const parts = e.target.value.split('-');
+				if (parts.length === 2 && /^\d{2}$/.test(parts[1])) {
+					if (Number(parts[1]) < 1 || Number(parts[1]) > 12) {
+						e.target.value = parts[0] + '-';
+						return;
+					}
+					e.target.value += '-';
+				}
+			}
+			// Nap validáció
+			if (e.target.value.length === 10) {
+				const parts = e.target.value.split('-');
+				if (parts.length === 3 && /^\d{2}$/.test(parts[2])) {
+					const year = Number(parts[0]);
+					const month = Number(parts[1]);
+					const day = Number(parts[2]);
+					const maxDay = new Date(year, month, 0).getDate();
+					if (day < 1 || day > maxDay) {
+						e.target.value = parts[0] + '-' + parts[1] + '-';
+						return;
+					}
+				}
+			}
+		});
+	});
+}
+
+window.addEventListener('DOMContentLoaded', setupDateInputs);
 // Minimálbér adatok
 const minimalberData = [
 	{ start: '1988-01-01', end: '1989-02-28', wage: 3000 },

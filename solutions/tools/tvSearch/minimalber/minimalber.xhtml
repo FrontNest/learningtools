@@ -15,9 +15,9 @@
       <h2>Minimálbér kalkulátor, arányos szolgálati idő</h2>
       <form id="dateForm">
         <label for="startDate">Kezdő dátum:</label>
-        <input type="date" id="startDate" name="startDate" />
+        <input type="text" id="startDate" name="startDate" pattern="\\d{4}-\\d{2}-\\d{2}" placeholder="ÉÉÉÉ-HH-NN" maxlength="10" autocomplete="off" inputmode="numeric" />
         <label for="endDate">Vége dátum:</label>
-        <input type="date" id="endDate" name="endDate" />
+        <input type="text" id="endDate" name="endDate" pattern="\\d{4}-\\d{2}-\\d{2}" placeholder="ÉÉÉÉ-HH-NN" maxlength="10" autocomplete="off" inputmode="numeric" />
         <hr />
         <div id="jogviszonyokContainer">
           <h4>Jogviszonyok</h4>
