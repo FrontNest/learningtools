@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <!-- A legprimitívebb knowledge base oldalt próbálom létrehozni, amiben nincs olyan dolog, ami a rendszer biztonságát veszélyeztethetné
-     ezért ez a legalapabb strukturájú, html + css oldal bookmarkokkal és ósdi iframe megoldásokkal 
+    <!-- A legprimitívebb knowledge base oldalt próbálom létrehozni, amiben nincs olyan dolog, ami a 
+     rendszer biztonságát veszélyeztethetné, ezért ez a legalapabb strukturájú, html + internal css 
+     flexboxos oldal bookmarkokkal és ósdi iframe megoldásokkal. Munkára jóleszaz.
      Nem szép, de csak egy CTRL+F -nél hasznosabbat szeretnék a munkámhoz. 
      Ha bárkinek gondja van vele securty okból (én nem tudom, mi lehet, de bármi megtörténhet), 
      pls szóljon, mielőtt eszkalál! Köszi! Besnyői -->
@@ -17,15 +18,16 @@
         body {
             margin: 0;
             font-family: 'Noto Sans', Arial, sans-serif;
-            background: #f7f7f7;
+            background: #03011f;
         }
         .header {
             width: 100%;
-            background: #222;
-            color: #fff;
+            background: #03011f;
+            color: #b6b6b7;            
             padding: clamp(0.5rem, 2vw, 2rem) 0;
             text-align: center;
             font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: bold;
             letter-spacing: 2px;
         }
         .container {
@@ -36,14 +38,14 @@
         }
         .sidebar {
             width: clamp(180px, 25vw, 350px);
-            background: #eaeaea;
-            border-right: 1px solid #ccc;
+            background: #03011f;
+            border-right: 1px solid #b6b6b7;
             height: 100%;
             overflow: hidden;
         }
         .main {
             flex: 1;
-            background: #fff;
+            background: #b6b6b7;
             height: 100%;
             overflow: hidden;
         }
