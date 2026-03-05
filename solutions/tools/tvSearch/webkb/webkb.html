@@ -9,7 +9,7 @@
     <meta name="description" content="WwebKb - Webes tudásbázis, tartalomjegyzékkel és könyvjelzőkkel">
     <meta name="keywords" content="webkb, tudásbázis, bookmark, tartalomjegyzék, webes eszköz">
     <meta name="author" content="Frontnest Studio">
-    <title>WwebKb</title>
+    <title>WebKb</title>
     <style>
         body {
             margin: 0;
@@ -20,21 +20,19 @@
             width: 100%;
             background: #222;
             color: #fff;
-            padding: 1rem 0;
+            padding: clamp(0.5rem, 2vw, 2rem) 0;
             text-align: center;
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
             letter-spacing: 2px;
         }
         .container {
             display: flex;
             flex-direction: row;
-            height: calc(100vh - 64px);
-            min-height: 400px;
+            height: calc(100vh - clamp(2.5rem, 8vw, 4rem));
+            min-height: 300px;
         }
         .sidebar {
-            width: 25%;
-            min-width: 200px;
-            max-width: 350px;
+            width: clamp(180px, 25vw, 350px);
             background: #eaeaea;
             border-right: 1px solid #ccc;
             height: 100%;
@@ -58,25 +56,23 @@
             }
             .sidebar {
                 width: 100%;
-                max-width: none;
-                min-width: 0;
-                height: 200px;
+                height: clamp(120px, 25vh, 220px);
             }
             .main {
-                height: calc(100vh - 264px);
+                height: calc(100vh - clamp(8rem, 32vw, 16rem));
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">WwebKb</div>
+    <div class="header">WebKb</div>
     <div class="container">
         <div class="sidebar">
-            <!-- Tartalomjegyzék iframe -->
+            <!-- Tartalomjegyzék -->
             <iframe src="toc.html"></iframe>
         </div>
         <div class="main">
-            <!-- Main content iframe -->
+            <!-- Main content -->
             <iframe name="mainContent" src="mainContent.html"></iframe>
         </div>
     </div>
