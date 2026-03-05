@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WwebKb - Webes tudásbázis, tartalomjegyzékkel és könyvjelzőkkel">
+    <meta name="keywords" content="webkb, tudásbázis, bookmark, tartalomjegyzék, webes eszköz">
+    <meta name="author" content="Frontnest Studio">
+    <title>WwebKb</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+        }
+        .header {
+            width: 100%;
+            background: #222;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            height: calc(100vh - 64px);
+            min-height: 400px;
+        }
+        .sidebar {
+            width: 25%;
+            min-width: 200px;
+            max-width: 350px;
+            background: #eaeaea;
+            border-right: 1px solid #ccc;
+            height: 100%;
+            overflow: hidden;
+        }
+        .main {
+            flex: 1;
+            background: #fff;
+            height: 100%;
+            overflow: hidden;
+        }
+        iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                max-width: none;
+                min-width: 0;
+                height: 200px;
+            }
+            .main {
+                height: calc(100vh - 264px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">WwebKb</div>
+    <div class="container">
+        <div class="sidebar">
+            <!-- Tartalomjegyzék iframe -->
+            <iframe src="toc.html"></iframe>
+        </div>
+        <div class="main">
+            <!-- Main content iframe -->
+            <iframe name="mainContent" src="mainContent.html"></iframe>
+        </div>
+    </div>
+</body>
+</html>
