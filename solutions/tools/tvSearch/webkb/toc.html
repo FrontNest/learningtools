@@ -8,9 +8,10 @@
     <meta name="author" content="BesnyőiG">
     <title>WebKB Tartalomjegyzék</title>
     <style>
-        body { font-family: 'Noto Sans', Arial, sans-serif; margin: 0; padding: 1em; background: #03011f; }
+        body { font-family: 'Noto Sans', Arial, sans-serif; margin: 0; padding: 1em 2em; background: #03011f; }
         p, h1, h2, h3, h4, h5, a {color: #b6b6b7}
-        ul { list-style: none; padding: 0; }
+        ul { list-style-type: disc; padding: 0; }
+        ol { list-style-type: decimal; }
         li { margin-bottom: 0em; }
         a { text-decoration: none; font-weight: bold; }
         a:hover { text-decoration: underline; }
@@ -20,10 +21,16 @@
     <h4>Tartalomjegyzék</h4>
     <p>1., MINTALEVELEK</p>
     <ul>
-        <li><a href="mainContent.html#001" target="mainContent">Első könyvjelző</a></li>
-        <li><a href="mainContent.html#002" target="mainContent">Második könyvjelző</a></li>
-        <li><a href="mainContent.html#003" target="mainContent">Harmadik könyvjelző</a></li>
-        <li><a href="file:///...:/......doc" target="mainContent">Módszertani03</a></li>
+        <li><a href="mainContent.html#001" target="mainContent">K 1</a>
+                <ol>
+                    <li><a href="mainContent.html#001a" target="mainContent">A 1</a></li>
+                    <li><a href="mainContent.html#001b" target="mainContent">A2 2</a></li>
+                    <li><a href="mainContent.html#001c" target="mainContent">A 3</a></li>
+                </ol>
+        </li>
+        <li><a href="mainContent.html#002" target="mainContent">K 2</a></li>
+        <li><a href="mainContent.html#003" target="mainContent">K 3</a></li>
+        <li><a href="file:///...:/......doc" target="mainContent">File path</a></li>
         
     </ul>
 
