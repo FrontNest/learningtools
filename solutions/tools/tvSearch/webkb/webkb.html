@@ -13,17 +13,18 @@
     <meta name="description" content="WebKb - Webes tudásbázis, tartalomjegyzékkel és könyvjelzőkkel">
     <meta name="keywords" content="webkb, tudásbázis, bookmark, tartalomjegyzék, webes eszköz">
     <meta name="author" content="BesnyőiG">
-    <title>WebKb</title>
+    <title>Tudásbázis adategyeztetés részére</title>
     <style>
         body {
+            overflow: hidden;
             margin: 0;
             font-family: 'Noto Sans', Arial, sans-serif;
-            background: #03011f;
+            background: linear-gradient(45deg, #391b01, #753c0a);
         }
         .header {
             width: 100%;
-            background: #03011f;
-            color: #b6b6b7;            
+            background: linear-gradient(135deg, #090400, #391b01);
+            color: #caae93;            
             padding: clamp(0.2rem, 1vw, 1.5rem) 0;
             text-align: center;
             font-size: clamp(1.5rem, 2.5vw, 2rem);
@@ -55,6 +56,10 @@
             height: 100%;
             display: block;
         }
+
+
+
+        
         @media (max-width: 900px) {
             .container {
                 flex-direction: column;
@@ -70,7 +75,7 @@
     </style>
 </head>
 <body>
-    <div class="header">WebKb</div>
+    <div class="header">Tudásbázis adategyeztetés részére</div>
     <div class="container">
         <div class="sidebar">
             <!-- Tartalomjegyzék -->
@@ -81,5 +86,6 @@
             <iframe name="mainContent" src="mainContent.html"></iframe>
         </div>
     </div>
+    <p>Készítette: Besnyői</p>
 </body>
 </html>
