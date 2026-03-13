@@ -1,25 +1,4 @@
-IGAZOLÁS KÉRÉSEK: 
-GYES: 1996.04.15-tól ha nem kifizetőhely a foglalkoztató, akkor BEO-t kell kérni
-        ez lőtt BEO-tól ( munkáltató székelye szerinti / ha passzív, akkor az ügyfél lakóhelye szerinti egészségbiztosítási főosztály ) kell kérni (GYES-hez) vagy ha foglalkoztató TB kifizetőhely
-
-GYET-hez 1999.04.01-től a családtámogatási osztálytól (lakóhely szerinti)
-        1999.03.31-előtt akkor a lakóhely szerinti önkormányzattól kell lekérni az igazolást.
-
-Munkanélküli: BFKH Foglalkoztatási Főosztály / Lakóhely szerinti JÁRÁSI HIAVATAL FOGLALKOZTATÁSI OSZTÁLY
-
-Táppénz, baleseti táppénz (BEO): BFHK Egészségbiztosítási főosztály / BFKH Egészségbiztosítási főosztály Cegléd/Vác
-
-Ápolási díj:     2013.01. előtt: lakóhely szerinti polgármesteri hivatal
-        utána pedig a lakóhely szerinti járási hivatal HATÓSÁGI FŐOSZTÁLY
-
-jafo : 1998.12.31-ig:
-    Budapestinek: Budapest Főváros Kormányhivatala Nyilvántartási Főosztály
-    Pest megyeinek: Pest Vármegyei Kormányhivatala Nyilvántartási Főosztály
-    1999-től NAV
-
-
-NAV foglalkoztató: béradatot közöl
-
+<pre>
 
 7., 1988.01.01-től nézzük a béreket
 
@@ -27,83 +6,14 @@ NAV foglalkoztató: béradatot közöl
 
 10., Munkaviszonynál nem nézzük a béreket, akármennyit keresett, azt megadjuk a bérlapon.
 
-NEMZETKÖZI ÜGYEK
+A 1998-as NYENYI hiányos! Be kell írni a nyugdíjjárulékot a bérlapon a járulékalapot képező összeghez
 
-<pre>
-        <div> <!--   -->
-        <h3 class="bookmarks" id="........."> NEMZETKÖZI </h3>
-            <div class="pref">Sürgetős táblázat NEMZETKÖZI
+ILDIKÓTÓL: 
+Szia! A tegnapi revízióhoz:
+1. kértem Bp BEO előzményt, mivel a nem a munkáltatótól kapott táppénzt, CSED-et és GYED-et. Célszerű mindíg megkérni ilyen esetekben.
 
-        KELEN: dossziét megnyitni
-        Fűzötteket rendbe tenni (ha van)    
-    
-        EETÜR:
-        Megjegyzéseket átolvasni
-        <p class="tab">NYOMTATVÁNYOK</p> fül 
-        Belső szerv felé
-        Budapesten belüli áttétel - Nemzetközi adategyeztetés
-            - MENTÉS TERVEZETKÉNT
-        <p class="tab">DOKUMENTUMOK</p> fül
-        Tervezet - ki kell választani a küldeményt
-        Dokumentum átadása vezetőnek (Barbinak)
-        
-        Visszamész az EETÜR ügybe
-        Küldemény létrehozása
+2. Az ügyfél a tartózkodási helye szerint kéri és az Budapest. Ezt be kell rögzíteni a "Biztosított" felületen még a határozat előtt, mivel ez a cím fog rákerülni a határozatra. Persze a TAJ nyilvántartóban le kell ellenőrizni, hogy ott szerepel-e. Ha nem szerepelt volna (bár kicsit szaga van 2020 óta van bejelentkezve :P), 
+akkor az állandó lakóhely szerinti nyugdíj-szervhez át kellett volna adni végzéssel illetékes intézkedésre az ügyet.
 
-        EGYÉB PAPÍR ALAPON!
-        átváltani HIVATALBÓL -ról SIMÁra
-        <p class="but">KÜLDEMÉNY LÉTREHOZÁSA</p>
- 
-        <p class="tab">KÜLDEMÉNYEK</p> fül
-        A borítékkal ki kell küldeni
-        KÉZI POSTÁZÁS !!!
-
-        Ez is határozatnak minősül a teljesítménylapon.
-
-
-
-            </div>
-        </div>
-
-</pre>
-
-ETÜR ELŐZMÉNY
- <pre>
-        <div> <!--   Ha van EETÜR előzmény -->
-        <h3 class="bookmarks" id="........."> Ha van EETÜR előzmény </h3>
-            <div class="pref">Például már van egy öregségi nyugdíj kérelme folyamatban, de belüld egy nők40-es kérelmet, vagy egy másik öregségit:
-      <input type="checkbox">NyugdMeg-ben megkeresed a LEGÚJABB előzmény ügyet
-        <input type="checkbox">az elejére írsz egy 5 -ös számot, majd kisENTER
-        <input type="checkbox">SHIFT + F1 -el belépsz az ügybe.
-        <input type="checkbox">Felírod az :
-            - ügyszámot
-            - beérkezés dátumát
-            - az ügy típusát (pl öregségi)
- <input type="checkbox"> EETÜR-ben:
-        <input type="checkbox"><p class="tab">NYOMTATVÁNYOK</p> fül
-        <input type="checkbox">Jobb oldalon: <u>I. Fokú döntések</u>
-            <input type="checkbox">Eljárás megszüntetéséről végzés
-        <input type="checkbox">Nyugdíjkérelmet RÁDIÓGOMB bejelölése
-        <input type="checkbox">Be kell írni a dátumot és az ügy típusát, amit a Nyugdmeg-ből kiírtál
-        <input type="checkbox">Kiadmányozó: Barbara
-        <input type="checkbox">A <p class="tab">dokumentumokban</p> lesz.
-        <input type="checkbox"><p class="but">Küldemény létrehozása<p/>
-        <input type="checkbox"><u>Ügyfél részére</u>
-        <input type="checkbox"><p class="but">Küldemény létrehozása<p/>
-        <input type="checkbox">Ezután ki kell küldeni az ügyfélnek
-
-        <input type="checkbox"><p class="but">Megjegyzés<p/> a nyomtatványok mellett.
-        <input type="checkbox">Szövegmezőbe:
-        " < ügyszám > ügyében <ügy típusa pl: öregségi nyugdíj> kérelmet adott be"
-         <input type="checkbox"><p class="but">MENTÉS<p/>
-        
- <input type="checkbox">KELEN: 
- <input type="checkbox">A lezárandó dossziét megnyitni, Fűzötteket megnézni, betenni, ha az övé.
-<input type="checkbox"> EETÜR:
-        <input type="checkbox">Utolsó fül: A <p class="tab">Nem érdemi lezárás</p>
-
-        Ez határozatnak számít a teljesítménylapon
-            </div>
-        </div>
 
 </pre>
