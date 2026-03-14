@@ -1,0 +1,150 @@
+        body { 
+            font-family: 'Noto Sans', Arial, sans-serif; 
+            margin: 0; 
+            padding: 1em; 
+            background: #160b01;
+        }
+        :root {
+            --border_light: #caae93 1px solid;
+            --border_dark: #4b2604 1px solid;
+        }
+        ::selection {
+            background: rgba(163, 106, 44, 0.565);
+            border-radius: 16px;
+            box-shadow: 0 0 24px 20px rgba(163, 106, 44, 0.565);
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            color:  rgb(202, 201, 194); 
+            }
+
+        h2 { 
+            margin-top: 1em; 
+        }
+        p, h1, h2, h3, h4, a, pre, .pref, .pre { 
+            color: #caae93; 
+            padding: 3px;
+        }
+        /* , pre:hover, .pref:hover, .pre:hover  */
+        p:hover, h1:hover, h2:hover, h3:hover, h4:hover, a:hover {
+            background: rgba(64, 34, 1, 0.565);
+            border-radius: 16px;
+            box-shadow: 0 0 24px 20px rgba(64, 34, 1, 0.565);
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            color:  rgb(202, 201, 194); 
+            cursor:pointer;
+            }
+        pre {
+            font-family: 'Noto Sans', Arial, sans-serif;
+        }
+        .pre {
+            font-family: 'Noto Sans', Arial, sans-serif;
+            padding: 0px 50px;
+            border: #caae93 1px solid;
+        }
+        .pref {
+            white-space: pre-wrap;
+            font-family: 'Noto Sans', monospace;
+            }
+        .highl {
+            color:#f9a940;
+            font-size: larger;
+        }
+
+        .but, .tab {
+            font-family: 'Noto Sans', monospace;
+            background: #757575;
+            color: #141414;
+            border-top: 2px solid #e4e3e2;
+            border-right: 2px solid #403f3f;
+            border-bottom: 2px solid #060606;
+            border-left: 2px solid #afaead;
+            padding: 3px 8px;
+            display: inline-block;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 6px #00000033;
+            transition: background 0.2s;
+        }
+        .but:hover, .tab:hover {
+            border-bottom: 2px solid #e4e3e2;
+            border-left: 2px solid #403f3f;
+            border-top: 2px solid #060606;
+            border-right: 2px solid #afaead;
+        }
+        .but {            
+            border-radius: 8px;
+        }
+        .tab {
+            border-radius: 8px 8px 0px 0px;
+        }
+        .bookmark { 
+            padding: 0.5em; 
+            border-bottom: 1px solid #caae93; 
+        }
+        img { 
+            max-width: 100%;
+        }
+
+        table {
+            border-collapse: collapse;
+            color: #caae93;
+            padding: 5px 5px;
+            max-width: 90vw;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+        tr, td {
+            border: 1px solid #caae93;
+            color: #caae93;
+            padding: 5px 5px;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background-color: #3c2404;
+        }
+        
+        tr:hover td, tr:hover th {
+            color: #c8b8a7;
+            border:#c8aa8b 1px solid;
+            border-collapse: collapse;
+        }
+        th {
+            background-color:#a36a2c;
+            border: 1px solid #2a1800;
+            color:#2a1800;
+            padding: 5px 5px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .def {
+            padding: 10px 20px;
+            border: 1px solid #a36a2c;
+            font-style: italic;
+            color: #caae93; 
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .nowrap {
+            white-space: nowrap;
+        }
+        /* Scrollbar vastagság és szín */
+        body::-webkit-scrollbar {
+        width: 12px;
+        background: #2a1800;
+        }
+        body::-webkit-scrollbar-thumb {
+        background: #a36a2c;
+        border-radius: 6px;
+        }
+        body::-webkit-scrollbar-track {
+        background: #391b01;
+        }
+        
