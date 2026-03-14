@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="hu">
     <!-- Ez egy irdatlan hosszú html oldal lesz azért, hogy js nélkül lehessen benne CTRL+F -el is keresni, 
-     meg a bokmarkokkal is -->
+     meg a bokmarkokkal is tagolni kezelhetőre. Nincs kódesztétika, sem best practices, csak minimal effort, hogy használható legyen. 
+     Agile dev, XS T-shirt, de csillllliárd story points... Notepadban bővítem, javítom, good luck betenni egy új fejezetet... -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,11 +13,22 @@
     <link rel="stylesheet" href="webKB.css" />
 </head>
 <body>
+
+        <div class="bookmark" id="000"><h2>FONTOS</h2>
+            <div class="pref">
+                Ha nem kifizetőhely a munkáltató, akkor BEO-t kell kérni.
+                    "Amennyiben más foglalkoztató esetében, vagy ... jogán is folyósítottak ellátást, azt is szíveskedjenek közölni."
+
+                Munkanélkülinél mindig kérjük a munkaügyi központtól a munkanélküli összegét.
+
+
+            </div>
+        </div>
+
     <div class="bookmark" id="001"><h2>1., MINTA LEVELEK</h2>
         <div> <!-- 001_01 Mintalevél - a végzés nem végleges -->
             <h3 class="bookmark" id="001_01">Mintalevél - a végzés nem végleges</h3>
-            <div class="pre">
-            <i>
+            <div class="pre"><i>
                 <p><b>
                 A végzés nem a végleges adatokat tartalmazza, a gyermeknyilatkozat és a hiányzó adatok beérkezését követően 
                 felülvizsgálatra és módosításra kerül.
@@ -531,28 +543,27 @@ sajnos nem mindig lett az igazolás módjánál odaírva</p>
 Nevezett igényének elbírálásához kérjük, szíveskedjenek a ................ . évi adatszolgáltatásukat felülvizsgálni és közölni a helyes kieső időket, illetőleg azok jogcímeit tekintettel arra, hogy a rendelkezésünkre álló adatok nem egyértelműek. ( pénzbeli ellátás nélküli keresőtevékenység )
 </p>
                 <input type="checkbox">Bal oldali kék linkek: <u>Küldemény adatok</u>
-                        ✓ CÉGKAPU
+                        <input type="checkbox">✓ CÉGKAPU
                         Megkeressük a partnerlistában a foglalkoztatót, akinek írni akarunk.
                         <input type="checkbox"><p class="but">Partnerlista betöltése</p>
-                        <p class="but">MENTÉS</p> 
+                        <input type="checkbox"><p class="but">MENTÉS</p> 
                         <input type="checkbox">alul <p class="but">TOVÁBB</p>
                             Meg kell várni, hogy mindegyik elkészüljön!
                         <input type="checkbox"><p class="but">X</p> -el be kell zárni,
-                        <p class="tab">KÜLDEMÉNYEK</p>
+                        <input type="checkbox"><p class="tab">KÜLDEMÉNYEK</p>
                         <input type="checkbox">Új dokumentum csatolása a dokumentum ikonra kattintva (balra a szélén )
-                        <input type="checkbox">A legördülő menüből kiválasztani: <u>IV-01 Levél</u>
-                        <p class="but">Kimenő dokumentum</p>
-                        <p class="but">TOVÁBB</p> legalul van jobbra.
+                        <input type="checkbox">A legördülő menüből kiválasztani: <u class="highl">IV-01 Levél</u>
+                        <input type="checkbox"><p class="but">Kimenő dokumentum</p>
+                        <input type="checkbox"><p class="but">TOVÁBB</p> legalul van jobbra.
                         <input type="checkbox">Helyi file - Tallózás: kiválasztod, hogy melyik szobábn scannelted, kikeresed a scannelt dokumentumot.
-                        <p class="but">Befejezés</p>
-                        <p class="but">Hitelesítés - OK</p>
-                        <p class="tab">KÜLDEMÉNYEK</p>
+                        <input type="checkbox"><p class="but">Befejezés</p>
+                        <input type="checkbox"><p class="but">Hitelesítés - OK</p>
+                        <input type="checkbox"><p class="tab">KÜLDEMÉNYEK</p>
                         <input type="checkbox">📧 ikonra kattintani a küldemény jobb oldalánál
                         <input type="checkbox">Határidő NEM kell
 
 Másik fajta mintalevél:                        
-<p style="border: var (--border_light); padding: 20px;"> 
-Fent nevezett személy ügyében a nyugdíjbiztosítási igazgatási szervnél a társadalombiztosítási nyugellátásról szóló 1997. évi LXXXI. törvény (továbbiakban: Tny.) 96/B-96/E.§ alapján a nyugdíjbiztosítási hatósági nyilvántartásban szereplő adatok egyeztetésével kapcsolatos eljárás van folyamatban.
+<p style="border: 1px solid #caae93; padding: 20px;">Fent nevezett személy ügyében a nyugdíjbiztosítási igazgatási szervnél a társadalombiztosítási nyugellátásról szóló 1997. évi LXXXI. törvény (továbbiakban: Tny.) 96/B-96/E.§ alapján a nyugdíjbiztosítási hatósági nyilvántartásban szereplő adatok egyeztetésével kapcsolatos eljárás van folyamatban.
 
 Nevezett igényének elbírálásához kérjük, szíveskedjenek a <b class="highl">.... . évi </b>adatszolgáltatásukat felülvizsgálni és közölni a helyes kieső időket, illetőleg azok jogcímeit tekintettel arra, hogy a rendelkezésünkre álló adatok nem egyértelműek.
 
@@ -562,9 +573,7 @@ Igénylő állítása szerint nem volt pénzbeli ellátás nélküli keresőkép
 
 Válaszukat a fenti ügyszámra hivatkozással a közigazgatási hatósági eljárás és szolgáltatás általános szabályairól szóló hivatkozással, <b>15 napon belül</b> szíveskedjenek megküldeni!
 (1997. Évi LXXXI. Törvény 97.§. (1) bekezdés és a 2016. Évi CL. Törvény 25.§ (1), (2) bekezdés)
-</p>                        
-
-
+</p> 
             </div>
         </div>
         <hr />
@@ -709,25 +718,25 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
                 JOGCÍM: "bizt. megszűnését követő ..."
                 SZOLGÁLATI IDŐ ( N ), de nem jogosító idő.
 
-                Ha a gyerek után kapja az ellátást, akkor pedig G
+                Ha a gyerek után kapja az ellátást, akkor pedig <b class="highl">G</b>
             </div>
 		</div>
         <hr />
 		<div> <!-- 002_14  Gyereknyilatkozat J NŐK40  -->
         <h3 class="bookmarks" id="002_14"> Gyereknyilatkozat J NŐK40 </h3>
             <div class="pref">EETÜR:
-            <p class="tab">NYOMTATVÁNYOK</p> fül
+            <input type="checkbox"><p class="tab">NYOMTATVÁNYOK</p> fül
 
-            <u>I-05 Nyilatkozat nők kedvezményes idejének elbírálásához</u>
+            <input type="checkbox"><u>I-05 Nyilatkozat nők kedvezményes idejének elbírálásához</u>
 
-            Szabad szöveg: 15 nap
-            <p class="but">GENERÁLÁS</p>
+            <input type="checkbox">Szabad szöveg: <b class="highl">15 nap</b>
+            <input type="checkbox"><p class="but">GENERÁLÁS</p>
 
-            <p class="tab">Küldemények</p> fül
-             MAPPA IKON ikon bal oldalon katt.
-                hozzá kell csatolni a gyereknyilatkozatot a küldeményhez.
-            <p class="tab">Küldemények</p> fül
-            LEVÉL IKON ikon bal oldalon katt.
+            <input type="checkbox"><p class="tab">Küldemények</p> fül
+             <input type="checkbox">MAPPA IKON ikon bal oldalon katt.
+             <input type="checkbox">   hozzá kell csatolni a gyereknyilatkozatot a küldeményhez.
+            <input type="checkbox"><p class="tab">Küldemények</p> fül
+            <input type="checkbox">LEVÉL IKON ikon bal oldalon katt.
                 Ezzel az ügyfél megkapta a levelet. 
                 ( 2026.03-tól a gyereknyilatkozat bene van az elektronikus beadványban. )
 
@@ -767,9 +776,17 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
 		GYET-hez 1999.04.01-től a családtámogatási osztálytól (lakóhely szerinti)
 		1999.03.31-előtt akkor a lakóhely szerinti önkormányzattól kell lekérni az igazolást.
 
-		Nyomtatványok:
-		Egyéb szerv felé történő megkeresések 
-		<u>I-15. GYED, GYES, GYET, TGYÁS, CSED időtartamának bekérése</u>
+		<input type="checkbox"><p class="tab">NYOMTATVÁNYOK</p> fül 
+		<input type="checkbox">Egyéb szerv felé történő megkeresések 
+		<input type="checkbox"><u>I-15. GYED, GYES, GYET, TGYÁS, CSED időtartamának bekérése</u>
+                <input type="checkbox">    AZ ÖSSZESET KI KELL PIPÁLNI ✓ 
+                Szabad szövegbe nem kell semmit írni.
+                <input type="checkbox"><input type="checkbox">Bal oldali kék linkek: <u>Küldemény adatok</u>
+                <input type="checkbox">Partner neve: 
+			Ha Budapesti: Budapest Főváros Kormányhivatala Családtámogatási Főosztály
+			Ha Pest Megyei: Pest Vármegyei Kormányhivatal Családtámogatási Főosztály
+                <input type="checkbox"><p class="but">MENTÉS</p>
+                Automatikusan küldi a partnernek. 
 
 		- GYES: 1996-tól nézünk összeget
 		- GYED 2000-től nézünk összeget
@@ -943,7 +960,8 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
         <hr />
 		<div> <!-- 002_17 HATÁROZAT  -->
         <h3 class="bookmarks" id="002_17"> HATÁROZAT </h3>
-		<a href="file:///O:/nyo07/INDOK/" target="mainContent">HATÁROZAT INDOKOK</a><br />
+		<a href="file:///O:/nyo07/INDOK/" target="mainContent">H://HATÁROZAT INDOKOK mappa</a><br />
+        <a href="hatarozat_kodok.html" target="mainContent">HATÁROZAT KÓDOK</a>
             <div class="pref">
             <input type="checkbox"><p class="tab">Kimuatási adatok</p> fül
             <input type="checkbox"><p class="tab">kimutatás módostíása</p> fül    

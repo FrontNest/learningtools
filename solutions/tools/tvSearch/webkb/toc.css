@@ -9,10 +9,22 @@
             background-size: cover;
             min-height: 100vh;
         }
+        ::selection {
+            background: rgba(163, 106, 44, 0.565);
+            border-radius: 16px;
+            box-shadow: 0 0 24px 20px rgba(163, 106, 44, 0.565);
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            color:  rgb(202, 201, 194); 
+        }
         
         p, h1, h2, h3, h4, h5, a, li {
             color: #caae93;
         }
+        a:hover { 
+            text-decoration: underline; 
+            color:  rgb(202, 201, 194);   
+        }      
         ul { 
             list-style-type: none; 
             padding: 0 20px; 
@@ -33,10 +45,7 @@
             text-decoration: none; 
             font-weight: bold;
         }
-        a:hover { 
-            text-decoration: underline; 
-            color:#968575;
-        }
+
         .footer {
             position: fixed;
             left: 0;
