@@ -21,7 +21,22 @@
 
                 Munkanélkülinél mindig kérjük a munkaügyi központtól a munkanélküli összegét.
 
+                A 1998-as NYENYI hiányos! Be kell írni a nyugdíjjárulékot a bérlapon a járulékalapot képező összeghez.
 
+                GYES: 1996-tól nézünk összeget
+                1996.04.15-tól ha nem kifizetőhely a foglalkoztató, akkor BEO-t kell kérni
+                    ez előtt BEO-tól ( munkáltató székelye szerinti / 
+                    ha PASSZÍV, 
+                    akkor az ügyfél lakóhelye szerinti egészségbiztosítási főosztály ) kell kérni (GYES-hez) vagy ha foglalkoztató TB kifizetőhely
+
+		        GYED 2000-től nézünk összeget
+
+                Ha a KELEN dokumentum alapján a munkaviszonya megszűnt, de ő tovább kapja a táppénzt, akkor új sorban felviszem a passzív táppénz időszakát a szolgálati idő táblázatba,
+                    JOGCÍM: "bizt. megszűnését követő ..."
+                    SZOLGÁLATI IDŐ ( N ), de nem jogosító idő.
+                    Ha a gyerek után kapja az ellátást, akkor pedig G
+
+                
             </div>
         </div>
 
@@ -608,20 +623,22 @@ Válaszukat a fenti ügyszámra hivatkozással a közigazgatási hatósági elj�
         <h3 class="bookmarks">Eljárás Nugdmeg előzmény irat esetén</h2>
             <div class="pref">
             Ha van <b>Nugdmeg előzmény irat:</b>
-            Megnyitom az iratot és felírom az alábbi adatokat a <a href="" target="mainContent">táblázat mintába:</a>
+            <input type="checkbox">Megnyitom az iratot és felírom az alábbi adatokat a <a href="" target="mainContent">táblázat mintába:</a>
             - ügyszámot
             - ügyfél nevét
             - TAJ számát
             - Születési dátumát
-            Elmentem a táblázatot PDF-ként, és csatolom egy emailhez:
-                <h3>Email minta</h3>
-                    <b>To:</b> Horváthné Farkas Zsanett
-                    <b>cc:</b> Dankó László; Papp Andrea; Czellárné Zámbó Ildikó
-            
-                    Tisztelt Horváthné Farkas Zsanett!
-                    A csatolt ügyiratot kérem részemre kiosztani.
-                    Köszönettel:
+            <input type="checkbox">Elmentem a táblázatot PDF-ként, és csatolom egy emailhez:
+<h3>Email minta</h3><b>To:</b> Horváthné Farkas Zsanett
+<b>cc:</b> Dankó László; Papp Andrea; Czellárné Zámbó Ildikó
+<p class="pref" style="border:var(--border_light); padding-left: 20px;">
+Tisztelt Horváthné Farkas Zsanett!
 
+A csatolt ügyiratot kérem részemre kiosztani.
+
+Köszönettel:
+
+            </p>
             </div>
         </div>
         <hr />
@@ -757,7 +774,7 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
                 <input type="checkbox">Bal oldali kék linkek: <u>GYES, GYET időtartamának bekérése</u>
                 <input type="checkbox">    AZ ÖSSZESET KI KELL PIPÁLNI ✓ 
                 Szabad szövegbe nem kell semmit írni.
-                <input type="checkbox"><input type="checkbox">Bal oldali kék linkek: <u>Küldemény adatok</u>
+                <input type="checkbox">Bal oldali kék linkek: <u>Küldemény adatok</u>
                 <input type="checkbox">Partner neve: 
 			Ha Budapesti: Budapest Főváros Kormányhivatala Családtámogatási Főosztály
 			Ha Pest Megyei: Pest Vármegyei Kormányhivatal Családtámogatási Főosztály
@@ -781,7 +798,7 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
 		<input type="checkbox"><u>I-15. GYED, GYES, GYET, TGYÁS, CSED időtartamának bekérése</u>
                 <input type="checkbox">    AZ ÖSSZESET KI KELL PIPÁLNI ✓ 
                 Szabad szövegbe nem kell semmit írni.
-                <input type="checkbox"><input type="checkbox">Bal oldali kék linkek: <u>Küldemény adatok</u>
+                <input type="checkbox">Bal oldali kék linkek: <u>Küldemény adatok</u>
                 <input type="checkbox">Partner neve: 
 			Ha Budapesti: Budapest Főváros Kormányhivatala Családtámogatási Főosztály
 			Ha Pest Megyei: Pest Vármegyei Kormányhivatal Családtámogatási Főosztály
@@ -824,7 +841,6 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
                 MÁV -nál: MÁV Szolgáltató Központ Zártkörűen Működő Részvénytársaság
                 <p class="but">MENTÉS</p> 
                 Automatikusan kiküldi.
-
             </div>
 		</div>
         <hr />
@@ -924,7 +940,7 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
 
             </div>
 		</div>
-
+        <hr />
 		<div> <!-- 002_15 ELLENŐRI TERVEZET -->
         <h3 class="bookmarks" id="002_15"> Ellenőri tervezet </h3>
             <div class="pref">Az ellenőrzésből mindig tervezetet készítünk és Beának át kell vinni.
@@ -938,15 +954,16 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
                         <input type="checkbox">Ellenőrizendő időszak kezdete és vége
                         <input type="checkbox">✓ "Szükség van a foglalkoztató hiteles nyilvántartása alapján adatbeszerzésre?"
                 <input type="checkbox">Bal oldali kék linkek: <u>Szabad szöveg</u>
-                <p class="pref">Kérjük szíveskedjenek az egykori foglalkoztató jogutódjának iratőrzőjénél<br />
-                    (Cég neve és címe: ......... )<br /><br />
-                    eljárni és az eredeti nyilvántartások alapján kigyűjteni a nyugdíjjárulék-köteles jövedelmeket, kieső időket, illetve azok jogcímeit , tekintettel arra, hogy a TB nyilvántartásban nem található.
-                    <br />
-                    Segítségüket és gyors ügyintézésüket előre is köszönjük!
+                <p class="pref" style="border:var(--border_light); padding-left:20px;">
+Kérjük szíveskedjenek az egykori foglalkoztató jogutódjának iratőrzőjénél
+(Cég neve és címe: ......... ) eljárni és az eredeti nyilvántartások alapján kigyűjteni a nyugdíjjárulék-köteles jövedelmeket, 
+kieső időket, illetve azok jogcímeit , tekintettel arra, hogy a TB nyilvántartásban nem található.
+
+Segítségüket és gyors ügyintézésüket előre is köszönjük!
                 </p>
-                <input type="checkbox"><p>Budapesti cég esetén: Budapest Főváros Kormányhivatala Nyugdíjbiztosítási Főosztály Ellenőrzési Osztályok (HK KÉR)</p>
+                <input type="checkbox">Budapesti cég esetén: Budapest Főváros Kormányhivatala Nyugdíjbiztosítási Főosztály Ellenőrzési Osztályok
                 <input type="checkbox"><p class="but">MENTÉS</p> 
-        <input type="checkbox"><b class="highl">A tervezetet Beának át kell vinni.</b>
+                <input type="checkbox"><b class="highl">A tervezetet Beának át kell vinni.</b>
 
                 Ha visszaadta:
                 <input type="checkbox"><p class="tab">DOKUMENTUMOK</p> fül
@@ -977,7 +994,7 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
             <input type="checkbox"><p class="tab">Dokumentumok</p> fül
             <input type="checkbox">"Tervezet" mellette a jelölőnégyzetet kipipálni a bal oldalon
                 <input type="checkbox">jobb oldalon CERUZA ikonra katt.
-                    <input type="checkbox">indoklásba beírni a szükségeseket ( O:\nyo07\INDOK\indoklási kódok <a href="mainContent.html#004_01" target="mainContent">Határozat kódok</a> )
+                    <input type="checkbox">indoklásba beírni a szükségeseket ( O:\nyo07\INDOK\indoklási kódok <a href="hatarozat_kodok.html" target="mainContent">Határozat kódok</a> )
                     // Mindenkinél : Szolgálati idő egyszeres
                         Nőknél +: Nők 40 (Ha van: elfogadó nyilatkozat) //
             <input type="checkbox">Kiadmányozó: Barbara
@@ -992,7 +1009,7 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
             <input type="checkbox">A kinyomtatott iratokat kézben is át kell vinni a revizornak.
             </div>
 		</div>
-
+        <hr />
 		<!--<div>  002_171 HATÁROZAT KÓDOK  
         <h3 class="bookmarks" id="002_171"> HATÁROZAT KÓDOK </h3>
         <table>
@@ -1266,16 +1283,18 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
 	        <input type="checkbox"><b class="highl">az eljárás megindításának jogszabályban meghatározott feltétele hiányzik.</b>
 
             <input type="checkbox"><b>A szövegdobozba:</b>
-            <p class="pref" style="border: var(--border_light); padding:10px;"><i>A nyugdíjbiztosítási szerv a biztosított, volt biztosított biztosítási kötelezettséggel járó jogviszonyaira és kereseteire, jövedelmeire vonatkozó nyilvántartásba bejelentett adatokat az öregségi nyugdíjasnak nem minősülő biztosítottal, volt biztosítottal hatósági eljárás keretében egyeztetheti (1997. évi LXXXI. törvény 96/B §. (1) bek)
+            <p class="pref" style="border: var(--border_light); padding-left:20px;"><i>
+A nyugdíjbiztosítási szerv a biztosított, volt biztosított biztosítási kötelezettséggel járó jogviszonyaira és kereseteire, jövedelmeire vonatkozó nyilvántartásba bejelentett adatokat az öregségi nyugdíjasnak nem minősülő biztosítottal, volt biztosítottal hatósági eljárás keretében egyeztetheti (1997. évi LXXXI. törvény 96/B §. (1) bek)
 
-            Tekintettel arra, hogy az Ön részére .......... napjától ......... számon öregségi teljes nyugdíj került megállapításra, mely alapján öregségi nyugdíjasnak minősül, így a fenti jogszabály értelmében adategyeztetési eljárás lefolytatására nincs mód. Az öregségi nyugdíj megállapító határozatban a szolgálati ideje összeszámításra került.
+Tekintettel arra, hogy az Ön részére .......... napjától ......... számon öregségi teljes nyugdíj került megállapításra, mely alapján öregségi nyugdíjasnak minősül, így a fenti jogszabály értelmében adategyeztetési eljárás lefolytatására nincs mód. Az öregségi nyugdíj megállapító határozatban a szolgálati ideje összeszámításra került.
 
-            ..............  törzsszámon folyósított ellátását a MÁK Nyugdíjfolyósító Igazgatóság változatlanul folyósítja tovább.</i></p>
+..............  törzsszámon folyósított ellátását a MÁK Nyugdíjfolyósító Igazgatóság változatlanul folyósítja tovább.</i>
 
+</p>
            <input type="checkbox"> <b>BÜN-ben megnézem, mikortól nyugdíjas.</b>
-            Ellátások
-            Nyugdíj eleje
-            és törzsszám
+            - Ellátások
+            - Nyugdíj eleje
+            - és törzsszám
 
             <input type="checkbox">ügyszámot a nyugdmegből látszik.
 
@@ -1317,8 +1336,7 @@ Külföldi tartózkodás miatti fizetés nélküli időtartamát teljes egészé
 		</div>
 
     </div> <!-- HOW TO vége-->
-        <hr />
-        <hr />
+
     <div class="bookmark" id="003"><h2>3., Táblázatok</h2>
         <div> <!-- 003_01 IGAZOLÁSOK 
             <h3 class="bookmark" id="003_01">IGAZOLÁSOK</h3>
