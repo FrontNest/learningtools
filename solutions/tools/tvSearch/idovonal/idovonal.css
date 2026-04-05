@@ -1,0 +1,49 @@
+body {
+	font-family: Arial, sans-serif;
+	background: #f8f8f8;
+	margin: 20px;
+}
+h1 {
+	color: #333;
+}
+#inputData {
+	font-family: monospace;
+	margin-bottom: 10px;
+}
+#timelineContainer {
+	margin-top: 30px;
+	padding: 20px;
+	background: #fff;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px #0001;
+	min-height: 80px;
+}
+.timeline-bar {
+	height: 32px;
+	margin: 8px 0;
+	display: flex;
+	align-items: center;
+}
+.segment {
+	height: 32px;
+	margin-right: 2px;
+	border-radius: 4px;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 0 8px;
+	transition: background 0.2s;
+}
+.segment.GYES { background: #4caf50; }
+.segment.posta { background: #2196f3; }
+.segment.avis { background: #ff9800; }
+.segment.megbíz, .segment.megbízás { background: #9c27b0; }
+.segment.munka { background: #607d8b; }
+.segment.default { background: #888; }
+.segment:hover {
+	filter: brightness(1.15);
+	cursor: pointer;
+}
