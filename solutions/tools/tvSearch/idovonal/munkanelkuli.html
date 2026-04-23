@@ -497,6 +497,7 @@
 
 			resultBody.querySelectorAll(".percent-input").forEach((input) => {
 				input.addEventListener("input", onPercentChanged);
+				input.addEventListener("keydown", onPercentKeyDown);
 				input.addEventListener("blur", normalizePercentInput);
 			});
 		}
@@ -578,6 +579,30 @@
 				end: event.target.selectionEnd
 			});
 			btnCopy.disabled = rows.length === 0;
+		}
+
+		function onPercentKeyDown(event) {
+			if (event.key !== "Enter" && event.key !== "Tab") {
+				return;
+			}
+
+			event.preventDefault();
+
+			const idx = Number(event.target.dataset.idx);
+			const delta = event.shiftKey ? -1 : 1;
+			const targetIdx = Math.max(0, Math.min(rows.length - 1, idx + delta));
+
+			const parsed = parsePercent(rows[idx].percentInput);
+			if (parsed !== null) {
+				rows[idx].percentInput = String(parsed).replace(".", ",");
+			}
+
+			const nextValueLength = String(rows[targetIdx].percentInput || "").length;
+			updateAllDerivedValues({
+				idx: targetIdx,
+				start: nextValueLength,
+				end: nextValueLength
+			});
 		}
 
 		function normalizePercentInput(event) {
