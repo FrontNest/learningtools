@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Munkanélküli Járadék Kalkulátor</title>
+	<style>
+		:root {
+			--bg-1: #f4f6f8;
+			--bg-2: #dde6ec;
+			--surface: #ffffff;
+			--text: #10232f;
+			--muted: #486173;
+			--line: #c7d3dc;
+			--accent: #0f6b8f;
+			--accent-2: #0a4f6a;
+			--danger: #b42318;
+			--ok: #067647;
+			--shadow: 0 10px 30px rgba(16, 35, 47, 0.12);
+			--radius: 14px;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			font-family: "Segoe UI", "Tahoma", sans-serif;
+			color: var(--text);
+			background: radial-gradient(circle at 12% 10%, var(--bg-2), transparent 32%),
+									radial-gradient(circle at 88% 88%, #c8d8e3, transparent 30%),
+									linear-gradient(160deg, var(--bg-1), #f8fbfd 45%, #eef4f8);
+			padding: 18px;
+		}
+
+		.container {
+			max-width: 1360px;
+			margin: 0 auto;
+			display: grid;
+			gap: 16px;
+		}
+
+		.panel {
+			background: var(--surface);
+			border: 1px solid var(--line);
+			border-radius: var(--radius);
+			box-shadow: var(--shadow);
+			padding: 16px;
+		}
+
+		h1 {
+			margin: 0 0 8px;
+			font-size: clamp(1.3rem, 2.1vw, 1.9rem);
+			letter-spacing: 0.2px;
+		}
+
+		.subtitle {
+			margin: 0;
+			color: var(--muted);
+			font-size: 0.95rem;
+			line-height: 1.45;
+		}
+
+		.grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 16px;
+		}
+
+		@media (min-width: 980px) {
+			.grid {
+				grid-template-columns: 1fr 1fr;
+			}
+		}
+
+		label {
+			display: inline-block;
+			margin-bottom: 8px;
+			font-weight: 600;
+			font-size: 0.95rem;
+		}
+
+		textarea {
+			width: 100%;
+			min-height: 180px;
+			resize: vertical;
+			border: 1px solid var(--line);
+			border-radius: 10px;
+			padding: 12px;
+			font: 500 0.94rem/1.45 "Consolas", "Courier New", monospace;
+			color: var(--text);
+			background: #fcfefe;
+		}
+
+		.hint {
+			margin-top: 8px;
+			color: var(--muted);
+			font-size: 0.86rem;
+		}
+
+		.actions {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-top: 10px;
+		}
+
+		button {
+			border: 0;
+			border-radius: 10px;
+			padding: 10px 14px;
+			cursor: pointer;
+			color: #fff;
+			background: var(--accent);
+			font-weight: 600;
+			transition: transform 0.15s ease, background 0.2s ease;
+		}
+
+		button.secondary {
+			background: #617b8a;
+		}
+
+		button:hover {
+			background: var(--accent-2);
+			transform: translateY(-1px);
+		}
+
+		button:disabled {
+			cursor: not-allowed;
+			opacity: 0.5;
+			transform: none;
+		}
+
+		.status {
+			margin-top: 8px;
+			min-height: 20px;
+			font-size: 0.9rem;
+			font-weight: 600;
+		}
+
+		.status.error {
+			color: var(--danger);
+		}
+
+		.status.ok {
+			color: var(--ok);
+		}
+
+		.table-wrap {
+			overflow-x: auto;
+			border: 1px solid var(--line);
+			border-radius: 12px;
+			background: #fff;
+		}
+
+		table {
+			width: 100%;
+			min-width: 1120px;
+			border-collapse: collapse;
+			font-size: 0.93rem;
+		}
+
+		th,
+		td {
+			border-bottom: 1px solid #e4ebf0;
+			border-right: 1px solid #e4ebf0;
+			padding: 8px 10px;
+			text-align: left;
+			vertical-align: middle;
+			white-space: nowrap;
+		}
+
+		th:last-child,
+		td:last-child {
+			border-right: 0;
+		}
+
+		th {
+			background: #f2f7fa;
+			font-weight: 700;
+			position: sticky;
+			top: 0;
+			z-index: 1;
+		}
+
+		tbody tr:nth-child(even) {
+			background: #fbfdff;
+		}
+
+		.num {
+			text-align: right;
+			font-variant-numeric: tabular-nums;
+		}
+
+		.year-cell {
+			background: #f8fbfd;
+			font-weight: 700;
+		}
+
+		.percent-input {
+			width: 92px;
+			padding: 6px 7px;
+			border: 1px solid #bdd0dc;
+			border-radius: 8px;
+			font-size: 0.9rem;
+			text-align: right;
+			font-variant-numeric: tabular-nums;
+			background: #fff;
+		}
+
+		.legend {
+			color: var(--muted);
+			font-size: 0.85rem;
+			margin-top: 8px;
+		}
+	</style>
+</head>
+<body>
+	<main class="container">
+		<section class="panel">
+			<h1>Munkanélküli járadék bontó és kalkulátor</h1>
+			<p class="subtitle">
+				Excelből másold be a <strong>4 oszlopot</strong> (tól, ig, napi összeg, jogcím), majd kattints a számításra.
+				A G oszlopban (járulék %) kézzel szerkeszthető az érték; az E, F, H, I, J automatikusan számolódik.
+			</p>
+		</section>
+
+		<section class="grid">
+			<div class="panel">
+				<label for="sourceData">A-D bemenet (tabulátorral tagolt sorok)</label>
+				<textarea id="sourceData" placeholder="2000.01.01.\t2000.03.15.\t225\tmunkanélküli járadék\n2000.09.20.\t2001.11.03.\t319\tálláskeresési támogatás"></textarea>
+				<p class="hint">Dátum formátum: YYYY.MM.DD. (a záró pont megengedett). A kezdő és végdátum is beleszámít a napokba.</p>
+				<div class="actions">
+					<button id="btnCalculate" type="button">Számítás és bontás</button>
+					<button id="btnSample" class="secondary" type="button">Minta betöltése</button>
+					<button id="btnCopy" class="secondary" type="button" disabled>A-J tábla másolása (TSV)</button>
+				</div>
+				<div id="status" class="status" aria-live="polite"></div>
+			</div>
+
+			<div class="panel">
+				<label>Használat röviden</label>
+				<p class="subtitle">
+					1) Illeszd be az adatokat a bal oldali mezőbe.<br>
+					2) Kattints a <strong>Számítás és bontás</strong> gombra.<br>
+					3) A G oszlopba írd be a százalékokat (pl. 6,5 vagy 10).<br>
+					4) A H, I, J oszlop automatikusan frissül.<br>
+					5) Másoláshoz használd az <strong>A-J tábla másolása</strong> gombot.
+				</p>
+			</div>
+		</section>
+
+		<section class="panel">
+			<label>Eredménytábla (éves bontás)</label>
+			<div class="table-wrap">
+				<table id="resultTable" aria-label="Kiszámolt adatok táblázata">
+					<thead>
+						<tr>
+							<th>A - tól</th>
+							<th>B - ig</th>
+							<th class="num">C - napi összeg</th>
+							<th>D - jogcím</th>
+							<th class="num">E - napok száma</th>
+							<th class="num">F - járulékalap</th>
+							<th class="num">G - járulék %</th>
+							<th class="num">H - járulék</th>
+							<th class="num">I - éves összeg</th>
+							<th class="num">J - éves járulék</th>
+						</tr>
+					</thead>
+					<tbody id="resultBody">
+						<tr>
+							<td colspan="10" style="text-align:center;color:#5f7685;padding:16px;">Még nincs kiszámolt adat.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p class="legend">Megjegyzés: az I és J oszlopban az adott év összesítése az év első sorában jelenik meg.</p>
+		</section>
+
+		<section class="panel">
+			<label>Összesítő (év + jogcím)</label>
+			<div class="table-wrap">
+				<table id="summaryTable" aria-label="Év és jogcím szerinti összesítés">
+					<thead>
+						<tr>
+							<th>Év</th>
+							<th>Jogcím</th>
+							<th class="num">Összes nap</th>
+							<th class="num">Összes járulékalap</th>
+							<th class="num">Összes járulék</th>
+						</tr>
+					</thead>
+					<tbody id="summaryBody">
+						<tr>
+							<td colspan="5" style="text-align:center;color:#5f7685;padding:16px;">Még nincs kiszámolt adat.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		const sourceData = document.getElementById("sourceData");
+		const btnCalculate = document.getElementById("btnCalculate");
+		const btnSample = document.getElementById("btnSample");
+		const btnCopy = document.getElementById("btnCopy");
+		const statusEl = document.getElementById("status");
+		const resultBody = document.getElementById("resultBody");
+		const summaryBody = document.getElementById("summaryBody");
+
+		const nf = new Intl.NumberFormat("hu-HU", { maximumFractionDigits: 0 });
+		const nfd = new Intl.NumberFormat("hu-HU", {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2
+		});
+
+		const DAY_MS = 24 * 60 * 60 * 1000;
+		let rows = [];
+
+		function setStatus(message, isError = false) {
+			statusEl.textContent = message;
+			statusEl.className = `status ${isError ? "error" : "ok"}`;
+		}
+
+		function parseHungarianDate(input) {
+			const cleaned = String(input || "").trim().replace(/\.$/, "");
+			const match = cleaned.match(/^(\d{4})\.(\d{2})\.(\d{2})$/);
+			if (!match) {
+				return null;
+			}
+			const year = Number(match[1]);
+			const month = Number(match[2]);
+			const day = Number(match[3]);
+			const dt = new Date(Date.UTC(year, month - 1, day));
+
+			if (
+				dt.getUTCFullYear() !== year ||
+				dt.getUTCMonth() !== month - 1 ||
+				dt.getUTCDate() !== day
+			) {
+				return null;
+			}
+
+			return dt;
+		}
+
+		function formatHungarianDate(date) {
+			const y = date.getUTCFullYear();
+			const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+			const d = String(date.getUTCDate()).padStart(2, "0");
+			return `${y}.${m}.${d}.`;
+		}
+
+		function inclusiveDays(start, end) {
+			return Math.floor((end - start) / DAY_MS) + 1;
+		}
+
+		function parseDailyAmount(value) {
+			const normalized = String(value || "").trim().replace(/\s+/g, "").replace(",", ".");
+			const parsed = Number(normalized);
+			if (!Number.isFinite(parsed)) {
+				return null;
+			}
+			return parsed;
+		}
+
+		function parsePercent(value) {
+			if (value === null || value === undefined) {
+				return null;
+			}
+			const normalized = String(value)
+				.replace("%", "")
+				.trim()
+				.replace(/\s+/g, "")
+				.replace(",", ".");
+
+			if (normalized === "") {
+				return null;
+			}
+
+			const parsed = Number(normalized);
+			if (!Number.isFinite(parsed)) {
+				return null;
+			}
+			return parsed;
+		}
+
+		function splitByYear(item) {
+			const parts = [];
+			const fromYear = item.fromDate.getUTCFullYear();
+			const toYear = item.toDate.getUTCFullYear();
+
+			for (let year = fromYear; year <= toYear; year += 1) {
+				const yearStart = new Date(Date.UTC(year, 0, 1));
+				const yearEnd = new Date(Date.UTC(year, 11, 31));
+				const start = item.fromDate > yearStart ? item.fromDate : yearStart;
+				const end = item.toDate < yearEnd ? item.toDate : yearEnd;
+
+				if (start <= end) {
+					const days = inclusiveDays(start, end);
+					const base = days * item.daily;
+					parts.push({
+						fromDate: new Date(start.getTime()),
+						toDate: new Date(end.getTime()),
+						from: formatHungarianDate(start),
+						to: formatHungarianDate(end),
+						daily: item.daily,
+						title: item.title,
+						year,
+						days,
+						base,
+						percentInput: "",
+						percent: null,
+						contribution: null,
+						annualBaseDisplay: "",
+						annualContributionDisplay: ""
+					});
+				}
+			}
+
+			return parts;
+		}
+
+		function collectYearTotals(dataRows) {
+			const totals = new Map();
+			dataRows.forEach((r) => {
+				const current = totals.get(r.year) || { base: 0, contribution: 0 };
+				current.base += r.base;
+				current.contribution += r.contribution || 0;
+				totals.set(r.year, current);
+			});
+			return totals;
+		}
+
+		function applyAnnualDisplay(dataRows) {
+			const totals = collectYearTotals(dataRows);
+			const firstIndexByYear = new Map();
+
+			dataRows.forEach((r, idx) => {
+				if (!firstIndexByYear.has(r.year)) {
+					firstIndexByYear.set(r.year, idx);
+				}
+				r.annualBaseDisplay = "";
+				r.annualContributionDisplay = "";
+			});
+
+			firstIndexByYear.forEach((idx, year) => {
+				const total = totals.get(year);
+				dataRows[idx].annualBaseDisplay = nf.format(Math.round(total.base));
+				dataRows[idx].annualContributionDisplay = nf.format(Math.round(total.contribution));
+			});
+		}
+
+		function renderResultTable() {
+			if (!rows.length) {
+				resultBody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#5f7685;padding:16px;">Még nincs kiszámolt adat.</td></tr>';
+				return;
+			}
+
+			applyAnnualDisplay(rows);
+
+			resultBody.innerHTML = rows
+				.map((r, idx) => {
+					const contributionText = r.contribution === null ? "" : nf.format(Math.round(r.contribution));
+					const percentValue = r.percentInput;
+					const rowClass = r.annualBaseDisplay ? "year-cell" : "";
+
+					return `
+						<tr>
+							<td>${r.from}</td>
+							<td>${r.to}</td>
+							<td class="num">${nf.format(Math.round(r.daily))}</td>
+							<td>${escapeHtml(r.title)}</td>
+							<td class="num">${nf.format(r.days)}</td>
+							<td class="num">${nf.format(Math.round(r.base))}</td>
+							<td class="num">
+								<input
+									class="percent-input"
+									data-idx="${idx}"
+									value="${escapeHtml(percentValue)}"
+									inputmode="decimal"
+									placeholder="pl. 6,5"
+								>
+							</td>
+							<td class="num">${contributionText}</td>
+							<td class="num ${rowClass}">${r.annualBaseDisplay}</td>
+							<td class="num ${rowClass}">${r.annualContributionDisplay}</td>
+						</tr>
+					`;
+				})
+				.join("");
+
+			resultBody.querySelectorAll(".percent-input").forEach((input) => {
+				input.addEventListener("input", onPercentChanged);
+				input.addEventListener("blur", normalizePercentInput);
+			});
+		}
+
+		function renderSummaryTable() {
+			if (!rows.length) {
+				summaryBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#5f7685;padding:16px;">Még nincs kiszámolt adat.</td></tr>';
+				return;
+			}
+
+			const bucket = new Map();
+			rows.forEach((r) => {
+				const key = `${r.year}||${r.title}`;
+				const current = bucket.get(key) || {
+					year: r.year,
+					title: r.title,
+					days: 0,
+					base: 0,
+					contribution: 0
+				};
+				current.days += r.days;
+				current.base += r.base;
+				current.contribution += r.contribution || 0;
+				bucket.set(key, current);
+			});
+
+			const list = Array.from(bucket.values()).sort((a, b) => {
+				if (a.year !== b.year) {
+					return a.year - b.year;
+				}
+				return a.title.localeCompare(b.title, "hu");
+			});
+
+			summaryBody.innerHTML = list
+				.map(
+					(item) => `
+						<tr>
+							<td>${item.year}</td>
+							<td>${escapeHtml(item.title)}</td>
+							<td class="num">${nf.format(item.days)}</td>
+							<td class="num">${nf.format(Math.round(item.base))}</td>
+							<td class="num">${nf.format(Math.round(item.contribution))}</td>
+						</tr>
+					`
+				)
+				.join("");
+		}
+
+		function updateAllDerivedValues() {
+			rows.forEach((r) => {
+				const parsedPercent = parsePercent(r.percentInput);
+				r.percent = parsedPercent;
+				r.contribution = parsedPercent === null ? null : (r.base * parsedPercent) / 100;
+			});
+			renderResultTable();
+			renderSummaryTable();
+		}
+
+		function onPercentChanged(event) {
+			const idx = Number(event.target.dataset.idx);
+			rows[idx].percentInput = event.target.value;
+			updateAllDerivedValues();
+			btnCopy.disabled = rows.length === 0;
+		}
+
+		function normalizePercentInput(event) {
+			const idx = Number(event.target.dataset.idx);
+			const parsed = parsePercent(rows[idx].percentInput);
+			if (parsed === null) {
+				return;
+			}
+			rows[idx].percentInput = String(parsed).replace(".", ",");
+			updateAllDerivedValues();
+		}
+
+		function escapeHtml(text) {
+			return String(text)
+				.replace(/&/g, "&amp;")
+				.replace(/</g, "&lt;")
+				.replace(/>/g, "&gt;")
+				.replace(/\"/g, "&quot;")
+				.replace(/'/g, "&#039;");
+		}
+
+		function calculateFromInput() {
+			const raw = sourceData.value.trim();
+			if (!raw) {
+				setStatus("Nincs bemenet. Illeszd be az A-D oszlop adatait.", true);
+				rows = [];
+				renderResultTable();
+				renderSummaryTable();
+				btnCopy.disabled = true;
+				return;
+			}
+
+			const lines = raw
+				.split(/\r?\n/)
+				.map((line) => line.trim())
+				.filter(Boolean);
+
+			const parsedRows = [];
+			const errors = [];
+
+			lines.forEach((line, lineIndex) => {
+				const cells = line.split("\t");
+				if (cells.length < 4) {
+					errors.push(`Hibás sor (${lineIndex + 1}): legalább 4 oszlop kell.`);
+					return;
+				}
+
+				const fromDate = parseHungarianDate(cells[0]);
+				const toDate = parseHungarianDate(cells[1]);
+				const daily = parseDailyAmount(cells[2]);
+				const title = String(cells[3] || "").trim();
+
+				if (!fromDate || !toDate) {
+					errors.push(`Hibás dátum (${lineIndex + 1}. sor): ${cells[0]} - ${cells[1]}`);
+					return;
+				}
+
+				if (fromDate > toDate) {
+					errors.push(`A kezdődátum nagyobb, mint a végdátum (${lineIndex + 1}. sor).`);
+					return;
+				}
+
+				if (daily === null) {
+					errors.push(`Hibás napi összeg (${lineIndex + 1}. sor): ${cells[2]}`);
+					return;
+				}
+
+				if (!title) {
+					errors.push(`Hiányzó jogcím (${lineIndex + 1}. sor).`);
+					return;
+				}
+
+				parsedRows.push({ fromDate, toDate, daily, title });
+			});
+
+			if (errors.length) {
+				setStatus(errors.slice(0, 3).join(" | "), true);
+				rows = [];
+				renderResultTable();
+				renderSummaryTable();
+				btnCopy.disabled = true;
+				return;
+			}
+
+			rows = parsedRows.flatMap(splitByYear).sort((a, b) => a.fromDate - b.fromDate || a.toDate - b.toDate);
+			updateAllDerivedValues();
+			setStatus(`Kész. ${parsedRows.length} eredeti sorból ${rows.length} éves bontott sor készült.`);
+			btnCopy.disabled = false;
+		}
+
+		function toTsvForClipboard() {
+			if (!rows.length) {
+				return "";
+			}
+
+			applyAnnualDisplay(rows);
+
+			const header = [
+				"tól",
+				"ig",
+				"napi összeg",
+				"jogcím",
+				"napok száma",
+				"járulékalap",
+				"járulék %",
+				"járulék",
+				"éves összeg",
+				"éves járulék"
+			];
+
+			const data = rows.map((r) => {
+				const pct = r.percent === null ? "" : `${String(r.percent).replace(".", ",")}%`;
+				const contribution = r.contribution === null ? "" : String(Math.round(r.contribution));
+				const annualBase = r.annualBaseDisplay ? String(r.annualBaseDisplay).replace(/\s/g, "") : "";
+				const annualContribution = r.annualContributionDisplay ? String(r.annualContributionDisplay).replace(/\s/g, "") : "";
+
+				return [
+					r.from,
+					r.to,
+					Math.round(r.daily),
+					r.title,
+					r.days,
+					Math.round(r.base),
+					pct,
+					contribution,
+					annualBase,
+					annualContribution
+				].join("\t");
+			});
+
+			return [header.join("\t"), ...data].join("\n");
+		}
+
+		async function copyResult() {
+			const text = toTsvForClipboard();
+			if (!text) {
+				setStatus("Nincs mit másolni.", true);
+				return;
+			}
+
+			try {
+				await navigator.clipboard.writeText(text);
+				setStatus("Az A-J tábla vágólapra másolva.");
+			} catch (error) {
+				setStatus("A másolás nem sikerült. Jelöld ki és másold kézzel a táblát.", true);
+			}
+		}
+
+		function loadSample() {
+			sourceData.value = [
+				"2000.01.01.\t2000.03.15.\t225\tmunkanélküli járadék",
+				"2000.09.20.\t2001.11.03.\t319\tálláskeresési támogatás",
+				"2001.10.30.\t2003.06.18.\t550\tmunkanélküli segély"
+			].join("\n");
+			calculateFromInput();
+		}
+
+		btnCalculate.addEventListener("click", calculateFromInput);
+		btnSample.addEventListener("click", loadSample);
+		btnCopy.addEventListener("click", copyResult);
+	</script>
+</body>
+</html>
