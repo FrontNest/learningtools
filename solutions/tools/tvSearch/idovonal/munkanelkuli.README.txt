@@ -1,0 +1,72 @@
+MUNKANELKULI KALKULATOR - DOKUMENTACIO
+
+1) CEL
+Ez az eszkoz a munkanelkuli/allaskeresesi ellatas idoszakait bontja eves es jarulekszabaly szerinti reszekre, majd automatikusan kiszamolja:
+- napok szama (E)
+- jarulekalap (F)
+- jarulek szazalek (G)
+- jarulek osszeg (H)
+- eves osszeg (I)
+- eves jarulek (J)
+
+2) BEMENET
+A bemenet 4 oszlop, tabulatorral tagolt sorokkal:
+- A: tol datum (YYYY.MM.DD.)
+- B: ig datum (YYYY.MM.DD.)
+- C: napi osszeg (szam)
+- D: jogcim (szoveg)
+
+Peldasor:
+2000.01.01.    2000.03.15.    225    munkanelkuli jaradek
+
+3) MUKODES
+- A rendszer beolvassa a sorokat es ellenorzi a datum/szam formatumot.
+- Az idoszakokat evek szerint bontja.
+- Ezen belul tovabb bontja jarulekszabaly-valtozasok menten (datumintervallumok szerint).
+- A napok szama inkluziv, tehat a kezdo- es vegdatum is beleszamit.
+- A G oszlop automatikusan toltodik, de kezzel felulirhato.
+- H, I, J oszlop automatikusan ujraszamolodik.
+
+4) KEZELES
+- Szamitas es bontas: feldolgozza a bemenetet.
+- Minta betoltese: tesztadatokat illeszt be.
+- A-J tabla masolasa (TSV): vagoapra masolja az eredmenyt.
+- G oszlopban Enter/Tab lep a kovetkezo sorra.
+
+5) FAJLOK
+- munkanelkuli.html: strukturalt HTML
+- munkanelkuli.css: megjelenes es responsive stilusok
+- munkanelkuli.js: feldolgozasi es szamitasi logika
+
+6) SECURITY SZABALYZAT (CSP)
+Az oldal CSP beallitasa:
+
+default-src 'self';
+script-src 'self';
+style-src 'self';
+img-src 'self' data:;
+font-src 'self';
+connect-src 'self';
+frame-ancestors 'none';
+base-uri 'self';
+form-action 'self';
+upgrade-insecure-requests;
+
+Mit ved ez a beallitas:
+- Csak sajat forrasbol enged betoltest (self).
+- Inline script/style futtatast gyakorlatilag kizarti (kulon engedely hianya miatt).
+- Korlatozza kulso eroforrasok hasznalatat (CDN, kulso API, kulso script).
+- Megakadalyozza az iframe-be agyazast (clickjacking ellen).
+- Korlatozza a form kuldest es a base URL manipulaciot.
+- HTTP eroforrasokat HTTPS-re kenyszerit, ha van ilyen hivatkozas.
+
+Vallalati kornyezetre vonatkozo megjegyzes:
+- A jelenlegi CSP konzervativ es biztonsagcentrikus.
+- Ha kesobb kulso szolgaltatas kell (pl. API), csak celzott, minimalis bovitessel modositsd a connect-src vagy mas direktivat.
+- Javasolt a CSP-t szerver oldali HTTP headerkent is beallitani (a meta tag mellett), mert az meg erosebb kontrollt ad.
+
+7) UZEMELTETESI JAVASLAT
+- Statikus hoszton HTTPS alatt futtasd.
+- Ne engedelyezz inline scriptet.
+- Ne tolts be kulso scriptet/style-t, hacsak nincs formalis jovahagyas.
+- Verzionalt release-eknel teszteld a masolas/szamitas/tablafrissites folyamatot.
