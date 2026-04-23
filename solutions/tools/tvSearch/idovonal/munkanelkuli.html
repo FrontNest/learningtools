@@ -224,7 +224,7 @@
 			<h1>Munkanélküli járadék bontó és kalkulátor</h1>
 			<p class="subtitle">
 				Excelből másold be a <strong>4 oszlopot</strong> (tól, ig, napi összeg, jogcím), majd kattints a számításra.
-				A G oszlopban (járulék %) kézzel szerkeszthető az érték; az E, F, H, I, J automatikusan számolódik.
+				A G oszlop (járulék %) dátum alapján automatikusan töltődik, de kézzel felülírható; az E, F, H, I, J automatikusan számolódik.
 			</p>
 		</section>
 
@@ -246,7 +246,7 @@
 				<p class="subtitle">
 					1) Illeszd be az adatokat a bal oldali mezőbe.<br>
 					2) Kattints a <strong>Számítás és bontás</strong> gombra.<br>
-					3) A G oszlopba írd be a százalékokat (pl. 6,5 vagy 10).<br>
+					3) A G oszlopban az érték automatikus, de kézzel átírható (pl. 6,5 vagy 10).<br>
 					4) A H, I, J oszlop automatikusan frissül.<br>
 					5) Másoláshoz használd az <strong>A-J tábla másolása</strong> gombot.
 				</p>
@@ -317,6 +317,51 @@
 
 		const DAY_MS = 24 * 60 * 60 * 1000;
 		let rows = [];
+		const RATE_RULES_RAW = [
+			["1988.01.01.", "1992.02.29.", 10],
+			["1992.03.01.", "1993.12.31.", 6],
+			["1994.01.01.", "1994.12.31.", 6],
+			["1995.01.01.", "1995.12.31.", 6],
+			["1996.01.01.", "1996.04.30.", 6],
+			["1996.05.01.", "1997.01.31.", 6],
+			["1997.02.01.", "1997.12.31.", 6],
+			["1998.01.01.", "1998.12.31.", 7],
+			["1999.01.01.", "1999.12.31.", 8],
+			["2000.01.01.", "2000.12.31.", 8],
+			["2001.01.01.", "2001.12.31.", 8],
+			["2002.01.01.", "2002.12.31.", 8],
+			["2003.01.01.", "2003.12.31.", 8.5],
+			["2004.01.01.", "2004.12.31.", 8.5],
+			["2005.01.01.", "2005.12.31.", 8.5],
+			["2006.01.01.", "2006.12.31.", 8.5],
+			["2007.01.01.", "2007.12.31.", 8.5],
+			["2008.01.01.", "2008.12.31.", 9.5],
+			["2009.01.01.", "2009.12.31.", 9.5],
+			["2010.01.01.", "2010.12.31.", 9.5],
+			["2011.01.01.", "2011.12.31.", 10],
+			["2012.01.01.", "2012.12.31.", 10],
+			["2013.01.01.", "2013.12.31.", 10],
+			["2014.01.01.", "2014.12.31.", 10],
+			["2015.01.01.", "2015.12.31.", 10]
+		];
+
+		const RATE_RULES = Array.from(
+			new Map(
+				RATE_RULES_RAW.map(([from, to, percent]) => {
+					const fromDate = parseHungarianDate(from);
+					const toDate = parseHungarianDate(to);
+					const key = `${from}|${to}|${percent}`;
+					return [
+						key,
+						{
+							fromDate,
+							toDate,
+							percent
+						}
+					];
+				})
+			).values()
+		).sort((a, b) => a.fromDate - b.fromDate || a.toDate - b.toDate);
 
 		function formatInt(value) {
 			return nf.format(value).replace(/[\u00A0\u202F]/g, " ");
@@ -360,6 +405,59 @@
 			return Math.floor((end - start) / DAY_MS) + 1;
 		}
 
+		function addDays(date, days) {
+			return new Date(date.getTime() + days * DAY_MS);
+		}
+
+		function splitByRateRules(start, end) {
+			const overlaps = RATE_RULES
+				.filter((rule) => rule.toDate >= start && rule.fromDate <= end)
+				.sort((a, b) => a.fromDate - b.fromDate || a.toDate - b.toDate);
+
+			if (!overlaps.length) {
+				return [{ start, end, percent: null }];
+			}
+
+			const parts = [];
+			let cursor = new Date(start.getTime());
+
+			overlaps.forEach((rule) => {
+				if (cursor > end) {
+					return;
+				}
+
+				const overlapStart = rule.fromDate > start ? rule.fromDate : start;
+				const overlapEnd = rule.toDate < end ? rule.toDate : end;
+
+				if (overlapStart > overlapEnd) {
+					return;
+				}
+
+				if (cursor < overlapStart) {
+					const gapEnd = addDays(overlapStart, -1);
+					if (cursor <= gapEnd) {
+						parts.push({ start: new Date(cursor.getTime()), end: gapEnd, percent: null });
+					}
+				}
+
+				const segmentStart = cursor > overlapStart ? cursor : overlapStart;
+				if (segmentStart <= overlapEnd) {
+					parts.push({
+						start: new Date(segmentStart.getTime()),
+						end: new Date(overlapEnd.getTime()),
+						percent: rule.percent
+					});
+					cursor = addDays(overlapEnd, 1);
+				}
+			});
+
+			if (cursor <= end) {
+				parts.push({ start: new Date(cursor.getTime()), end: new Date(end.getTime()), percent: null });
+			}
+
+			return parts;
+		}
+
 		function parseDailyAmount(value) {
 			const normalized = String(value || "").trim().replace(/\s+/g, "").replace(",", ".");
 			const parsed = Number(normalized);
@@ -401,26 +499,33 @@
 				const start = item.fromDate > yearStart ? item.fromDate : yearStart;
 				const end = item.toDate < yearEnd ? item.toDate : yearEnd;
 
-				if (start <= end) {
-					const days = inclusiveDays(start, end);
+				if (start > end) {
+					continue;
+				}
+
+				const rateSegments = splitByRateRules(start, end);
+				rateSegments.forEach((segment) => {
+					const days = inclusiveDays(segment.start, segment.end);
 					const base = days * item.daily;
+					const defaultPercent = segment.percent;
+
 					parts.push({
-						fromDate: new Date(start.getTime()),
-						toDate: new Date(end.getTime()),
-						from: formatHungarianDate(start),
-						to: formatHungarianDate(end),
+						fromDate: new Date(segment.start.getTime()),
+						toDate: new Date(segment.end.getTime()),
+						from: formatHungarianDate(segment.start),
+						to: formatHungarianDate(segment.end),
 						daily: item.daily,
 						title: item.title,
 						year,
 						days,
 						base,
-						percentInput: "",
-						percent: null,
-						contribution: null,
+						percentInput: defaultPercent === null ? "" : String(defaultPercent).replace(".", ","),
+						percent: defaultPercent,
+						contribution: defaultPercent === null ? null : (base * defaultPercent) / 100,
 						annualBaseDisplay: "",
 						annualContributionDisplay: ""
 					});
-				}
+				});
 			}
 
 			return parts;
