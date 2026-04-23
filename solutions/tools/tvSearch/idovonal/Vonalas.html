@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>Jogviszony Gantt</title>
+<style>
+body {
+  font-family: Noto Sans;
+  margin: clamp(8px, 4vw, 32px);
+}
+textarea {
+  width: 100%;
+  height: clamp(80px, 20vw, 180px);
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  box-sizing: border-box;
+  margin-bottom: clamp(8px, 2vw, 20px);
+}
+button {
+  margin: clamp(8px, 2vw, 16px) 0;
+  padding: clamp(6px, 1vw, 12px) clamp(12px, 2vw, 24px);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+}
+
+#chart {
+  position: relative;
+  border: 1px solid #ccc;
+  height: auto;
+  width: 100%;
+  margin-top: clamp(24px, 6vw, 60px);
+  overflow-x: auto;
+}
+
+h3, p {
+  margin-left: clamp(0px, 2vw, 30px);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+}
+
+.row {
+  position: relative;
+  height: clamp(22px, 4vw, 36px);
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  min-width: clamp(90px, 18vw, 180px);
+  max-width: clamp(120px, 22vw, 220px);
+  font-size: clamp(0.8rem, 2vw, 1.1rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar {
+  position: absolute;
+  height: clamp(14px, 2.5vw, 22px);
+  top: clamp(3px, 0.7vw, 7px);
+  background: steelblue;
+  border-radius: 3px;
+  color: white;
+  font-size: clamp(0.7rem, 1.5vw, 1rem);
+  padding: 1px 4px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.timeline {
+  position: sticky;
+  top: 0;
+  background: white;
+  border-bottom: 2px solid black;
+  min-height: clamp(16px, 3vw, 28px);
+  z-index: 2;
+}
+
+.tick {
+  position: absolute;
+  font-size: clamp(0.6rem, 1.2vw, 0.9rem);
+  top: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .label {
+    min-width: 80px;
+    max-width: 120px;
+    font-size: 0.85rem;
+  }
+  .bar {
+    font-size: 0.7rem;
+  }
+  h3, p {
+    font-size: 1rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<h3>Vonalas ütemterv</h3>
+
+<p>Másold be ide az adatokat (tabulátorral tagolt):</p>
+
+<textarea id="input"></textarea>
+<br>
+<button onclick="render()">Rajzol</button>
+
+<div id="chart"></div>
+
+<script>
+function parseDate(str) {
+  const [y, m, d] = str.split(".");
+  return new Date(y, m - 1, d);
+}
+
+function daysBetween(a, b) {
+  return (b - a) / (1000 * 60 * 60 * 24);
+}
+
+function shortName(name) {
+  return name.substring(0, 3) + "***";
+}
+
+function render() {
+  const input = document.getElementById("input").value.trim();
+  const lines = input.split("\n");
+
+  const data = lines.map(line => {
+    const [start, end, employer, type] = line.split("\t");
+    return {
+      start: parseDate(start),
+      end: parseDate(end),
+      label: shortName(employer) + " | " + type
+    };
+  });
+
+  const minDate = new Date(Math.min(...data.map(d => d.start)));
+  const maxDate = new Date(Math.max(...data.map(d => d.end)));
+
+  const totalDays = daysBetween(minDate, maxDate);
+  // pxPerDay responsive: clamp(1.2, 2vw, 3.5)
+  const pxPerDay = Math.max(1.2, Math.min(window.innerWidth * 0.012, 3.5));
+  // labelWidth responsive: clamp(90, 18vw, 180)
+  const labelWidth = Math.max(90, Math.min(window.innerWidth * 0.18, 180));
+  const totalWidth = labelWidth + totalDays * pxPerDay + 40;
+
+  const chart = document.getElementById("chart");
+  chart.innerHTML = "";
+  chart.style.width = "100%";
+
+  // timeline
+  const timeline = document.createElement("div");
+  timeline.className = "timeline";
+  timeline.style.height = "clamp(16px, 3vw, 28px)";
+  timeline.style.minWidth = totalWidth + "px";
+
+  for (let i = 0; i <= totalDays; i += 30) {
+    const tick = document.createElement("div");
+    tick.className = "tick";
+    tick.style.left = (i * pxPerDay + labelWidth) + "px";
+
+    const d = new Date(minDate);
+    d.setDate(d.getDate() + i);
+
+    tick.innerText = d.toISOString().slice(0, 10);
+    timeline.appendChild(tick);
+  }
+
+  chart.appendChild(timeline);
+
+  // rows
+  data.forEach((d, idx) => {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.style.position = "relative";
+    row.style.minWidth = totalWidth + "px";
+
+    // Floating label (sticky)
+    const label = document.createElement("div");
+    label.className = "label";
+    label.innerText = d.label;
+    label.style.position = "sticky";
+    label.style.left = "0";
+    label.style.background = "white";
+    label.style.zIndex = "3";
+    label.style.boxShadow = "2px 0 2px -2px #ccc";
+
+    const bar = document.createElement("div");
+    bar.className = "bar";
+
+    const offset = daysBetween(minDate, d.start);
+    const length = daysBetween(d.start, d.end) + 1;
+
+    bar.style.left = (offset * pxPerDay + labelWidth) + "px";
+    bar.style.width = (length * pxPerDay) + "px";
+
+    bar.innerText = "";
+
+    row.appendChild(label);
+    row.appendChild(bar);
+    chart.appendChild(row);
+  });
+}
+
+document.getElementById("input").addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && e.ctrlKey) {
+    render();
+  }
+});
+</script>
+
+</body>
+</html>
