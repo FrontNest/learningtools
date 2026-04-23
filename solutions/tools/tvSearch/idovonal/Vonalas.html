@@ -2,213 +2,351 @@
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
-<title>Jogviszony Gantt</title>
+<title>Nyugdíj jogviszony vizualizáció</title>
 <style>
+*, *::before, *::after { box-sizing: border-box; }
 body {
-  font-family: Noto Sans;
-  margin: clamp(8px, 4vw, 32px);
+  font-family: 'Noto Sans', sans-serif;
+  margin: clamp(8px, 3vw, 28px);
+  background: #f8f9fa;
 }
+h3 { font-size: clamp(1.1rem, 2.5vw, 1.5rem); margin-bottom: 4px; }
+p  { font-size: clamp(0.85rem, 1.8vw, 1rem); color: #444; margin: 4px 0 8px; }
 textarea {
   width: 100%;
-  height: clamp(80px, 20vw, 180px);
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
-  box-sizing: border-box;
-  margin-bottom: clamp(8px, 2vw, 20px);
+  height: clamp(90px, 18vw, 160px);
+  font-size: clamp(0.85rem, 1.8vw, 1rem);
+  font-family: monospace;
+  margin-bottom: 8px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  padding: 6px;
 }
 button {
-  margin: clamp(8px, 2vw, 16px) 0;
-  padding: clamp(6px, 1vw, 12px) clamp(12px, 2vw, 24px);
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  margin: 4px 6px 4px 0;
+  padding: clamp(5px,1vw,10px) clamp(10px,2vw,20px);
+  font-size: clamp(0.9rem,1.8vw,1.1rem);
+  border-radius: 4px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
 }
-
+button:hover { background: #1d4ed8; }
+button.secondary { background: #6b7280; }
+button.secondary:hover { background: #4b5563; }
+#legend { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; font-size:0.85rem; }
+.legend-item { display:flex; align-items:center; gap:4px; }
+.legend-swatch { width:18px; height:12px; border-radius:2px; display:inline-block; flex-shrink:0; }
 #chart {
   position: relative;
   border: 1px solid #ccc;
-  height: auto;
-  width: 100%;
-  margin-top: clamp(24px, 6vw, 60px);
+  background: white;
+  border-radius: 6px;
   overflow-x: auto;
+  margin-top: 12px;
 }
-
-h3, p {
-  margin-left: clamp(0px, 2vw, 30px);
-  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+.timeline {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  border-bottom: 2px solid #333;
+  z-index: 10;
+  height: 26px;
 }
-
+.tick {
+  position: absolute;
+  font-size: clamp(0.58rem,1.1vw,0.76rem);
+  top: 5px;
+  white-space: nowrap;
+  color: #555;
+  border-left: 1px solid #ddd;
+  padding-left: 3px;
+}
 .row {
   position: relative;
-  height: clamp(22px, 4vw, 36px);
+  height: clamp(26px,4vw,38px);
   border-bottom: 1px solid #eee;
   display: flex;
   align-items: center;
 }
-
+.row:hover { background: #f0f7ff; }
 .label {
-  min-width: clamp(90px, 18vw, 180px);
-  max-width: clamp(120px, 22vw, 220px);
-  font-size: clamp(0.8rem, 2vw, 1.1rem);
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 5;
+  box-shadow: 2px 0 4px -2px rgba(0,0,0,0.15);
+  padding: 0 6px;
+  font-size: clamp(0.72rem,1.6vw,0.93rem);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex-shrink: 0;
+  border-right: 1px solid #e5e7eb;
 }
-
+.row:hover .label { background: #f0f7ff; }
 .bar {
   position: absolute;
-  height: clamp(14px, 2.5vw, 22px);
-  top: clamp(3px, 0.7vw, 7px);
-  background: steelblue;
+  height: clamp(13px,2.2vw,20px);
+  top: 50%;
+  transform: translateY(-50%);
   border-radius: 3px;
-  color: white;
-  font-size: clamp(0.7rem, 1.5vw, 1rem);
-  padding: 1px 4px;
+  font-size: clamp(0.62rem,1.2vw,0.82rem);
+  padding: 0 4px;
   overflow: hidden;
   white-space: nowrap;
+  color: white;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: opacity 0.15s, filter 0.15s;
 }
-
-.timeline {
-  position: sticky;
-  top: 0;
-  background: white;
-  border-bottom: 2px solid black;
-  min-height: clamp(16px, 3vw, 28px);
-  z-index: 2;
+.bar:hover { opacity:1; filter:brightness(1.12); }
+.row-gap .label  { color:#b45309; font-style:italic; }
+.gap-bar {
+  background: repeating-linear-gradient(45deg,#fef3c7,#fef3c7 4px,#fde68a 4px,#fde68a 8px);
+  border: 1px dashed #d97706;
 }
-
-.tick {
-  position: absolute;
-  font-size: clamp(0.6rem, 1.2vw, 0.9rem);
-  top: 0;
-  white-space: nowrap;
+.sec-sep {
+  height: 4px;
+  background: #f3f4f6;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
 }
-
-@media (max-width: 600px) {
-  .label {
-    min-width: 80px;
-    max-width: 120px;
-    font-size: 0.85rem;
-  }
-  .bar {
-    font-size: 0.7rem;
-  }
-  h3, p {
-    font-size: 1rem;
-  }
+#tooltip {
+  position: fixed;
+  background: rgba(20,20,20,0.93);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 0.82rem;
+  pointer-events: none;
+  z-index: 9999;
+  display: none;
+  line-height: 1.6;
+  max-width: 300px;
 }
 </style>
 </head>
 <body>
-
-<h3>Vonalas ütemterv</h3>
-
-<p>Másold be ide az adatokat (tabulátorral tagolt):</p>
-
-<textarea id="input"></textarea>
+<h3>🧾 Nyugdíj jogviszony vizualizáció</h3>
+<p>
+  Illeszd be az adatokat (TAB tagolt: kezdő dátum &nbsp;·&nbsp; záró dátum &nbsp;·&nbsp; munkáltató &nbsp;·&nbsp; jogviszony típusa)<br>
+  <small>Dátumformátum: <code>2000.01.31.</code> &nbsp;|&nbsp; <b>Ctrl+Enter</b> = Rajzol</small>
+</p>
+<textarea id="input" placeholder="Illeszd ide az adattáblát"></textarea>
 <br>
-<button onclick="render()">Rajzol</button>
-
+<button onclick="render()">▶ Rajzol</button>
+<button class="secondary" onclick="clearAll()">🗑 Töröl</button>
+<div id="legend"></div>
 <div id="chart"></div>
-
+<div id="tooltip"></div>
 <script>
-function parseDate(str) {
-  const [y, m, d] = str.split(".");
-  return new Date(y, m - 1, d);
+const TYPE_COLORS = [
+  { keys:['munkaviszony'],                              color:'#1d6fa5', label:'Munkaviszony' },
+  { keys:['gyes','gyed','gyet'],                        color:'#16a34a', label:'GYES / GYED / GYET' },
+  { keys:['egyszerűsített','egyszerűs','egyszerusit'],  color:'#ea580c', label:'Egyszerűsített foglalkoztatás' },
+  { keys:['táppénz','tappenz','betegség','betegallom'], color:'#dc2626', label:'Táppénz / Betegség' },
+  { keys:['fizetés nélküli','fizetésnélküli'],          color:'#9333ea', label:'Fizetés nélküli szabadság' },
+  { keys:['közszolg','közalkalm','köztisztv','önkorm'], color:'#0891b2', label:'Közszolgálati jogviszony' },
+  { keys:['vállalkoz','megbíz','bt.','kft.','zrt.'],    color:'#d97706', label:'Vállalkozói / Megbízási' },
+];
+const DEFAULT_COLOR = '#64748b';
+
+function typeColor(type) {
+  if (!type) return DEFAULT_COLOR;
+  const t = type.toLowerCase();
+  for (const e of TYPE_COLORS) {
+    if (e.keys.some(k => t.includes(k))) return e.color;
+  }
+  return DEFAULT_COLOR;
 }
 
-function daysBetween(a, b) {
-  return (b - a) / (1000 * 60 * 60 * 24);
+function parseDateStr(str) {
+  if (!str) return null;
+  const parts = str.trim().replace(/\.$/, '').split('.');
+  if (parts.length < 3) return null;
+  const d = new Date(+parts[0], +parts[1]-1, +parts[2]);
+  return isNaN(d.getTime()) ? null : d;
 }
 
-function shortName(name) {
-  return name.substring(0, 3) + "***";
+function fmtDate(d) {
+  if (!d) return '?';
+  return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')+'.';
+}
+
+function daysBetween(a, b) { return (b.getTime()-a.getTime())/86400000; }
+
+function addDays(d, n) { const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+
+const tooltip = document.getElementById('tooltip');
+document.addEventListener('mousemove', e => {
+  tooltip.style.left=(e.clientX+16)+'px';
+  tooltip.style.top=(e.clientY+16)+'px';
+});
+function attachTip(el, html) {
+  el.addEventListener('mouseenter', ()=>{ tooltip.innerHTML=html; tooltip.style.display='block'; });
+  el.addEventListener('mouseleave', ()=>{ tooltip.style.display='none'; });
+}
+
+function findGaps(data, minDate) {
+  const intervals = data.map(d=>[d.start.getTime(), d.end.getTime()]);
+  intervals.sort((a,b)=>a[0]-b[0]);
+  const gaps = [];
+  let cursor = minDate.getTime();
+  for (const [s,e] of intervals) {
+    if (s > cursor+86400000) {
+      gaps.push({ start:new Date(cursor+86400000), end:new Date(s-86400000) });
+    }
+    if (e > cursor) cursor = e;
+  }
+  return gaps;
+}
+
+function findOverlaps(data) {
+  const overlaps = [];
+  for (let i=0; i<data.length; i++) {
+    for (let j=i+1; j<data.length; j++) {
+      const a=data[i], b=data[j];
+      const oS=new Date(Math.max(a.start.getTime(), b.start.getTime()));
+      const oE=new Date(Math.min(a.end.getTime(),   b.end.getTime()));
+      if (oS<=oE) overlaps.push({ start:oS, end:oE, labelA:a.label, labelB:b.label });
+    }
+  }
+  return overlaps;
+}
+
+function clearAll() {
+  document.getElementById('input').value='';
+  document.getElementById('chart').innerHTML='';
+  document.getElementById('legend').innerHTML='';
 }
 
 function render() {
-  const input = document.getElementById("input").value.trim();
-  const lines = input.split("\n");
+  const raw = document.getElementById('input').value.trim();
+  if (!raw) return;
 
-  const data = lines.map(line => {
-    const [start, end, employer, type] = line.split("\t");
-    return {
-      start: parseDate(start),
-      end: parseDate(end),
-      label: shortName(employer) + " | " + type
-    };
-  });
+  const data = [];
+  for (const line of raw.split('\n').map(l=>l.trim()).filter(Boolean)) {
+    const parts = line.split('\t');
+    const start=parseDateStr(parts[0]), end=parseDateStr(parts[1]);
+    if (!start||!end) continue;
+    const employer=(parts[2]||'').trim(), type=(parts[3]||'').trim();
+    data.push({ start, end, employer, type,
+      label: employer+(type?' | '+type:''),
+      color: typeColor(type) });
+  }
+  if (!data.length) { alert('Nem sikerült adatot beolvasni. Ellenőrizd a formátumot.'); return; }
 
-  const minDate = new Date(Math.min(...data.map(d => d.start)));
-  const maxDate = new Date(Math.max(...data.map(d => d.end)));
+  data.sort((a,b)=>a.start-b.start);
 
+  const minDate   = new Date(Math.min(...data.map(d=>d.start.getTime())));
+  const maxDate   = new Date(Math.max(...data.map(d=>d.end.getTime())));
   const totalDays = daysBetween(minDate, maxDate);
-  // pxPerDay responsive: clamp(1.2, 2vw, 3.5)
-  const pxPerDay = Math.max(1.2, Math.min(window.innerWidth * 0.012, 3.5));
-  // labelWidth responsive: clamp(90, 18vw, 180)
-  const labelWidth = Math.max(90, Math.min(window.innerWidth * 0.18, 180));
-  const totalWidth = labelWidth + totalDays * pxPerDay + 40;
 
-  const chart = document.getElementById("chart");
-  chart.innerHTML = "";
-  chart.style.width = "100%";
+  const pxPerDay   = Math.max(2, Math.min(window.innerWidth*0.016, 6));
+  const labelWidth = Math.max(130, Math.min(window.innerWidth*0.24, 240));
+  const totalWidth = labelWidth+(totalDays+4)*pxPerDay+30;
 
-  // timeline
-  const timeline = document.createElement("div");
-  timeline.className = "timeline";
-  timeline.style.height = "clamp(16px, 3vw, 28px)";
-  timeline.style.minWidth = totalWidth + "px";
+  const gaps     = findGaps(data, minDate);
+  const overlaps = findOverlaps(data);
 
-  for (let i = 0; i <= totalDays; i += 30) {
-    const tick = document.createElement("div");
-    tick.className = "tick";
-    tick.style.left = (i * pxPerDay + labelWidth) + "px";
+  // Legend
+  const usedColors = new Map();
+  for (const d of data) {
+    if (!usedColors.has(d.color)) {
+      const entry = TYPE_COLORS.find(e=>e.color===d.color);
+      usedColors.set(d.color, entry ? entry.label : (d.type||'Egyéb'));
+    }
+  }
+  const legEl = document.getElementById('legend');
+  legEl.innerHTML='';
+  for (const [color,lbl] of usedColors)
+    legEl.innerHTML+=`<span class="legend-item"><span class="legend-swatch" style="background:${color}"></span>${lbl}</span>`;
+  if (gaps.length)
+    legEl.innerHTML+=`<span class="legend-item"><span class="legend-swatch" style="background:repeating-linear-gradient(45deg,#fef3c7,#fef3c7 4px,#fde68a 4px,#fde68a 8px);border:1px dashed #d97706"></span>Kieső idő</span>`;
+  if (overlaps.length)
+    legEl.innerHTML+=`<span class="legend-item"><span class="legend-swatch" style="background:repeating-linear-gradient(45deg,#ede9fe,#ede9fe 4px,#ddd6fe 4px,#ddd6fe 8px);border:1px dashed #7c3aed"></span>Átfedés</span>`;
 
-    const d = new Date(minDate);
-    d.setDate(d.getDate() + i);
+  // Chart
+  const chart=document.getElementById('chart');
+  chart.innerHTML='';
 
-    tick.innerText = d.toISOString().slice(0, 10);
-    timeline.appendChild(tick);
+  function makeRow(cls) {
+    const r=document.createElement('div');
+    r.className='row'+(cls?' '+cls:'');
+    r.style.minWidth=totalWidth+'px';
+    return r;
+  }
+  function makeLabel(text,w,tipHtml) {
+    const l=document.createElement('div');
+    l.className='label';
+    l.style.minWidth=w+'px'; l.style.maxWidth=w+'px';
+    l.title=text; l.innerText=text;
+    if(tipHtml) attachTip(l,tipHtml);
+    return l;
+  }
+  function makeBar(start,end,color,cls,tipHtml) {
+    const off=daysBetween(minDate,start);
+    const len=daysBetween(start,end)+1;
+    const b=document.createElement('div');
+    b.className='bar'+(cls?' '+cls:'');
+    b.style.left=(off*pxPerDay+labelWidth)+'px';
+    b.style.width=Math.max(len*pxPerDay,3)+'px';
+    if(color) b.style.background=color;
+    attachTip(b,tipHtml);
+    return b;
+  }
+  function makeSep() {
+    const s=document.createElement('div');
+    s.className='sec-sep'; s.style.minWidth=totalWidth+'px';
+    return s;
   }
 
-  chart.appendChild(timeline);
+  // Timeline
+  const tl=document.createElement('div');
+  tl.className='timeline'; tl.style.minWidth=totalWidth+'px';
+  const tlPad=document.createElement('div');
+  tlPad.style.cssText=`position:sticky;left:0;display:inline-block;min-width:${labelWidth}px;max-width:${labelWidth}px;height:26px;background:white;z-index:12;border-right:1px solid #ccc;vertical-align:top;`;
+  tl.appendChild(tlPad);
+  const tickStep=totalDays>730?90:totalDays>365?30:14;
+  for (let i=0; i<=totalDays+tickStep; i+=tickStep) {
+    const tick=document.createElement('div');
+    tick.className='tick';
+    tick.style.left=(i*pxPerDay+labelWidth)+'px';
+    tick.innerText=fmtDate(addDays(minDate,i));
+    tl.appendChild(tick);
+  }
+  chart.appendChild(tl);
 
-  // rows
-  data.forEach((d, idx) => {
-    const row = document.createElement("div");
-    row.className = "row";
-    row.style.position = "relative";
-    row.style.minWidth = totalWidth + "px";
-
-    // Floating label (sticky)
-    const label = document.createElement("div");
-    label.className = "label";
-    label.innerText = d.label;
-    label.style.position = "sticky";
-    label.style.left = "0";
-    label.style.background = "white";
-    label.style.zIndex = "3";
-    label.style.boxShadow = "2px 0 2px -2px #ccc";
-
-    const bar = document.createElement("div");
-    bar.className = "bar";
-
-    const offset = daysBetween(minDate, d.start);
-    const length = daysBetween(d.start, d.end) + 1;
-
-    bar.style.left = (offset * pxPerDay + labelWidth) + "px";
-    bar.style.width = (length * pxPerDay) + "px";
-
-    bar.innerText = "";
-
-    row.appendChild(label);
-    row.appendChild(bar);
+  // Data rows
+  for (const d of data) {
+    const days=Math.round(daysBetween(d.start,d.end))+1;
+    const tip=`<b>${d.label}</b><br>${fmtDate(d.start)} – ${fmtDate(d.end)}<br>${days} nap`;
+    const row=makeRow('');
+    row.appendChild(makeLabel(d.label,labelWidth,tip));
+    row.appendChild(makeBar(d.start,d.end,d.color,'',tip));
     chart.appendChild(row);
-  });
+  }
+
+  // Gap rows
+  if (gaps.length) {
+    chart.appendChild(makeSep());
+    for (const g of gaps) {
+      const days=Math.round(daysBetween(g.start,g.end))+1;
+      const tip=`<b>⚠ Kieső időszak</b><br>${fmtDate(g.start)} – ${fmtDate(g.end)}<br>${days} nap`;
+      const row=makeRow('row-gap');
+      row.appendChild(makeLabel('⚠ kieső idő',labelWidth,tip));
+      row.appendChild(makeBar(g.start,g.end,null,'gap-bar',tip));
+      chart.appendChild(row);
+    }
+  }
+
 }
 
-document.getElementById("input").addEventListener("keydown", function(e) {
-  if (e.key === "Enter" && e.ctrlKey) {
-    render();
-  }
+document.getElementById('input').addEventListener('keydown', e=>{
+  if(e.key==='Enter'&&e.ctrlKey) render();
 });
 </script>
-
 </body>
 </html>
