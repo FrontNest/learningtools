@@ -7,7 +7,7 @@ const resultBody = document.getElementById("resultBody");
 const summaryBody = document.getElementById("summaryBody");
 
 const nf = new Intl.NumberFormat("hu-HU", { maximumFractionDigits: 0 });
-
+// járulék százalékok idő intervallumonként
 const DAY_MS = 24 * 60 * 60 * 1000;
 let rows = [];
 const RATE_RULES_RAW = [
@@ -56,15 +56,18 @@ const RATE_RULES = Array.from(
 	).values()
 ).sort((a, b) => a.fromDate - b.fromDate || a.toDate - b.toDate);
 
+// Egységes ezres tagolású egészszám formázás szóköz elválasztóval.
 function formatInt(value) {
 	return nf.format(value).replace(/[\u00A0\u202F]/g, " ");
 }
 
+// Egységes státusz üzenet kiírása (siker/hiba) a felületen.
 function setStatus(message, isError = false) {
 	statusEl.textContent = message;
 	statusEl.className = `status ${isError ? "error" : "ok"}`;
 }
 
+// Magyar dátum (YYYY.MM.DD.) biztonságos parse-olása UTC-ben.
 function parseHungarianDate(input) {
 	const cleaned = String(input || "").trim().replace(/\.$/, "");
 	const match = cleaned.match(/^(\d{4})\.(\d{2})\.(\d{2})$/);
@@ -87,6 +90,7 @@ function parseHungarianDate(input) {
 	return dt;
 }
 
+// Dátum visszaalakítása szabványos magyar formára.
 function formatHungarianDate(date) {
 	const y = date.getUTCFullYear();
 	const m = String(date.getUTCMonth() + 1).padStart(2, "0");
@@ -94,14 +98,17 @@ function formatHungarianDate(date) {
 	return `${y}.${m}.${d}.`;
 }
 
+// Napok száma inkluzívan: kezdő és záró dátum is beleszámít.
 function inclusiveDays(start, end) {
 	return Math.floor((end - start) / DAY_MS) + 1;
 }
 
+// Segédfüggvény dátumléptetéshez (pozitív/negatív napokkal).
 function addDays(date, days) {
 	return new Date(date.getTime() + days * DAY_MS);
 }
 
+// Egy időszakot feldarabol a járulékszabályok metszetei szerint.
 function splitByRateRules(start, end) {
 	const overlaps = RATE_RULES
 		.filter((rule) => rule.toDate >= start && rule.fromDate <= end)
@@ -151,6 +158,7 @@ function splitByRateRules(start, end) {
 	return parts;
 }
 
+// Napi összeg parse: szóköz/vessző toleráns beolvasás számmá.
 function parseDailyAmount(value) {
 	const normalized = String(value || "").trim().replace(/\s+/g, "").replace(",", ".");
 	const parsed = Number(normalized);
@@ -160,6 +168,7 @@ function parseDailyAmount(value) {
 	return parsed;
 }
 
+// Százalék parse: pl. "8,5", "8.5", "8,5%" formátumok kezelése.
 function parsePercent(value) {
 	if (value === null || value === undefined) {
 		return null;
@@ -181,6 +190,7 @@ function parsePercent(value) {
 	return parsed;
 }
 
+// Az eredeti sort évekre bontja, majd minden évben szabályszakaszokra oszt.
 function splitByYear(item) {
 	const parts = [];
 	const fromYear = item.fromDate.getUTCFullYear();
@@ -224,6 +234,7 @@ function splitByYear(item) {
 	return parts;
 }
 
+// Éves összesítő gyűjtés (alap + járulék) az I/J oszlophoz.
 function collectYearTotals(dataRows) {
 	const totals = new Map();
 	dataRows.forEach((r) => {
@@ -235,6 +246,7 @@ function collectYearTotals(dataRows) {
 	return totals;
 }
 
+// Az éves összeg csak az adott év első sorában jelenjen meg.
 function applyAnnualDisplay(dataRows) {
 	const totals = collectYearTotals(dataRows);
 	const firstIndexByYear = new Map();
@@ -254,6 +266,7 @@ function applyAnnualDisplay(dataRows) {
 	});
 }
 
+// Főtábla újrarenderelése és a G oszlop input eseményeinek bekötése.
 function renderResultTable() {
 	if (!rows.length) {
 		resultBody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#5f7685;padding:16px;">Még nincs kiszámolt adat.</td></tr>';
@@ -300,6 +313,7 @@ function renderResultTable() {
 	});
 }
 
+// Év + jogcím szerinti összesítő tábla felépítése.
 function renderSummaryTable() {
 	if (!rows.length) {
 		summaryBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#5f7685;padding:16px;">Még nincs kiszámolt adat.</td></tr>';
@@ -344,6 +358,7 @@ function renderSummaryTable() {
 		.join("");
 }
 
+// Származtatott mezők újraszámolása, opcionális fókusz visszaállítással.
 function updateAllDerivedValues(focusState = null) {
 	rows.forEach((r) => {
 		const parsedPercent = parsePercent(r.percentInput);
@@ -368,6 +383,7 @@ function updateAllDerivedValues(focusState = null) {
 	}
 }
 
+// G oszlop input közben azonnali újraszámolás, kurzor megtartásával.
 function onPercentChanged(event) {
 	const idx = Number(event.target.dataset.idx);
 	rows[idx].percentInput = event.target.value;
@@ -379,6 +395,7 @@ function onPercentChanged(event) {
 	btnCopy.disabled = rows.length === 0;
 }
 
+// Enter/Tab navigáció a százalékmezők között, érték-normalizálással.
 function onPercentKeyDown(event) {
 	if (event.key !== "Enter" && event.key !== "Tab") {
 		return;
@@ -403,6 +420,7 @@ function onPercentKeyDown(event) {
 	});
 }
 
+// Kilépéskor egységesíti a százalék megjelenítését (pl. 8.5 -> 8,5).
 function normalizePercentInput(event) {
 	const idx = Number(event.target.dataset.idx);
 	const parsed = parsePercent(rows[idx].percentInput);
@@ -413,6 +431,7 @@ function normalizePercentInput(event) {
 	updateAllDerivedValues();
 }
 
+// Alap HTML-escape, hogy a szöveges mezők ne törjék meg a DOM-ot.
 function escapeHtml(text) {
 	return String(text)
 		.replace(/&/g, "&amp;")
@@ -422,6 +441,7 @@ function escapeHtml(text) {
 		.replace(/'/g, "&#039;");
 }
 
+// Teljes bemenet feldolgozása: validálás, bontás, render és státuszkezelés.
 function calculateFromInput() {
 	const raw = sourceData.value.trim();
 	if (!raw) {
@@ -491,6 +511,7 @@ function calculateFromInput() {
 	btnCopy.disabled = false;
 }
 
+// A jelenlegi eredményt TSV szöveggé alakítja vágólapos exporthoz.
 function toTsvForClipboard() {
 	if (!rows.length) {
 		return "";
@@ -534,6 +555,7 @@ function toTsvForClipboard() {
 	return [header.join("\t"), ...data].join("\n");
 }
 
+// Eredménytábla kimásolása a rendszer vágólapjára.
 async function copyResult() {
 	const text = toTsvForClipboard();
 	if (!text) {
@@ -549,6 +571,7 @@ async function copyResult() {
 	}
 }
 
+// Gyors tesztadat betöltése demonstrációhoz/ellenőrzéshez.
 function loadSample() {
 	sourceData.value = [
 		"2000.01.01.\t2000.03.15.\t225\tmunkanélküli járadék",
