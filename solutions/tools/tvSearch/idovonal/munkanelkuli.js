@@ -155,7 +155,43 @@ function splitByRateRules(start, end) {
 		parts.push({ start: new Date(cursor.getTime()), end: new Date(end.getTime()), percent: null });
 	}
 
-	return parts;
+	return mergeAdjacentRateSegments(parts);
+}
+
+// Azonos százalékú, egymást követő szakaszok összevonása évhatáron belül.
+function mergeAdjacentRateSegments(segments) {
+	if (!segments.length) {
+		return segments;
+	}
+
+	const merged = [
+		{
+			start: new Date(segments[0].start.getTime()),
+			end: new Date(segments[0].end.getTime()),
+			percent: segments[0].percent
+		}
+	];
+
+	for (let i = 1; i < segments.length; i += 1) {
+		const current = segments[i];
+		const prev = merged[merged.length - 1];
+		const prevNextDay = addDays(prev.end, 1);
+		const isConsecutive = prevNextDay.getTime() === current.start.getTime();
+		const samePercent = prev.percent === current.percent;
+
+		if (isConsecutive && samePercent) {
+			prev.end = new Date(current.end.getTime());
+			continue;
+		}
+
+		merged.push({
+			start: new Date(current.start.getTime()),
+			end: new Date(current.end.getTime()),
+			percent: current.percent
+		});
+	}
+
+	return merged;
 }
 
 // Napi összeg parse: szóköz/vessző toleráns beolvasás számmá.
