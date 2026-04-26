@@ -209,3 +209,9 @@ tbody tr:nth-child(even) {
 	font-size: 0.85rem;
 	margin-top: 8px;
 }
+
+.madeby {
+	font-size: small;
+	align-items: flex-end;
+	text-align: right;
+}
