@@ -1,72 +1,120 @@
-MUNKANELKULI KALKULATOR - DOKUMENTACIO
+Munkanélküli ellátások kalkulátor – dokumentáció
 
-1) CEL
-Ez az eszkoz a munkanelkuli/allaskeresesi ellatas idoszakait bontja eves es jarulekszabaly szerinti reszekre, majd automatikusan kiszamolja:
-- napok szama (E)
-- jarulekalap (F)
-- jarulek szazalek (G)
-- jarulek osszeg (H)
-- eves osszeg (I)
-- eves jarulek (J)
+1. Cél
+Kifejezetten helyi gépen, szerver és bármiféle külső hivatkozás nélkül futó, minimalista, feladatspecifikált eszköz volt a cél, 
+ami a maximális hálózati- és adatbiztonság megtartása mellett jelentősen gyorsíthatja a munkavégzést, 
+növelhetje a munka pontosságát, hatékonyságát ennél a napi több alkalommal előforduló, 
+alkalmanként adatmennyiségtől függően akár 10-15 vagy több percet is igényló, 
+kézi számolás során magas hibaszázalékú feladatnál.
 
-2) BEMENET
-A bemenet 4 oszlop, tabulatorral tagolt sorokkal:
-- A: tol datum (YYYY.MM.DD.)
-- B: ig datum (YYYY.MM.DD.)
-- C: napi osszeg (szam)
-- D: jogcim (szoveg)
+A ezszköz feladata:
+A munkanélküli-, illetve álláskeresési ellátások időszakait bontja éves és járulékszabályok szerinti szakaszokra, 
+majd automatikusan kiszámítja az alábbi adatokat:
+- napok száma (E)
+- járulékalap (F)
+- járulékszázalék (G)
+- járulék összege (H)
+- éves összeg (I)
+- éves járulék (J)
 
-Peldasor:
-2000.01.01.    2000.03.15.    225    munkanelkuli jaradek
+2. Bemenet
+A bemenet nem tartalmaz GDPR alá tartozó, vagy egyéb érzékeny információt.
+A bemenet négy oszlopból áll, az alábbi sorrendben:
+- A:- kezdő dátum (YYYY.MM.DD.)
+- B:- záró dátum (YYYY.MM.DD.)
+- C:- napi összeg (szám)
+- D:- jogcím (szöveg)
 
-3) MUKODES
-- A rendszer beolvassa a sorokat es ellenorzi a datum/szam formatumot.
-- Az idoszakokat evek szerint bontja.
-- Ezen belul tovabb bontja jarulekszabaly-valtozasok menten (datumintervallumok szerint).
-- A napok szama inkluziv, tehat a kezdo- es vegdatum is beleszamit.
-- A G oszlop automatikusan toltodik, de kezzel felulirhato.
-- H, I, J oszlop automatikusan ujraszamolodik.
+Elfogadott bemeneti formátumok
+- tabulátorral tagolt sor (például Excelből másolva)
+- szóközzel tagolt sor, amit a felhasználó ír be
 
-4) KEZELES
-- Szamitas es bontas: feldolgozza a bemenetet.
-- Minta betoltese: tesztadatokat illeszt be.
-- A-J tabla masolasa (TSV): vagoapra masolja az eredmenyt.
-- G oszlopban Enter/Tab lep a kovetkezo sorra.
+Megjegyzések a feldolgozáshoz
+- a napi összeg ezres tagolással is megadható (például: 1 125)
+- tizedeselválasztóként vessző és pont is használható
+- a jogcím több szóból is állhat
 
-5) FAJLOK
-- munkanelkuli.html: strukturalt HTML
-- munkanelkuli.css: megjelenes es responsive stilusok
-- munkanelkuli.js: feldolgozasi es szamitasi logika
+Példák:
+1992.01.01 1993.09.15 1558 álláskeresési támogatás
+2000.01.01. 2000.12.30. 225 MUNKANÉLKÜLI JÁRADÉK
+2001.01.01. 2001.12.31. 1 125 ÁPOLÁSI DÍJ
 
-6) SECURITY SZABALYZAT (CSP)
-Az oldal CSP beallitasa:
+3. Működés
+- A program beolvassa a sorokat, majd ellenőrzi a dátum- és számformátumokat.
+- Az időszakokat először évek szerint bontja fel.
+- Ezen belül a járulékszabályok változásainak megfelelően további bontást végez.
+- Az azonos járulékszázalékú, egymást követő szakaszokat automatikusan összevonja, így egy éven belül csak valódi százalékváltozás esetén keletkezik új sor.
+- A napok száma inkluzív, vagyis a kezdő- és zárónap is beleszámít.
+- A G oszlop automatikusan kitöltődik, de szükség esetén kézzel módosítható.
+- A H, I és J oszlop értékei minden módosítás után automatikusan újraszámolódnak.
 
+
+4. Használat
+- A „Számítás és bontás”*- gomb feldolgozza a bemeneti adatokat.
+- A G oszlopban az Enter vagy a Tab billentyű a következő sorra léptet.
+Jelenleg elérhető vezérlő (gomb):
+- Számítás és bontás
+
+5. Fájlok
+- `munkanelkuli.html` – a felhasználói felület szerkezete
+- `munkanelkuli.css` – megjelenés és reszponzív stílusok
+- `munkanelkuli.js` – feldolgozási és számítási logika
+
+6. Biztonsági beállítások (CSP)
+Az alkalmazás az alábbi Content Security Policy beállítást használja:
+
+************
 default-src 'self';
 script-src 'self';
 style-src 'self';
 img-src 'self' data:;
 font-src 'self';
 connect-src 'self';
-frame-ancestors 'none';
 base-uri 'self';
 form-action 'self';
 upgrade-insecure-requests;
+************`
 
-Mit ved ez a beallitas:
-- Csak sajat forrasbol enged betoltest (self).
-- Inline script/style futtatast gyakorlatilag kizarti (kulon engedely hianya miatt).
-- Korlatozza kulso eroforrasok hasznalatat (CDN, kulso API, kulso script).
-- Megakadalyozza az iframe-be agyazast (clickjacking ellen).
-- Korlatozza a form kuldest es a base URL manipulaciot.
-- HTTP eroforrasokat HTTPS-re kenyszerit, ha van ilyen hivatkozas.
+- Csak saját forrásból engedélyezi az erőforrások betöltését.
+- Megakadályozza az inline JavaScript és CSS futtatását.
+- Korlátozza külső erőforrások (például CDN-ek vagy API-k) használatát.
+- Védi az űrlapküldést és a base URL módosítását.
+- A nem biztonságos HTTP-hivatkozásokat HTTPS-re kényszeríti.
 
-Vallalati kornyezetre vonatkozo megjegyzes:
-- A jelenlegi CSP konzervativ es biztonsagcentrikus.
-- Ha kesobb kulso szolgaltatas kell (pl. API), csak celzott, minimalis bovitessel modositsd a connect-src vagy mas direktivat.
-- Javasolt a CSP-t szerver oldali HTTP headerkent is beallitani (a meta tag mellett), mert az meg erosebb kontrollt ad.
+- nincs vágólapkezelési funkció
+- nincs mintaadat-betöltés
+- nincs külső script vagy API-hívás
+- nincs localStorage vagy sessionStorage használat
 
-7) UZEMELTETESI JAVASLAT
-- Statikus hoszton HTTPS alatt futtasd.
-- Ne engedelyezz inline scriptet.
-- Ne tolts be kulso scriptet/style-t, hacsak nincs formalis jovahagyas.
-- Verzionalt release-eknel teszteld a masolas/szamitas/tablafrissites folyamatot.
+Vállalati környezetben
+
+A jelenlegi CSP szigorú és biztonságközpontú beállításokat alkalmaz. Az alkalmazás önálló, helyi futtatásra készült, 
+ezért szerver nélkül, közvetlenül fájlból is használható. 
+
+Amennyiben később külső szolgáltatás integrálása válik szükségessé, elegendő a megfelelő CSP-direktívák célzott, minimális módosítása.
+
+7. Üzemeltetési javaslatok
+
+- Helyi használathoz elegendő a HTML-fájl megnyitása.
+- Inline JavaScript használata nem javasolt.
+- Külső script vagy stíluslap csak hivatalos jóváhagyással kerüljön beépítésre.
+- Új verzió kiadása előtt célszerű ellenőrizni:
+  - az adatok beolvasását
+  - a számítások helyességét
+  - a táblázat frissítését
+
+8. AI és egyéb segédeszköz használata az eszköz fejlesztéséhez
+A script VS Code-ban íródott 
+A végleges megoldás ellenőrzése, tesztelése és szakmai validálása minden esetben manuálisan történt.
+A következő részfeladatokhoz vettem igénybe AI segédletet (Claude Sonnet 4.6)
+- egyes kódrészletek refaktorálása
+- CSP szigorítása
+- biztonsági javaslatok
+- dokumentáció előkészítés
+- kódesztétika
+
+9. Záró gondolatok
+Ez az eszköz elsősorban a saját munkám minősőgnek, sebességének, hatékonyságának növelését célozza,
+de engedélyezés esetén bárminemű ellenszolgáltatás, kompenzálás nélkül és teljeskörűen szívesen átadom a cégnek.
+Nem támasztok igényt a nevem feltüntesére. (sőt inkább kerülném ennek széles körű publikálását, ha nem muszáj.)
+
