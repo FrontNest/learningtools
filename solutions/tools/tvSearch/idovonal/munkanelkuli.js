@@ -1,7 +1,5 @@
 const sourceData = document.getElementById("sourceData");
 const btnCalculate = document.getElementById("btnCalculate");
-const btnSample = document.getElementById("btnSample");
-const btnCopy = document.getElementById("btnCopy");
 const statusEl = document.getElementById("status");
 const resultBody = document.getElementById("resultBody");
 const summaryBody = document.getElementById("summaryBody");
@@ -353,54 +351,88 @@ function applyAnnualDisplay(dataRows) {
 // Főtábla újrarenderelése és a G oszlop input eseményeinek bekötése.
 function renderResultTable() {
 	if (!rows.length) {
-		resultBody.innerHTML = '<tr><td colspan="10" class="empty-cell">Még nincs kiszámolt adat.</td></tr>';
+		const tr = document.createElement("tr");
+		const td = document.createElement("td");
+		td.colSpan = 10;
+		td.className = "empty-cell";
+		td.textContent = "Még nincs kiszámolt adat.";
+		tr.appendChild(td);
+		resultBody.replaceChildren(tr);
 		return;
 	}
 
 	applyAnnualDisplay(rows);
 
-	resultBody.innerHTML = rows
-		.map((r, idx) => {
-			const contributionText = r.contribution === null ? "" : formatInt(Math.round(r.contribution));
-			const percentValue = r.percentInput;
-			const rowClass = r.annualBaseDisplay ? "year-cell" : "";
+	const fragment = document.createDocumentFragment();
 
-			return `
-				<tr>
-					<td>${r.from}</td>
-					<td>${r.to}</td>
-					<td class="num">${formatInt(Math.round(r.daily))}</td>
-					<td>${escapeHtml(r.title)}</td>
-					<td class="num">${formatInt(r.days)}</td>
-					<td class="num">${formatInt(Math.round(r.base))}</td>
-					<td class="num">
-						<input
-							class="percent-input"
-							data-idx="${idx}"
-							value="${escapeHtml(percentValue)}"
-							inputmode="decimal"
-							placeholder="pl. 6,5"
-						>
-					</td>
-					<td class="num">${contributionText}</td>
-					<td class="num ${rowClass}">${r.annualBaseDisplay}</td>
-					<td class="num ${rowClass}">${r.annualContributionDisplay}</td>
-				</tr>
-			`;
-		})
-		.join("");
+	rows.forEach((r, idx) => {
+		const tr = document.createElement("tr");
+		const contributionText = r.contribution === null ? "" : formatInt(Math.round(r.contribution));
+		const rowClass = r.annualBaseDisplay ? "year-cell" : "";
 
-	resultBody.querySelectorAll(".percent-input").forEach((input) => {
+		const cells = [
+			{ text: r.from },
+			{ text: r.to },
+			{ text: formatInt(Math.round(r.daily)), className: "num" },
+			{ text: r.title },
+			{ text: formatInt(r.days), className: "num" },
+			{ text: formatInt(Math.round(r.base)), className: "num" }
+		];
+
+		cells.forEach((cell) => {
+			const td = document.createElement("td");
+			if (cell.className) {
+				td.className = cell.className;
+			}
+			td.textContent = cell.text;
+			tr.appendChild(td);
+		});
+
+		const percentTd = document.createElement("td");
+		percentTd.className = "num";
+		const input = document.createElement("input");
+		input.className = "percent-input";
+		input.dataset.idx = String(idx);
+		input.value = r.percentInput;
+		input.inputMode = "decimal";
+		input.placeholder = "pl. 6,5";
 		input.addEventListener("input", onPercentChanged);
 		input.addEventListener("keydown", onPercentKeyDown);
 		input.addEventListener("blur", normalizePercentInput);
+		percentTd.appendChild(input);
+		tr.appendChild(percentTd);
+
+		const contributionTd = document.createElement("td");
+		contributionTd.className = "num";
+		contributionTd.textContent = contributionText;
+		tr.appendChild(contributionTd);
+
+		const annualBaseTd = document.createElement("td");
+		annualBaseTd.className = rowClass ? `num ${rowClass}` : "num";
+		annualBaseTd.textContent = r.annualBaseDisplay;
+		tr.appendChild(annualBaseTd);
+
+		const annualContributionTd = document.createElement("td");
+		annualContributionTd.className = rowClass ? `num ${rowClass}` : "num";
+		annualContributionTd.textContent = r.annualContributionDisplay;
+		tr.appendChild(annualContributionTd);
+
+		fragment.appendChild(tr);
 	});
+
+	resultBody.replaceChildren(fragment);
 }
 
 // Év + jogcím szerinti összesítő tábla felépítése.
 function renderSummaryTable() {
 	if (!rows.length) {
-		summaryBody.innerHTML = '<tr><td colspan="5" class="empty-cell">Még nincs kiszámolt adat.</td></tr>';
+		const tr = document.createElement("tr");
+		const td = document.createElement("td");
+		td.colSpan = 5;
+		td.className = "empty-cell";
+		td.textContent = "Még nincs kiszámolt adat.";
+		tr.appendChild(td);
+		summaryBody.replaceChildren(tr);
 		return;
 	}
 
@@ -427,19 +459,37 @@ function renderSummaryTable() {
 		return a.title.localeCompare(b.title, "hu");
 	});
 
-	summaryBody.innerHTML = list
-		.map(
-			(item) => `
-				<tr>
-					<td>${item.year}</td>
-					<td>${escapeHtml(item.title)}</td>
-					<td class="num">${formatInt(item.days)}</td>
-					<td class="num">${formatInt(Math.round(item.base))}</td>
-					<td class="num">${formatInt(Math.round(item.contribution))}</td>
-				</tr>
-			`
-		)
-		.join("");
+	const fragment = document.createDocumentFragment();
+	list.forEach((item) => {
+		const tr = document.createElement("tr");
+
+		const yearTd = document.createElement("td");
+		yearTd.textContent = String(item.year);
+		tr.appendChild(yearTd);
+
+		const titleTd = document.createElement("td");
+		titleTd.textContent = item.title;
+		tr.appendChild(titleTd);
+
+		const daysTd = document.createElement("td");
+		daysTd.className = "num";
+		daysTd.textContent = formatInt(item.days);
+		tr.appendChild(daysTd);
+
+		const baseTd = document.createElement("td");
+		baseTd.className = "num";
+		baseTd.textContent = formatInt(Math.round(item.base));
+		tr.appendChild(baseTd);
+
+		const contributionTd = document.createElement("td");
+		contributionTd.className = "num";
+		contributionTd.textContent = formatInt(Math.round(item.contribution));
+		tr.appendChild(contributionTd);
+
+		fragment.appendChild(tr);
+	});
+
+	summaryBody.replaceChildren(fragment);
 }
 
 // Származtatott mezők újraszámolása, opcionális fókusz visszaállítással.
@@ -476,9 +526,6 @@ function onPercentChanged(event) {
 		start: event.target.selectionStart,
 		end: event.target.selectionEnd
 	});
-	if (btnCopy) {
-		btnCopy.disabled = rows.length === 0;
-	}
 }
 
 // Enter/Tab navigáció a százalékmezők között, érték-normalizálással.
@@ -517,16 +564,6 @@ function normalizePercentInput(event) {
 	updateAllDerivedValues();
 }
 
-// Alap HTML-escape, hogy a szöveges mezők ne törjék meg a DOM-ot.
-function escapeHtml(text) {
-	return String(text)
-		.replace(/&/g, "&amp;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;")
-		.replace(/\"/g, "&quot;")
-		.replace(/'/g, "&#039;");
-}
-
 // Teljes bemenet feldolgozása: validálás, bontás, render és státuszkezelés.
 function calculateFromInput() {
 	const raw = sourceData.value.trim();
@@ -535,9 +572,6 @@ function calculateFromInput() {
 		rows = [];
 		renderResultTable();
 		renderSummaryTable();
-		if (btnCopy) {
-			btnCopy.disabled = true;
-		}
 		return;
 	}
 
@@ -589,133 +623,12 @@ function calculateFromInput() {
 		rows = [];
 		renderResultTable();
 		renderSummaryTable();
-		if (btnCopy) {
-			btnCopy.disabled = true;
-		}
 		return;
 	}
 
 	rows = parsedRows.flatMap(splitByYear).sort((a, b) => a.fromDate - b.fromDate || a.toDate - b.toDate);
 	updateAllDerivedValues();
 	setStatus(`Kész. ${parsedRows.length} eredeti sorból ${rows.length} éves bontott sor készült.`);
-	if (btnCopy) {
-		btnCopy.disabled = false;
-	}
-}
-
-// A jelenlegi eredményt TSV szöveggé alakítja vágólapos exporthoz.
-function toTsvForClipboard() {
-	if (!rows.length) {
-		return "";
-	}
-
-	applyAnnualDisplay(rows);
-
-	const header = [
-		"tól",
-		"ig",
-		"napi összeg",
-		"jogcím",
-		"napok száma",
-		"járulékalap",
-		"járulék %",
-		"járulék",
-		"éves összeg",
-		"éves járulék"
-	];
-
-	const data = rows.map((r) => {
-		const pct = r.percent === null ? "" : `${String(r.percent).replace(".", ",")}%`;
-		const contribution = r.contribution === null ? "" : String(Math.round(r.contribution));
-		const annualBase = r.annualBaseDisplay ? String(r.annualBaseDisplay).replace(/\s/g, "") : "";
-		const annualContribution = r.annualContributionDisplay ? String(r.annualContributionDisplay).replace(/\s/g, "") : "";
-
-		return [
-			r.from,
-			r.to,
-			Math.round(r.daily),
-			r.title,
-			r.days,
-			Math.round(r.base),
-			pct,
-			contribution,
-			annualBase,
-			annualContribution
-		].join("\t");
-	});
-
-	return [header.join("\t"), ...data].join("\n");
-}
-
-// Fallback másolás régebbi / korlátozott böngésző környezetekhez.
-function legacyCopyToClipboard(text) {
-	const textarea = document.createElement("textarea");
-	textarea.value = text;
-	textarea.setAttribute("readonly", "");
-	textarea.style.position = "fixed";
-	textarea.style.top = "-1000px";
-	textarea.style.left = "-1000px";
-	document.body.appendChild(textarea);
-
-	textarea.focus();
-	textarea.select();
-
-	let success = false;
-	try {
-		success = document.execCommand("copy");
-	} catch (error) {
-		success = false;
-	}
-
-	document.body.removeChild(textarea);
-	return success;
-}
-
-// Eredménytábla kimásolása a rendszer vágólapjára.
-async function copyResult() {
-	const text = toTsvForClipboard();
-	if (!text) {
-		setStatus("Nincs mit másolni.", true);
-		return;
-	}
-
-	try {
-		if (navigator.clipboard && window.isSecureContext) {
-			await navigator.clipboard.writeText(text);
-			setStatus("Az A-J tábla TSV-ként vágólapra másolva.");
-			return;
-		}
-
-		if (legacyCopyToClipboard(text)) {
-			setStatus("Az A-J tábla TSV-ként vágólapra másolva (fallback módban).");
-			return;
-		}
-
-		setStatus("A másolás nem sikerült. Jelöld ki és másold kézzel a táblát.", true);
-	} catch (error) {
-		if (legacyCopyToClipboard(text)) {
-			setStatus("Az A-J tábla TSV-ként vágólapra másolva (fallback módban).");
-			return;
-		}
-
-		setStatus("A másolás nem sikerült. Jelöld ki és másold kézzel a táblát.", true);
-	}
-}
-
-// Gyors tesztadat betöltése demonstrációhoz/ellenőrzéshez.
-function loadSample() {
-	sourceData.value = [
-		"2000.01.01.\t2000.03.15.\t225\tmunkanélküli járadék",
-		"2000.09.20.\t2001.11.03.\t319\tálláskeresési támogatás",
-		"2001.10.30.\t2003.06.18.\t550\tmunkanélküli segély"
-	].join("\n");
-	calculateFromInput();
 }
 
 btnCalculate.addEventListener("click", calculateFromInput);
-if (btnSample) {
-	btnSample.addEventListener("click", loadSample);
-}
-if (btnCopy) {
-	btnCopy.addEventListener("click", copyResult);
-}
