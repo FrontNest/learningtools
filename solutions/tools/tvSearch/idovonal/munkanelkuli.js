@@ -10,6 +10,7 @@ const nf = new Intl.NumberFormat("hu-HU", { maximumFractionDigits: 0 });
 // másképpen a rendszer nem engedi rögzíteni az adatsort, ezért szükséges, hogy ott a részösszeg jelenjen meg.
 const DAY_MS = 24 * 60 * 60 * 1000;
 let rows = [];
+let _isRendering = false; // megakadályozza a blur-ból induló dupla renderelést
 const RATE_RULES_RAW = [
 	["1988.01.01.", "1992.02.29.", 10],
 	["1992.03.01.", "1993.12.31.", 6],
@@ -424,7 +425,12 @@ function renderResultTable() {
 		fragment.appendChild(tr);
 	});
 
-	resultBody.replaceChildren(fragment);
+	_isRendering = true;
+	try {
+		resultBody.replaceChildren(fragment);
+	} finally {
+		_isRendering = false;
+	}
 }
 
 // Év + jogcím szerinti összesítő tábla felépítése
@@ -559,6 +565,11 @@ function onPercentKeyDown(event) {
 
 // Kilépéskor egységesíti a százalék megjelenítését (pl. 8.5 -> 8,5)
 function normalizePercentInput(event) {
+	// Ha renderelés közben tüzel a blur (replaceChildren detacholja az inputot),
+	// ne indítsunk újabb renderelést – ez okozná a NotFoundError-t.
+	if (_isRendering) {
+		return;
+	}
 	const idx = Number(event.target.dataset.idx);
 	const parsed = parsePercent(rows[idx].percentInput);
 	if (parsed === null) {
