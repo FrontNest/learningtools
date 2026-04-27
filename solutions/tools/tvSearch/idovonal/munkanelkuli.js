@@ -204,6 +204,54 @@ function parseDailyAmount(value) {
 	return parsed;
 }
 
+// Egy bemeneti sor parse-olása (tabos vagy szóközös formátum, több szavas jogcímmel).
+function parseInputLine(line) {
+	const rawLine = String(line || "").trim();
+	if (!rawLine) {
+		return null;
+	}
+
+	if (rawLine.includes("\t")) {
+		const cells = rawLine.split("\t").map((c) => c.trim());
+		if (cells.length < 4) {
+			return null;
+		}
+
+		return {
+			fromRaw: cells[0],
+			toRaw: cells[1],
+			dailyRaw: cells[2],
+			titleRaw: cells.slice(3).join(" ").trim()
+		};
+	}
+
+	const tokens = rawLine.split(/\s+/).filter(Boolean);
+	if (tokens.length < 4) {
+		return null;
+	}
+
+	const fromRaw = tokens[0];
+	const toRaw = tokens[1];
+	const amountTokens = [];
+	let idx = 2;
+
+	while (idx < tokens.length && /^[0-9][0-9.,]*$/.test(tokens[idx])) {
+		amountTokens.push(tokens[idx]);
+		idx += 1;
+	}
+
+	if (!amountTokens.length) {
+		return null;
+	}
+
+	return {
+		fromRaw,
+		toRaw,
+		dailyRaw: amountTokens.join(" "),
+		titleRaw: tokens.slice(idx).join(" ").trim()
+	};
+}
+
 // Százalék parse: pl. "8,5", "8.5", "8,5%" formátumok kezelése.
 function parsePercent(value) {
 	if (value === null || value === undefined) {
@@ -305,7 +353,7 @@ function applyAnnualDisplay(dataRows) {
 // Főtábla újrarenderelése és a G oszlop input eseményeinek bekötése.
 function renderResultTable() {
 	if (!rows.length) {
-		resultBody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#5f7685;padding:16px;">Még nincs kiszámolt adat.</td></tr>';
+		resultBody.innerHTML = '<tr><td colspan="10" class="empty-cell">Még nincs kiszámolt adat.</td></tr>';
 		return;
 	}
 
@@ -352,7 +400,7 @@ function renderResultTable() {
 // Év + jogcím szerinti összesítő tábla felépítése.
 function renderSummaryTable() {
 	if (!rows.length) {
-		summaryBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#5f7685;padding:16px;">Még nincs kiszámolt adat.</td></tr>';
+		summaryBody.innerHTML = '<tr><td colspan="5" class="empty-cell">Még nincs kiszámolt adat.</td></tr>';
 		return;
 	}
 
@@ -428,7 +476,9 @@ function onPercentChanged(event) {
 		start: event.target.selectionStart,
 		end: event.target.selectionEnd
 	});
-	btnCopy.disabled = rows.length === 0;
+	if (btnCopy) {
+		btnCopy.disabled = rows.length === 0;
+	}
 }
 
 // Enter/Tab navigáció a százalékmezők között, érték-normalizálással.
@@ -485,7 +535,9 @@ function calculateFromInput() {
 		rows = [];
 		renderResultTable();
 		renderSummaryTable();
-		btnCopy.disabled = true;
+		if (btnCopy) {
+			btnCopy.disabled = true;
+		}
 		return;
 	}
 
@@ -498,19 +550,19 @@ function calculateFromInput() {
 	const errors = [];
 
 	lines.forEach((line, lineIndex) => {
-		const cells = line.split("\t");
-		if (cells.length < 4) {
-			errors.push(`Hibás sor (${lineIndex + 1}): legalább 4 oszlop kell.`);
+		const parsedLine = parseInputLine(line);
+		if (!parsedLine) {
+			errors.push(`Hibás sor (${lineIndex + 1}): nem értelmezhető bemenet.`);
 			return;
 		}
 
-		const fromDate = parseHungarianDate(cells[0]);
-		const toDate = parseHungarianDate(cells[1]);
-		const daily = parseDailyAmount(cells[2]);
-		const title = String(cells[3] || "").trim();
+		const fromDate = parseHungarianDate(parsedLine.fromRaw);
+		const toDate = parseHungarianDate(parsedLine.toRaw);
+		const daily = parseDailyAmount(parsedLine.dailyRaw);
+		const title = String(parsedLine.titleRaw || "").trim();
 
 		if (!fromDate || !toDate) {
-			errors.push(`Hibás dátum (${lineIndex + 1}. sor): ${cells[0]} - ${cells[1]}`);
+			errors.push(`Hibás dátum (${lineIndex + 1}. sor): ${parsedLine.fromRaw} - ${parsedLine.toRaw}`);
 			return;
 		}
 
@@ -520,7 +572,7 @@ function calculateFromInput() {
 		}
 
 		if (daily === null) {
-			errors.push(`Hibás napi összeg (${lineIndex + 1}. sor): ${cells[2]}`);
+			errors.push(`Hibás napi összeg (${lineIndex + 1}. sor): ${parsedLine.dailyRaw}`);
 			return;
 		}
 
@@ -537,14 +589,18 @@ function calculateFromInput() {
 		rows = [];
 		renderResultTable();
 		renderSummaryTable();
-		btnCopy.disabled = true;
+		if (btnCopy) {
+			btnCopy.disabled = true;
+		}
 		return;
 	}
 
 	rows = parsedRows.flatMap(splitByYear).sort((a, b) => a.fromDate - b.fromDate || a.toDate - b.toDate);
 	updateAllDerivedValues();
 	setStatus(`Kész. ${parsedRows.length} eredeti sorból ${rows.length} éves bontott sor készült.`);
-	btnCopy.disabled = false;
+	if (btnCopy) {
+		btnCopy.disabled = false;
+	}
 }
 
 // A jelenlegi eredményt TSV szöveggé alakítja vágólapos exporthoz.
@@ -591,6 +647,30 @@ function toTsvForClipboard() {
 	return [header.join("\t"), ...data].join("\n");
 }
 
+// Fallback másolás régebbi / korlátozott böngésző környezetekhez.
+function legacyCopyToClipboard(text) {
+	const textarea = document.createElement("textarea");
+	textarea.value = text;
+	textarea.setAttribute("readonly", "");
+	textarea.style.position = "fixed";
+	textarea.style.top = "-1000px";
+	textarea.style.left = "-1000px";
+	document.body.appendChild(textarea);
+
+	textarea.focus();
+	textarea.select();
+
+	let success = false;
+	try {
+		success = document.execCommand("copy");
+	} catch (error) {
+		success = false;
+	}
+
+	document.body.removeChild(textarea);
+	return success;
+}
+
 // Eredménytábla kimásolása a rendszer vágólapjára.
 async function copyResult() {
 	const text = toTsvForClipboard();
@@ -600,9 +680,24 @@ async function copyResult() {
 	}
 
 	try {
-		await navigator.clipboard.writeText(text);
-		setStatus("Az A-J tábla vágólapra másolva.");
+		if (navigator.clipboard && window.isSecureContext) {
+			await navigator.clipboard.writeText(text);
+			setStatus("Az A-J tábla TSV-ként vágólapra másolva.");
+			return;
+		}
+
+		if (legacyCopyToClipboard(text)) {
+			setStatus("Az A-J tábla TSV-ként vágólapra másolva (fallback módban).");
+			return;
+		}
+
+		setStatus("A másolás nem sikerült. Jelöld ki és másold kézzel a táblát.", true);
 	} catch (error) {
+		if (legacyCopyToClipboard(text)) {
+			setStatus("Az A-J tábla TSV-ként vágólapra másolva (fallback módban).");
+			return;
+		}
+
 		setStatus("A másolás nem sikerült. Jelöld ki és másold kézzel a táblát.", true);
 	}
 }
@@ -618,5 +713,9 @@ function loadSample() {
 }
 
 btnCalculate.addEventListener("click", calculateFromInput);
-btnSample.addEventListener("click", loadSample);
-btnCopy.addEventListener("click", copyResult);
+if (btnSample) {
+	btnSample.addEventListener("click", loadSample);
+}
+if (btnCopy) {
+	btnCopy.addEventListener("click", copyResult);
+}

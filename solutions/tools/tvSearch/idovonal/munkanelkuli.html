@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
 	<title>Munkanélküli Járadék Kalkulátor</title>
 	<link rel="stylesheet" href="munkanelkuli.css">
 </head>
@@ -25,7 +25,6 @@
 				<div class="actions">
 					<button id="btnCalculate" type="button">Számítás és bontás</button>
 					<!-- <button id="btnSample" class="secondary" type="button">Minta betöltése</button> -->
-					<button id="btnCopy" class="secondary" type="button" disabled>A-J tábla másolása (TSV)</button>
 				</div>
 				<div id="status" class="status" aria-live="polite"></div>
 			</div>
@@ -36,8 +35,7 @@
 					1) Illeszd be az adatokat a bal oldali mezőbe.<br>
 					2) Kattints a <strong>Számítás és bontás</strong> gombra.<br>
 					3) A G oszlopban az érték automatikus, de kézzel átírható (pl. 6,5 vagy 10).<br>
-					4) A H, I, J oszlop automatikusan frissül.<br>
-					5) Másoláshoz használd az <strong>A-J tábla másolása</strong> gombot.
+					4) A H, I, J oszlop automatikusan frissül.
 				</p>
 			</div>
 		</section>
@@ -62,7 +60,7 @@
 					</thead>
 					<tbody id="resultBody">
 						<tr>
-							<td colspan="10" style="text-align:center;color:#5f7685;padding:16px;">Még nincs kiszámolt adat.</td>
+							<td colspan="10" class="empty-cell">Még nincs kiszámolt adat.</td>
 						</tr>
 					</tbody>
 				</table>
@@ -85,7 +83,7 @@
 					</thead>
 					<tbody id="summaryBody">
 						<tr>
-							<td colspan="5" style="text-align:center;color:#5f7685;padding:16px;">Még nincs kiszámolt adat.</td>
+							<td colspan="5" class="empty-cell">Még nincs kiszámolt adat.</td>
 						</tr>
 					</tbody>
 				</table>
@@ -94,7 +92,7 @@
 		<section class="panel">
 			<div class="subtitle">
 				<p class="madeby">Készítette: Besnyői Gáborné 2026.04.26. (BFKH tulajdona) 
-				Dokumentáció: <a href="munkanelkuli.README.txt" target="_blank">munkanelkuli.README.txt</a></p>
+				Dokumentáció: <a href="munkanelkuli.README.txt">munkanelkuli.README.txt</a></p>
 			</div>
 		</section>
 	</main>

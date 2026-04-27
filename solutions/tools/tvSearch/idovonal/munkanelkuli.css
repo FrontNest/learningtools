@@ -188,6 +188,12 @@ tbody tr:nth-child(even) {
 	font-variant-numeric: tabular-nums;
 }
 
+.empty-cell {
+	text-align: center;
+	color: #5f7685;
+	padding: 16px;
+}
+
 .year-cell {
 	background: #f8fbfd;
 	font-weight: 700;
