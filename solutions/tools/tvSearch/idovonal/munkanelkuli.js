@@ -559,6 +559,8 @@ function onPercentKeyDown(event) {
 
 // Kilépéskor egységesíti a százalék megjelenítését (pl. 8.5 -> 8,5)
 function normalizePercentInput(event) {
+	// Ha a DOM-rebuild közben a mező lecsatolódott (blur a replaceChildren miatt), ne futtassunk újra
+	if (!event.target.isConnected) return;
 	const idx = Number(event.target.dataset.idx);
 	const parsed = parsePercent(rows[idx].percentInput);
 	if (parsed === null) {
