@@ -398,9 +398,12 @@ function renderResultTable() {
 		const input = document.createElement("input");
 		input.className = "percent-input";
 		input.dataset.idx = String(idx);
+		input.id = `percent-input-${idx}`;
+		input.name = `percentInput${idx}`;
 		input.value = r.percentInput;
 		input.inputMode = "decimal";
 		input.placeholder = "pl. 6,5";
+		input.setAttribute("aria-label", `J\u00e1rul\u00e9k sz\u00e1zal\u00e9k: ${r.from} - ${r.to}, ${r.title}`);
 		input.addEventListener("input", onPercentChanged);
 		input.addEventListener("keydown", onPercentKeyDown);
 		input.addEventListener("blur", normalizePercentInput);

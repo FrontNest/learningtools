@@ -68,7 +68,8 @@ h1 {
 	}
 }
 
-label {
+label,
+.section-label {
 	display: inline-block;
 	margin-bottom: 8px;
 	font-weight: 600;

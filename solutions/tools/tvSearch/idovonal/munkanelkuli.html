@@ -19,8 +19,8 @@
 
 		<section class="grid">
 			<div class="panel">
-				<label for="sourceData">A-D bemenet (tabulátorral tagolt sorok)</label>
-				<textarea id="sourceData" placeholder="2000.01.01.    2000.03.15.    225    munkanélküli járadék&#10;2000.09.20.    2001.11.03.    319    álláskeresési támogatás&#10;2001.10.30.    2003.06.18.    550    munkanélküli segély"></textarea>
+				<label for="sourceData">A-D bemenet (tabulátorral, vagy szóközzel tagolt sorok)</label>
+				<textarea id="sourceData" name="sourceData" placeholder="2000.01.01.    2000.03.15.    225    munkanélküli járadék&#10;2000.09.20.    2001.11.03.    319    álláskeresési támogatás&#10;2001.10.30.    2003.06.18.    550    munkanélküli segély"></textarea>
 				<p class="hint">Dátum formátum: YYYY.MM.DD. (a záró pont megengedett). A kezdő és végdátum is beleszámít a napokba.</p>
 				<div class="actions">
 					<button id="btnCalculate" type="button">Számítás és bontás</button>
@@ -29,7 +29,7 @@
 			</div>
 
 			<div class="panel">
-				<label>Használat röviden</label>
+				<p class="section-label">Használat röviden</p>
 				<p class="subtitle">
 					1) Illeszd/írd be az adatokat a bal oldali mezőbe.<br>
 					2) Kattints a <strong>Számítás és bontás</strong> gombra.<br>
@@ -40,7 +40,7 @@
 		</section>
 
 		<section class="panel">
-			<label>Eredménytábla (éves bontás)</label>
+			<p class="section-label">Eredménytábla (éves bontás)</p>
 			<div class="table-wrap">
 				<table id="resultTable" aria-label="Kiszámolt adatok táblázata">
 					<thead>
@@ -68,7 +68,7 @@
 		</section>
 
 		<section class="panel">
-			<label>Összesítő (év + jogcím)</label>
+			<p class="section-label">Összesítő (év + jogcím)</p>
 			<div class="table-wrap">
 				<table id="summaryTable" aria-label="Év és jogcím szerinti összesítés">
 					<thead>
