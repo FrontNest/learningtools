@@ -18,7 +18,8 @@ majd automatikusan kiszámítja az alábbi adatokat:
 - éves járulék (J)
 
 2. Bemenet
-A bemenet nem tartalmaz GDPR alá tartozó, vagy egyéb érzékeny információt.
+A bemenet rendeltetésszerű használat esetén nem tartalmaz GDPR alá tartozó, 
+vagy egyéb érzékeny információt.
 A bemenet négy oszlopból áll, az alábbi sorrendben:
 - A:- kezdő dátum (YYYY.MM.DD.)
 - B:- záró dátum (YYYY.MM.DD.)
@@ -34,7 +35,7 @@ Megjegyzések a feldolgozáshoz
 - tizedeselválasztóként vessző és pont is használható
 - a jogcím több szóból is állhat
 
-Példák:
+Teszt adatsorok például:
 1992.01.01 1993.09.15 1558 álláskeresési támogatás
 2000.01.01. 2000.12.30. 225 MUNKANÉLKÜLI JÁRADÉK
 2001.01.01. 2001.12.31. 1 125 ÁPOLÁSI DÍJ
@@ -94,7 +95,6 @@ ezért szerver nélkül, közvetlenül fájlból is használható.
 Amennyiben később külső szolgáltatás integrálása válik szükségessé, elegendő a megfelelő CSP-direktívák célzott, minimális módosítása.
 
 7. Üzemeltetési javaslatok
-
 - Helyi használathoz elegendő a HTML-fájl megnyitása.
 - Inline JavaScript használata nem javasolt.
 - Külső script vagy stíluslap csak hivatalos jóváhagyással kerüljön beépítésre.
@@ -114,7 +114,7 @@ A következő részfeladatokhoz vettem igénybe AI segédletet (Claude Sonnet 4.
 - kódesztétika
 
 9. Záró gondolatok
-Ez az eszköz elsősorban a saját munkám minősőgnek, sebességének, hatékonyságának növelését célozza,
+Ez az eszköz elsősorban a saját munkám minőségének, sebességének, hatékonyságának növelését célozza,
 de engedélyezés esetén bárminemű ellenszolgáltatás, kompenzálás nélkül és teljeskörűen szívesen átadom a cégnek.
 Nem támasztok igényt a nevem feltüntesére. (sőt inkább kerülném ennek széles körű publikálását, ha nem muszáj.)
 

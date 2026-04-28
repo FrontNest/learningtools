@@ -11,6 +11,7 @@ const nf = new Intl.NumberFormat("hu-HU", { maximumFractionDigits: 0 });
 const DAY_MS = 24 * 60 * 60 * 1000;
 let rows = [];
 let _isRendering = false; // megakadályozza a blur-ból induló dupla renderelést
+// ha más évközi bontás lenne szükséges, a dátum tömbök szerint bontja az éveket a logika
 const RATE_RULES_RAW = [
 	["1988.01.01.", "1992.02.29.", 10],
 	["1992.03.01.", "1993.12.31.", 6],
@@ -197,7 +198,7 @@ function mergeAdjacentRateSegments(segments) {
 	return merged;
 }
 
-// Napi összeg parse: szóköz/vessző toleráns beolvasás számmá
+// Napi összeg parse: szóköz/vessző toleráns beolvasás számmára
 function parseDailyAmount(value) {
 	const normalized = String(value || "").trim().replace(/\s+/g, "").replace(",", ".");
 	const parsed = Number(normalized);
@@ -436,7 +437,7 @@ function renderResultTable() {
 	}
 }
 
-// Év + jogcím szerinti összesítő tábla felépítése
+// Év + jogcím szerinti összesítő tábla felépítése HTML elemek felépítése
 function renderSummaryTable() {
 	if (!rows.length) {
 		const tr = document.createElement("tr");
