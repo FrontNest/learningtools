@@ -26,9 +26,7 @@
         "munkavegzes aloli mentesites",
         "munkavegzes aluli mentesites",
         "igazolt tavollét",
-        "igazolt tavollet",
-        "igazolatlan tavollét",
-        "igazolatlan tavollet"
+        "igazolt tavollet"
       ],
       "classification": {"female": "N", "male": "N", "default": "N"}
     },
@@ -61,7 +59,7 @@
       "priority": 6,
       "countable": false,
       "minber_check": false,
-      "title_patterns": ["nem szamithato", "kizart", "letartoztatas", "szabadsagvesztes"],
+      "title_patterns": ["nem szamithato", "kizart", "letartoztatas", "szabadsagvesztes", "igazolatlan tavollét", "igazolatlan tavollet"],
       "classification": {"female": "--", "male": "--", "default": "--"}
     }
   ]
