@@ -525,14 +525,22 @@ def apply_unpaid_leave_30day_cap(
             result.at[loc_idx, "decision_reason"]
             + f" | Tny.42§(1)b: FNYSZ ev={int(row['year'])} {rank}. nap > 30 napos ev/korlat → atsorolva --"
         )
+
+    # Egy összevont issue/év: nem naponként
+    for year_val, year_grp in fnysz_sub[over_cap_mask].groupby("year"):
+        first_date = year_grp["date"].min()
+        last_date = year_grp["date"].max()
+        count = len(year_grp)
+        first_row_idx = int(result.loc[year_grp.index[0], "winner_row_index"])
         issues.append(
             {
                 "severity": "medium",
                 "issue_type": "unpaid_leave_over_30days",
-                "row_index": int(result.at[loc_idx, "winner_row_index"]),
+                "row_index": first_row_idx,
+                "days_affected": count,
                 "details": (
-                    f"date {result.at[loc_idx, 'date'].date()}: FNYSZ ev={int(row['year'])}, "
-                    f"ev beluli sorrend: {rank}. nap (korlat: 30) — nem szamithato be [Tny. 42.§(1)b]"
+                    f"{first_date.date()} – {last_date.date()} ({count} nap): "
+                    f"FNYSZ ev={int(year_val)}, 30 nap felett nem szamithato be [Tny. 42.§(1)b]"
                 ),
             }
         )
@@ -570,16 +578,37 @@ def build_review_queue(
             }
         )
 
-    overlap_days = daily_final[daily_final["decision_reason"].str.contains("excluded", na=False)]
-    for _, row in overlap_days.head(500).iterrows():
-        issues.append(
-            {
-                "severity": "medium",
-                "issue_type": "overlap_resolved",
-                "row_index": int(row["winner_row_index"]),
-                "details": f"date {row['date'].date()}: {row['decision_reason']}",
-            }
+    overlap_days = daily_final[daily_final["decision_reason"].str.contains("excluded", na=False)].copy()
+    if not overlap_days.empty:
+        overlap_days = overlap_days.sort_values("date").reset_index(drop=True)
+
+        # Tömörítés: egymást követő napokat egy sorba vonjuk ha azonos a döntési indok
+        # Egy "döntési csoport" = azonos winner_row_index + azonos decision_reason + folytonos dátumsor
+        overlap_days["_group_break"] = (
+            (overlap_days["date"].diff().dt.days != 1)
+            | (overlap_days["winner_row_index"] != overlap_days["winner_row_index"].shift())
+            | (overlap_days["decision_reason"] != overlap_days["decision_reason"].shift())
         )
+        overlap_days["_group_id"] = overlap_days["_group_break"].cumsum()
+
+        for _, grp in overlap_days.groupby("_group_id", sort=True):
+            first_row = grp.iloc[0]
+            last_row = grp.iloc[-1]
+            day_count = len(grp)
+            date_range_str = (
+                str(first_row["date"].date())
+                if day_count == 1
+                else f"{first_row['date'].date()} – {last_row['date'].date()}"
+            )
+            issues.append(
+                {
+                    "severity": "medium",
+                    "issue_type": "overlap_resolved",
+                    "row_index": int(first_row["winner_row_index"]),
+                    "days_affected": day_count,
+                    "details": f"{date_range_str} ({day_count} nap): {first_row['decision_reason']}",
+                }
+            )
 
     if extra_issues:
         issues.extend(extra_issues)
