@@ -39,6 +39,7 @@ class Rule:
     rule_id: str
     priority: int
     countable: bool
+    minber_check: bool
     title_patterns: List[str]
     classification_female: str
     classification_male: str
@@ -167,6 +168,7 @@ def load_rules(path: Path) -> List[Rule]:
                 rule_id=entry["id"],
                 priority=int(entry["priority"]),
                 countable=bool(entry["countable"]),
+                minber_check=bool(entry.get("minber_check", False)),
                 title_patterns=entry.get("title_patterns", []),
                 classification_female=entry.get("classification", {}).get("female", "N"),
                 classification_male=entry.get("classification", {}).get("male", "N"),
@@ -370,12 +372,16 @@ def aggregate_wages_by_year(
     daily_final: pd.DataFrame,
     wage_daily: pd.DataFrame,
     annual_caps: Optional[Dict[str, float]] = None,
+    excluded_wage_rows: Optional[set] = None,
 ) -> pd.DataFrame:
     if daily_final.empty:
         return pd.DataFrame(columns=["year", "accepted_regular", "accepted_irregular", "accepted_benefit", "accepted_total", "cap", "accepted_total_capped"])
 
     accepted_days = daily_final[daily_final["classification"] != "--"][["date"]].copy()
-    joined = accepted_days.merge(wage_daily, on="date", how="left")
+    eligible_wage_daily = wage_daily.copy()
+    if excluded_wage_rows:
+        eligible_wage_daily = eligible_wage_daily[~eligible_wage_daily["wage_row_index"].isin(excluded_wage_rows)]
+    joined = accepted_days.merge(eligible_wage_daily, on="date", how="left")
     joined = joined.fillna(0)
     joined["year"] = joined["date"].dt.year
 
@@ -406,6 +412,89 @@ def aggregate_wages_by_year(
     grouped["cap"] = caps
     grouped["accepted_total_capped"] = capped_totals
     return grouped
+
+
+def apply_minber_check(
+    wage_checked: pd.DataFrame,
+    daily_final: pd.DataFrame,
+    rules: List[Rule],
+    minber_data: Dict[str, float],
+) -> Tuple[pd.DataFrame, List[dict], set]:
+    """TnyR 56.§: EV / társas tag / megbízásos jogviszonyoknál, ha az időszaki jövedelem
+    (rendszeres + nem rendszeres) kisebb az időszakra arányos minimálbérnél, akkor az
+    időszak nem számítható be — sem a szolgálati idő, sem a bér nem fogadható el.
+    Returns: (updated daily_final, issues list, set of disqualified wage row indices)
+    """
+    result = daily_final.copy()
+    issues: List[dict] = []
+    disqualified_wage_rows: set = set()
+
+    # Build a lookup: rule_id -> rule, for minber_check=True rules
+    minber_rule_ids: set = {r.rule_id for r in rules if r.minber_check}
+    if not minber_rule_ids:
+        return result, issues, disqualified_wage_rows
+
+    # For each wage row matching a minber_check rule, evaluate the threshold
+    for idx, wrow in wage_checked.iterrows():
+        title = str(wrow.get("title", ""))
+        matched_rule: Optional[Rule] = None
+        for rule in rules:
+            if rule.minber_check and rule.matches(title):
+                matched_rule = rule
+                break
+        if matched_rule is None:
+            continue
+
+        from_date: pd.Timestamp = wrow["from_date"]
+        to_date: pd.Timestamp = wrow["to_date"]
+        days = int(wrow["inclusive_days_calc"])
+        if days <= 0:
+            continue
+
+        year = from_date.year
+        monthly_minber = minber_data.get(str(year))
+        # Proportional minimum wage for the period: (days / 30) * monthly_minber
+        # Per TnyR the reference base is always 30 days/month regardless of actual month length
+        proportional_minber = (days / 30.0) * monthly_minber
+
+        period_income = (
+            float(pd.to_numeric(pd.Series([wrow.get("regular_base", 0)]), errors="coerce").fillna(0).iloc[0])
+            + float(pd.to_numeric(pd.Series([wrow.get("irregular_income", 0)]), errors="coerce").fillna(0).iloc[0])
+        )
+
+        if period_income >= proportional_minber:
+            continue  # Passes — no action needed
+
+        # Disqualify: mark all daily_final rows in this date range & rule as '--'
+        date_mask = (
+            (result["date"] >= from_date)
+            & (result["date"] <= to_date)
+            & (result["winner_rule_id"] == matched_rule.rule_id)
+            & (result["classification"] != "--")
+        )
+        affected_count = date_mask.sum()
+        for loc_idx in result.index[date_mask]:
+            result.at[loc_idx, "classification"] = "--"
+            result.at[loc_idx, "decision_reason"] = (
+                result.at[loc_idx, "decision_reason"]
+                + f" | TnyR56.§: jovedelem ({period_income:.0f} Ft) < aranyos minbér ({proportional_minber:.0f} Ft) → atsorolva --"
+            )
+
+        disqualified_wage_rows.add(int(idx))
+        issues.append({
+            "severity": "high",
+            "issue_type": "minber_below_threshold",
+            "row_index": int(idx),
+            "details": (
+                f"wage row {idx}: {from_date.date()} – {to_date.date()}, "
+                f"jogcim='{title}', {days} nap, "
+                f"jovedelem={period_income:.0f} Ft, "
+                f"aranyos minber={proportional_minber:.0f} Ft ({monthly_minber:.0f}/ho x {days}/30), "
+                f"{affected_count} nap atsorolva '--' [TnyR 56.§]"
+            ),
+        })
+
+    return result, issues, disqualified_wage_rows
 
 
 def apply_unpaid_leave_30day_cap(
@@ -524,15 +613,22 @@ def main() -> None:
     parser.add_argument("--wage-sheet", default="ber", help="Wage sheet name.")
     parser.add_argument("--rules", default="rules.json", help="Rules JSON path.")
     parser.add_argument("--annual-cap", default=None, help="Optional JSON with yearly caps.")
+    parser.add_argument("--minber", default="minber.json", help="JSON with monthly minimum wages by year (default: minber.json).")
     args = parser.parse_args()
 
     input_path = Path(args.input)
     output_path = Path(args.output)
     rules_path = Path(args.rules)
     cap_path = Path(args.annual_cap) if args.annual_cap else None
+    minber_path = Path(args.minber) if args.minber else None
 
     rules = load_rules(rules_path)
     annual_caps = read_annual_caps(cap_path)
+
+    minber_data: Dict[str, float] = {}
+    if minber_path and minber_path.exists():
+        raw = json.loads(minber_path.read_text(encoding="utf-8"))
+        minber_data = {str(k): float(v) for k, v in raw.items() if not str(k).startswith("_")}
 
     service_raw = pd.read_excel(input_path, sheet_name=args.service_sheet)
     wage_raw = pd.read_excel(input_path, sheet_name=args.wage_sheet)
@@ -552,13 +648,14 @@ def main() -> None:
 
     service_daily = expand_service_daily(service_checked, rules, args.sex)
     daily_final = decide_daily_classification(service_daily)
+    daily_final, minber_issues, disqualified_wage_rows = apply_minber_check(wage_checked, daily_final, rules, minber_data)
     daily_final, fnysz_issues = apply_unpaid_leave_30day_cap(daily_final)
     periods_year_split = merge_daily_to_periods(daily_final)
 
     wage_daily = expand_wage_daily(wage_checked)
-    yearly_wages = aggregate_wages_by_year(daily_final, wage_daily, annual_caps)
+    yearly_wages = aggregate_wages_by_year(daily_final, wage_daily, annual_caps, excluded_wage_rows=disqualified_wage_rows)
 
-    review_queue = build_review_queue(service_checked, wage_checked, daily_final, extra_issues=fnysz_issues)
+    review_queue = build_review_queue(service_checked, wage_checked, daily_final, extra_issues=minber_issues + fnysz_issues)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
