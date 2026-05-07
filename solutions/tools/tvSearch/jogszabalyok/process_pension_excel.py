@@ -12,7 +12,7 @@ import pandas as pd
 SERVICE_ALIASES = {
     "from_date": ["datumtol", "datumtol_", "datumtol(", "datum(tol)", "datum_tol", "tol"],
     "to_date": ["datumig", "datum(ig)", "datum_ig", "ig"],
-    "inclusive_days": ["inclusive_napok_szama", "inclusive", "napok_szama", "napok"],
+    "inclusive_days": ["inclusive_napok_szama", "inclusive_napok", "inclusive", "napok_szama", "napok"],
     "employer": ["munkaltato_neve", "munkaltato", "ceg", "munkaltato neve"],
     "title": ["jogcim", "jogcime"],
     "classification": ["minosites", "minosites_", "besorolas"],
@@ -21,14 +21,17 @@ SERVICE_ALIASES = {
 WAGE_ALIASES = {
     "from_date": ["datumtol", "datum(tol)", "datum_tol", "tol"],
     "to_date": ["datumig", "datum(ig)", "datum_ig", "ig"],
-    "inclusive_days": ["inclusive_napok_szama", "inclusive", "napok_szama", "napok"],
+    # inclusive_days is OPTIONAL for wage rows — computed from dates when absent
     "employer": ["munkaltato_neve", "munkaltato", "ceg", "munkaltato neve"],
     "title": ["jogcim", "jogcime"],
-    "regular_base": ["rendszeres_jarulekalap", "rendszeres", "jarulekalap"],
-    "irregular_income": ["nem_rendszeres_juttatas", "nem_rendszeres", "juttatas"],
-    "benefit_income": ["ellatas_osszegek", "gyes_gyed_tgyas_gyap_munkanelkuli_stb", "ellatas", "h"],
-    "paid_contribution": ["befizetett_jarulek", "jarulek"],
+    "regular_base": ["rendszeres_jarulekalap", "rendszeres_jovedelem", "rendszeres", "jarulekalap"],
+    "irregular_income": ["nem_rendszeres_juttatas", "nem_rendszeres_jovedelem", "nem_rendszeres", "juttatas"],
+    "benefit_income": ["ellatas_1", "ellatas_osszegek", "gyes_gyed_tgyas_gyap_munkanelkuli_stb", "ellatas", "h"],
+    "paid_contribution": ["befizetett_nyugdijjarulek", "befizetett_jarulek", "jarulek"],
 }
+
+# Columns omitted from WAGE_ALIASES that are optional (synthesised from dates if absent)
+WAGE_OPTIONAL: set = {"inclusive_days"}
 
 
 @dataclass
@@ -64,7 +67,13 @@ def normalize_colname(col: str) -> str:
     return normalized
 
 
-def map_columns(df: pd.DataFrame, aliases: Dict[str, List[str]], table_name: str) -> pd.DataFrame:
+def map_columns(
+    df: pd.DataFrame,
+    aliases: Dict[str, List[str]],
+    table_name: str,
+    optional_cols: Optional[set] = None,
+) -> pd.DataFrame:
+    optional_cols = optional_cols or set()
     reverse_map: Dict[str, str] = {}
     for canonical, candidates in aliases.items():
         reverse_map[canonical] = canonical
@@ -78,7 +87,28 @@ def map_columns(df: pd.DataFrame, aliases: Dict[str, List[str]], table_name: str
             rename_map[col] = reverse_map[normalized]
 
     mapped = df.rename(columns=rename_map).copy()
-    missing = [canonical for canonical in aliases.keys() if canonical not in mapped.columns]
+
+    # ellatas_2 is an optional extra benefit column — normalise name then fold into benefit_income
+    for raw_col in list(mapped.columns):
+        if normalize_colname(raw_col) == "ellatas_2" or raw_col == "ellatas_2":
+            e2 = pd.to_numeric(mapped[raw_col], errors="coerce").fillna(0)
+            if "benefit_income" in mapped.columns:
+                bi = pd.to_numeric(mapped["benefit_income"], errors="coerce").fillna(0)
+                mapped["benefit_income"] = bi + e2
+            else:
+                mapped["benefit_income"] = e2
+            mapped.drop(columns=[raw_col], inplace=True)
+            break
+
+    # Synthesise inclusive_days from dates if column is optional and absent
+    if "inclusive_days" in optional_cols and "inclusive_days" not in mapped.columns:
+        mapped["inclusive_days"] = pd.NA  # will be filled after date parsing
+
+    missing = [
+        canonical
+        for canonical in aliases.keys()
+        if canonical not in mapped.columns and canonical not in optional_cols
+    ]
     if missing:
         raise ValueError(
             f"{table_name} table is missing required columns after alias mapping: {missing}. "
@@ -89,12 +119,30 @@ def map_columns(df: pd.DataFrame, aliases: Dict[str, List[str]], table_name: str
 
 def parse_date_columns(df: pd.DataFrame, table_name: str) -> pd.DataFrame:
     parsed = df.copy()
-    parsed["from_date"] = pd.to_datetime(parsed["from_date"], dayfirst=True, errors="coerce")
-    parsed["to_date"] = pd.to_datetime(parsed["to_date"], dayfirst=True, errors="coerce")
+
+    def coerce_date_col(col: pd.Series) -> pd.Series:
+        # If already datetime (openpyxl reads real date cells as datetime), keep as-is
+        if pd.api.types.is_datetime64_any_dtype(col):
+            return col
+        # Try ISO / Excel date string formats common in Hungary: YYYY.MM.DD, DD.MM.YYYY, YYYY-MM-DD
+        for fmt in ("%Y.%m.%d", "%Y-%m-%d", "%d.%m.%Y", "%d/%m/%Y"):
+            try:
+                result = pd.to_datetime(col, format=fmt, errors="raise")
+                return result
+            except (ValueError, TypeError):
+                pass
+        # Last resort: generic inference
+        return pd.to_datetime(col, dayfirst=False, errors="coerce")
+
+    parsed["from_date"] = coerce_date_col(parsed["from_date"])
+    parsed["to_date"] = coerce_date_col(parsed["to_date"])
 
     invalid_dates = parsed[parsed["from_date"].isna() | parsed["to_date"].isna()]
     if not invalid_dates.empty:
-        raise ValueError(f"{table_name} table has invalid date values in from/to columns.")
+        raise ValueError(
+            f"{table_name} table has invalid date values in rows: "
+            f"{list(invalid_dates.index)}"
+        )
 
     if (parsed["to_date"] < parsed["from_date"]).any():
         raise ValueError(f"{table_name} table has rows where to_date < from_date.")
@@ -439,10 +487,14 @@ def main() -> None:
     wage_raw = pd.read_excel(input_path, sheet_name=args.wage_sheet)
 
     service_mapped = map_columns(service_raw, SERVICE_ALIASES, "service")
-    wage_mapped = map_columns(wage_raw, WAGE_ALIASES, "wage")
+    wage_mapped = map_columns(wage_raw, WAGE_ALIASES, "wage", optional_cols=WAGE_OPTIONAL)
 
     service_parsed = parse_date_columns(service_mapped, "service")
     wage_parsed = parse_date_columns(wage_mapped, "wage")
+
+    # Synthesise inclusive_days for wage if not present in source data
+    if wage_parsed["inclusive_days"].isna().all():
+        wage_parsed["inclusive_days"] = (wage_parsed["to_date"] - wage_parsed["from_date"]).dt.days + 1
 
     service_checked = validate_inclusive_days(service_parsed)
     wage_checked = validate_inclusive_days(wage_parsed)
