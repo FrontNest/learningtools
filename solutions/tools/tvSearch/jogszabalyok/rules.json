@@ -1,0 +1,46 @@
+{
+  "rules": [
+    {
+      "id": "employment_main",
+      "priority": 1,
+      "countable": true,
+      "title_patterns": ["munkaviszony", "foallasu", "foallas", "egyeni vallalkozo", "tarsas vallalkozo"],
+      "classification": {"female": "J", "male": "N", "default": "N"}
+    },
+    {
+      "id": "secondary_or_casual",
+      "priority": 2,
+      "countable": true,
+      "title_patterns": ["mellekallas", "egyszerusitett", "megbizas", "alkalmi"],
+      "classification": {"female": "N", "male": "N", "default": "N"}
+    },
+    {
+      "id": "childcare",
+      "priority": 3,
+      "countable": true,
+      "title_patterns": ["gyes", "gyed", "tgyas", "csed", "gyap", "gyermek"],
+      "classification": {"female": "G", "male": "G", "default": "G"}
+    },
+    {
+      "id": "sick_pay",
+      "priority": 4,
+      "countable": true,
+      "title_patterns": ["tappenz", "betegszabadsag", "baleseti tappenz"],
+      "classification": {"female": "N", "male": "N", "default": "N"}
+    },
+    {
+      "id": "unpaid_leave",
+      "priority": 5,
+      "countable": true,
+      "title_patterns": ["fizetes nelkuli"],
+      "classification": {"female": "N", "male": "N", "default": "N"}
+    },
+    {
+      "id": "not_countable",
+      "priority": 6,
+      "countable": false,
+      "title_patterns": ["nem szamithato", "kizart", "letartoztatas", "szabadsagvesztes"],
+      "classification": {"female": "--", "male": "--", "default": "--"}
+    }
+  ]
+}
