@@ -21,7 +21,15 @@
       "priority": 3,
       "countable": true,
       "minber_check": false,
-      "title_patterns": ["fizetes nelkuli"],
+      "title_patterns": [
+        "fizetes nelkuli",
+        "munkavegzes aloli mentesites",
+        "munkavegzes aluli mentesites",
+        "igazolt tavollét",
+        "igazolt tavollet",
+        "igazolatlan tavollét",
+        "igazolatlan tavollet"
+      ],
       "classification": {"female": "N", "male": "N", "default": "N"}
     },
     {
