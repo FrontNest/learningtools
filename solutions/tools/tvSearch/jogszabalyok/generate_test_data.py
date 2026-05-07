@@ -48,6 +48,8 @@ BER_ROWS = [
     [10, "2000.03.04", "2001.01.01", "M4",               "megbízásos",            12345678,      0,       None,   None,    6  ],
     [11, "2000.03.05", "2001.01.02", "M5",               "megbízásos",            12345678,      0,       None,   None,    7  ],
     [12, "2000.03.06", "2001.01.03", "egyéni vállalkozó","egyéni vállalkozó főállás", 12345678,  0,       None,   None,    8  ],
+    # FNYSZ 30-napos szabaly tesztesehez: 1990-ben 45 napos FNYSZ
+    [13, "1990.01.01", "1990.02.14", None,               "fizetés nélküli szabadság",       0,  0,       None,   None, None  ],
 ]
 
 # -------------------------------------------------------------------------
@@ -79,6 +81,8 @@ SZOLG_ROWS = [
     [10, "2000.03.04", "2001.01.01",  304, "M4",               "megbízásos",                  "N"  ],
     [11, "2000.03.05", "2001.01.02",  304, "M5",               "megbízásos",                  "N"  ],
     [12, "2000.03.06", "2001.01.03",  304, "egyéni vállalkozó","egyéni vállalkozó főállás",   "J"  ],
+    # FNYSZ 30-napos szabaly tesztesehez: 1990-ben 45 napos FNYSZ, nincs mogotte munkaviszony
+    [13, "1990.01.01", "1990.02.14",   45, None,               "fizetés nélküli szabadság",   "N"  ],
 ]
 
 

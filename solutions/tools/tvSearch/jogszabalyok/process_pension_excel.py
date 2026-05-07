@@ -408,7 +408,55 @@ def aggregate_wages_by_year(
     return grouped
 
 
-def build_review_queue(service_checked: pd.DataFrame, wage_checked: pd.DataFrame, daily_final: pd.DataFrame) -> pd.DataFrame:
+def apply_unpaid_leave_30day_cap(
+    daily_final: pd.DataFrame,
+) -> Tuple[pd.DataFrame, List[dict]]:
+    """Tny. 42.§(1)b: evente legfeljebb 30 nap fizetés nélküli szabadság számítható be.
+    A 31. naptól induló FNYSZ napok átsorolódnak '--'-ra (nem számítható be).
+    Gyermekes FNYSZ jellemzően 'childcare' rule_id-vel szerepel, ezt nem érinti.
+    """
+    result = daily_final.copy()
+    issues: List[dict] = []
+
+    mask_fnysz = (result["winner_rule_id"] == "unpaid_leave") & (result["classification"] != "--")
+    if not mask_fnysz.any():
+        return result, issues
+
+    # Az FNYSZ napokat dátum szerint rangsoroljuk éven belül (daily_final már dátum szerint rendezett)
+    fnysz_indices = result.index[mask_fnysz].tolist()
+    fnysz_sub = result.loc[fnysz_indices, ["date"]].copy()
+    fnysz_sub["year"] = fnysz_sub["date"].dt.year
+    fnysz_sub["rank_in_year"] = fnysz_sub.groupby("year", sort=False).cumcount() + 1
+
+    over_cap_mask = fnysz_sub["rank_in_year"] > 30
+    for loc_idx, row in fnysz_sub[over_cap_mask].iterrows():
+        rank = int(row["rank_in_year"])
+        result.at[loc_idx, "classification"] = "--"
+        result.at[loc_idx, "decision_reason"] = (
+            result.at[loc_idx, "decision_reason"]
+            + f" | Tny.42§(1)b: FNYSZ ev={int(row['year'])} {rank}. nap > 30 napos ev/korlat → atsorolva --"
+        )
+        issues.append(
+            {
+                "severity": "medium",
+                "issue_type": "unpaid_leave_over_30days",
+                "row_index": int(result.at[loc_idx, "winner_row_index"]),
+                "details": (
+                    f"date {result.at[loc_idx, 'date'].date()}: FNYSZ ev={int(row['year'])}, "
+                    f"ev beluli sorrend: {rank}. nap (korlat: 30) — nem szamithato be [Tny. 42.§(1)b]"
+                ),
+            }
+        )
+
+    return result, issues
+
+
+def build_review_queue(
+    service_checked: pd.DataFrame,
+    wage_checked: pd.DataFrame,
+    daily_final: pd.DataFrame,
+    extra_issues: Optional[List[dict]] = None,
+) -> pd.DataFrame:
     issues = []
 
     invalid_service = service_checked[~service_checked["inclusive_days_ok"]]
@@ -443,6 +491,9 @@ def build_review_queue(service_checked: pd.DataFrame, wage_checked: pd.DataFrame
                 "details": f"date {row['date'].date()}: {row['decision_reason']}",
             }
         )
+
+    if extra_issues:
+        issues.extend(extra_issues)
 
     if not issues:
         issues.append(
@@ -501,12 +552,13 @@ def main() -> None:
 
     service_daily = expand_service_daily(service_checked, rules, args.sex)
     daily_final = decide_daily_classification(service_daily)
+    daily_final, fnysz_issues = apply_unpaid_leave_30day_cap(daily_final)
     periods_year_split = merge_daily_to_periods(daily_final)
 
     wage_daily = expand_wage_daily(wage_checked)
     yearly_wages = aggregate_wages_by_year(daily_final, wage_daily, annual_caps)
 
-    review_queue = build_review_queue(service_checked, wage_checked, daily_final)
+    review_queue = build_review_queue(service_checked, wage_checked, daily_final, extra_issues=fnysz_issues)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
