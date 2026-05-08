@@ -160,6 +160,38 @@ def validate_inclusive_days(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def load_minber_intervals(path: Optional[Path]) -> Optional[List[dict]]:
+    """Load interval-based minimum wage data. Each interval has 'from', 'to', 'value' (Ft).
+    Returns None if path not provided or doesn't exist; returns list of intervals otherwise.
+    """
+    if not path or not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        intervals = data.get("intervals", [])
+        # Sort by from_date for binary search optimization (optional)
+        intervals.sort(key=lambda x: x.get("from"))
+        return intervals
+    except Exception as e:
+        print(f"Warning: Could not load minber_intervals.json: {e}")
+        return None
+
+
+def get_minber_for_date(date_value: pd.Timestamp, intervals: Optional[List[dict]]) -> Optional[float]:
+    """Get monthly minimum wage for a given date from interval list.
+    Returns the value (Ft) if found, None otherwise.
+    """
+    if intervals is None:
+        return None
+    date_str = date_value.strftime("%Y-%m-%d")
+    for interval in intervals:
+        from_str = interval.get("from")
+        to_str = interval.get("to")
+        if from_str <= date_str <= to_str:
+            return float(interval.get("value", 0))
+    return None
+
+
 def load_rules(path: Path, statutory_path: Optional[Path] = None) -> List[Rule]:
     data = json.loads(path.read_text(encoding="utf-8"))
     
@@ -441,11 +473,12 @@ def apply_minber_check(
     wage_checked: pd.DataFrame,
     daily_final: pd.DataFrame,
     rules: List[Rule],
-    minber_data: Dict[str, float],
+    minber_intervals: Optional[List[dict]] = None,
 ) -> Tuple[pd.DataFrame, List[dict], set]:
     """TnyR 56.§: EV / társas tag / megbízásos jogviszonyoknál, ha az időszaki jövedelem
     (rendszeres + nem rendszeres) kisebb az időszakra arányos minimálbérnél, akkor az
     időszak nem számítható be — sem a szolgálati idő, sem a bér nem fogadható el.
+    Supports interval-based minimum wage lookup for day-level precision.
     Returns: (updated daily_final, issues list, set of disqualified wage row indices)
     """
     result = daily_final.copy()
@@ -454,7 +487,7 @@ def apply_minber_check(
 
     # Build a lookup: rule_id -> rule, for minber_check=True rules
     minber_rule_ids: set = {r.rule_id for r in rules if r.minber_check}
-    if not minber_rule_ids:
+    if not minber_rule_ids or minber_intervals is None:
         return result, issues, disqualified_wage_rows
 
     # For each wage row matching a minber_check rule, evaluate the threshold
@@ -474,11 +507,18 @@ def apply_minber_check(
         if days <= 0:
             continue
 
-        year = from_date.year
-        monthly_minber = minber_data.get(str(year))
-        # Proportional minimum wage for the period: (days / 30) * monthly_minber
-        # Per TnyR the reference base is always 30 days/month regardless of actual month length
-        proportional_minber = (days / 30.0) * monthly_minber
+        # Compute average minimum wage across the period (day-level precision)
+        # For each day, lookup the applicable minimum wage from intervals
+        total_minber = 0.0
+        for day_offset in range(days):
+            day = from_date + pd.Timedelta(days=day_offset)
+            daily_minber = get_minber_for_date(day, minber_intervals)
+            if daily_minber:
+                total_minber += daily_minber
+        
+        # Proportional minimum wage for the period: sum of daily minimums / 30
+        # (converts monthly values to period-proportional threshold)
+        proportional_minber = total_minber / 30.0 if days > 0 else 0.0
 
         period_income = (
             float(pd.to_numeric(pd.Series([wrow.get("regular_base", 0)]), errors="coerce").fillna(0).iloc[0])
@@ -512,7 +552,7 @@ def apply_minber_check(
                 f"wage row {idx}: {from_date.date()} – {to_date.date()}, "
                 f"jogcim='{title}', {days} nap, "
                 f"jovedelem={period_income:.0f} Ft, "
-                f"aranyos minber={proportional_minber:.0f} Ft ({monthly_minber:.0f}/ho x {days}/30), "
+                f"aranyos minber={proportional_minber:.0f} Ft (intervallum-alapú napponkénti lekérdezés), "
                 f"{affected_count} nap atsorolva '--' [TnyR 56.§]"
             ),
         })
@@ -666,7 +706,7 @@ def main() -> None:
     parser.add_argument("--rules", default="rules.json", help="Rules JSON path.")
     parser.add_argument("--statutory-basis", default="statutory_basis.json", help="Statutory basis references JSON (default: statutory_basis.json).")
     parser.add_argument("--annual-cap", default=None, help="Optional JSON with yearly caps.")
-    parser.add_argument("--minber", default="minber.json", help="JSON with monthly minimum wages by year (default: minber.json).")
+    parser.add_argument("--minber-intervals", default="minber_intervals.json", help="JSON with interval-based minimum wages (default: minber_intervals.json).")
     args = parser.parse_args()
 
     input_path = Path(args.input)
@@ -674,15 +714,13 @@ def main() -> None:
     rules_path = Path(args.rules)
     statutory_path = Path(args.statutory_basis) if args.statutory_basis else None
     cap_path = Path(args.annual_cap) if args.annual_cap else None
-    minber_path = Path(args.minber) if args.minber else None
+    minber_intervals_path = Path(args.minber_intervals) if args.minber_intervals else None
 
     rules = load_rules(rules_path, statutory_path)
     annual_caps = read_annual_caps(cap_path)
 
-    minber_data: Dict[str, float] = {}
-    if minber_path and minber_path.exists():
-        raw = json.loads(minber_path.read_text(encoding="utf-8"))
-        minber_data = {str(k): float(v) for k, v in raw.items() if not str(k).startswith("_")}
+    # Load interval-based minimum wage data instead of yearly snapshots
+    minber_intervals = load_minber_intervals(minber_intervals_path)
 
     service_raw = pd.read_excel(input_path, sheet_name=args.service_sheet)
     wage_raw = pd.read_excel(input_path, sheet_name=args.wage_sheet)
@@ -702,7 +740,7 @@ def main() -> None:
 
     service_daily = expand_service_daily(service_checked, rules, args.sex)
     daily_final = decide_daily_classification(service_daily)
-    daily_final, minber_issues, disqualified_wage_rows = apply_minber_check(wage_checked, daily_final, rules, minber_data)
+    daily_final, minber_issues, disqualified_wage_rows = apply_minber_check(wage_checked, daily_final, rules, minber_intervals)
     daily_final, fnysz_issues = apply_unpaid_leave_30day_cap(daily_final)
     periods_year_split = merge_daily_to_periods(daily_final)
 
