@@ -566,6 +566,10 @@ def apply_unpaid_leave_30day_cap(
     """Tny. 42.§(1)b: evente legfeljebb 30 nap fizetés nélküli szabadság számítható be.
     A 31. naptól induló FNYSZ napok átsorolódnak '--'-ra (nem számítható be).
     Gyermekes FNYSZ jellemzően 'childcare' rule_id-vel szerepel, ezt nem érinti.
+    
+    1997-régimes (pre-1998): Nőknél bontásra voltak kötelezve a 30 napot meghaladó FNYSZ-t
+    (meg kellett választani a 'DOLGOZOTT' és 'NEM DOLGOZOTT' szakaszokat).
+    Az alkalmazás jelölésre kerül a review_queue-ban az ügyintéző kézzel lebontásához.
     """
     result = daily_final.copy()
     issues: List[dict] = []
@@ -583,11 +587,23 @@ def apply_unpaid_leave_30day_cap(
     over_cap_mask = fnysz_sub["rank_in_year"] > 30
     for loc_idx, row in fnysz_sub[over_cap_mask].iterrows():
         rank = int(row["rank_in_year"])
+        date_val = pd.Timestamp(row["date"])
+        
+        # 1997-régimes detektálás: 1997.12.31 előtt
+        is_pre_1998 = date_val <= pd.Timestamp("1997-12-31")
+        
         result.at[loc_idx, "classification"] = "--"
         result.at[loc_idx, "decision_reason"] = (
             result.at[loc_idx, "decision_reason"]
             + f" | Tny.42§(1)b: FNYSZ ev={int(row['year'])} {rank}. nap > 30 napos ev/korlat → atsorolva --"
         )
+        
+        # 1997-régimes: jelöl az ügyintéző számára, hogy kézzel kell lebontani
+        if is_pre_1998:
+            result.at[loc_idx, "decision_reason"] = (
+                result.at[loc_idx, "decision_reason"]
+                + " | 1997-RÉGIMES: ügyintéző kézzel kell lebontsa 'DOLGOZOTT'/'NEM DOLGOZOTT' szakaszokra"
+            )
 
     # Egy összevont issue/év: nem naponként
     for year_val, year_grp in fnysz_sub[over_cap_mask].groupby("year"):
@@ -595,18 +611,30 @@ def apply_unpaid_leave_30day_cap(
         last_date = year_grp["date"].max()
         count = len(year_grp)
         first_row_idx = int(result.loc[year_grp.index[0], "winner_row_index"])
-        issues.append(
-            {
-                "severity": "medium",
-                "issue_type": "unpaid_leave_over_30days",
-                "row_index": first_row_idx,
-                "days_affected": count,
-                "details": (
-                    f"{first_date.date()} – {last_date.date()} ({count} nap): "
-                    f"FNYSZ ev={int(year_val)}, 30 nap felett nem szamithato be [Tny. 42.§(1)b]"
-                ),
-            }
-        )
+        
+        # 1997-régimes detektálás
+        is_pre_1998 = pd.Timestamp(first_date) <= pd.Timestamp("1997-12-31")
+        
+        issue_dict = {
+            "severity": "medium",
+            "issue_type": "unpaid_leave_over_30days",
+            "row_index": first_row_idx,
+            "days_affected": count,
+            "details": (
+                f"{first_date.date()} – {last_date.date()} ({count} nap): "
+                f"FNYSZ ev={int(year_val)}, 30 nap felett nem szamithato be [Tny. 42.§(1)b]"
+            ),
+        }
+        
+        # 1997-régimes megjegyzés hozzáadása
+        if is_pre_1998:
+            issue_dict["details"] += (
+                " | 1997-RÉGIMES BONTÁSI KÖTELEZETTSÉG: "
+                "ügyintéző kézzel kell lebontsa a 30 napot meghaladó FNYSZ-t "
+                "'DOLGOZOTT' (eredeti jogcím) és 'NEM DOLGOZOTT' (--) szakaszokra"
+            )
+        
+        issues.append(issue_dict)
 
     return result, issues
 
