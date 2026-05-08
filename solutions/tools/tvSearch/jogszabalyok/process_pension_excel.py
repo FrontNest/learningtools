@@ -44,6 +44,7 @@ class Rule:
     classification_female: str
     classification_male: str
     classification_default: str
+    statutory_basis: str = ""  # Legal reference from statutory_basis.json
 
     def matches(self, title: str) -> bool:
         normalized_title = normalize_text(title)
@@ -159,13 +160,25 @@ def validate_inclusive_days(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def load_rules(path: Path) -> List[Rule]:
+def load_rules(path: Path, statutory_path: Optional[Path] = None) -> List[Rule]:
     data = json.loads(path.read_text(encoding="utf-8"))
+    
+    # Load statutory basis references if provided
+    statutory_basis_map: Dict[str, str] = {}
+    if statutory_path and statutory_path.exists():
+        statutory_data = json.loads(statutory_path.read_text(encoding="utf-8"))
+        for rule_id, ref_info in statutory_data.get("statutory_references", {}).items():
+            basis = ref_info.get("basis_hu", "")
+            description = ref_info.get("description", "")
+            statutory_basis_map[rule_id] = f"{basis} - {description}" if basis else ""
+    
     rules = []
     for entry in data.get("rules", []):
+        rule_id = entry["id"]
+        statutory_basis = statutory_basis_map.get(rule_id, "")
         rules.append(
             Rule(
-                rule_id=entry["id"],
+                rule_id=rule_id,
                 priority=int(entry["priority"]),
                 countable=bool(entry["countable"]),
                 minber_check=bool(entry.get("minber_check", False)),
@@ -173,6 +186,7 @@ def load_rules(path: Path) -> List[Rule]:
                 classification_female=entry.get("classification", {}).get("female", "N"),
                 classification_male=entry.get("classification", {}).get("male", "N"),
                 classification_default=entry.get("classification", {}).get("default", "N"),
+                statutory_basis=statutory_basis,
             )
         )
     if not rules:
@@ -211,6 +225,7 @@ def expand_service_daily(service_df: pd.DataFrame, rules: List[Rule], sex: str) 
     for idx, row in service_df.iterrows():
         rule, priority, countable, rule_reason = assign_rule(row, rules)
         final_cls = pick_classification(rule, sex, str(row.get("classification", "")).strip())
+        statutory_basis = rule.statutory_basis if rule else ""
 
         for day in pd.date_range(row["from_date"], row["to_date"], freq="D"):
             daily_rows.append(
@@ -225,6 +240,7 @@ def expand_service_daily(service_df: pd.DataFrame, rules: List[Rule], sex: str) 
                     "countable": countable,
                     "classification": final_cls,
                     "rule_reason": rule_reason,
+                    "statutory_basis": statutory_basis,
                 }
             )
 
@@ -233,7 +249,7 @@ def expand_service_daily(service_df: pd.DataFrame, rules: List[Rule], sex: str) 
 
 def decide_daily_classification(service_daily: pd.DataFrame) -> pd.DataFrame:
     if service_daily.empty:
-        return pd.DataFrame(columns=["date", "classification", "priority", "decision_reason", "winner_row_index"])
+        return pd.DataFrame(columns=["date", "classification", "priority", "decision_reason", "winner_row_index", "statutory_basis"])
 
     chosen_rows = []
     for date_value, group in service_daily.groupby("date", sort=True):
@@ -261,6 +277,7 @@ def decide_daily_classification(service_daily: pd.DataFrame) -> pd.DataFrame:
                 "winner_rule_id": winner.rule_id,
                 "winner_countable": bool(winner.countable),
                 "decision_reason": decision_reason,
+                "statutory_basis": winner.statutory_basis if pd.notna(winner.get("statutory_basis")) else "",
             }
         )
 
@@ -269,12 +286,13 @@ def decide_daily_classification(service_daily: pd.DataFrame) -> pd.DataFrame:
 
 def merge_daily_to_periods(daily_final: pd.DataFrame) -> pd.DataFrame:
     if daily_final.empty:
-        return pd.DataFrame(columns=["from_date", "to_date", "inclusive_days", "classification", "year"])
+        return pd.DataFrame(columns=["from_date", "to_date", "inclusive_days", "classification", "year", "statutory_basis"])
 
     rows = []
     current = daily_final.iloc[0]
     start_date = current.date
     prev_date = current.date
+    current_statutory = current.get("statutory_basis", "")
 
     for _, row in daily_final.iloc[1:].iterrows():
         contiguous = (row.date - prev_date).days == 1
@@ -291,12 +309,14 @@ def merge_daily_to_periods(daily_final: pd.DataFrame) -> pd.DataFrame:
                 "inclusive_days": (prev_date - start_date).days + 1,
                 "classification": current.classification,
                 "year": start_date.year,
+                "statutory_basis": current_statutory,
             }
         )
 
         start_date = row.date
         prev_date = row.date
         current = row
+        current_statutory = row.get("statutory_basis", "")
 
     rows.append(
         {
@@ -305,6 +325,7 @@ def merge_daily_to_periods(daily_final: pd.DataFrame) -> pd.DataFrame:
             "inclusive_days": (prev_date - start_date).days + 1,
             "classification": current.classification,
             "year": start_date.year,
+            "statutory_basis": current_statutory,
         }
     )
 
@@ -318,6 +339,7 @@ def split_periods_by_year(periods: pd.DataFrame) -> pd.DataFrame:
         start = row["from_date"]
         end = row["to_date"]
         classification = row["classification"]
+        statutory_basis = row.get("statutory_basis", "")
 
         year_cursor = start.year
         while year_cursor <= end.year:
@@ -333,6 +355,7 @@ def split_periods_by_year(periods: pd.DataFrame) -> pd.DataFrame:
                     "to_date": part_end,
                     "inclusive_days": (part_end - part_start).days + 1,
                     "classification": classification,
+                    "statutory_basis": statutory_basis,
                 }
             )
             year_cursor += 1
@@ -641,6 +664,7 @@ def main() -> None:
     parser.add_argument("--service-sheet", default="szolgalati_ido", help="Service sheet name.")
     parser.add_argument("--wage-sheet", default="ber", help="Wage sheet name.")
     parser.add_argument("--rules", default="rules.json", help="Rules JSON path.")
+    parser.add_argument("--statutory-basis", default="statutory_basis.json", help="Statutory basis references JSON (default: statutory_basis.json).")
     parser.add_argument("--annual-cap", default=None, help="Optional JSON with yearly caps.")
     parser.add_argument("--minber", default="minber.json", help="JSON with monthly minimum wages by year (default: minber.json).")
     args = parser.parse_args()
@@ -648,10 +672,11 @@ def main() -> None:
     input_path = Path(args.input)
     output_path = Path(args.output)
     rules_path = Path(args.rules)
+    statutory_path = Path(args.statutory_basis) if args.statutory_basis else None
     cap_path = Path(args.annual_cap) if args.annual_cap else None
     minber_path = Path(args.minber) if args.minber else None
 
-    rules = load_rules(rules_path)
+    rules = load_rules(rules_path, statutory_path)
     annual_caps = read_annual_caps(cap_path)
 
     minber_data: Dict[str, float] = {}
