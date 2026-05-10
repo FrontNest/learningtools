@@ -485,6 +485,25 @@ def apply_minber_check(
     issues: List[dict] = []
     disqualified_wage_rows: set = set()
 
+    megbizas_like_keywords = [
+        "munkavegzesre iranyulo egyeb jogviszony",
+        "megbizasi jogviszony",
+        "megbizas",
+        "felhasznalasi szerzodes",
+        "valasztott tisztsegviselo",
+        "allami projektertekelo",
+    ]
+
+    def minber_multiplier_for_day(rule_id: str, normalized_title: str, day: pd.Timestamp) -> float:
+        # 1997-tol a megbizas-jellegu jogviszonyoknal a 30%-os minimumszint a kuszob.
+        if (
+            rule_id == "secondary_or_casual"
+            and day >= pd.Timestamp("1997-01-01")
+            and any(keyword in normalized_title for keyword in megbizas_like_keywords)
+        ):
+            return 0.30
+        return 1.0
+
     # Build a lookup: rule_id -> rule, for minber_check=True rules
     minber_rule_ids: set = {r.rule_id for r in rules if r.minber_check}
     if not minber_rule_ids or minber_intervals is None:
@@ -493,6 +512,7 @@ def apply_minber_check(
     # For each wage row matching a minber_check rule, evaluate the threshold
     for idx, wrow in wage_checked.iterrows():
         title = str(wrow.get("title", ""))
+        normalized_title = normalize_text(title)
         matched_rule: Optional[Rule] = None
         for rule in rules:
             if rule.minber_check and rule.matches(title):
@@ -510,11 +530,14 @@ def apply_minber_check(
         # Compute average minimum wage across the period (day-level precision)
         # For each day, lookup the applicable minimum wage from intervals
         total_minber = 0.0
+        applied_multipliers: set = set()
         for day_offset in range(days):
             day = from_date + pd.Timedelta(days=day_offset)
             daily_minber = get_minber_for_date(day, minber_intervals)
             if daily_minber:
-                total_minber += daily_minber
+                multiplier = minber_multiplier_for_day(matched_rule.rule_id, normalized_title, day)
+                applied_multipliers.add(multiplier)
+                total_minber += daily_minber * multiplier
         
         # Proportional minimum wage for the period: sum of daily minimums / 30
         # (converts monthly values to period-proportional threshold)
@@ -524,6 +547,14 @@ def apply_minber_check(
             float(pd.to_numeric(pd.Series([wrow.get("regular_base", 0)]), errors="coerce").fillna(0).iloc[0])
             + float(pd.to_numeric(pd.Series([wrow.get("irregular_income", 0)]), errors="coerce").fillna(0).iloc[0])
         )
+
+        threshold_note = "100%"
+        if applied_multipliers == {0.3}:
+            threshold_note = "30%"
+        elif applied_multipliers == {1.0}:
+            threshold_note = "100%"
+        elif applied_multipliers:
+            threshold_note = "mixed"
 
         if period_income >= proportional_minber:
             continue  # Passes — no action needed
@@ -540,7 +571,7 @@ def apply_minber_check(
             result.at[loc_idx, "classification"] = "--"
             result.at[loc_idx, "decision_reason"] = (
                 result.at[loc_idx, "decision_reason"]
-                + f" | TnyR56.§: jovedelem ({period_income:.0f} Ft) < aranyos minbér ({proportional_minber:.0f} Ft) → atsorolva --"
+                + f" | TnyR56.§: jovedelem ({period_income:.0f} Ft) < aranyos minbér kuszob ({proportional_minber:.0f} Ft, {threshold_note}) → atsorolva --"
             )
 
         disqualified_wage_rows.add(int(idx))
@@ -552,7 +583,7 @@ def apply_minber_check(
                 f"wage row {idx}: {from_date.date()} – {to_date.date()}, "
                 f"jogcim='{title}', {days} nap, "
                 f"jovedelem={period_income:.0f} Ft, "
-                f"aranyos minber={proportional_minber:.0f} Ft (intervallum-alapú napponkénti lekérdezés), "
+                f"aranyos minber kuszob={proportional_minber:.0f} Ft ({threshold_note}, intervallum-alapu napponkenti lekerdezes), "
                 f"{affected_count} nap atsorolva '--' [TnyR 56.§]"
             ),
         })
@@ -721,7 +752,16 @@ def read_annual_caps(path: Optional[Path]) -> Optional[Dict[str, float]]:
     if path is None:
         return None
     data = json.loads(path.read_text(encoding="utf-8"))
-    return {str(k): float(v) for k, v in data.items()}
+    caps: Dict[str, float] = {}
+    for key, value in data.items():
+        # Allow metadata fields (e.g. _comment) and ignore non-numeric entries.
+        if str(key).startswith("_"):
+            continue
+        try:
+            caps[str(key)] = float(value)
+        except (TypeError, ValueError):
+            continue
+    return caps
 
 
 def main() -> None:

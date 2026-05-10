@@ -51,7 +51,18 @@
       "priority": 5,
       "countable": true,
       "minber_check": true,
-      "title_patterns": ["mellekallas", "egyszerusitett", "megbizas", "alkalmi", "efo"],
+      "title_patterns": [
+        "mellekallas",
+        "egyszerusitett",
+        "megbizas",
+        "megbizasi jogviszony",
+        "munkavegzesre iranyulo egyeb jogviszony",
+        "felhasznalasi szerzodes",
+        "valasztott tisztsegviselo",
+        "allami projektertekelo",
+        "alkalmi",
+        "efo"
+      ],
       "classification": {"female": "N", "male": "N", "default": "N"}
     },
     {
