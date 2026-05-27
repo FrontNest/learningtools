@@ -166,6 +166,7 @@
     if (ymdDash) return new Date(Date.UTC(Number(ymdDash[1]), Number(ymdDash[2]) - 1, Number(ymdDash[3])));
     const dmyDot = value.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})\.?$/);
     if (dmyDot) return new Date(Date.UTC(Number(dmyDot[3]), Number(dmyDot[2]) - 1, Number(dmyDot[1])));
+    if (!/[.\-/]/.test(value)) return null;
     const fallback = new Date(value);
     return Number.isNaN(fallback.getTime()) ? null : new Date(Date.UTC(fallback.getFullYear(), fallback.getMonth(), fallback.getDate()));
   }
@@ -195,19 +196,94 @@
     return indexMap;
   }
 
-  function parseDelimitedTable(text, delimiterMode) {
+  function isLikelyHeaderRow(cols) {
+    const indexMap = mapHeaderIndex(cols);
+    return Object.keys(indexMap).length >= 2 && indexMap.startDate != null && indexMap.endDate != null;
+  }
+
+  function detectDateColumnIndexes(cols) {
+    const dateIndexes = [];
+    for (let i = 0; i < cols.length; i += 1) {
+      if (parseDate(cols[i])) {
+        dateIndexes.push(i);
+        if (dateIndexes.length === 2) break;
+      }
+    }
+    return dateIndexes;
+  }
+
+  function parseHeaderlessRow(cols, rowNumber, tableKind) {
+    const dateIndexes = detectDateColumnIndexes(cols);
+    if (dateIndexes.length < 2) {
+      return { error: `Sor ${rowNumber}: nem találtam két dátumoszlopot.` };
+    }
+
+    const startIndex = dateIndexes[0];
+    const endIndex = dateIndexes[1];
+    const startDate = parseDate(cols[startIndex]);
+    const endDate = parseDate(cols[endIndex]);
+
+    if (!startDate || !endDate) {
+      return { error: `Sor ${rowNumber}: hibás dátum (${cols[startIndex] || ""} - ${cols[endIndex] || ""}).` };
+    }
+
+    const employer = (cols[endIndex + 1] || "").trim();
+    const title = (cols[endIndex + 2] || "").trim();
+    const common = {
+      rowNumber,
+      raw: cols,
+      startDate,
+      endDate,
+      employer,
+      title,
+      rawStatus: "",
+      statusState: "pending",
+      daysRaw: 0,
+      regularWage: 0,
+      irregularWage: 0,
+      totalWage: 0,
+      fnyszDays: 0
+    };
+
+    if (tableKind === "service") {
+      common.daysRaw = parseAmount(cols[endIndex + 3] || "0");
+      common.rawStatus = (cols[endIndex + 4] || "").trim();
+      common.statusState = parseStatus(common.rawStatus);
+      return { row: common };
+    }
+
+    common.regularWage = parseAmount(cols[endIndex + 3] || "0");
+    common.irregularWage = parseAmount(cols[endIndex + 4] || "0");
+    common.totalWage = common.regularWage + common.irregularWage;
+    return { row: common };
+  }
+
+  function parseDelimitedTable(text, delimiterMode, tableKind) {
     const clean = (text || "").trim();
     if (!clean) return { rows: [], delimiter: "\t", errors: [] };
     const delimiter = resolveDelimiter(delimiterMode, clean);
     const lines = clean.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
     if (lines.length === 0) return { rows: [], delimiter, errors: [] };
-    const headers = splitCsvLine(lines[0], delimiter);
-    const indexMap = mapHeaderIndex(headers);
     const rows = [];
     const errors = [];
+    const firstCols = splitCsvLine(lines[0], delimiter);
+    const hasHeader = isLikelyHeaderRow(firstCols);
+    const indexMap = hasHeader ? mapHeaderIndex(firstCols) : {};
+    const startLineIndex = hasHeader ? 1 : 0;
 
-    for (let i = 1; i < lines.length; i += 1) {
+    for (let i = startLineIndex; i < lines.length; i += 1) {
       const cols = splitCsvLine(lines[i], delimiter);
+
+      if (!hasHeader) {
+        const parsed = parseHeaderlessRow(cols, i + 1, tableKind);
+        if (parsed.error) {
+          errors.push(parsed.error);
+          continue;
+        }
+        rows.push(parsed.row);
+        continue;
+      }
+
       const rawStart = cols[indexMap.startDate] || "";
       const rawEnd = cols[indexMap.endDate] || "";
       const startDate = parseDate(rawStart);
@@ -532,8 +608,8 @@
   }
 
   analyzeBtn.addEventListener("click", () => {
-    const serviceParsed = parseDelimitedTable(serviceInput.value, delimiterSelect.value);
-    const wageParsed = parseDelimitedTable(wageInput.value, delimiterSelect.value);
+    const serviceParsed = parseDelimitedTable(serviceInput.value, delimiterSelect.value, "service");
+    const wageParsed = parseDelimitedTable(wageInput.value, delimiterSelect.value, "wage");
     if (showParseErrors(serviceParsed, wageParsed)) {
       summary.innerHTML = "<p>Előbb javítsd a beolvasási hibákat.</p>";
       return;
