@@ -1,0 +1,144 @@
+:root {
+  --bg: #f6e8db;
+  --surface: #fff7ef;
+  --ink: #4b2f1e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Segoe UI", "Inter", system-ui, sans-serif;
+  background: linear-gradient(180deg, var(--bg), #f0d8c1);
+  color: var(--ink);
+  padding: 0.75rem;
+}
+
+h2 {
+  margin: 0 0 0.7rem;
+  color: #7a4721;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.group {
+  margin-bottom: 0.75rem;
+  border: 1px solid rgba(130, 74, 38, 0.2);
+  background: var(--surface);
+  border-radius: 0.85rem;
+  padding: 0.65rem;
+  box-shadow: 0 4px 14px rgba(78, 45, 21, 0.1);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+  margin-bottom: 0.45rem;
+}
+
+label {
+  font-size: 0.78rem;
+  color: #6f4123;
+  font-weight: 600;
+}
+
+input,
+textarea,
+select,
+button {
+  width: 100%;
+  font: inherit;
+  border: 1px solid rgba(130, 74, 38, 0.32);
+  border-radius: 0.7rem;
+  padding: 0.48rem 0.55rem;
+  background: linear-gradient(180deg, #fff8f1, #efd6bf);
+  color: #5e3f2b;
+  box-shadow: 0 2px 0 #7a4420, 0 8px 12px rgba(82, 45, 21, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 7rem;
+  line-height: 1.45;
+}
+
+button {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #7a4420, 0 5px 10px rgba(82, 45, 21, 0.16);
+}
+
+.button-grid {
+  display: grid;
+  gap: 0.4rem;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 0.45rem;
+}
+
+.button-grid .full {
+  grid-column: 1 / -1;
+}
+
+ol,
+ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+li {
+  margin-bottom: 0.4rem;
+}
+
+.bookmark-btn {
+  width: 100%;
+  text-align: left;
+  padding: 0.42rem 0.5rem;
+  border-radius: 0.65rem;
+  font-size: 0.92rem;
+  background: linear-gradient(180deg, #fff8f1, #f0dbc9);
+}
+
+.bookmark-btn.active {
+  border-color: rgba(155, 90, 42, 0.7);
+  background: linear-gradient(180deg, #ffeedc, #f7d6b2);
+}
+
+.status {
+  margin-top: 0.55rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(130, 74, 38, 0.3);
+  background: #ffead1;
+  font-size: 0.76rem;
+  color: #6b3e21;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.status small {
+  opacity: 0.88;
+}
+
+.hint {
+  margin-top: 0.55rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(130, 74, 38, 0.25);
+  background: #fff2e5;
+  font-size: 0.75rem;
+  color: #6f4123;
+  line-height: 1.35;
+}

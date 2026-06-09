@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Knowledgebase felület bookmark alapú navigációval és formázott főtartalom megjelenítéssel."
+    />
+    <meta
+      name="keywords"
+      content="knowledgebase, dokumentum, bookmark, szövegszerkesztés, tartalomkezelés"
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#a6642a" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'self' blob:"
+    />
+    <title>Knowledgebase</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <header class="kb-header">
+      <h1>Knowledgebase</h1>
+    </header>
+
+    <main class="kb-layout" aria-label="Tudásbázis fő elrendezés">
+      <section class="kb-panel kb-panel-bookmarks" aria-label="Bookmarkok panel">
+        <iframe
+          id="bookmarksFrame"
+          title="Bookmarkok"
+          loading="lazy"
+          src="./bookmarks-frame.html"
+        ></iframe>
+      </section>
+
+      <section class="kb-panel kb-panel-content" aria-label="Fő tartalom panel">
+        <iframe
+          id="mainContentFrame"
+          title="Main content"
+          loading="lazy"
+          src="./main-content-frame.html"
+        ></iframe>
+      </section>
+    </main>
+  </body>
+</html>

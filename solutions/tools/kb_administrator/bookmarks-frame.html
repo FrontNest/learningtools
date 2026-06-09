@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bookmarkok panel</title>
+    <link rel="stylesheet" href="./bookmarks-frame.css" />
+  </head>
+  <body>
+    <h2>Bookmarkok</h2>
+
+    <section class="group">
+      <div class="row">
+        <label for="bookmarkTitle">Cím</label>
+        <input id="bookmarkTitle" name="bookmarkTitle" maxlength="120" placeholder="Új bejegyzés címe" />
+      </div>
+
+      <div class="row">
+        <label for="bookmarkStyle">Stílus</label>
+        <select id="bookmarkStyle" name="bookmarkStyle"></select>
+      </div>
+
+      <div class="row">
+        <label for="bookmarkContent">Tartalom</label>
+        <textarea id="bookmarkContent" name="bookmarkContent" placeholder="Írd ide a dokumentum szövegét..."></textarea>
+      </div>
+
+      <div class="button-grid">
+        <button type="button" data-action="create">Új mentése</button>
+        <button type="button" data-action="update">Aktív frissítése</button>
+        <button type="button" data-action="delete">Aktív törlése</button>
+        <button class="full" type="button" data-action="clear">Mezők ürítése</button>
+        <button class="full" type="button" data-action="exportJson">JSON export (backup)</button>
+        <button class="full" type="button" data-action="importJson">JSON import (egyesítés / frissítés)</button>
+        <button class="full" type="button" data-action="importJsonOverwrite">JSON import (teljes felülírás)</button>
+        <button class="full" type="button" data-action="exportHtml">HTML export (letöltés)</button>
+        <button class="full" type="button" data-action="exportPackage">Export csomag (HTML+CSS+JS)</button>
+      </div>
+
+      <input id="jsonFilePicker" type="file" accept="application/json,.json" hidden />
+
+      <div class="status" role="status" aria-live="polite" aria-atomic="true">
+        <div><strong>Állapot:</strong> <span id="statusMessage">Készen áll a szerkesztésre.</span></div>
+        <small>Idő: <span id="statusTime">--:--:--</span></small>
+      </div>
+
+      <div class="hint">
+        A csomag export egyszerre 3 fájlt tölt le: HTML + kb-public.css + kb-public-view.js.
+      </div>
+    </section>
+
+    <section class="group">
+      <h2>Lista (ol)</h2>
+      <ol id="bookmarksOrderedList"></ol>
+    </section>
+
+    <section class="group">
+      <h2>Aktív info (ul)</h2>
+      <ul id="activeInfoList"></ul>
+    </section>
+  </body>
+</html>
