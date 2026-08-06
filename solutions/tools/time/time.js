@@ -149,6 +149,54 @@ document.addEventListener("DOMContentLoaded", function () {
         return arr[Math.floor(Math.random() * arr.length)];
     }
 
+    function normalize24Time(value) {
+        const trimmed = (value || "").trim();
+        const match = trimmed.match(/^(\d{1,2}):(\d{1,2})$/);
+        if (!match) return null;
+
+        const h = Number(match[1]);
+        const m = Number(match[2]);
+        if (Number.isNaN(h) || Number.isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
+            return null;
+        }
+
+        return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
+    }
+
+    function setupSmartTimeInput(input) {
+        const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+        if (isMobile) return;
+
+        input.type = "text";
+        input.inputMode = "numeric";
+        input.placeholder = "HH:MM";
+        input.pattern = "^([01]\\d|2[0-3]):[0-5]\\d$";
+        input.maxLength = 5;
+
+        input.addEventListener("input", function () {
+            const digits = input.value.replace(/\D/g, "").slice(0, 4);
+
+            if (digits.length >= 3) {
+                input.value = `${digits.slice(0, 2)}:${digits.slice(2)}`;
+                return;
+            }
+
+            if (digits.length === 2) {
+                input.value = `${digits}:`;
+                return;
+            }
+
+            input.value = digits;
+        });
+
+        input.addEventListener("blur", function () {
+            const normalized = normalize24Time(input.value);
+            if (normalized) {
+                input.value = normalized;
+            }
+        });
+    }
+
     // Tesztkérdések generálása
 function generateTestQuestions() {
     const testContainer = document.getElementById("test-container");
@@ -170,12 +218,13 @@ function generateTestQuestions() {
     analogToDigitalQuestion.style.display = "flex";
     //analogToDigitalQuestion.style.flexDirection = "column"; // Stack elements vertically
     analogToDigitalQuestion.innerHTML = `<p>Hány óra van az analóg órán? (DE és DU is elfogadható)</p><br>
-                                        <input type='time' id='analog-answer' required>
+                                        <input type='time' id='analog-answer' class='analog-answer-input' required>
                                         <canvas id='testClockCanvas' width='200' height='200'></canvas>`;
     // Store the expected time as data attributes
     analogToDigitalQuestion.dataset.expectedHour = randomHour1;
     analogToDigitalQuestion.dataset.expectedMinute = randomMinute1;
     testContainer.appendChild(analogToDigitalQuestion);    
+    setupSmartTimeInput(document.getElementById("analog-answer"));
     drawTestClock(randomHour1, randomMinute1, 'testClockCanvas');
  
     // Generate a different random time for the second question
@@ -187,6 +236,7 @@ function generateTestQuestions() {
     digitalToAnalogQuestion.style.display = "flex";
     //digitalToAnalogQuestion.style.flexDirection = "column"; // Stack elements vertically
     digitalToAnalogQuestion.innerHTML = `<p>Állítsd be az analóg órát erre az időre az óramutatók mozgatásával: <b> ${randomHour2}:${randomMinute2.toString().padStart(2, '0')}</b></p>
+                                        <p class='mobile-hand-hint' style='margin: 6px 0 0 0; font-size: 0.95em; color: #d2d4d6;'></p>
                                         <canvas id='setClockCanvas' width='200' height='200'></canvas>`;
     testContainer.appendChild(digitalToAnalogQuestion);
     setupAnalogClockInteraction("setClockCanvas");
@@ -240,31 +290,51 @@ function generateTestQuestions() {
 function drawTestClock(hour, minute, canvasId) {
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext("2d");
+    const centerX = 100;
+    const centerY = 100;
+    const minuteDotRadius = 84;
+    const minuteHandLength = 84;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.strokeStyle = "#d2d4d6";
     ctx.beginPath();
-    ctx.arc(100, 100, 90, 0, Math.PI * 2);
+    ctx.arc(centerX, centerY, 90, 0, Math.PI * 2);
     ctx.stroke();
     ctx.fillStyle = "#d2d4d6";
 
     for (let i = 1; i <= 12; i++) {
         let angle = (i * 30 - 90) * (Math.PI / 180);
-        let x = 100 + Math.cos(angle) * 75;
-        let y = 100 + Math.sin(angle) * 75;
+        let x = centerX + Math.cos(angle) * 75;
+        let y = centerY + Math.sin(angle) * 75;
         ctx.fillText(i, x - 5, y + 5);
     }
+
+    // Minute markers for easier precise reading on test clocks.
+    for (let i = 0; i < 60; i++) {
+        const angle = (i * 6 - 90) * (Math.PI / 180);
+        const x = centerX + Math.cos(angle) * minuteDotRadius;
+        const y = centerY + Math.sin(angle) * minuteDotRadius;
+        const dotSize = i % 5 === 0 ? 2.5 : 1.6;
+
+        ctx.beginPath();
+        ctx.fillStyle = "#ff3b30";
+        ctx.arc(x, y, dotSize, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    ctx.fillStyle = "#d2d4d6";
 
     let hourAngle = ((hour % 12) * 30 + minute / 2) * (Math.PI / 180) - Math.PI / 2;
     let minuteAngle = (minute * 6) * (Math.PI / 180) - Math.PI / 2;
 
     ctx.beginPath();
-    ctx.moveTo(100, 100);
-    ctx.lineTo(100 + 40 * Math.cos(hourAngle), 100 + 40 * Math.sin(hourAngle));
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + 40 * Math.cos(hourAngle), centerY + 40 * Math.sin(hourAngle));
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(100, 100);
-    ctx.lineTo(100 + 60 * Math.cos(minuteAngle), 100 + 60 * Math.sin(minuteAngle));
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + minuteHandLength * Math.cos(minuteAngle), centerY + minuteHandLength * Math.sin(minuteAngle));
     ctx.stroke();
 }
 
@@ -275,6 +345,12 @@ function setupAnalogClockInteraction(canvasId) {
     let userHours = 0;
     let userMinutes = 0;
     let draggingHand = null;
+    let interactionStep = "hour";
+
+    const hintEl = canvas.parentElement ? canvas.parentElement.querySelector(".mobile-hand-hint") : null;
+    if (hintEl) {
+        hintEl.textContent = "Először a kismutatót állítsd be, utána a nagymutatót.";
+    }
     
     // Draw initial clock
     drawTestClock(userHours, userMinutes, canvasId);
@@ -283,17 +359,7 @@ function setupAnalogClockInteraction(canvasId) {
         let rect = canvas.getBoundingClientRect();
         let x = event.clientX - rect.left - 100;
         let y = event.clientY - rect.top - 100;
-        let angle = Math.atan2(y, x) + Math.PI / 2;
-        let min = Math.round((angle / (Math.PI * 2)) * 60) % 60;
-        let hr = Math.round((angle / (Math.PI * 2)) * 12) % 12;
-        
-        // Determine if user is trying to move hour or minute hand
-        let distance = Math.sqrt(x*x + y*y);
-        if (distance < 50) {
-            draggingHand = "hour";
-        } else {
-            draggingHand = "minute";
-        }
+        draggingHand = interactionStep;
     });
 
     canvas.addEventListener("mousemove", function(event) {
@@ -305,8 +371,11 @@ function setupAnalogClockInteraction(canvasId) {
         let angle = Math.atan2(y, x) + Math.PI / 2;
         
         if (draggingHand === "minute") {
-            userMinutes = Math.round((angle / (Math.PI * 2)) * 60) % 60;
-            if (userMinutes < 0) userMinutes += 60;
+            let newMinutes = Math.round((angle / (Math.PI * 2)) * 60) % 60;
+            if (newMinutes < 0) newMinutes += 60;
+            if (newMinutes < userMinutes && userMinutes - newMinutes > 30) userHours = (userHours + 1) % 12;
+            if (newMinutes > userMinutes && newMinutes - userMinutes > 30) userHours = (userHours - 1 + 12) % 12;
+            userMinutes = newMinutes;
         } else {
             userHours = Math.round((angle / (Math.PI * 2)) * 12) % 12;
             if (userHours < 0) userHours += 12;
@@ -314,22 +383,22 @@ function setupAnalogClockInteraction(canvasId) {
         
         // Redraw the clock with new values
         drawTestClock(userHours, userMinutes, canvasId);
+        updateDataset();
     });
     canvas.addEventListener("mouseup", function() {
+        if (interactionStep === "hour") {
+            interactionStep = "minute";
+            if (hintEl) {
+                hintEl.textContent = "Most állítsd be a nagymutatót.";
+            }
+        }
         draggingHand = null;
+        updateDataset();
     });
     // Touch events for mobile
     canvas.addEventListener("touchstart", function(event) {
         if (event.touches.length !== 1) return;
-        let rect = canvas.getBoundingClientRect();
-        let x = event.touches[0].clientX - rect.left - 100;
-        let y = event.touches[0].clientY - rect.top - 100;
-        let distance = Math.sqrt(x*x + y*y);
-        if (distance < 50) {
-            draggingHand = "hour";
-        } else {
-            draggingHand = "minute";
-        }
+        draggingHand = interactionStep;
         event.preventDefault();
     }, { passive: false });
     canvas.addEventListener("touchmove", function(event) {
@@ -338,18 +407,32 @@ function setupAnalogClockInteraction(canvasId) {
         let x = event.touches[0].clientX - rect.left - 100;
         let y = event.touches[0].clientY - rect.top - 100;
         let angle = Math.atan2(y, x) + Math.PI / 2;
+
         if (draggingHand === "minute") {
-            userMinutes = Math.round((angle / (Math.PI * 2)) * 60) % 60;
-            if (userMinutes < 0) userMinutes += 60;
+            let newMinutes = Math.round((angle / (Math.PI * 2)) * 60) % 60;
+            if (newMinutes < 0) newMinutes += 60;
+            if (newMinutes < userMinutes && userMinutes - newMinutes > 30) userHours = (userHours + 1) % 12;
+            if (newMinutes > userMinutes && newMinutes - userMinutes > 30) userHours = (userHours - 1 + 12) % 12;
+            userMinutes = newMinutes;
         } else {
             userHours = Math.round((angle / (Math.PI * 2)) * 12) % 12;
             if (userHours < 0) userHours += 12;
         }
+
         drawTestClock(userHours, userMinutes, canvasId);
+        updateDataset();
         event.preventDefault();
     }, { passive: false });
+
     canvas.addEventListener("touchend", function() {
+        if (interactionStep === "hour") {
+            interactionStep = "minute";
+            if (hintEl) {
+                hintEl.textContent = "Most állítsd be a nagymutatót.";
+            }
+        }
         draggingHand = null;
+        updateDataset();
     });
     
     // Store the user's answer in a data attribute for later checking
@@ -391,7 +474,7 @@ function checkAnswers() {
         const questionText = questionDiv.querySelector("p")?.textContent || "";
         
         // Check if it's a time input (analog to digital conversion)
-        if (input.type === "time" && input.value) {
+        if ((input.type === "time" || input.classList.contains("analog-answer-input")) && input.value) {
             totalAnswered++;
             
             // Get the expected time from the data attributes
@@ -400,7 +483,12 @@ function checkAnswers() {
             const expectedMinute = parseInt(questionDiv.dataset.expectedMinute || 0);
             
             // Parse user's answer
-            const [userHours, userMinutes] = input.value.split(':').map(Number);
+            const parsedValue = input.type === "time" ? input.value : normalize24Time(input.value);
+            if (!parsedValue) {
+                input.style.backgroundColor = "#d60314";
+                return;
+            }
+            const [userHours, userMinutes] = parsedValue.split(':').map(Number);
             
             // Check if correct (allowing for 12/24 hour format)
             const isCorrect = (userHours % 12 === expectedHour % 12) && (userMinutes === expectedMinute);
