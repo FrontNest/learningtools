@@ -21,6 +21,57 @@ function pad(n) {
   function randomDuration(min = 20, max = 200) {
     return Math.floor(Math.random() * (max - min)) + min;
   }
+
+    function normalize24Time(value) {
+      const trimmed = (value || '').trim();
+      const match = trimmed.match(/^(\d{1,2}):(\d{1,2})$/);
+      if (!match) return null;
+
+      const h = Number(match[1]);
+      const m = Number(match[2]);
+      if (Number.isNaN(h) || Number.isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
+        return null;
+      }
+
+      return `${pad(h)}:${pad(m)}`;
+    }
+
+    function setupDesktop24HourInputs() {
+      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      if (isMobile) return;
+
+      ["a1", "a2", "a3"].forEach((id) => {
+        const input = document.getElementById(id);
+        input.type = "text";
+        input.inputMode = "numeric";
+        input.placeholder = "HH:MM";
+        input.pattern = "^([01]\\d|2[0-3]):[0-5]\\d$";
+        input.maxLength = 5;
+
+        input.addEventListener("input", () => {
+          const digits = input.value.replace(/\D/g, "").slice(0, 4);
+
+          if (digits.length >= 3) {
+            input.value = `${digits.slice(0, 2)}:${digits.slice(2)}`;
+            return;
+          }
+
+          if (digits.length === 2) {
+            input.value = `${digits}:`;
+            return;
+          }
+
+          input.value = digits;
+        });
+
+        input.addEventListener("blur", () => {
+          const normalized = normalize24Time(input.value);
+          if (normalized) {
+            input.value = normalized;
+          }
+        });
+      });
+    }
   
   function generateQuestions() {
     const q1Start = randomTimeBetween();
@@ -67,9 +118,14 @@ function pad(n) {
   
   document.getElementById("testForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    const a1 = document.getElementById("a1").value;
-    const a2 = document.getElementById("a2").value;
-    const a3 = document.getElementById("a3").value;
+    const a1 = normalize24Time(document.getElementById("a1").value);
+    const a2 = normalize24Time(document.getElementById("a2").value);
+    const a3 = normalize24Time(document.getElementById("a3").value);
+
+    if (!a1 || !a2 || !a3) {
+      document.getElementById("results").innerHTML = "Kérlek, 24 órás formátumban add meg az időt: HH:MM";
+      return;
+    }
   
     const res = [];
     res.push(`1. ${a1 === window.currentAnswers.q1Arrival ? "✔️" : `❌ Helyes válasz: ${window.currentAnswers.q1Arrival}`}`);
@@ -80,6 +136,8 @@ function pad(n) {
   });
   
   document.getElementById("generateNew").addEventListener("click", generateQuestions);
+
+  setupDesktop24HourInputs();
   
   // Első betöltéskor generáljon kérdéseket
   generateQuestions();

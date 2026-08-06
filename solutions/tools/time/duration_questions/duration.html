@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css?family=Noto Sans' rel='stylesheet'>
     <title>Porfolio</title>
-    <!-- <link rel="icon" type="image/png" href="../media/favicon_light.png"> NE NYÚLJ HOZZÁ, MŰKÖDIK -->
     <link rel="icon" type="image/png" href="../../../../media/favicon_light.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -17,13 +16,13 @@
         <h1>Időtartam számítás teszt</h1>
         <form id="testForm">
           <div class="question" id="q1"></div>
-          <input type="time" id="a1" required>
+          <input type="time" id="a1" required lang="hu" step="60">
     
           <div class="question" id="q2"></div>
-          <input type="time" id="a2" required>
+          <input type="time" id="a2" required lang="hu" step="60">
     
           <div class="question" id="q3"></div>
-          <input type="time" id="a3" required>
+          <input type="time" id="a3" required lang="hu" step="60">
     
           <button type="submit">Ellenőrzés</button>
           <button type="button" id="generateNew">Új teszt</button>
