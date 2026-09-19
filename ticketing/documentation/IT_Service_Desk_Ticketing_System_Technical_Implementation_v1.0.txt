@@ -1,0 +1,2017 @@
+IT SERVICE DESK TICKETING SYSTEM
+TECHNICAL IMPLEMENTATION SPECIFICATION
+Version 1.0
+Prepared for L2 development
+Date: 2026-09-17
+
+IMPORTANT
+---------
+This document is the technical companion to:
+"IT Service Desk Ticketing System - Functional and Technical Specification v1.0".
+
+It describes the recommended Azure architecture, development stack,
+Microsoft Graph integration, security model, implementation sequence,
+and estimated monthly Azure cost.
+
+The primary design objective is:
+- secure
+- maintainable by internal IT/L2
+- low operating cost
+- no unnecessary Azure services
+- suitable for approximately 100 Requesters + 4 initial Admins
+- expandable later without redesigning the core data model
+
+
+======================================================================
+1. RECOMMENDED TECHNOLOGY STACK
+======================================================================
+
+FRONTEND
+--------
+React
+JavaScript / TypeScript
+CSS
+
+Recommended:
+- React + TypeScript
+- Vite for build tooling
+- React Router for navigation
+- native fetch or Axios for API communication
+
+The frontend must NOT contain:
+- Graph application secrets
+- SQL credentials
+- privileged API credentials
+- client secrets
+
+
+BACKEND
+-------
+Node.js
+TypeScript
+Express
+
+Recommended project structure:
+
+/src
+  /controllers
+  /services
+  /repositories
+  /middleware
+  /models
+  /validators
+  /config
+  /utils
+
+The backend runs in Azure App Service.
+
+The backend is responsible for:
+- authentication context
+- authorization
+- ticket CRUD
+- assignment
+- status changes
+- comments
+- worklogs
+- attachments
+- audit log
+- Graph calls
+- notification creation
+- validation
+- database access
+
+
+DATABASE
+--------
+Azure SQL Database
+
+Recommended initial tier:
+Azure SQL Database - Basic
+
+Reason:
+- relational data model fits the application very well
+- transactions are important for ticket creation and ticket numbering
+- strong referential integrity
+- simple SQL reporting later
+- low initial data volume
+- low cost compared with larger database tiers
+
+Do NOT use Cosmos DB for the initial implementation.
+
+
+FILE STORAGE
+------------
+Azure Blob Storage
+
+Use a private Storage Account/container for ticket attachments.
+
+Do NOT store attachment binary content in Azure SQL.
+
+
+BACKGROUND PROCESSING
+---------------------
+Azure Functions
+
+Recommended hosting:
+- Flex Consumption if available/approved for the tenant
+- Consumption can be used where appropriate and where not affected by
+  the planned Linux Consumption retirement
+
+Azure Functions are responsible for:
+- automatic ticket closure
+- asynchronous email notifications
+- retry of failed notifications
+- future scheduled synchronization jobs
+
+
+IDENTITY
+--------
+Microsoft Entra ID
+
+Use:
+- company SSO
+- Entra Object ID as stable user identifier
+- Entra security groups for Admin membership where practical
+
+
+GRAPH API
+---------
+Microsoft Graph REST API
+
+Use Microsoft Graph for:
+- current user
+- user information
+- Intune managed devices
+- device properties
+
+The Graph API must be called from the backend, never directly with
+privileged credentials from the browser.
+
+
+MONITORING
+----------
+Azure Application Insights / Azure Monitor
+
+
+SECRETS
+-------
+Preferred:
+- Managed Identity
+- Azure Key Vault only where a secret actually needs to exist
+
+Avoid client secrets whenever Managed Identity can be used.
+
+
+SOURCE CONTROL
+--------------
+GitHub or Azure DevOps
+
+Recommended:
+GitHub repository + GitHub Actions deployment to Azure App Service.
+
+Do NOT commit:
+- .env files containing secrets
+- Azure credentials
+- Graph secrets
+- database passwords
+
+
+======================================================================
+2. AZURE RESOURCES
+======================================================================
+
+Recommended MVP resource list:
+
+1. Azure App Service
+2. Azure App Service Plan
+3. Azure SQL Server
+4. Azure SQL Database
+5. Azure Storage Account
+6. Azure Blob Container
+7. Azure Function App
+8. Application Insights / Log Analytics resource as required
+9. Microsoft Entra App Registration
+10. Managed Identity
+11. Optional Azure Key Vault
+
+
+2.1 AZURE APP SERVICE
+---------------------
+
+Purpose:
+Hosts the web application and Node.js backend/API.
+
+Recommended production starting tier:
+App Service B1.
+
+The F1 Free plan costs $0 but Microsoft explicitly describes F1 as
+intended for trials, experimentation and learning; production workloads
+are not supported and there is no SLA.
+
+Therefore:
+- F1 = acceptable for early development/testing only
+- B1 = recommended production starting point
+
+Microsoft currently lists B1 at approximately USD 54.75/month on the
+Windows App Service pricing page.
+
+Source:
+https://azure.microsoft.com/pricing/details/app-service/
+
+
+IMPORTANT COST OPTIMIZATION:
+----------------------------
+If the company already has an Azure App Service Plan with unused
+capacity, the application may be deployed into that existing plan.
+Then there may be no incremental App Service compute cost.
+
+The developer must check the existing Azure subscription before creating
+a new App Service Plan.
+
+
+2.2 AZURE SQL
+-------------
+
+Create:
+- one logical Azure SQL Server
+- one database for the application
+
+Recommended initial database:
+Azure SQL Database Basic
+
+Expected workload is very small:
+- ~100 Requesters
+- 4 initial Admins
+- relatively low ticket volume
+- small relational dataset
+
+Basic is therefore appropriate for MVP if its performance is sufficient.
+
+Alternative:
+Azure SQL Database General Purpose Serverless if the company prefers
+automatic scaling/auto-pause and the regional pricing makes it cheaper
+or operationally preferable.
+
+Do not start with:
+- Managed Instance
+- Hyperscale
+- Premium
+- large provisioned vCore configuration
+
+Those would be unnecessary for this workload.
+
+Microsoft documents that SQL Database serverless can automatically
+scale compute and can auto-pause during inactivity in the General
+Purpose tier.
+
+Source:
+https://azure.microsoft.com/pricing/details/azure-sql-database/
+
+
+2.3 AZURE STORAGE
+-----------------
+
+Create one Storage Account.
+
+Recommended:
+- Standard performance
+- LRS redundancy
+- private access
+- Blob Storage
+- Hot tier for active ticket attachments
+
+Container example:
+
+ticket-attachments
+
+Do NOT make the container public.
+
+The application should issue authorized downloads or short-lived
+access mechanisms rather than public blob URLs.
+
+Expected storage cost for this application should be very small at the
+beginning because attachment volume is expected to be low.
+
+Blob Storage price depends on:
+- GB stored
+- transaction count
+- redundancy
+- data transfer
+
+Source:
+https://azure.microsoft.com/pricing/details/storage/blobs/
+
+
+2.4 AZURE FUNCTIONS
+-------------------
+
+Create one Function App.
+
+Functions:
+
+AutoCloseResolvedTickets
+ProcessNotifications
+RetryFailedNotifications
+
+Potential future:
+SyncIntuneDevices
+
+Recommended hosting:
+Flex Consumption or an appropriate Consumption configuration supported
+by the tenant.
+
+For this low-volume application, Functions compute should normally fall
+within the monthly free grant on a paid Azure subscription.
+
+Microsoft currently provides a monthly free grant for Functions
+Consumption of 1 million executions and 400,000 GB-s per subscription.
+Storage used by Functions is billed separately.
+
+Source:
+https://azure.microsoft.com/pricing/details/functions/
+
+
+IMPORTANT:
+----------
+Do not use a dedicated Premium Functions plan for this application.
+
+Cold starts are acceptable for:
+- automatic closure
+- notification processing
+- scheduled background jobs
+
+There is no reason to pay for always-warm execution in the MVP.
+
+
+2.5 APPLICATION INSIGHTS
+------------------------
+
+Enable Application Insights / Azure Monitor.
+
+Monitor:
+- API failures
+- exceptions
+- Graph API failures
+- Function failures
+- notification failures
+- authentication failures
+- slow requests
+
+Do not log:
+- access tokens
+- passwords
+- Graph client secrets
+- attachment contents
+- unnecessary personal data
+
+Azure Monitor has a free monthly allowance for certain ingestion
+scenarios; current pricing states that the first 5 GB/month in the
+relevant Log Analytics billing tier is free.
+
+Source:
+https://azure.microsoft.com/pricing/details/monitor/
+
+For this small application, logging should normally remain within a
+very low-cost range if verbose logging is avoided.
+
+
+2.6 MANAGED IDENTITY
+--------------------
+
+Enable a System Assigned Managed Identity on:
+
+- App Service
+- Function App
+
+Use Managed Identity to authenticate from Azure workloads to supported
+Azure resources and Microsoft Graph where configured.
+
+Benefits:
+- no client secret in application configuration
+- no secret rotation required
+- reduced credential exposure
+
+Managed Identity itself should not create a meaningful additional
+monthly charge.
+
+
+2.7 KEY VAULT
+-------------
+
+Key Vault is optional.
+
+Use it if there are credentials/secrets that cannot be replaced with
+Managed Identity.
+
+Example:
+- external service secret
+- special SMTP credential, if Graph cannot be used
+- future integration credential
+
+Do not put every configuration value into Key Vault unnecessarily.
+
+Standard Key Vault charges are primarily operation based.
+
+Source:
+https://azure.microsoft.com/pricing/details/key-vault/
+
+For the expected usage, Key Vault operational cost should be negligible,
+but the vault should only be introduced if needed.
+
+
+======================================================================
+3. MICROSOFT ENTRA ID CONFIGURATION
+======================================================================
+
+Create an Entra App Registration for the application.
+
+Recommended conceptual components:
+
+App Registration
+    |
+    +-- Redirect URI(s)
+    +-- API permissions
+    +-- Enterprise Application
+    +-- Admin consent
+    +-- Group/user assignment if required
+
+
+3.1 AUTHENTICATION
+------------------
+
+Use Microsoft Entra ID for SSO.
+
+The user opens:
+
+https://<internal-app-domain>
+
+The application authenticates against the company's Entra tenant.
+
+After authentication:
+- frontend receives authenticated session/token context
+- backend validates authentication
+- backend identifies user by Entra Object ID
+
+
+3.2 USER IDENTITY
+-----------------
+
+Do NOT use email address as the primary identity key.
+
+Use:
+entraObjectId
+
+Email can change.
+Entra Object ID is the stable identity identifier for the tenant.
+
+
+3.3 ADMIN GROUPS
+----------------
+
+Recommended:
+
+Entra group:
+IT-ServiceDesk-SD-Admins
+
+Entra group:
+IT-ServiceDesk-L2-Admins
+
+Future:
+IT-ServiceDesk-Admins
+
+The application can map group membership to:
+Role = Admin
+Team = SD / L2
+
+This avoids manually maintaining Admin role membership inside the
+application database.
+
+If the company prefers application-managed membership, a Users table can
+contain role/team assignments, but Entra groups are preferable for
+security and lifecycle management.
+
+
+======================================================================
+4. MICROSOFT GRAPH API
+======================================================================
+
+The backend should use Microsoft Graph REST API.
+
+Base:
+https://graph.microsoft.com/v1.0
+
+
+4.1 CURRENT USER
+----------------
+
+Use Microsoft Graph / Entra identity information to identify the
+authenticated user.
+
+Typical information:
+- id
+- displayName
+- mail
+- userPrincipalName
+- department
+- jobTitle
+
+
+4.2 USER'S DEVICES
+------------------
+
+The application must retrieve the user's managed Intune devices.
+
+Microsoft Graph Intune managedDevice endpoint:
+
+GET
+/deviceManagement/managedDevices
+
+Microsoft documents the application permission:
+
+DeviceManagementManagedDevices.Read.All
+
+for read access to Intune managed devices.
+
+Source:
+https://learn.microsoft.com/en-us/graph/api/intune-devices-manageddevice-list
+
+
+4.3 INTUNE PERMISSION
+---------------------
+
+Minimum intended application permission:
+
+DeviceManagementManagedDevices.Read.All
+
+This is an application permission and requires administrator consent.
+
+Microsoft explicitly documents that this permission allows reading
+Intune managed devices.
+
+Do NOT request:
+DeviceManagementManagedDevices.ReadWrite.All
+
+because the ticketing application does not need to modify Intune
+devices.
+
+Do NOT request:
+DeviceManagementManagedDevices.PrivilegedOperations.All
+
+because the ticketing application must not perform remote device actions.
+
+Source:
+https://learn.microsoft.com/en-us/graph/permissions-reference
+
+
+4.4 IMPORTANT GRAPH SECURITY RULE
+---------------------------------
+
+The ticketing application is READ-ONLY with respect to Intune.
+
+It must never:
+- wipe device
+- retire device
+- reboot device
+- reset passcode
+- locate device
+- modify device properties
+- modify Intune configuration
+
+The application only retrieves information.
+
+
+4.5 DEVICE DATA
+----------------
+
+Retrieve, where available:
+
+- id
+- deviceName
+- serialNumber
+- manufacturer
+- model
+- operatingSystem
+- osVersion
+- complianceState
+- managementState
+- lastSyncDateTime / last check-in equivalent
+- user/device relationship
+- IP information only if exposed by the selected API object
+
+The developer MUST verify each desired field against the current
+Microsoft Graph object available in the tenant.
+
+Do not assume that an IP address is always available in the
+managedDevice resource.
+
+
+======================================================================
+5. GRAPH AUTHENTICATION ARCHITECTURE
+======================================================================
+
+Recommended:
+
+User
+ |
+ | Entra authentication
+ v
+App Service
+ |
+ | Managed Identity / secure Graph authentication
+ v
+Microsoft Graph
+ |
+ +--> Entra user data
+ +--> Intune managed device data
+
+The privileged Graph permission must not be exposed to the browser.
+
+The frontend should call:
+
+GET /api/me/devices
+
+The backend performs the Graph call.
+
+This makes authorization and error handling controllable in one place.
+
+
+======================================================================
+6. DATABASE DESIGN
+======================================================================
+
+Use Azure SQL.
+
+Recommended tables:
+
+USERS
+-----
+id
+entraObjectId
+email
+displayName
+department
+jobTitle
+teamId
+role
+active
+createdAt
+updatedAt
+
+
+TEAMS
+-----
+id
+name
+type
+active
+createdAt
+updatedAt
+
+Examples:
+SD
+L2
+
+
+CATEGORIES
+----------
+id
+parentId
+code
+name
+active
+createdAt
+updatedAt
+
+Supports hierarchy:
+
+HW
+  Phone
+    Broken screen
+
+SW
+  Teams
+    Login problem
+
+
+TICKETS
+-------
+id
+ticketNumber
+requesterId
+subject
+description
+categoryId
+priority
+status
+assignedTeamId
+assignedUserId
+deviceId
+otherDeviceDescription
+resolvedAt
+autoCloseAt
+closedAt
+createdAt
+updatedAt
+
+
+TICKET_DEVICE_SNAPSHOTS
+-----------------------
+id
+ticketId
+deviceId
+entraDeviceId
+intuneDeviceId
+deviceName
+serialNumber
+manufacturer
+model
+operatingSystem
+osVersion
+complianceState
+managementState
+lastCheckIn
+ipAddress
+capturedAt
+
+
+COMMENTS
+--------
+id
+ticketId
+authorId
+type
+text
+createdAt
+
+type:
+PUBLIC
+INTERNAL
+
+
+WORKLOGS
+--------
+id
+ticketId
+adminId
+durationMinutes
+description
+createdAt
+
+
+ATTACHMENTS
+-----------
+id
+ticketId
+uploadedBy
+originalFileName
+mimeType
+fileSize
+storageReference
+createdAt
+
+
+AUDIT_LOGS
+----------
+id
+ticketId
+actorId
+action
+oldValue
+newValue
+details
+createdAt
+
+
+NOTIFICATIONS
+-------------
+id
+ticketId
+recipientId
+type
+status
+createdAt
+sentAt
+errorMessage
+
+
+======================================================================
+7. TICKET NUMBER GENERATION
+======================================================================
+
+Format:
+
+TCK-2026-0000001
+
+Do not generate the ticket number in the browser.
+
+The backend/database must generate it.
+
+Recommended approach:
+- maintain a database sequence or controlled counter
+- perform ticket creation in a transaction
+- guarantee uniqueness with a unique database constraint
+
+Recommended SQL constraint:
+
+UNIQUE(ticketNumber)
+
+The ticket ID and ticket number are different:
+- id = internal database key
+- ticketNumber = user-facing identifier
+
+
+======================================================================
+8. TICKET CREATION TRANSACTION
+======================================================================
+
+When a Requester creates a ticket:
+
+1. Authenticate user.
+2. Determine Entra Object ID.
+3. Load/create local Users record.
+4. Validate subject.
+5. Validate description.
+6. Validate category/subcategory.
+7. Validate priority.
+8. Validate selected device.
+9. If device is selected, retrieve current device data.
+10. Create ticket.
+11. Generate unique TCK number.
+12. Create device snapshot.
+13. Create AuditLog entry.
+14. Create notification event.
+15. Commit transaction.
+16. Return ticket.
+
+Email sending should NOT occur synchronously inside the database
+transaction.
+
+
+======================================================================
+9. ASSIGNMENT IMPLEMENTATION
+======================================================================
+
+Ticket fields:
+
+assignedTeamId
+assignedUserId
+
+Rules:
+
+assignedTeamId = NULL
+assignedUserId = NULL
+=> Unassigned
+
+assignedTeamId = SD
+assignedUserId = NULL
+=> SD queue
+
+assignedTeamId = SD
+assignedUserId = Orsi
+=> SD / Orsi
+
+If assignedUserId is not NULL:
+- assigned user must be an active Admin
+- assigned user's team should normally match assignedTeamId
+
+Cross-team transfer:
+
+assignedTeamId = L2
+assignedUserId = NULL
+
+Then an L2 Admin can take ownership:
+
+assignedUserId = L2 Admin
+
+
+======================================================================
+10. STATUS AND PROGRESS
+======================================================================
+
+Status enum:
+
+NEW
+ASSIGNED
+IN_PROGRESS
+WAITING_FOR_USER
+WAITING_FOR_THIRD_PARTY
+RESOLVED
+CLOSED
+
+No CANCELLED.
+
+Progress calculation:
+
+NEW                    0
+ASSIGNED               10
+IN_PROGRESS            50
+WAITING_FOR_USER       50
+WAITING_FOR_THIRD_PARTY 50
+RESOLVED               90
+CLOSED                 100
+
+Implement as a function/mapping in backend/frontend shared logic.
+
+Do not allow the client to submit arbitrary progress.
+
+
+======================================================================
+11. RESOLVED -> CLOSED AUTOMATION
+======================================================================
+
+When Admin sets:
+
+status = RESOLVED
+
+Backend:
+resolvedAt = current timestamp
+autoCloseAt = current timestamp + 5 days
+
+Azure Function runs periodically.
+
+Example schedule:
+every 15 minutes
+
+Query:
+status = RESOLVED
+AND autoCloseAt <= current timestamp
+
+For each matching ticket:
+
+1. Start transaction.
+2. Re-read ticket.
+3. Confirm it is still RESOLVED.
+4. Confirm autoCloseAt <= now.
+5. Set status = CLOSED.
+6. Set closedAt = now.
+7. Create AuditLog with actor = SYSTEM.
+8. Create requester notification.
+9. Commit.
+
+
+======================================================================
+12. RESOLVED COMMENT TIMER RESET
+======================================================================
+
+If Requester comments on a Resolved ticket:
+
+1. Save comment.
+2. Keep status = RESOLVED.
+3. Set autoCloseAt = current timestamp + 5 days.
+4. Create audit log.
+5. Create notification for assigned Admin/team.
+
+Do NOT automatically set status back to In Progress.
+
+
+======================================================================
+13. EMAIL NOTIFICATIONS
+======================================================================
+
+Use Microsoft Graph SendMail from backend/background processing.
+
+Recommended flow:
+
+Ticket action
+   |
+   v
+Notification record
+   |
+   v
+Azure Function
+   |
+   v
+Microsoft Graph
+   |
+   v
+Exchange Online
+
+
+12/13 notification examples:
+
+TICKET_CREATED
+TICKET_ASSIGNED
+TICKET_REASSIGNED
+STATUS_CHANGED
+PRIORITY_CHANGED
+REQUESTER_COMMENTED
+TICKET_RESOLVED
+TICKET_CLOSED
+
+
+REQUESTER_COMMENTED RULE
+------------------------
+
+If assignedUserId != NULL:
+send to assigned Admin only.
+
+If assignedUserId == NULL:
+send to all active Admins in assignedTeam.
+
+
+======================================================================
+14. GRAPH MAIL PERMISSION
+======================================================================
+
+The exact email sender architecture must be agreed with the company's
+Microsoft 365 administrators.
+
+If Microsoft Graph SendMail is used as an application, request only the
+mail permission required for the chosen sending model.
+
+Do not automatically grant broad Microsoft Graph permissions.
+
+Preferred principle:
+least privilege + dedicated service mailbox/account if company policy
+requires it.
+
+The developer must document:
+- sender address
+- Graph permission
+- admin consent
+- whether the sender is a dedicated mailbox
+- whether Exchange application access restrictions are used
+
+
+======================================================================
+15. ATTACHMENT IMPLEMENTATION
+======================================================================
+
+Frontend:
+multipart/form-data upload to backend.
+
+Backend:
+1. authenticate user
+2. authorize ticket access
+3. validate file extension
+4. validate MIME type
+5. validate size
+6. generate safe storage name
+7. upload to private Blob container
+8. save attachment metadata in SQL
+9. audit log
+
+Never use the original filename as the storage object key.
+
+Recommended storage key:
+
+tickets/{ticketId}/{guid}-{safeExtension}
+
+Example:
+
+tickets/8a7.../3e4...-pdf
+
+
+DOWNLOAD
+--------
+
+Do not expose the Blob container publicly.
+
+Backend can:
+- authorize access
+- generate a short-lived SAS URL
+OR
+- stream/download the blob through an authorized backend endpoint
+
+For a small internal application, a short-lived authorized download is
+reasonable.
+
+
+======================================================================
+16. WORKLOG IMPLEMENTATION
+======================================================================
+
+Backend validation:
+
+durationMinutes >= 0
+
+description:
+- non-empty
+- maximum 20 lines
+
+A line is separated by CRLF/LF.
+
+The 20-line rule must be enforced server-side.
+
+Recommended maximum character limit:
+10,000 characters
+
+This is an implementation safeguard and can be adjusted later.
+
+
+======================================================================
+17. AUDIT LOG IMPLEMENTATION
+======================================================================
+
+AuditLog must be append-only.
+
+Application users must not have a normal UPDATE/DELETE endpoint for
+audit records.
+
+Important events:
+
+TICKET_CREATED
+ASSIGNMENT_CHANGED
+TEAM_CHANGED
+ADMIN_CHANGED
+PRIORITY_CHANGED
+STATUS_CHANGED
+COMMENT_ADDED
+INTERNAL_NOTE_ADDED
+WORKLOG_ADDED
+ATTACHMENT_UPLOADED
+ATTACHMENT_DELETED (if deletion is later implemented)
+AUTOMATIC_CLOSURE
+MANUAL_CLOSURE
+
+Actor can be:
+- authenticated Entra user
+- SYSTEM
+
+
+======================================================================
+18. API DESIGN
+======================================================================
+
+Recommended REST API:
+
+AUTH / USER
+-----------
+
+GET /api/me
+
+Returns:
+- user
+- role
+- team
+
+
+GET /api/me/devices
+
+Returns Requester's available devices.
+
+
+TICKETS
+-------
+
+POST /api/tickets
+GET /api/tickets
+GET /api/tickets/{id}
+PATCH /api/tickets/{id}
+
+
+COMMENTS
+--------
+
+GET /api/tickets/{id}/comments
+POST /api/tickets/{id}/comments
+
+
+WORKLOG
+-------
+
+GET /api/tickets/{id}/worklogs
+POST /api/tickets/{id}/worklogs
+
+
+ASSIGNMENT
+----------
+
+PATCH /api/tickets/{id}/assignment
+
+
+ATTACHMENTS
+-----------
+
+GET /api/tickets/{id}/attachments
+POST /api/tickets/{id}/attachments
+GET /api/tickets/{id}/attachments/{attachmentId}
+
+
+AUDIT
+-----
+
+GET /api/tickets/{id}/audit
+
+
+CONFIGURATION
+-------------
+
+GET /api/teams
+GET /api/categories
+GET /api/admin/users
+
+
+ADMIN DASHBOARD
+---------------
+
+GET /api/dashboard/summary
+
+Optional filters:
+- team
+- status
+- priority
+- assigned user
+- category
+- date
+
+
+======================================================================
+19. BACKEND AUTHORIZATION MIDDLEWARE
+======================================================================
+
+Every protected endpoint must pass:
+
+1. Authentication
+2. User resolution
+3. Role authorization
+4. Resource authorization
+
+Example:
+
+GET /api/tickets/123
+
+Requester:
+- allowed only if ticket.requesterId == currentUser.id
+
+Admin:
+- allowed
+
+PATCH /api/tickets/123/assignment
+
+Requester:
+- 403 Forbidden
+
+Admin:
+- allowed
+
+
+======================================================================
+20. SQL SECURITY
+======================================================================
+
+Use:
+- parameterized queries
+OR
+- a mature ORM/query builder
+
+Do not construct SQL using string concatenation.
+
+Recommended options:
+- Prisma
+- TypeORM
+- tedious/mssql with parameterized queries
+
+For an internal Node/TypeScript application, Prisma is a reasonable
+choice if the developer is comfortable with it.
+
+The ORM choice is not a functional requirement.
+
+
+======================================================================
+21. ENVIRONMENT CONFIGURATION
+======================================================================
+
+At minimum:
+
+Development
+Test
+Production
+
+Do not share production database with development.
+
+Suggested configuration variables:
+
+NODE_ENV
+AZURE_TENANT_ID
+AZURE_CLIENT_ID if required by the selected authentication flow
+SQL connection information
+STORAGE_ACCOUNT information
+STORAGE_CONTAINER
+GRAPH configuration
+MAIL configuration
+
+Where possible, use Managed Identity rather than secrets.
+
+Production configuration must be stored in Azure configuration/Key Vault
+rather than source control.
+
+
+======================================================================
+22. DEPLOYMENT
+======================================================================
+
+Recommended:
+
+Developer
+   |
+   v
+GitHub
+   |
+   v
+GitHub Actions
+   |
+   +--> build/test
+   |
+   +--> deploy backend/frontend
+   |
+   v
+Azure App Service
+
+Functions should have their own deployment pipeline.
+
+Recommended environments:
+
+Development
+Staging
+Production
+
+For a very small first implementation, Development + Production can be
+used, but production should never be used for testing database changes.
+
+
+======================================================================
+23. DEVELOPMENT ORDER
+======================================================================
+
+PHASE 1 - AZURE FOUNDATION
+--------------------------
+
+1. Confirm Azure subscription.
+2. Confirm region.
+3. Confirm existing App Service resources.
+4. Create resource group.
+5. Create App Service Plan.
+6. Create App Service.
+7. Enable HTTPS.
+8. Enable Managed Identity.
+9. Create Azure SQL.
+10. Create Storage Account.
+11. Create Blob container.
+12. Create Function App.
+13. Enable Application Insights.
+14. Create Entra App Registration.
+
+
+PHASE 2 - ENTRA
+---------------
+
+1. Configure authentication.
+2. Create/identify SD Admin group.
+3. Create/identify L2 Admin group.
+4. Configure group membership.
+5. Configure App Service authentication.
+6. Verify SSO.
+7. Verify role mapping.
+
+
+PHASE 3 - SQL
+------------
+
+1. Create database.
+2. Create migrations.
+3. Create:
+   Users
+   Teams
+   Categories
+   Tickets
+   TicketDeviceSnapshots
+   Comments
+   Worklogs
+   Attachments
+   AuditLogs
+   Notifications
+4. Add indexes.
+5. Add unique constraints.
+6. Add foreign keys.
+7. Add seed data for SD/L2 and categories.
+
+
+PHASE 4 - BACKEND
+-----------------
+
+Implement:
+
+1. authentication middleware
+2. user service
+3. ticket service
+4. category service
+5. assignment service
+6. comment service
+7. worklog service
+8. attachment service
+9. audit service
+10. notification service
+11. Graph service
+12. dashboard service
+
+
+PHASE 5 - GRAPH
+---------------
+
+1. Configure Graph application permissions.
+2. Obtain admin consent.
+3. Implement user lookup.
+4. Implement managed device lookup.
+5. Test Requester -> device list.
+6. Test device snapshot.
+7. Handle Graph errors/timeouts.
+8. Confirm exact fields available in the tenant.
+
+
+PHASE 6 - FRONTEND
+------------------
+
+Build:
+
+1. Login
+2. Requester dashboard
+3. New ticket
+4. Ticket list
+5. Ticket detail
+6. Comments
+7. Attachments
+8. Admin dashboard
+9. Assignment UI
+10. Worklog UI
+11. Audit history
+
+
+PHASE 7 - FUNCTIONS
+-------------------
+
+Implement:
+
+1. AutoCloseResolvedTickets
+2. ProcessNotifications
+3. RetryFailedNotifications
+
+
+PHASE 8 - SECURITY TEST
+-----------------------
+
+Test:
+- Requester cannot read another user's ticket
+- Requester cannot modify assignment
+- Requester cannot resolve/close
+- Requester cannot add worklog
+- Requester cannot view internal notes
+- Admin can access all tickets
+- Admin can reassign another Admin's ticket
+- Unauthorized API requests fail
+- Blob container is private
+- Graph privileged permissions are not exposed to frontend
+- Tokens/secrets do not appear in logs
+
+
+PHASE 9 - ACCEPTANCE TEST
+-------------------------
+
+Create test users:
+
+Requester A
+Requester B
+
+SD Admin A
+SD Admin B
+
+L2 Admin A
+L2 Admin B
+
+Test:
+- ticket creation
+- numbering
+- priority
+- category
+- device selection
+- assignment
+- cross-team transfer
+- comments
+- notifications
+- worklog
+- attachments
+- status changes
+- resolve
+- 5-day auto-close
+- timer reset after requester comment
+- manual close
+- audit log
+- vacation reassignment scenario
+
+
+======================================================================
+24. INDEXES
+======================================================================
+
+At minimum:
+
+Tickets:
+- ticketNumber UNIQUE
+- requesterId
+- status
+- priority
+- assignedTeamId
+- assignedUserId
+- categoryId
+- createdAt
+- updatedAt
+- autoCloseAt
+
+Comments:
+- ticketId
+- createdAt
+
+Worklogs:
+- ticketId
+- adminId
+- createdAt
+
+AuditLogs:
+- ticketId
+- createdAt
+- actorId
+
+Notifications:
+- status
+- createdAt
+- recipientId
+
+Attachments:
+- ticketId
+- createdAt
+
+
+======================================================================
+25. RELIABILITY REQUIREMENTS
+======================================================================
+
+Ticket creation must be transactional.
+
+A ticket must never exist without:
+- valid requester
+- valid ticket number
+- valid status
+- valid priority
+
+Where device snapshot creation fails because Graph is unavailable,
+ticket creation may continue, but the failure must be recorded.
+
+Notification failure must never roll back a successful ticket change.
+
+Automatic closure must be idempotent.
+
+
+======================================================================
+26. GRAPH FAILURE STRATEGY
+======================================================================
+
+If Graph is unavailable:
+
+Requester sees:
+"Device information is temporarily unavailable."
+
+The user can select:
+Other device
+
+The ticket can still be created.
+
+Backend logs:
+GRAPH_DEVICE_LOOKUP_FAILED
+
+Do not retry Graph synchronously many times during a user request.
+
+Use:
+- short timeout
+- limited retry
+- graceful fallback
+
+
+======================================================================
+27. DATABASE BACKUP
+======================================================================
+
+Use Azure SQL built-in backup capabilities.
+
+The developer must verify:
+- retention period
+- restore capability
+- point-in-time restore
+- company's Azure backup requirements
+
+Do not build a custom backup system for MVP.
+
+
+======================================================================
+28. STORAGE BACKUP / RETENTION
+======================================================================
+
+Attachments are potentially business data.
+
+The developer should confirm the company's retention requirements.
+
+For MVP:
+- private Blob Storage
+- appropriate redundancy
+- no public access
+
+Do not automatically delete ticket attachments when a ticket closes.
+
+
+======================================================================
+29. DOMAIN / NETWORKING
+======================================================================
+
+Initial MVP does not require:
+- Azure Front Door
+- Application Gateway
+- API Management
+- private VNet
+- private endpoint for every service
+
+These would add cost and complexity.
+
+The application can initially use:
+HTTPS
++
+App Service
++
+Azure SQL firewall rules
++
+Managed Identity
++
+private Blob container
++
+Entra authentication
+
+If company security policy requires private endpoints/VNet integration,
+that becomes a later architecture/security requirement.
+
+
+======================================================================
+30. API MANAGEMENT
+======================================================================
+
+DO NOT deploy Azure API Management for MVP.
+
+Reason:
+- unnecessary cost
+- unnecessary complexity
+- only one internal application/API
+- no external API consumers
+
+The App Service backend is sufficient.
+
+
+======================================================================
+31. REDIS / CACHE
+======================================================================
+
+DO NOT deploy Azure Cache for Redis for MVP.
+
+The workload is too small to justify it.
+
+If later required:
+- category caching
+- dashboard caching
+- Graph result caching
+
+can be implemented in application memory first.
+
+
+======================================================================
+32. SERVICE BUS
+======================================================================
+
+DO NOT deploy Azure Service Bus for MVP unless notification volume or
+workflow complexity requires it.
+
+The initial notification queue can be implemented with:
+- SQL Notifications table
+- Azure Function polling
+
+This avoids an additional paid service.
+
+If later the application requires high reliability/event volume, Service
+Bus can replace the SQL polling mechanism.
+
+
+======================================================================
+33. EMAIL IMPLEMENTATION COST
+======================================================================
+
+If Microsoft Graph SendMail is used with the company's existing
+Exchange Online/Microsoft 365 tenant, there is normally no separate
+per-email Azure service required.
+
+The company must already have the appropriate Microsoft 365/Exchange
+licensing and mailbox/service-account arrangement.
+
+Do not introduce SendGrid or another paid email provider unless company
+policy requires it.
+
+
+======================================================================
+34. ESTIMATED MONTHLY AZURE COST
+======================================================================
+
+IMPORTANT:
+Actual Azure pricing depends on:
+- Azure region
+- currency
+- existing Microsoft agreement
+- Enterprise Agreement / MCA / CSP discounts
+- existing reserved capacity
+- tax
+- actual traffic
+- actual storage
+- current Azure pricing
+
+The numbers below are planning estimates, not a quotation.
+
+
+RECOMMENDED LOW-COST PRODUCTION CONFIGURATION
+----------------------------------------------
+
+1. App Service B1
+   Approx. USD 54.75/month on the current Microsoft pricing page.
+
+2. Azure SQL Database Basic
+   Plan approximately USD 5-15/month for this workload, depending on
+   region/pricing agreement.
+
+3. Azure Functions
+   Approximately USD 0/month at this scale in normal Consumption/Flex
+   Consumption usage, assuming usage remains inside the free grant.
+   Storage used by Functions is separate.
+
+4. Azure Blob Storage
+   Approximately USD 0.50-3/month initially for a small attachment
+   volume.
+   Actual cost depends on storage and transaction volume.
+
+5. Application Insights / Azure Monitor
+   Approximately USD 0-5/month at this scale if logging is kept within
+   the free allowance / very low ingestion volume.
+
+6. Managed Identity
+   No significant separate compute charge expected.
+
+7. Key Vault
+   Approximately USD 0-2/month for low operation volume if used.
+   It can be omitted if Managed Identity removes the need for secrets.
+
+8. Microsoft Graph
+   No separate per-API-call Azure charge is expected for the described
+   Graph usage; Microsoft 365/Intune licensing remains a tenant/company
+   licensing matter.
+
+PLANNING TOTAL:
+Approximately USD 60-80/month.
+
+A reasonable internal planning figure is:
+USD 70/month.
+
+At an illustrative 360 HUF/USD exchange rate:
+USD 70 ≈ 25,200 HUF/month.
+
+The actual HUF amount will depend on the company's Azure billing
+currency and exchange rate.
+
+
+======================================================================
+35. DEVELOPMENT / TEST COST OPTIMIZATION
+======================================================================
+
+For development/testing:
+
+- App Service F1 can be used temporarily for development/testing.
+- Do not use F1 as the production plan.
+- Functions can remain on a consumption-based plan.
+- SQL can use the lowest suitable tier.
+- Storage remains very cheap.
+- Application Insights should be enabled but with sensible logging.
+
+If the company already has an App Service Plan, SQL server, Storage
+Account or shared Azure infrastructure, reuse it where security and
+resource isolation permit.
+
+
+======================================================================
+36. COST-SAVING RULES
+======================================================================
+
+DO:
+- reuse existing Azure resources where appropriate
+- use App Service B1 for production instead of larger tiers
+- use Functions Consumption/Flex Consumption
+- use Azure SQL Basic initially
+- use Blob Storage LRS
+- use Managed Identity
+- keep Application Insights logging controlled
+- avoid API Management
+- avoid Redis
+- avoid Service Bus initially
+- avoid Front Door initially
+- avoid unnecessary Key Vault secrets
+
+DO NOT:
+- use Premium SQL
+- use Premium Functions
+- use multiple App Service instances initially
+- use dedicated notification infrastructure
+- create unnecessary VMs
+- store attachments in SQL
+
+
+======================================================================
+37. SECURITY VS COST DECISION
+======================================================================
+
+The cost optimization strategy must NOT remove core security controls.
+
+The following are considered mandatory even on a low budget:
+
+- Entra authentication
+- HTTPS
+- server-side authorization
+- Managed Identity
+- private Blob container
+- least-privilege Graph permissions
+- read-only Intune access
+- SQL parameterization
+- server-side upload validation
+- audit logging
+- Application Insights
+- secure configuration
+- no secrets in source control
+
+
+======================================================================
+38. RECOMMENDED FIRST DEPLOYMENT
+======================================================================
+
+Production:
+
+Azure App Service B1
+Azure SQL Basic
+Azure Storage Standard LRS
+Azure Functions Consumption/Flex
+Application Insights
+Entra ID
+Managed Identity
+
+No:
+- API Management
+- Redis
+- Service Bus
+- Front Door
+- VM
+- Premium database
+- Premium Functions
+
+
+======================================================================
+39. TECHNICAL DEFINITION OF DONE
+======================================================================
+
+The application is considered technically ready for MVP production
+when:
+
+1. Entra SSO works.
+2. Requester/Admin roles work server-side.
+3. SD/L2 groups are correctly mapped.
+4. Requester can create tickets.
+5. TCK number generation is concurrency-safe.
+6. SQL migrations are repeatable.
+7. Graph device lookup works.
+8. Graph permissions are least privilege.
+9. Device snapshot is stored.
+10. Assignment works for team and individual.
+11. Cross-team assignment works.
+12. Requester cannot access another Requester's ticket.
+13. Requester cannot Resolve/Close.
+14. Worklog validation works.
+15. Attachment upload works.
+16. Blob container is private.
+17. Comments work.
+18. Internal notes are protected.
+19. Audit log records important changes.
+20. Email notifications work.
+21. Notification failure is retryable.
+22. Resolved -> Closed automation works.
+23. Requester comment resets autoCloseAt.
+24. Manual early closure works.
+25. Application Insights is receiving errors/telemetry.
+26. No secrets are committed to source control.
+27. Production deployment is repeatable.
+28. Database backup/restore has been tested.
+29. Basic security testing has been completed.
+30. Monthly Azure cost is monitored with an Azure Budget/alert.
+
+
+======================================================================
+40. AZURE BUDGET
+======================================================================
+
+Create an Azure Cost Management budget for the resource group.
+
+Recommended initial budget:
+USD 100/month
+
+Alert thresholds:
+50%
+75%
+90%
+100%
+
+This is intentionally above the expected ~USD 60-80 planning range and
+provides warning before an unexpected cost increase.
+
+The developer should also create an alert for anomalous cost growth if
+available under the company's Azure Cost Management configuration.
+
+
+======================================================================
+41. OFFICIAL REFERENCES
+======================================================================
+
+Azure App Service pricing:
+https://azure.microsoft.com/pricing/details/app-service/
+
+Azure Functions pricing:
+https://azure.microsoft.com/pricing/details/functions/
+
+Azure SQL Database pricing:
+https://azure.microsoft.com/pricing/details/azure-sql-database/
+
+Azure Blob Storage pricing:
+https://azure.microsoft.com/pricing/details/storage/blobs/
+
+Azure Monitor pricing:
+https://azure.microsoft.com/pricing/details/monitor/
+
+Azure Key Vault pricing:
+https://azure.microsoft.com/pricing/details/key-vault/
+
+Microsoft Graph - Intune managed devices:
+https://learn.microsoft.com/en-us/graph/api/intune-devices-manageddevice-list
+
+Microsoft Graph permissions reference:
+https://learn.microsoft.com/en-us/graph/permissions-reference
+
+Microsoft Intune Graph API access:
+https://learn.microsoft.com/en-us/intune/developer/configure-graph-api-access
+
+
+======================================================================
+42. FINAL ARCHITECTURE SUMMARY
+======================================================================
+
+                         COMPANY USER
+                              |
+                              v
+                     Microsoft Entra ID
+                              |
+                              v
+                    +-------------------+
+                    |   Azure App       |
+                    |   Service B1      |
+                    |-------------------|
+                    | React frontend    |
+                    | Node/TypeScript   |
+                    | REST API          |
+                    +---------+---------+
+                              |
+             +----------------+----------------+
+             |                |                |
+             v                v                v
+       Azure SQL        Microsoft Graph    Azure Blob
+       Database         Entra + Intune     Attachments
+             |
+             |
+             v
+       Audit / Tickets /
+       Comments / Worklog /
+       Notifications
+
+
+                    +-------------------+
+                    | Azure Functions   |
+                    |-------------------|
+                    | Auto-close        |
+                    | Notifications     |
+                    | Retry             |
+                    +-------------------+
+
+                    +-------------------+
+                    | App Insights      |
+                    | Monitoring        |
+                    +-------------------+
+
+
+The architecture is intentionally small.
+
+It uses managed Azure services instead of VMs, avoids unnecessary
+middleware, uses Entra SSO and Managed Identity for security, and keeps
+the main production infrastructure around the estimated USD 60-80/month
+planning range for the initial workload.

@@ -1,0 +1,1514 @@
+IT SERVICE DESK TICKETING SYSTEM
+Functional and Technical Specification
+Version 1.0
+Status: MVP specification
+
+============================================================
+1. PURPOSE
+============================================================
+
+The application is an internal, lightweight IT Service Desk ticketing
+system for approximately 100 Requesters and an IT organization consisting
+initially of two teams:
+
+- SD (Service Desk): approximately 2 Admins
+- L2: approximately 2 Admins
+
+The system shall provide ticket creation and management, assignment,
+prioritization, status/progress tracking, worklogs, comments,
+attachments, audit logging, email notifications, and automatic retrieval
+of selected user/device information from Microsoft Entra ID / Intune
+through Microsoft Graph.
+
+The application shall run on Azure using Azure App Service and Azure
+Functions.
+
+The system is intentionally not a full ITIL/ITSM platform. The goal is a
+simple internal application tailored to the company's Service Desk
+workflow.
+
+
+============================================================
+2. SCOPE - MVP
+============================================================
+
+IN SCOPE
+
+- Microsoft Entra ID authentication / company SSO
+- Requester and Admin roles
+- User/team information
+- Ticket creation
+- Automatic ticket numbering
+- Ticket categories and subcategories
+- User-selected priority
+- Admin priority override
+- Automatic device suggestions from the Requester's Intune devices
+- Manual selection of another device
+- Ticket assignment to a team or individual Admin
+- Transfer between SD, L2 and other configured teams
+- Ticket status management
+- Automatic progress calculation from status
+- Requester comments
+- Admin comments / internal notes
+- Worklog
+- File attachments
+- Email notifications
+- Automatic Resolved -> Closed after 5 days
+- Reset of the 5-day closure timer after a Requester comment
+- Manual closure by Admin
+- Audit log
+- Azure Functions for background/automated processing
+- Microsoft Graph / Intune integration
+- Application logging and error handling
+
+OUT OF SCOPE FOR MVP
+
+- Creating tickets from email
+- Cancelled ticket status
+- Full ITIL incident/problem/change management
+- SLA engine
+- Customer satisfaction surveys
+- Public/external users
+- Mobile native application
+- Automated AI categorization/routing
+- Complex approval workflows
+
+
+============================================================
+3. USER TYPES AND ORGANIZATION
+============================================================
+
+3.1 REQUESTER
+
+Approximately 100 users distributed across approximately 20 company
+teams.
+
+Requester permissions:
+
+- Create a ticket
+- View own tickets
+- Add comments to own tickets
+- Upload attachments to own tickets
+- View ticket status/progress
+- View relevant ticket information
+- Select the affected device from the devices presented by the system
+- Select "Other device" if the affected device is not automatically
+  available
+
+Requester cannot:
+
+- Change ticket status to Resolved
+- Change ticket status to Closed
+- Assign tickets
+- Change assignment
+- Change priority after creation unless explicitly allowed by future
+  configuration
+- Edit audit log
+- Add internal notes
+- Add Admin worklogs
+
+3.2 ADMIN
+
+Admins are IT personnel.
+
+Initial teams:
+
+- SD
+- L2
+
+Initial Admin count:
+
+- SD: 2
+- L2: 2
+
+Admin permissions:
+
+- View all tickets
+- Create/manage assignments
+- Assign to own or another team
+- Assign to a specific Admin
+- Transfer tickets between teams
+- Change priority
+- Change status
+- Add comments
+- Add internal notes
+- Add worklogs
+- Add/view attachments
+- Resolve tickets
+- Manually close tickets
+- View audit history
+- View user/device information
+- Reassign tickets assigned to another Admin
+
+IMPORTANT:
+Both SD and L2 Admins can see ALL tickets.
+
+An Admin must be able to reassign tickets even when the currently
+assigned Admin is absent (for example, vacation). Therefore assignment
+is not restricted by current ownership.
+
+
+============================================================
+4. ROLES AND TEAM MEMBERSHIP
+============================================================
+
+The system shall distinguish:
+
+ROLE:
+- Requester
+- Admin
+
+TEAM:
+- Requester organizational team
+- IT team (SD / L2 / future teams)
+
+For Admins, team membership determines the default team queue and
+visibility context, but does NOT restrict visibility of tickets.
+
+Example:
+
+User:
+  Role = Admin
+  Team = SD
+
+This Admin can see:
+- SD tickets
+- L2 tickets
+- Unassigned tickets
+- Tickets assigned to other Admins
+
+The Admin may reassign any ticket according to the configured
+administrative permissions.
+
+
+============================================================
+5. ASSIGNMENT MODEL
+============================================================
+
+Assignment consists of:
+
+- Assigned Team
+- Assigned Admin (optional)
+
+A ticket can therefore have the following states:
+
+1. Unassigned
+
+2. Assigned to team:
+   Assigned Team = SD
+   Assigned Admin = NULL
+
+3. Assigned to individual:
+   Assigned Team = SD
+   Assigned Admin = Orsi
+
+The same model applies to L2 and future teams.
+
+Example workflow:
+
+Unassigned
+    ->
+SD
+    ->
+SD / Orsi
+
+Another example:
+
+SD / Orsi
+    ->
+L2
+    ->
+L2 / Peter
+
+Admins must be able to transfer a ticket:
+- from Unassigned to a team
+- from a team to a specific Admin
+- from one Admin to another Admin
+- from SD to L2
+- from L2 to SD
+- from any configured team to another configured team
+
+Every assignment change must create an AuditLog entry.
+
+
+============================================================
+6. TICKET NUMBERING
+============================================================
+
+Ticket number format:
+
+TCK-YYYY-NNNNNNN
+
+Example:
+
+TCK-2026-0000001
+TCK-2026-0000002
+TCK-2026-0000003
+
+The ticket number must be unique.
+
+The database should also have an internal immutable primary key separate
+from the human-readable ticket number.
+
+The year in the displayed ticket number represents the ticket creation
+year.
+
+The sequence must be concurrency-safe so that two simultaneous ticket
+creations cannot receive the same number.
+
+
+============================================================
+7. TICKET CATEGORIES
+============================================================
+
+Category selection shall support a hierarchical structure.
+
+Initial top-level categories:
+
+- HW
+- SW
+
+The category system must be configurable so additional categories can
+be added later without changing application source code.
+
+Example:
+
+HW
+  - Phone
+      - Broken screen
+      - Battery
+      - Camera
+      - Other
+
+SW
+  - Teams
+      - Login problem
+      - Audio problem
+      - Video problem
+      - Other
+
+The exact category/subcategory list will be expanded later.
+
+The database should therefore model Category and Subcategory separately
+or as a generic hierarchical category structure.
+
+The selected category/subcategory shall be stored on the ticket and
+must remain historically valid even if the category configuration is
+later changed.
+
+
+============================================================
+8. TICKET CREATION - REQUESTER
+============================================================
+
+Required fields:
+
+8.1 SUBJECT
+- Required
+- Single-line text
+
+8.2 DESCRIPTION
+- Required
+- Multi-line text
+
+8.3 CATEGORY
+- Required
+- Top-level category + subcategory
+- Example: HW -> Phone -> Broken screen
+
+8.4 PRIORITY
+- Required
+- Selected by Requester
+- Admin may override it later
+
+Available priorities:
+
+- Low
+- Normal
+- High
+- Critical
+
+Default:
+Normal may be preselected, but the Requester must explicitly have the
+ability to select another priority.
+
+8.5 DEVICE
+The system shall automatically retrieve/present the Requester's
+available managed devices from Microsoft Graph / Intune.
+
+The Requester selects the affected device.
+
+Example:
+
+Affected device:
+  [HP-LAPTOP-001]
+  [iPhone-002]
+  [Samsung-003]
+  [Other device]
+
+The system must support "Other device".
+
+If "Other device" is selected, the Requester should be able to enter
+a free-text device description and/or identifier.
+
+The device information available at ticket creation time should be
+captured as a snapshot so historical ticket data does not change when
+the device changes later in Intune.
+
+
+============================================================
+9. USER AND DEVICE DATA
+============================================================
+
+User information should be retrieved from Microsoft Entra ID /
+Microsoft Graph where available.
+
+Potential user fields:
+
+- Entra Object ID / User ID
+- Display name
+- Email
+- Department
+- Job title
+- Company/team information where available
+
+The exact Graph fields shall be selected according to available company
+directory data and required permissions.
+
+Device information should be retrieved from Intune / Microsoft Graph
+where available.
+
+Potential fields:
+
+- Device name
+- Entra device ID
+- Intune managed device ID
+- Serial number
+- Manufacturer
+- Model
+- Operating system
+- OS version
+- Compliance state
+- Management state
+- Last check-in / last sync
+- Primary user
+- IP address, only if available from the selected Graph/Intune data
+  source
+
+The application must not assume that every listed field is always
+available from Graph/Intune.
+
+The UI should gracefully display "Not available" where appropriate.
+
+
+============================================================
+10. TICKET STATUS
+============================================================
+
+Allowed statuses:
+
+- New
+- Assigned
+- In Progress
+- Waiting for User
+- Waiting for 3rd Party
+- Resolved
+- Closed
+
+There is NO Cancelled status.
+
+Recommended status transitions:
+
+New
+  -> Assigned
+  -> In Progress
+  -> Waiting for User
+  -> Waiting for 3rd Party
+  -> Resolved
+  -> Closed
+
+The application should allow Admins to move a ticket between appropriate
+statuses as required by the workflow, including returning from a waiting
+status to In Progress.
+
+A Requester cannot set Resolved or Closed.
+
+
+============================================================
+11. AUTOMATIC PROGRESS
+============================================================
+
+Progress is derived from ticket status.
+
+Recommended mapping:
+
+New                 = 0%
+Assigned            = 10%
+In Progress         = 50%
+Waiting for User    = 50%
+Waiting for 3rd Party= 50%
+Resolved            = 90%
+Closed              = 100%
+
+Progress should preferably NOT be stored as an independently editable
+database value. It should be calculated from the status.
+
+This prevents inconsistent combinations such as:
+
+Status = New
+Progress = 80%
+
+
+============================================================
+12. RESOLVED AND AUTOMATIC CLOSURE
+============================================================
+
+Only Admins can set a ticket to Resolved.
+
+When a ticket becomes Resolved:
+
+- resolvedAt is recorded
+- autoCloseAt is calculated as resolvedAt + 5 days
+- status remains Resolved during this period
+
+After 5 days, the ticket is automatically changed:
+
+Resolved
+   ->
+Closed
+
+The automatic change must create an AuditLog entry.
+
+Example:
+
+Actor: SYSTEM
+Action: STATUS_CHANGED
+Old value: Resolved
+New value: Closed
+Reason: Automatic closure after 5 days
+
+12.1 REQUESTER COMMENT DURING RESOLVED PERIOD
+
+If the Requester adds a comment while the ticket is Resolved:
+
+- The ticket remains Resolved
+- The ticket is NOT automatically reopened
+- The 5-day automatic closure timer is restarted
+- autoCloseAt = comment timestamp + 5 days
+- The assigned Admin/team is notified according to the notification
+  rules
+
+Example:
+
+Resolved:
+17 September
+
+Requester comments:
+19 September
+
+New auto-close:
+24 September
+
+12.2 MANUAL CLOSURE
+
+Admin can manually set a Resolved ticket to Closed before the 5-day
+period expires.
+
+Example:
+Requester says "The problem is solved."
+
+Admin:
+Resolved -> Closed
+
+Manual closure must be recorded in AuditLog.
+
+
+============================================================
+13. COMMENTS
+============================================================
+
+Requesters can comment on their own tickets.
+
+Admins can comment on tickets.
+
+The system should distinguish:
+
+- Public comment: visible to Requester and Admins
+- Internal note: visible only to Admins
+
+Internal notes are optional but recommended for the MVP because they are
+useful for internal Service Desk communication.
+
+Every comment/note must contain:
+
+- ID
+- Ticket ID
+- Author
+- Timestamp
+- Text
+- Visibility/type
+
+Comments should be append-only from an audit perspective. Editing/deleting
+comments is not required for MVP.
+
+
+============================================================
+14. WORKLOG
+============================================================
+
+Only Admins can create worklog entries.
+
+Each worklog entry contains:
+
+- Ticket ID
+- Admin
+- Date/time
+- Duration in minutes
+- Description
+
+The description must support approximately 20 lines of text per entry.
+
+The 20-line limitation must be enforced both:
+- in the frontend
+- on the backend/API
+
+The worklog description should support multiline text.
+
+Example:
+
+17.09.2026 14:32
+Admin: Orsi
+Duration: 20 min
+
+"Checked Intune compliance.
+Checked VPN client configuration.
+Removed and reinstalled VPN profile.
+Tested connection with user."
+
+
+============================================================
+15. ATTACHMENTS
+============================================================
+
+Tickets shall support file attachments.
+
+Allowed file types:
+
+- PDF
+- Word documents
+- Excel documents
+- Images
+- TXT
+
+Recommended accepted extensions:
+
+.pdf
+.doc
+.docx
+.xls
+.xlsx
+.png
+.jpg
+.jpeg
+.gif
+.txt
+
+The exact maximum file size must be configurable.
+
+Attachments should be stored in Azure storage rather than directly in
+the relational ticket table.
+
+Each attachment should have metadata:
+
+- ID
+- Ticket ID
+- Original filename
+- MIME type
+- File size
+- Storage reference
+- Uploaded by
+- Uploaded at
+
+Attachment access must respect ticket permissions.
+
+The application must validate file type and size on the backend, not
+only in the browser.
+
+
+============================================================
+16. EMAIL NOTIFICATIONS
+============================================================
+
+Email notifications shall be generated by backend/background processing,
+not directly by the browser.
+
+Microsoft Graph / Exchange Online can be used for sending email.
+
+Initial notification events:
+
+1. Ticket created
+2. Ticket assigned to a team
+3. Ticket assigned/reassigned to an Admin
+4. Status changed where user notification is appropriate
+5. Priority changed by Admin
+6. Requester adds a comment
+7. Ticket resolved
+8. Ticket closed
+
+16.1 REQUESTER COMMENT NOTIFICATION
+
+If the ticket is assigned to a specific Admin:
+
+Requester comment
+    ->
+notification to assigned Admin
+
+If the ticket is assigned only to a team:
+
+Requester comment
+    ->
+notification to all Admins in that team
+
+Example:
+
+Ticket:
+TCK-2026-0000001
+Team:
+SD
+Assigned Admin:
+NULL
+
+Requester comments.
+
+Both SD Admins receive notification.
+
+If:
+
+Team:
+SD
+Assigned Admin:
+Orsi
+
+Only Orsi receives the notification.
+
+16.2 NOTIFICATION ARCHITECTURE
+
+Recommended:
+
+Ticket event
+   ->
+notification/event record
+   ->
+Azure Function
+   ->
+Microsoft Graph SendMail
+   ->
+Notification status update
+
+This prevents email delivery failure from causing ticket creation/update
+to fail.
+
+Notification records should track at least:
+
+- event/type
+- recipient
+- createdAt
+- sentAt
+- status
+- error message if sending failed
+
+
+============================================================
+17. AUDIT LOG
+============================================================
+
+The application must maintain an immutable audit trail for important
+ticket changes.
+
+Audit entries should include:
+
+- Timestamp
+- Actor
+- Ticket ID
+- Action
+- Old value
+- New value
+- Additional details
+
+Examples:
+
+Ticket created
+Assignment changed
+Team changed
+Admin changed
+Priority changed
+Status changed
+Requester comment added
+Admin comment added
+Internal note added
+Worklog added
+Attachment uploaded
+Automatic closure
+Manual closure
+
+Example:
+
+17.09.2026 20:14
+Actor: Orsi
+Action: ASSIGNMENT_CHANGED
+Ticket: TCK-2026-0000001
+Old: Unassigned
+New: SD
+
+17.09.2026 20:16
+Actor: Peter
+Action: ASSIGNMENT_CHANGED
+Ticket: TCK-2026-0000001
+Old: SD
+New: SD / Peter
+
+
+============================================================
+18. ADMIN DASHBOARD
+============================================================
+
+The Admin dashboard should provide at minimum:
+
+- Total open tickets
+- Unassigned tickets
+- High priority tickets
+- Critical priority tickets
+- Waiting for User
+- Waiting for 3rd Party
+- My assigned tickets
+- Team/queue tickets
+- Recently updated tickets
+
+Admins must be able to filter/search tickets by:
+
+- Ticket number
+- Requester
+- Subject
+- Status
+- Priority
+- Team
+- Assigned Admin
+- Category
+- Device
+- Date range
+
+Both SD and L2 Admins can see all tickets.
+
+
+============================================================
+19. REQUESTER DASHBOARD
+============================================================
+
+Requester dashboard:
+
+- New Ticket button
+- Own open tickets
+- Own resolved tickets
+- Own closed tickets
+- Ticket number
+- Subject
+- Priority
+- Status
+- Progress
+- Last update
+
+Requester cannot see other users' tickets.
+
+
+============================================================
+20. TICKET DETAIL PAGE
+============================================================
+
+Recommended layout:
+
+HEADER
+
+TCK-2026-0000001
+Subject
+
+Requester
+Category / Subcategory
+Priority
+Status
+Progress
+Team
+Assigned Admin
+
+
+REQUESTER / USER INFORMATION
+
+Display relevant Entra information.
+
+
+DEVICE INFORMATION
+
+Display selected device and the captured snapshot information.
+
+For "Other device", display the Requester's manually entered device
+description.
+
+
+DESCRIPTION
+
+
+COMMENTS / CONVERSATION
+
+
+WORKLOG
+Admin only
+
+
+ATTACHMENTS
+
+
+ACTIVITY / AUDIT LOG
+Admin only
+
+
+============================================================
+21. DATABASE MODEL
+============================================================
+
+Recommended relational model for Azure SQL.
+
+USERS
+- id
+- entraObjectId
+- email
+- displayName
+- department
+- teamId
+- role
+- active
+- createdAt
+- updatedAt
+
+TEAMS
+- id
+- name
+- type
+- active
+
+CATEGORIES
+- id
+- parentId (nullable)
+- code
+- name
+- active
+
+TICKETS
+- id
+- ticketNumber
+- requesterId
+- subject
+- description
+- categoryId
+- priority
+- status
+- assignedTeamId (nullable)
+- assignedUserId (nullable)
+- deviceId (nullable)
+- otherDeviceDescription (nullable)
+- resolvedAt (nullable)
+- autoCloseAt (nullable)
+- closedAt (nullable)
+- createdAt
+- updatedAt
+
+TICKET_DEVICE_SNAPSHOTS
+- id
+- ticketId
+- deviceId
+- deviceName
+- entraDeviceId
+- intuneDeviceId
+- serialNumber
+- manufacturer
+- model
+- operatingSystem
+- osVersion
+- complianceState
+- managementState
+- lastCheckIn
+- ipAddress
+- capturedAt
+
+COMMENTS
+- id
+- ticketId
+- authorId
+- type
+- text
+- createdAt
+
+WORKLOGS
+- id
+- ticketId
+- adminId
+- durationMinutes
+- description
+- createdAt
+
+ATTACHMENTS
+- id
+- ticketId
+- uploadedBy
+- originalFileName
+- mimeType
+- fileSize
+- storageReference
+- createdAt
+
+AUDIT_LOGS
+- id
+- ticketId
+- actorId (nullable for SYSTEM)
+- action
+- oldValue
+- newValue
+- details
+- createdAt
+
+NOTIFICATIONS
+- id
+- ticketId
+- recipientId
+- type
+- status
+- createdAt
+- sentAt
+- errorMessage
+
+The schema may be normalized differently by the developer, but the
+functional relationships above must remain.
+
+
+============================================================
+22. AZURE ARCHITECTURE
+============================================================
+
+The application shall use:
+
+- Azure App Service
+- Azure Functions
+- Azure SQL
+- Microsoft Entra ID
+- Microsoft Graph
+- Azure Storage for attachments
+- Application Insights / Azure Monitor
+
+Recommended architecture:
+
+                    Microsoft Entra ID
+                           |
+                           v
+                    Azure App Service
+                    +----------------+
+                    | React frontend |
+                    | Backend/API    |
+                    +-------+--------+
+                            |
+             +--------------+--------------+
+             |              |              |
+             v              v              v
+         Azure SQL     Microsoft Graph   Azure Blob
+                       / Intune          Storage
+                                             |
+                                             |
+                     Azure Functions <--------+
+                     +----------------------+
+                     | Auto close           |
+                     | Notifications        |
+                     | Scheduled processing |
+                     | Graph/background jobs |
+                     +----------------------+
+
+
+============================================================
+23. AUTHENTICATION
+============================================================
+
+Authentication must use Microsoft Entra ID.
+
+No local username/password database is required.
+
+The application should use company SSO.
+
+The authenticated Entra Object ID should be used as the stable identity
+mapping for users.
+
+The backend must not trust role information supplied by the browser.
+
+Role/team authorization must be validated server-side.
+
+
+============================================================
+24. AUTHORIZATION
+============================================================
+
+Authorization rules:
+
+REQUESTER
+
+Can:
+- Create ticket
+- Read own tickets
+- Comment on own tickets
+- Upload attachments to own tickets
+- View own ticket status/progress
+
+Cannot:
+- Read other users' tickets
+- Assign
+- Reassign
+- Resolve
+- Close
+- Add worklogs
+- Add internal notes
+
+
+ADMIN
+
+Can:
+- Read all tickets
+- Create/update assignment
+- Transfer tickets
+- Change priority
+- Change status
+- Resolve
+- Close
+- Comment
+- Add internal notes
+- Add worklogs
+- Manage attachments
+- View audit log
+
+ADMIN ABSENCE / REASSIGNMENT
+
+Any Admin must be able to reassign a ticket assigned to another Admin.
+This is required for vacation/absence handling.
+
+Example:
+
+L2 / Admin A is on vacation.
+
+Admin B:
+TCK-2026-0000001
+L2 / Admin A
+    ->
+L2 / Admin B
+
+
+============================================================
+25. MICROSOFT GRAPH / INTUNE INTEGRATION
+============================================================
+
+The backend should access Graph using a secure server-side identity.
+
+Preferred Azure approach:
+- Managed Identity where practical
+- Least-privilege Microsoft Graph permissions
+- No client secrets embedded in frontend code
+
+The frontend must never directly contain privileged Graph credentials.
+
+Graph calls should be made through the backend/API or an appropriate
+secure service layer.
+
+Graph/Intune failures must not prevent the user from creating a ticket.
+
+If device lookup fails:
+- show a clear message
+- allow "Other device"
+- record the failure in application logs
+
+
+============================================================
+26. AZURE FUNCTIONS
+============================================================
+
+At minimum, background processing should support:
+
+1. AUTO-CLOSE FUNCTION
+
+Purpose:
+Find Resolved tickets where autoCloseAt <= current time and change them
+to Closed.
+
+2. NOTIFICATION FUNCTION
+
+Purpose:
+Process pending notification events and send email.
+
+3. Optional future background functions:
+- device data synchronization
+- cleanup
+- reporting aggregation
+- retry processing
+
+Functions should be idempotent where possible.
+
+
+============================================================
+27. SECURITY REQUIREMENTS
+============================================================
+
+- All traffic over HTTPS.
+- No privileged Graph credentials in frontend code.
+- Server-side authorization for every ticket operation.
+- Requester must never be able to access another Requester's ticket by
+  modifying a ticket ID in the URL/API request.
+- Validate all uploaded files server-side.
+- Limit attachment size.
+- Prevent executable/script uploads unless explicitly added later.
+- Sanitize/render user-generated text safely to prevent XSS.
+- Parameterized SQL / ORM queries to prevent SQL injection.
+- Audit security-relevant operations.
+- Secrets/configuration must be stored using appropriate Azure
+  configuration/secret management.
+- Application errors shown to users must not expose stack traces,
+  tokens, credentials, or internal infrastructure information.
+
+
+============================================================
+28. ERROR HANDLING
+============================================================
+
+Examples:
+
+Graph unavailable:
+"Device information is currently unavailable. You can continue by
+selecting Other device."
+
+Email failed:
+Ticket update remains successful.
+Notification is marked failed and can be retried.
+
+Database failure:
+Do not display internal database details to the user.
+
+Attachment upload failure:
+Ticket remains intact; user can retry the attachment.
+
+
+============================================================
+29. LOGGING AND MONITORING
+============================================================
+
+Application Insights / Azure Monitor should be used.
+
+Log at minimum:
+
+- API errors
+- Graph API errors
+- Function execution errors
+- Email delivery errors
+- Attachment errors
+- Authentication/authorization failures
+- Important background job results
+
+Do not log:
+- passwords
+- access tokens
+- secrets
+- unnecessary sensitive user data
+
+
+============================================================
+30. API - RECOMMENDED ENDPOINTS
+============================================================
+
+The exact API technology is implementation-dependent, but the following
+logical endpoints should exist.
+
+AUTH / USER
+
+GET  /api/me
+GET  /api/me/devices
+
+TICKETS
+
+POST /api/tickets
+GET  /api/tickets
+GET  /api/tickets/{id}
+PATCH /api/tickets/{id}
+
+COMMENTS
+
+GET  /api/tickets/{id}/comments
+POST /api/tickets/{id}/comments
+
+WORKLOG
+
+GET  /api/tickets/{id}/worklogs
+POST /api/tickets/{id}/worklogs
+
+ASSIGNMENT
+
+PATCH /api/tickets/{id}/assignment
+
+ATTACHMENTS
+
+GET  /api/tickets/{id}/attachments
+POST /api/tickets/{id}/attachments
+GET  /api/tickets/{id}/attachments/{attachmentId}
+
+AUDIT
+
+GET /api/tickets/{id}/audit
+
+ADMIN / CONFIGURATION
+
+GET /api/teams
+GET /api/categories
+GET /api/admin/users
+
+
+============================================================
+31. API VALIDATION RULES
+============================================================
+
+POST /api/tickets must validate:
+
+- authenticated user
+- subject present
+- description present
+- valid category
+- valid priority
+- device selection / other device handling
+
+PATCH operations must validate the caller's role.
+
+Requester:
+- may only modify permitted fields on own tickets
+- cannot set status to Resolved/Closed
+- cannot modify assignment
+
+Admin:
+- may modify administrative fields
+
+The backend must validate every state-changing request.
+
+
+============================================================
+32. UI/UX REQUIREMENTS
+============================================================
+
+The UI should be simple, responsive, and optimized for normal desktop
+Service Desk usage.
+
+Requester should see a minimal ticket creation form.
+
+Admin should have a more information-dense interface.
+
+Recommended ticket header:
+
+TCK-2026-0000001
+[Subject]
+
+Priority:  High
+Status:    In Progress
+Progress:  50%
+Team:      SD
+Assigned:  Orsi
+
+
+============================================================
+33. NON-FUNCTIONAL REQUIREMENTS
+============================================================
+
+The system should:
+
+- Be responsive on common desktop resolutions
+- Work with current Microsoft Edge
+- Use HTTPS only
+- Support company Entra SSO
+- Handle at least the initial ~104 users/admins comfortably
+- Be structured so user/team/admin count can grow
+- Be maintainable by the internal IT/L2 development team
+- Keep configuration (teams, categories, users/roles where possible)
+  separate from hard-coded UI logic
+
+
+============================================================
+34. FUTURE EXTENSIONS
+============================================================
+
+The design should leave room for:
+
+- Additional IT teams
+- More categories/subcategories
+- SLA tracking
+- Reporting/dashboard analytics
+- Knowledge base
+- Self-service articles
+- Automatic category/routing suggestions
+- Asset history
+- Approval workflows
+- Teams notifications
+- Microsoft Teams integration
+- Email-to-ticket
+- More detailed Intune/device synchronization
+
+
+============================================================
+35. MVP ACCEPTANCE CRITERIA
+============================================================
+
+AC-01
+A company user can authenticate using Entra SSO.
+
+AC-02
+A Requester can create a ticket with:
+- subject
+- description
+- category/subcategory
+- priority
+- device
+
+AC-03
+The system generates a unique number such as:
+TCK-2026-0000001
+
+AC-04
+The system presents the Requester's Intune devices for selection.
+
+AC-05
+The Requester can select Other device.
+
+AC-06
+A Requester can view only their own tickets.
+
+AC-07
+A Requester can comment on their own ticket.
+
+AC-08
+An Admin receives notification when a Requester comments, according to
+the assignment rules.
+
+AC-09
+Both SD and L2 Admins can view all tickets.
+
+AC-10
+An Admin can assign a ticket to:
+- a team
+- a specific Admin
+
+AC-11
+An Admin can transfer a ticket between SD and L2.
+
+AC-12
+An Admin can reassign another Admin's ticket.
+
+AC-13
+A Requester-selected priority can be overridden by an Admin.
+
+AC-14
+Only Admins can set Resolved.
+
+AC-15
+Resolved tickets automatically become Closed after 5 days.
+
+AC-16
+A Requester comment during the Resolved period resets the 5-day timer
+without reopening the ticket.
+
+AC-17
+An Admin can manually close a Resolved ticket before 5 days.
+
+AC-18
+Progress is automatically calculated from status.
+
+AC-19
+An Admin can add a multiline worklog entry of up to 20 lines.
+
+AC-20
+The system supports PDF, Word, Excel, image and TXT attachments.
+
+AC-21
+Important ticket changes are recorded in an immutable audit log.
+
+AC-22
+Automatic closure is recorded in the audit log as a SYSTEM action.
+
+AC-23
+Email delivery failure does not roll back a successful ticket update.
+
+AC-24
+Graph/Intune failure does not prevent ticket creation.
+
+AC-25
+Unauthorized API requests are rejected server-side.
+
+AC-26
+The application is deployed on Azure App Service with Azure Functions
+for background processing.
+
+
+============================================================
+36. OPEN CONFIGURATION ITEMS
+============================================================
+
+The following items are intentionally configurable / to be finalized
+during implementation:
+
+- Final HW/SW category and subcategory list
+- Final company team list
+- Exact Admin membership source (Entra groups are recommended)
+- Exact Microsoft Graph permissions after testing the required fields
+- Maximum attachment file size
+- Exact email templates / wording
+- Exact notification events beyond the mandatory Requester-comment
+  notification
+- Whether Admin public comments and internal notes use separate UI
+  actions
+- Azure SQL tier / sizing
+- Azure Storage configuration
+- Production/staging environment structure
+
+
+============================================================
+37. IMPLEMENTATION PRINCIPLE
+============================================================
+
+The system should favor a simple, maintainable architecture over a
+large ITSM framework.
+
+Core principle:
+
+Requester
+    ->
+simple ticket creation
+    ->
+central ticket record
+    ->
+team assignment
+    ->
+individual assignment
+    ->
+work / comments / attachments
+    ->
+Resolved
+    ->
+5-day automatic closure
+    ->
+Closed
+
+All important changes are auditable.
+
+All authentication and authorization are based on Microsoft Entra ID.
+
+Azure App Service hosts the application/API.
+
+Azure Functions handle asynchronous and scheduled processing.
+
+Microsoft Graph provides Entra/Intune information.
+
+Azure SQL stores transactional ticket data.
+
+Azure Storage stores attachments.

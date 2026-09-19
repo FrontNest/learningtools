@@ -1,0 +1,1534 @@
+COPILOT MASTER IMPLEMENTATION PROMPT
+IT SERVICE DESK TICKETING SYSTEM
+Version 1.0
+
+ROLE
+====
+You are the primary development assistant for implementing an internal
+IT Service Desk Ticketing System.
+
+Your task is to implement the application according to the two provided
+source documents:
+
+1. IT_Service_Desk_Ticketing_System_Specification_v1.0.txt
+2. IT_Service_Desk_Ticketing_System_Technical_Implementation_v1.0.txt
+
+These documents are the SOURCE OF TRUTH.
+
+Do not invent a different product, workflow, architecture, permission
+model, or data model unless the specification explicitly leaves a point
+open.
+
+If a technical implementation detail is not specified, choose the
+simplest secure and maintainable solution that fits the existing
+architecture. Document the decision briefly in the code or development
+notes.
+
+
+======================================================================
+1. PRIMARY OBJECTIVE
+======================================================================
+
+Build a small, secure, maintainable internal Service Desk application
+for approximately:
+
+- 100 Requesters
+- 2 SD Admins
+- 2 L2 Admins
+- approximately 20 Requester teams
+
+The application runs on Azure.
+
+Required main architecture:
+
+- React frontend
+- Node.js + TypeScript + Express backend/API
+- Azure App Service
+- Azure SQL Database
+- Azure Blob Storage for attachments
+- Azure Functions for background processing
+- Microsoft Entra ID for authentication
+- Microsoft Graph for Entra/Intune data
+- Application Insights / Azure Monitor
+- Managed Identity where supported
+
+The application is NOT intended to be a full ITIL/ITSM platform.
+
+
+======================================================================
+2. NON-NEGOTIABLE FUNCTIONAL REQUIREMENTS
+======================================================================
+
+Ticket number:
+
+TCK-YYYY-NNNNNNN
+
+Example:
+
+TCK-2026-0000001
+
+There is NO Cancelled status.
+
+Allowed statuses:
+
+NEW
+ASSIGNED
+IN_PROGRESS
+WAITING_FOR_USER
+WAITING_FOR_THIRD_PARTY
+RESOLVED
+CLOSED
+
+Progress is derived from status:
+
+NEW                     0%
+ASSIGNED               10%
+IN_PROGRESS            50%
+WAITING_FOR_USER       50%
+WAITING_FOR_THIRD_PARTY 50%
+RESOLVED               90%
+CLOSED                100%
+
+Do not allow users to set arbitrary progress values.
+
+
+======================================================================
+3. USER ROLES
+======================================================================
+
+REQUESTER
+
+Can:
+- create tickets
+- view own tickets
+- comment on own tickets
+- upload attachments to own tickets
+- view own ticket status/progress
+- select affected device
+
+Cannot:
+- view another Requester's tickets
+- assign/reassign
+- resolve
+- close
+- add worklogs
+- add internal notes
+
+ADMIN
+
+Can:
+- view ALL tickets
+- assign to team
+- assign to individual Admin
+- transfer between teams
+- reassign another Admin's ticket
+- change priority
+- change status
+- resolve
+- manually close
+- add public comments
+- add internal notes
+- add worklogs
+- upload/manage attachments
+- view audit history
+
+Initial teams:
+
+SD
+L2
+
+Initial Admin groups:
+
+SD Admins
+L2 Admins
+
+Both SD and L2 Admins can see all tickets.
+
+
+======================================================================
+4. ASSIGNMENT MODEL
+======================================================================
+
+Assignment consists of:
+
+assignedTeamId
+assignedUserId
+
+Examples:
+
+Unassigned:
+assignedTeamId = NULL
+assignedUserId = NULL
+
+Team queue:
+assignedTeamId = SD
+assignedUserId = NULL
+
+Individual:
+assignedTeamId = SD
+assignedUserId = specific SD Admin
+
+Cross-team transfer must work:
+
+SD -> L2
+L2 -> SD
+
+An Admin must be able to reassign a ticket belonging to another Admin.
+
+This is required for absence/vacation handling.
+
+
+======================================================================
+5. TICKET CREATION
+======================================================================
+
+Requester creates a ticket with:
+
+Required:
+- Subject
+- Description
+- Category/subcategory
+- Priority
+- Device selection
+
+Priorities:
+
+LOW
+NORMAL
+HIGH
+CRITICAL
+
+The Requester selects the initial priority.
+
+An Admin can override it later.
+
+Categories are hierarchical and configurable.
+
+Initial top-level categories:
+
+HW
+SW
+
+Example:
+
+HW
+  Phone
+    Broken screen
+
+SW
+  Teams
+    Login problem
+
+Do not hard-code category logic into the UI in a way that prevents
+future database-driven configuration.
+
+
+======================================================================
+6. DEVICE INFORMATION
+======================================================================
+
+The system must present the Requester's managed devices from
+Microsoft Graph / Intune.
+
+The Requester selects the affected device.
+
+There must also be:
+
+OTHER DEVICE
+
+If selected, allow manual device description/identifier.
+
+The selected device's relevant information must be captured in a
+Ticket Device Snapshot at ticket creation.
+
+Do not rely only on the current Intune state because the device may
+change later.
+
+Potential device fields include:
+
+- device name
+- Entra device ID
+- Intune managed device ID
+- serial number
+- manufacturer
+- model
+- operating system
+- OS version
+- compliance state
+- management state
+- last check-in
+- IP address if actually available from the API
+
+Never assume that every Graph/Intune field is available.
+
+If Graph device lookup fails, ticket creation must still be possible
+using Other Device.
+
+
+======================================================================
+7. MICROSOFT GRAPH
+======================================================================
+
+Use Microsoft Graph REST API.
+
+Base:
+
+https://graph.microsoft.com/v1.0
+
+The backend, not the browser, must perform privileged Graph access.
+
+The intended Intune permission is:
+
+DeviceManagementManagedDevices.Read.All
+
+Do NOT request:
+
+DeviceManagementManagedDevices.ReadWrite.All
+
+Do NOT request privileged remote-operation permissions.
+
+The ticketing system is READ-ONLY with respect to Intune.
+
+Never:
+- wipe devices
+- retire devices
+- modify devices
+- reboot devices
+- reset passcodes
+- perform remote Intune actions
+
+Use least privilege.
+
+
+======================================================================
+8. AUTHENTICATION
+======================================================================
+
+Use Microsoft Entra ID / company SSO.
+
+Do not build local username/password authentication.
+
+Use Entra Object ID as the stable user identity.
+
+Do not use email address as the primary identity key.
+
+The backend must validate authentication and authorization server-side.
+
+Never trust role/team information sent by the frontend.
+
+
+======================================================================
+9. ADMIN GROUPS
+======================================================================
+
+Prefer Entra security groups for Admin membership.
+
+Suggested groups:
+
+IT-ServiceDesk-SD-Admins
+IT-ServiceDesk-L2-Admins
+
+Map membership to:
+
+Admin + SD
+Admin + L2
+
+Do not hard-code individual Admin email addresses in source code.
+
+
+======================================================================
+10. STATUS WORKFLOW
+======================================================================
+
+Normal lifecycle:
+
+NEW
+ ->
+ASSIGNED
+ ->
+IN_PROGRESS
+ ->
+WAITING_FOR_USER
+ ->
+IN_PROGRESS
+ ->
+RESOLVED
+ ->
+CLOSED
+
+Also support:
+
+IN_PROGRESS -> WAITING_FOR_THIRD_PARTY
+WAITING_FOR_THIRD_PARTY -> IN_PROGRESS
+
+Admins may perform appropriate status changes.
+
+Requesters cannot set RESOLVED or CLOSED.
+
+
+======================================================================
+11. RESOLVED -> CLOSED AUTOMATION
+======================================================================
+
+When an Admin changes a ticket to RESOLVED:
+
+resolvedAt = current timestamp
+
+autoCloseAt = current timestamp + 5 days
+
+The ticket remains RESOLVED during this period.
+
+An Azure Function must periodically find:
+
+status = RESOLVED
+AND autoCloseAt <= current timestamp
+
+and change the ticket to:
+
+CLOSED
+
+Set:
+
+closedAt = current timestamp
+
+Create an AuditLog entry with actor:
+
+SYSTEM
+
+Reason:
+
+Automatic closure after 5 days.
+
+The operation must be idempotent.
+
+
+======================================================================
+12. REQUESTER COMMENT ON RESOLVED TICKET
+======================================================================
+
+If a Requester comments while the ticket is RESOLVED:
+
+- keep status = RESOLVED
+- reset autoCloseAt to comment timestamp + 5 days
+- notify the assigned Admin/team
+- create AuditLog entry
+
+DO NOT automatically reopen the ticket.
+
+Example:
+
+Resolved:
+17 Sep
+
+Requester comment:
+19 Sep
+
+New autoCloseAt:
+24 Sep
+
+
+======================================================================
+13. MANUAL CLOSURE
+======================================================================
+
+An Admin may close a RESOLVED ticket before the 5-day period expires.
+
+Example:
+
+Requester:
+"The problem is solved."
+
+Admin:
+
+RESOLVED -> CLOSED
+
+Create AuditLog entry.
+
+
+======================================================================
+14. COMMENTS
+======================================================================
+
+Two comment types:
+
+PUBLIC
+INTERNAL
+
+PUBLIC:
+- visible to Requester and Admins
+
+INTERNAL:
+- visible only to Admins
+
+Requesters may create PUBLIC comments only.
+
+Admins may create PUBLIC and INTERNAL comments.
+
+Comments should be append-only for MVP.
+
+
+======================================================================
+15. WORKLOG
+======================================================================
+
+Only Admins can add worklog entries.
+
+Fields:
+
+- ticket
+- admin
+- timestamp
+- duration in minutes
+- description
+
+Description:
+- multiline
+- maximum 20 lines
+- maximum 10,000 characters as implementation safeguard
+
+Validate the limit both frontend and backend.
+
+The browser-side validation must never be considered sufficient.
+
+
+======================================================================
+16. ATTACHMENTS
+======================================================================
+
+Supported types:
+
+PDF
+Word
+Excel
+Images
+TXT
+
+Suggested extensions:
+
+.pdf
+.doc
+.docx
+.xls
+.xlsx
+.png
+.jpg
+.jpeg
+.gif
+.txt
+
+Attachments must be stored in private Azure Blob Storage.
+
+Do not store binary attachments in SQL.
+
+Do not make the Blob container public.
+
+Validate on backend:
+- extension
+- MIME type
+- file size
+
+Do not use original filename directly as blob storage key.
+
+Use a generated safe storage key.
+
+Attachment metadata is stored in SQL.
+
+
+======================================================================
+17. EMAIL NOTIFICATIONS
+======================================================================
+
+Use backend/background processing.
+
+Do not make email delivery part of the main database transaction.
+
+Recommended:
+
+Ticket event
+ ->
+Notification record
+ ->
+Azure Function
+ ->
+Microsoft Graph
+ ->
+Exchange Online
+
+Important notification events:
+
+TICKET_CREATED
+TICKET_ASSIGNED
+TICKET_REASSIGNED
+STATUS_CHANGED
+PRIORITY_CHANGED
+REQUESTER_COMMENTED
+TICKET_RESOLVED
+TICKET_CLOSED
+
+Requester comment notification:
+
+If assignedUserId exists:
+send to assigned Admin only.
+
+If assignedUserId is NULL:
+send to all active Admins in assignedTeam.
+
+
+======================================================================
+18. AUDIT LOG
+======================================================================
+
+Audit log is append-only.
+
+Record important changes including:
+
+TICKET_CREATED
+ASSIGNMENT_CHANGED
+TEAM_CHANGED
+ADMIN_CHANGED
+PRIORITY_CHANGED
+STATUS_CHANGED
+COMMENT_ADDED
+INTERNAL_NOTE_ADDED
+WORKLOG_ADDED
+ATTACHMENT_UPLOADED
+MANUAL_CLOSURE
+AUTOMATIC_CLOSURE
+
+Fields:
+
+- timestamp
+- actor
+- ticket
+- action
+- old value
+- new value
+- details
+
+SYSTEM may be the actor for automatic operations.
+
+
+======================================================================
+19. DATABASE
+======================================================================
+
+Use Azure SQL Database.
+
+Do NOT use Cosmos DB for MVP.
+
+Recommended main tables:
+
+Users
+Teams
+Categories
+Tickets
+TicketDeviceSnapshots
+Comments
+Worklogs
+Attachments
+AuditLogs
+Notifications
+
+Use:
+- foreign keys
+- indexes
+- unique constraints
+- parameterized SQL / ORM
+
+Ticket number must have a UNIQUE constraint.
+
+Recommended ORM:
+Prisma is acceptable.
+
+If another mature TypeScript-compatible SQL ORM is already established
+in the project, it may be used instead of Prisma.
+
+
+======================================================================
+20. TICKET TABLE CORE FIELDS
+======================================================================
+
+Tickets should contain at least:
+
+id
+ticketNumber
+requesterId
+subject
+description
+categoryId
+priority
+status
+assignedTeamId
+assignedUserId
+deviceId
+otherDeviceDescription
+resolvedAt
+autoCloseAt
+closedAt
+createdAt
+updatedAt
+
+Do not store progress as an independently editable value.
+
+
+======================================================================
+21. API
+======================================================================
+
+Recommended API structure:
+
+GET  /api/me
+GET  /api/me/devices
+
+POST /api/tickets
+GET  /api/tickets
+GET  /api/tickets/{id}
+PATCH /api/tickets/{id}
+
+GET  /api/tickets/{id}/comments
+POST /api/tickets/{id}/comments
+
+GET  /api/tickets/{id}/worklogs
+POST /api/tickets/{id}/worklogs
+
+PATCH /api/tickets/{id}/assignment
+
+GET  /api/tickets/{id}/attachments
+POST /api/tickets/{id}/attachments
+GET  /api/tickets/{id}/attachments/{attachmentId}
+
+GET /api/tickets/{id}/audit
+
+GET /api/teams
+GET /api/categories
+GET /api/admin/users
+
+GET /api/dashboard/summary
+
+The developer may adjust endpoint names if there is a strong reason,
+but functionality and authorization rules must remain unchanged.
+
+
+======================================================================
+22. AUTHORIZATION RULE
+======================================================================
+
+Every protected API operation must perform:
+
+1. Authentication
+2. User resolution
+3. Role check
+4. Resource authorization
+
+Example:
+
+GET /api/tickets/123
+
+Requester:
+allowed only if ticket.requesterId == currentUser.id
+
+Admin:
+allowed
+
+PATCH /api/tickets/123/assignment
+
+Requester:
+403 Forbidden
+
+Admin:
+allowed
+
+
+======================================================================
+23. AZURE ARCHITECTURE
+======================================================================
+
+Required production architecture:
+
+Microsoft Entra ID
+        |
+        v
+Azure App Service
+        |
+        +---- React frontend
+        |
+        +---- Node.js/TypeScript API
+        |
+        +---- Azure SQL
+        |
+        +---- Microsoft Graph
+        |
+        +---- Azure Blob Storage
+
+Azure Functions:
+- AutoCloseResolvedTickets
+- ProcessNotifications
+- RetryFailedNotifications
+
+Application Insights / Azure Monitor:
+- API monitoring
+- errors
+- Function monitoring
+- Graph failures
+- notification failures
+
+
+======================================================================
+24. AZURE SERVICES NOT REQUIRED FOR MVP
+======================================================================
+
+Do NOT add these unless a documented requirement appears:
+
+- Azure API Management
+- Azure Cache for Redis
+- Azure Service Bus
+- Azure Front Door
+- Application Gateway
+- Azure VM
+- Premium SQL
+- Premium Functions
+
+The project has a small budget.
+
+Prefer simple managed services.
+
+
+======================================================================
+25. COST CONTROL
+======================================================================
+
+The production planning target is approximately:
+
+USD 60-80/month
+
+Planning value:
+approximately USD 70/month
+
+Expected major component:
+
+App Service B1:
+approximately USD 54.75/month at the referenced Microsoft list price,
+subject to region, agreement, currency, tax and discounts.
+
+Azure SQL Basic:
+approximately USD 5-15/month planning estimate.
+
+Functions:
+normally approximately USD 0 at this workload when within the
+applicable free grant.
+
+Blob Storage:
+approximately USD 0.50-3/month initially.
+
+Application Insights:
+approximately USD 0-5/month at low ingestion.
+
+These are estimates, not quotations.
+
+Before creating resources, inspect the company's existing Azure
+subscription for resources/plans that can be safely reused.
+
+Do not create duplicate:
+- App Service Plans
+- SQL servers
+- Storage accounts
+- monitoring resources
+
+without checking first.
+
+
+======================================================================
+26. SECURITY REQUIREMENTS
+======================================================================
+
+Mandatory:
+
+- HTTPS
+- Entra authentication
+- server-side authorization
+- Managed Identity where possible
+- least-privilege Graph permissions
+- private Blob Storage
+- backend-only privileged Graph access
+- parameterized SQL
+- backend file validation
+- XSS-safe rendering
+- no secrets in source control
+- no access tokens in logs
+- audit logging
+- Application Insights
+- secure configuration
+
+
+======================================================================
+27. IMPLEMENTATION ORDER
+======================================================================
+
+Implement in the following order.
+
+PHASE 0 - INSPECT EXISTING PROJECT
+----------------------------------
+
+Before changing anything:
+
+1. Inspect repository structure.
+2. Inspect package.json.
+3. Inspect existing React setup.
+4. Inspect existing backend, if any.
+5. Inspect Azure configuration files.
+6. Inspect environment configuration.
+7. Identify whether an existing App Service project exists.
+8. Identify whether existing Firebase code is unrelated legacy code.
+
+Do not delete or replace existing project components without evidence.
+
+First provide a short assessment of the existing repository.
+
+PHASE 1 - PROJECT FOUNDATION
+----------------------------
+
+Set up:
+- frontend
+- backend
+- shared types if appropriate
+- linting
+- formatting
+- environment configuration
+- error handling
+
+PHASE 2 - DATABASE
+------------------
+
+Create Azure SQL schema/migrations.
+
+Implement:
+- Users
+- Teams
+- Categories
+- Tickets
+- TicketDeviceSnapshots
+- Comments
+- Worklogs
+- Attachments
+- AuditLogs
+- Notifications
+
+Add indexes and constraints.
+
+Seed:
+- SD
+- L2
+- initial categories
+
+PHASE 3 - AUTHENTICATION
+------------------------
+
+Configure Entra ID.
+
+Implement:
+- SSO
+- authenticated user resolution
+- role/team mapping
+- authorization middleware
+
+PHASE 4 - CORE TICKETS
+----------------------
+
+Implement:
+- ticket creation
+- ticket numbering
+- ticket retrieval
+- requester ticket list
+- admin ticket list
+- ticket detail
+- priority
+- status
+- progress
+
+PHASE 5 - ASSIGNMENT
+---------------------
+
+Implement:
+- unassigned
+- team assignment
+- individual assignment
+- cross-team transfer
+- reassignment
+- audit entries
+
+PHASE 6 - COMMENTS / WORKLOG
+----------------------------
+
+Implement:
+- public comments
+- internal notes
+- worklogs
+- 20-line validation
+- notification events
+
+PHASE 7 - GRAPH / INTUNE
+------------------------
+
+Implement:
+- current user
+- managed devices
+- device selection
+- Other Device
+- device snapshot
+- Graph failure fallback
+
+PHASE 8 - ATTACHMENTS
+---------------------
+
+Implement:
+- private Blob Storage
+- upload
+- download
+- authorization
+- file validation
+- metadata
+- audit logging
+
+PHASE 9 - NOTIFICATIONS
+-----------------------
+
+Implement:
+- notification records
+- Azure Function
+- Graph SendMail
+- retry handling
+
+PHASE 10 - AUTO CLOSE
+---------------------
+
+Implement:
+- Resolved timestamp
+- autoCloseAt
+- scheduled Function
+- automatic close
+- timer reset after requester comment
+- manual close
+- audit logging
+
+PHASE 11 - DASHBOARDS
+---------------------
+
+Requester:
+- My tickets
+- New ticket
+
+Admin:
+- all tickets
+- filters
+- summary
+- unassigned
+- high/critical
+- waiting
+- own assignments
+
+PHASE 12 - TESTING
+------------------
+
+Test all acceptance criteria from the functional specification.
+
+
+======================================================================
+28. DEVELOPMENT METHOD
+======================================================================
+
+Work incrementally.
+
+Do NOT generate the entire application blindly in one step.
+
+For each implementation phase:
+
+1. Inspect current code.
+2. Explain the intended change briefly.
+3. Implement the smallest coherent unit.
+4. Run/build/test it.
+5. Fix errors.
+6. Check against the source specifications.
+7. Continue to the next unit.
+
+Do not proceed while the project is left in a knowingly broken build
+state unless the current task explicitly requires a temporary broken
+state.
+
+
+======================================================================
+29. COPILOT BEHAVIOR
+======================================================================
+
+When coding:
+
+- Prefer simple code over unnecessary abstraction.
+- Prefer explicit code over magic.
+- Use TypeScript types.
+- Validate API input.
+- Handle errors.
+- Avoid duplicated business rules.
+- Keep authorization in backend services/middleware.
+- Keep secrets out of frontend.
+- Keep Azure-specific code isolated in service modules.
+- Keep Graph integration isolated in a Graph service.
+- Keep database access isolated in repository/service layers.
+- Keep notification logic isolated.
+- Keep ticket state transition rules centralized.
+
+Do not put all application logic in React components.
+
+Do not put privileged operations in browser code.
+
+
+======================================================================
+30. BUSINESS RULES MUST BE CENTRALIZED
+======================================================================
+
+Create centralized backend logic for:
+
+- status transitions
+- progress calculation
+- assignment validation
+- priority validation
+- requester permissions
+- Admin permissions
+- automatic closure
+- notification recipient calculation
+- worklog validation
+- attachment validation
+
+Do not duplicate these rules independently in multiple controllers.
+
+
+======================================================================
+31. DATABASE MIGRATIONS
+======================================================================
+
+Use migrations.
+
+Never manually modify production schema without a migration.
+
+Every schema change must:
+- be represented in migration
+- be reproducible
+- be tested against a development database
+
+
+======================================================================
+32. ERROR HANDLING
+======================================================================
+
+Use consistent HTTP responses.
+
+Suggested:
+
+400:
+validation error
+
+401:
+not authenticated
+
+403:
+authenticated but not authorized
+
+404:
+resource not found
+
+409:
+business conflict
+
+500:
+unexpected server error
+
+Do not expose:
+- stack traces
+- SQL errors
+- tokens
+- secrets
+- internal file paths
+
+in production API responses.
+
+
+======================================================================
+33. GRAPH ERROR HANDLING
+======================================================================
+
+Graph failure must not prevent ticket creation.
+
+For device lookup:
+
+Try Graph
+  |
+  +-- success -> show devices
+  |
+  +-- failure -> show Other Device
+                    |
+                    v
+              allow ticket creation
+
+Log the Graph error in Application Insights.
+
+Do not display raw Graph error details to users.
+
+
+======================================================================
+34. NOTIFICATION RELIABILITY
+======================================================================
+
+Notification processing must be retryable.
+
+Notification statuses:
+
+PENDING
+SENT
+FAILED
+
+A failed notification should contain an error message suitable for
+administrative troubleshooting, but must not contain credentials or
+tokens.
+
+Use controlled retry/backoff.
+
+Do not create infinite retry loops.
+
+
+======================================================================
+35. AUTO-CLOSE RELIABILITY
+======================================================================
+
+The auto-close Function must be safe if executed multiple times.
+
+Before closing:
+
+- reload ticket
+- verify status == RESOLVED
+- verify autoCloseAt <= now
+
+Then close.
+
+This avoids closing a ticket that was changed by an Admin between the
+initial query and update.
+
+
+======================================================================
+36. FRONTEND RULES
+======================================================================
+
+Requester UI should be simple.
+
+New Ticket form:
+
+Subject
+Description
+Category
+Subcategory
+Priority
+Device
+
+Admin UI should provide:
+
+Ticket list
+Filters
+Assignment
+Priority
+Status
+Comments
+Internal notes
+Worklog
+Attachments
+Audit log
+
+
+======================================================================
+37. UI MUST NOT BE THE SECURITY BOUNDARY
+======================================================================
+
+Hiding a button is NOT authorization.
+
+Example:
+
+Even if the Requester does not see a "Resolve" button, the backend must
+still reject:
+
+PATCH /api/tickets/{id}
+
+with status=RESOLVED
+
+from a Requester.
+
+The same applies to:
+- assignment
+- internal notes
+- worklog
+- other users' tickets
+- Admin functions
+
+
+======================================================================
+38. TEST USERS
+======================================================================
+
+Use test identities representing:
+
+Requester A
+Requester B
+
+SD Admin A
+SD Admin B
+
+L2 Admin A
+L2 Admin B
+
+Test cross-team assignment.
+
+Test vacation scenario:
+
+L2 Admin A owns tickets.
+
+L2 Admin A is unavailable.
+
+L2 Admin B reassigns those tickets.
+
+Verify:
+- operation succeeds
+- audit log records it
+- notifications go to the new owner
+
+
+======================================================================
+39. REQUIRED TEST SCENARIOS
+======================================================================
+
+1. Requester creates ticket.
+2. Unique TCK number generated.
+3. Requester selects HW category.
+4. Requester selects SW category.
+5. Requester selects priority.
+6. Admin overrides priority.
+7. Requester sees devices.
+8. Requester selects Other Device.
+9. Graph unavailable but ticket still created.
+10. Ticket assigned to SD.
+11. Ticket assigned to SD Admin.
+12. SD transfers ticket to L2.
+13. L2 transfers ticket to SD.
+14. Admin reassigns another Admin's ticket.
+15. Requester adds comment.
+16. Correct Admin/team receives notification.
+17. Admin adds public comment.
+18. Admin adds internal note.
+19. Requester cannot see internal note.
+20. Admin adds 20-line worklog.
+21. 21-line worklog is rejected.
+22. Attachment upload works.
+23. Unsupported attachment is rejected.
+24. Requester cannot access another Requester's ticket.
+25. Requester cannot Resolve.
+26. Requester cannot Close.
+27. Admin resolves ticket.
+28. autoCloseAt is +5 days.
+29. Requester comments while Resolved.
+30. autoCloseAt resets to +5 days.
+31. Status remains Resolved.
+32. Admin manually closes early.
+33. Function automatically closes expired Resolved tickets.
+34. Audit log records all important operations.
+35. Email failure does not undo ticket update.
+
+
+======================================================================
+40. COST AND INFRASTRUCTURE SAFETY
+======================================================================
+
+Before provisioning Azure resources:
+
+1. Inspect existing resources.
+2. Check whether an existing App Service Plan can be reused.
+3. Check existing SQL infrastructure.
+4. Check existing Storage accounts.
+5. Check existing Application Insights.
+6. Check Azure region.
+7. Check company Azure budget.
+
+Do not silently provision expensive services.
+
+If a proposed implementation would materially exceed the expected
+~USD 60-80/month planning range, STOP and explain the cost impact before
+implementing it.
+
+
+======================================================================
+41. AZURE RESOURCE NAMING
+======================================================================
+
+Use a consistent company naming convention.
+
+Do not invent a company-specific naming standard if one already exists.
+
+If no standard exists, propose names such as:
+
+rg-it-servicedesk-prod
+app-it-servicedesk-prod
+func-it-servicedesk-prod
+sql-it-servicedesk-prod
+stitservicedeskprod
+appi-it-servicedesk-prod
+
+Confirm actual names before provisioning.
+
+
+======================================================================
+42. PRODUCTION DEPLOYMENT
+======================================================================
+
+Deployment should be repeatable.
+
+Recommended:
+
+GitHub
+  ->
+GitHub Actions
+  ->
+build/test
+  ->
+Azure App Service
+
+Functions use a separate deployment step/pipeline.
+
+Never require a developer to manually copy source files into production
+as the normal deployment process.
+
+
+======================================================================
+43. DOCUMENTATION TO MAINTAIN
+======================================================================
+
+As implementation proceeds, maintain:
+
+README.md
+ARCHITECTURE.md
+DATABASE.md
+API.md
+DEPLOYMENT.md
+SECURITY.md
+AZURE-COST.md
+
+Do not create unnecessary documentation files if the repository already
+has an established documentation structure.
+
+Documentation must describe actual implemented behavior, not planned
+behavior that does not exist yet.
+
+
+======================================================================
+44. WHEN REQUIREMENTS ARE AMBIGUOUS
+======================================================================
+
+Use this decision order:
+
+1. Functional Specification
+2. Technical Implementation Specification
+3. Existing project conventions
+4. Existing company Azure conventions
+5. Simplest secure implementation
+
+If the ambiguity materially changes:
+- security
+- cost
+- data model
+- permissions
+- user workflow
+- external integrations
+
+STOP and ask for clarification before implementing.
+
+Do not ask unnecessary questions for minor implementation details.
+
+
+======================================================================
+45. WHEN THE SPECIFICATION CONFLICTS WITH EXISTING CODE
+======================================================================
+
+The specification takes precedence for this new application.
+
+However:
+
+- do not delete unrelated existing functionality
+- do not overwrite unrelated configuration
+- identify conflicts
+- explain the conflict
+- make the smallest safe change
+
+
+======================================================================
+46. NO UNAUTHORIZED SCOPE CREEP
+======================================================================
+
+Do not independently add:
+
+- AI ticket classification
+- email-to-ticket
+- SLA engine
+- Teams bot
+- approval workflows
+- knowledge base
+- reporting platform
+- advanced analytics
+- external customer portal
+
+unless explicitly requested.
+
+The MVP should remain small.
+
+
+======================================================================
+47. FIRST ACTION
+======================================================================
+
+When these specification files are provided to you and the repository is
+opened:
+
+DO NOT immediately start generating application code.
+
+First:
+
+1. Read both specification files completely.
+2. Inspect the existing repository.
+3. Identify current technologies/files that can be reused.
+4. Identify missing components.
+5. Produce a concise implementation plan.
+6. Identify only genuinely blocking ambiguities.
+7. Propose the initial Azure resource layout.
+8. Propose the database migration order.
+9. Then begin implementation phase by phase.
+
+The first implementation task should normally be the project/database
+foundation, not the full UI.
+
+
+======================================================================
+48. FINAL PRINCIPLE
+======================================================================
+
+Build exactly the system described by the specifications.
+
+Prioritize:
+
+SECURITY
+  >
+CORRECTNESS
+  >
+MAINTAINABILITY
+  >
+SIMPLICITY
+  >
+COST EFFICIENCY
+
+Do not sacrifice security merely to reduce Azure cost.
+
+Do not introduce paid Azure services when a secure built-in or
+consumption-based alternative is sufficient.
+
+Every important implementation decision should be traceable back to the
+functional or technical specification.
