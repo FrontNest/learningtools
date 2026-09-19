@@ -59,10 +59,18 @@ export async function updateTicketAssignment(admin: User, ticketId: string, inpu
     return prisma.ticket.findUniqueOrThrow({ where: { id: ticketId }, include: ticketInclude });
   }
 
+  // Moving a ticket out of Unassigned (team and/or admin now set) should leave
+  // the NEW status automatically, since it no longer reflects reality.
+  const shouldAutoAssignStatus = ticket.status === "NEW" && Boolean(nextTeamId);
+
   return prisma.$transaction(async (tx) => {
     await tx.ticket.update({
       where: { id: ticketId },
-      data: { assignedTeamId: nextTeamId, assignedUserId: nextUserId },
+      data: {
+        assignedTeamId: nextTeamId,
+        assignedUserId: nextUserId,
+        status: shouldAutoAssignStatus ? "ASSIGNED" : undefined,
+      },
     });
 
     await writeAuditLog(tx, {
@@ -72,6 +80,17 @@ export async function updateTicketAssignment(admin: User, ticketId: string, inpu
       oldValue: oldLabel,
       newValue: newLabel,
     });
+
+    if (shouldAutoAssignStatus) {
+      await writeAuditLog(tx, {
+        ticketId,
+        actorId: admin.id,
+        action: "STATUS_CHANGED",
+        oldValue: "NEW",
+        newValue: "ASSIGNED",
+        details: "Automatic status change on assignment",
+      });
+    }
 
     // Notify the newly assigned individual Admin, if any (spec section 16).
     if (nextUser && nextUser.id !== ticket.assignedUserId) {
