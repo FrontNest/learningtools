@@ -1,0 +1,251 @@
+// Prisma schema for the IT Service Desk Ticketing System (standalone MVP)
+// Database: SQLite (file-based). Designed so the relational model can migrate
+// to PostgreSQL/Azure SQL later without conceptual changes.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// NOTE: SQLite has no native enum support in Prisma, so enum-like fields below
+// are plain String columns. The allowed values are centralized as TypeScript
+// union types / const arrays in src/domain/enums.ts and validated with zod at
+// every API boundary — never trust a raw string coming from the client.
+
+model User {
+  id                 String   @id @default(uuid())
+  email              String   @unique
+  displayName        String
+  department         String?
+  jobTitle           String?
+  passwordHash       String
+  mustChangePassword Boolean  @default(true)
+  role               String   @default("REQUESTER")
+  teamId             String?
+  team               Team?    @relation(fields: [teamId], references: [id])
+  active             Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  requestedTickets   Ticket[]       @relation("RequesterTickets")
+  assignedTickets    Ticket[]       @relation("AssignedAdminTickets")
+  comments           Comment[]
+  worklogs           Worklog[]
+  attachmentsUploaded Attachment[]
+  auditLogsActed     AuditLog[]
+  notifications      Notification[]
+  loginAttempts      LoginAttempt[]
+
+  @@index([teamId])
+  @@index([role])
+}
+
+model Team {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  type      String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members         User[]
+  assignedTickets Ticket[] @relation("AssignedTeamTickets")
+}
+
+model Category {
+  id        String     @id @default(uuid())
+  parentId  String?
+  parent    Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryHierarchy")
+  code      String     @unique
+  name      String
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  tickets Ticket[]
+
+  @@index([parentId])
+}
+
+model Device {
+  id                String       @id @default(uuid())
+  source            String       @default("INVENTORY")
+  deviceName        String
+  primaryUserEmail  String?
+  entraDeviceId     String?
+  intuneDeviceId    String?
+  serialNumber      String?
+  manufacturer      String?
+  model             String?
+  operatingSystem   String?
+  osVersion         String?
+  complianceState   String?
+  managementState   String?
+  lastCheckIn       DateTime?
+  ipAddress         String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  tickets   Ticket[]
+  snapshots TicketDeviceSnapshot[]
+}
+
+model Ticket {
+  id                     String       @id @default(uuid())
+  ticketNumber           String       @unique
+  requesterId            String
+  requester              User         @relation("RequesterTickets", fields: [requesterId], references: [id])
+  subject                String
+  description            String
+  categoryId             String
+  category               Category     @relation(fields: [categoryId], references: [id])
+  priority               String       @default("NORMAL")
+  status                 String       @default("NEW")
+  assignedTeamId         String?
+  assignedTeam           Team?        @relation("AssignedTeamTickets", fields: [assignedTeamId], references: [id])
+  assignedUserId         String?
+  assignedUser           User?        @relation("AssignedAdminTickets", fields: [assignedUserId], references: [id])
+  deviceId               String?
+  device                 Device?      @relation(fields: [deviceId], references: [id])
+  otherDeviceDescription String?
+  resolvedAt             DateTime?
+  autoCloseAt            DateTime?
+  closedAt               DateTime?
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+
+  deviceSnapshot TicketDeviceSnapshot?
+  comments       Comment[]
+  worklogs       Worklog[]
+  attachments    Attachment[]
+  auditLogs      AuditLog[]
+  notifications  Notification[]
+
+  @@index([requesterId])
+  @@index([assignedTeamId])
+  @@index([assignedUserId])
+  @@index([status])
+  @@index([priority])
+}
+
+// Snapshot of device info captured at ticket-creation time so historical
+// ticket data doesn't change if the device record changes/syncs later.
+model TicketDeviceSnapshot {
+  id              String   @id @default(uuid())
+  ticketId        String   @unique
+  ticket          Ticket   @relation(fields: [ticketId], references: [id])
+  deviceId        String?
+  device          Device?  @relation(fields: [deviceId], references: [id])
+  deviceName      String?
+  entraDeviceId   String?
+  intuneDeviceId  String?
+  serialNumber    String?
+  manufacturer    String?
+  model           String?
+  operatingSystem String?
+  osVersion       String?
+  complianceState String?
+  managementState String?
+  lastCheckIn     DateTime?
+  ipAddress       String?
+  capturedAt      DateTime @default(now())
+}
+
+model Comment {
+  id        String      @id @default(uuid())
+  ticketId  String
+  ticket    Ticket      @relation(fields: [ticketId], references: [id])
+  authorId  String
+  author    User        @relation(fields: [authorId], references: [id])
+  type      String      @default("PUBLIC")
+  text      String
+  createdAt DateTime    @default(now())
+
+  @@index([ticketId])
+}
+
+model Worklog {
+  id              String   @id @default(uuid())
+  ticketId        String
+  ticket          Ticket   @relation(fields: [ticketId], references: [id])
+  adminId         String
+  admin           User     @relation(fields: [adminId], references: [id])
+  durationMinutes Int
+  description     String
+  createdAt       DateTime @default(now())
+
+  @@index([ticketId])
+}
+
+model Attachment {
+  id               String   @id @default(uuid())
+  ticketId         String
+  ticket           Ticket   @relation(fields: [ticketId], references: [id])
+  uploadedById     String
+  uploadedBy       User     @relation(fields: [uploadedById], references: [id])
+  originalFileName String
+  mimeType         String
+  fileSize         Int
+  storageKey       String
+  createdAt        DateTime @default(now())
+
+  @@index([ticketId])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  ticketId  String?
+  ticket    Ticket?  @relation(fields: [ticketId], references: [id])
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id])
+  action    String
+  oldValue  String?
+  newValue  String?
+  details   String?
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
+  @@index([actorId])
+}
+
+model Notification {
+  id           String             @id @default(uuid())
+  ticketId     String?
+  ticket       Ticket?            @relation(fields: [ticketId], references: [id])
+  recipientId  String
+  recipient    User               @relation(fields: [recipientId], references: [id])
+  type         String
+  status       String             @default("PENDING")
+  message      String
+  createdAt    DateTime           @default(now())
+  readAt       DateTime?
+  errorMessage String?
+
+  @@index([recipientId])
+  @@index([status])
+}
+
+// Tracks failed login attempts per account for basic brute-force lockout.
+model LoginAttempt {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  email     String
+  success   Boolean
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([userId])
+}
+
+// Concurrency-safe ticket number sequence (per year).
+model TicketSequence {
+  year        Int @id
+  lastNumber  Int @default(0)
+}

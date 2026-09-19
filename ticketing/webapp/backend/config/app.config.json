@@ -1,0 +1,16 @@
+{
+  "appName": "IT Service Desk",
+  "appShortName": "ServiceDesk",
+  "favicon": "/favicon.ico",
+  "supportContact": "it-servicedesk@company.example",
+  "ticketNumberPrefix": "TCK",
+  "autoCloseAfterDays": 5,
+  "worklogMaxLines": 20,
+  "worklogMaxChars": 10000,
+  "allowedAttachmentExtensions": [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".png", ".jpg", ".jpeg", ".gif", ".txt"],
+  "deviceProvider": "INVENTORY",
+  "teams": [
+    { "name": "SD", "type": "IT_TEAM" },
+    { "name": "L2", "type": "IT_TEAM" }
+  ]
+}
