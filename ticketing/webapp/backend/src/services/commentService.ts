@@ -82,6 +82,16 @@ export async function createComment(
         type: "REQUESTER_COMMENTED",
         message: `${currentUser.displayName} commented on ${ticket.ticketNumber}`,
       });
+    } else if (input.type === "PUBLIC") {
+      const requester = await tx.user.findUnique({ where: { id: ticket.requesterId } });
+      if (requester && requester.active && requester.id !== currentUser.id) {
+        await notify(tx, {
+          ticketId,
+          recipients: [requester],
+          type: "ADMIN_COMMENTED",
+          message: `${currentUser.displayName} commented on ${ticket.ticketNumber}`,
+        });
+      }
     }
 
     return comment;
