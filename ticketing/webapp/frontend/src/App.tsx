@@ -8,6 +8,7 @@ import { TicketDetailPage } from "./pages/TicketDetailPage";
 import { NotificationsPage } from "./pages/NotificationsPage";
 import { ChangePasswordPage } from "./pages/ChangePasswordPage";
 import { AdminUsersPage } from "./pages/AdminUsersPage";
+import { AdminCategoriesPage } from "./pages/AdminCategoriesPage";
 
 function App() {
   return (
@@ -28,6 +29,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AdminUsersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/categories"
+            element={
+              <ProtectedRoute>
+                <AdminCategoriesPage />
               </ProtectedRoute>
             }
           />

@@ -58,6 +58,7 @@ export function TicketListPage() {
         <div className="header-actions">
           <Link to="/notifications">Notifications{unreadCount > 0 ? ` (${unreadCount})` : ""}</Link>
           {isAdmin && <Link to="/admin/users">Manage users</Link>}
+          {isAdmin && <Link to="/admin/categories">Manage categories</Link>}
           <Link to="/change-password">Change password</Link>
           <Link to="/tickets/new" className="button-link">New ticket</Link>
           <button onClick={() => logout()}>Sign out</button>

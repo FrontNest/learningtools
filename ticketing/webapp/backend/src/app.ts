@@ -18,6 +18,7 @@ import { meDevicesRouter } from "./routes/meDevices";
 import { notificationsRouter } from "./routes/notifications";
 import { dashboardRouter } from "./routes/dashboard";
 import { userManagementRouter } from "./routes/userManagement";
+import { categoryManagementRouter } from "./routes/categoryManagement";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 export function createApp() {
@@ -74,6 +75,7 @@ export function createApp() {
   app.use("/api/notifications", notificationsRouter);
   app.use("/api/dashboard", dashboardRouter);
   app.use("/api/admin/user-management", userManagementRouter);
+  app.use("/api/admin/category-management", categoryManagementRouter);
 
   app.use("/api", notFoundHandler);
 
