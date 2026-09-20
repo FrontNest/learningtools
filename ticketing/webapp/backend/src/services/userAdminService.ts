@@ -1,9 +1,12 @@
+import fs from "fs";
+import path from "path";
 import type { User } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { AppError } from "../errors/AppError";
 import { hashPassword } from "./authService";
 import { generateTempPassword } from "../lib/passwordGenerator";
 import type { RoleValue } from "../domain/enums";
+import { env } from "../config";
 
 const userSelect = {
   id: true,
@@ -187,6 +190,16 @@ export async function deleteUser(actingAdmin: User, userId: string, deleteHistor
       await tx.user.delete({ where: { id: userId } });
     });
 
+    await Promise.all(
+      ownedAttachments.map(async ({ storageKey }) => {
+        const attachmentPath = path.join(env.uploadDir, storageKey);
+        const relativePath = path.relative(path.resolve(env.uploadDir), attachmentPath);
+        if (relativePath && !relativePath.startsWith("..") && !path.isAbsolute(relativePath)) {
+          await fs.promises.unlink(attachmentPath).catch(() => undefined);
+        }
+      })
+    );
+
     return { deleted: true, deletedTicketCount: requestedTicketIds.length, storageKeys: ownedAttachments.map((file) => file.storageKey) };
   }
 
@@ -222,4 +235,6 @@ export async function deleteUser(actingAdmin: User, userId: string, deleteHistor
     prisma.loginAttempt.deleteMany({ where: { userId } }),
     prisma.user.delete({ where: { id: userId } }),
   ]);
+
+  return { deleted: true, deletedTicketCount: 0, storageKeys: [] as string[] };
 }
