@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import { fetchTickets, type TicketFilters } from "../lib/ticketApi";
+import { fetchAdminUsers, fetchTeams, fetchTickets, type TicketFilters } from "../lib/ticketApi";
 import { fetchNotifications } from "../lib/notificationApi";
-import type { TicketSummary } from "../types/ticket";
+import type { AdminUser, Priority, Team, TicketStatus, TicketSummary } from "../types/ticket";
 import { TicketTable } from "../components/TicketTable";
 import { AdminSummaryBar } from "../components/AdminSummaryBar";
 
@@ -15,6 +15,8 @@ export function TicketListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -31,6 +33,20 @@ export function TicketListPage() {
       .then((notifications) => setUnreadCount(notifications.filter((n) => !n.readAt).length))
       .catch(() => undefined);
   }, []);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    fetchTeams().then(setTeams).catch(() => undefined);
+  }, [isAdmin]);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    fetchAdminUsers(filters.assignedTeamId).then(setAdmins).catch(() => undefined);
+  }, [filters.assignedTeamId, isAdmin]);
+
+  function updateFilter<K extends keyof TicketFilters>(key: K, value: TicketFilters[K] | undefined) {
+    setFilters((current) => ({ ...current, ...(value ? { [key]: value } : { [key]: undefined }) }));
+  }
 
   return (
     <div className="dashboard-page">
@@ -49,6 +65,52 @@ export function TicketListPage() {
       </header>
 
       {isAdmin && user && <AdminSummaryBar currentUserId={user.id} onFilter={setFilters} />}
+
+      {isAdmin && (
+        <div className="ticket-filters">
+          <input
+            placeholder="Search ticket number or subject"
+            value={filters.search ?? ""}
+            onChange={(event) => updateFilter("search", event.target.value || undefined)}
+          />
+          <select
+            value={filters.assignedTeamId ?? ""}
+            onChange={(event) => {
+              updateFilter("assignedTeamId", event.target.value || undefined);
+              updateFilter("assignedUserId", undefined);
+            }}
+          >
+            <option value="">All teams</option>
+            {teams.map((team) => <option key={team.id} value={team.id}>{team.name}</option>)}
+          </select>
+          <select
+            value={filters.assignedUserId ?? ""}
+            onChange={(event) => updateFilter("assignedUserId", event.target.value || undefined)}
+          >
+            <option value="">All assigned admins</option>
+            {admins.map((admin) => <option key={admin.id} value={admin.id}>{admin.displayName}</option>)}
+          </select>
+          <select
+            value={filters.status ?? ""}
+            onChange={(event) => updateFilter("status", (event.target.value || undefined) as TicketStatus | undefined)}
+          >
+            <option value="">All statuses</option>
+            {(["NEW", "ASSIGNED", "IN_PROGRESS", "WAITING_FOR_USER", "WAITING_FOR_THIRD_PARTY", "RESOLVED", "CLOSED"] as TicketStatus[]).map((status) => (
+              <option key={status} value={status}>{status}</option>
+            ))}
+          </select>
+          <select
+            value={filters.priority ?? ""}
+            onChange={(event) => updateFilter("priority", (event.target.value || undefined) as Priority | undefined)}
+          >
+            <option value="">All priorities</option>
+            {(["LOW", "NORMAL", "HIGH", "CRITICAL"] as Priority[]).map((priority) => (
+              <option key={priority} value={priority}>{priority}</option>
+            ))}
+          </select>
+          <button className="link-button" onClick={() => setFilters({})}>Clear filters</button>
+        </div>
+      )}
 
       {error && <p className="form-error">{error}</p>}
 

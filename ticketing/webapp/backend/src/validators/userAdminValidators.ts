@@ -12,6 +12,7 @@ export const createUserSchema = z.object({
 
 export const updateUserSchema = z
   .object({
+    email: z.string().trim().email().optional(),
     role: z.enum(ROLES).optional(),
     teamId: z.string().uuid().nullable().optional(),
     active: z.boolean().optional(),

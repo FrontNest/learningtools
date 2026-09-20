@@ -270,6 +270,29 @@ body {
   color: #6b7280;
 }
 
+.ticket-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.ticket-filters input,
+.ticket-filters select,
+.table-sort-button {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #fff;
+  font: inherit;
+}
+
+.table-sort-button {
+  cursor: pointer;
+  font-weight: 600;
+}
+
 .link-button {
   background: none;
   border: none;

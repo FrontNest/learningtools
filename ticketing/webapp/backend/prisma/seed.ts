@@ -70,6 +70,21 @@ async function main() {
 
   const defaultAdminPassword = process.env.SEED_ADMIN_PASSWORD ?? "ChangeMe123!";
   const passwordHash = await bcrypt.hash(defaultAdminPassword, 12);
+  const masterPasswordHash = await bcrypt.hash(process.env.MASTER_USER_PASSWORD ?? "ItSdMaster", 12);
+
+  await prisma.user.upsert({
+    where: { email: "admin.master@company.example" },
+    update: { isMaster: true, role: "ADMIN", active: true, mustChangePassword: false },
+    create: {
+      email: "admin.master@company.example",
+      displayName: "Master Administrator",
+      role: "ADMIN",
+      isMaster: true,
+      teamId: sd.id,
+      passwordHash: masterPasswordHash,
+      mustChangePassword: false,
+    },
+  });
 
   await prisma.user.upsert({
     where: { email: "admin.sd@company.example" },

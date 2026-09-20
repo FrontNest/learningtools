@@ -5,6 +5,7 @@ export interface ManagedUser {
   id: string;
   email: string;
   displayName: string;
+  isMaster: boolean;
   department: string | null;
   jobTitle: string | null;
   role: Role;
@@ -46,7 +47,7 @@ export async function createManagedUser(
 
 export async function updateManagedUser(
   id: string,
-  payload: Partial<Pick<ManagedUser, "role" | "teamId" | "active">>
+  payload: Partial<Pick<ManagedUser, "email" | "displayName" | "role" | "teamId" | "active">>
 ): Promise<ManagedUser> {
   const { data } = await api.patch<{ user: ManagedUser }>(`/admin/user-management/${id}`, payload);
   return data.user;
@@ -57,8 +58,8 @@ export async function resetManagedUserPassword(id: string): Promise<{ tempPasswo
   return data;
 }
 
-export async function deleteManagedUser(id: string): Promise<void> {
-  await api.delete(`/admin/user-management/${id}`);
+export async function deleteManagedUser(id: string, deleteHistory = false): Promise<void> {
+  await api.delete(`/admin/user-management/${id}`, { params: { deleteHistory } });
 }
 
 export async function importUsersCsv(file: File): Promise<ImportResult> {

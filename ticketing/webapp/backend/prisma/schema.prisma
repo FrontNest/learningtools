@@ -25,6 +25,7 @@ model User {
   passwordHash       String
   mustChangePassword Boolean  @default(true)
   role               String   @default("REQUESTER")
+  isMaster           Boolean  @default(false)
   teamId             String?
   team               Team?    @relation(fields: [teamId], references: [id])
   active             Boolean  @default(true)

@@ -12,6 +12,7 @@ const userSelect = {
   department: true,
   jobTitle: true,
   role: true,
+  isMaster: true,
   teamId: true,
   active: true,
   mustChangePassword: true,
@@ -67,6 +68,7 @@ export async function createUser(input: CreateUserInput) {
 }
 
 interface UpdateUserInput {
+  email?: string;
   role?: RoleValue;
   teamId?: string | null;
   active?: boolean;
@@ -84,6 +86,10 @@ export async function updateUser(actingAdmin: User, userId: string, input: Updat
     throw AppError.notFound("User not found");
   }
 
+  if (target.isMaster && (input.active === false || input.role === "REQUESTER")) {
+    throw AppError.forbidden("The master user cannot be deactivated or downgraded");
+  }
+
   if (input.teamId) {
     const team = await prisma.team.findUnique({ where: { id: input.teamId } });
     if (!team || !team.active) {
@@ -91,9 +97,18 @@ export async function updateUser(actingAdmin: User, userId: string, input: Updat
     }
   }
 
+  const normalizedEmail = input.email?.trim().toLowerCase();
+  if (normalizedEmail && normalizedEmail !== target.email) {
+    const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+    if (existing) {
+      throw AppError.conflict("A user with this email already exists");
+    }
+  }
+
   return prisma.user.update({
     where: { id: userId },
     data: {
+      email: normalizedEmail,
       role: input.role,
       teamId: input.teamId === undefined ? undefined : input.teamId,
       active: input.active,
@@ -125,7 +140,7 @@ export async function resetUserPassword(userId: string) {
 // tickets/comments/worklogs/attachments/audit entries/notifications) —
 // otherwise it would either violate referential integrity or silently erase
 // audit trail data. Anything with history must be deactivated instead.
-export async function deleteUser(actingAdmin: User, userId: string) {
+export async function deleteUser(actingAdmin: User, userId: string, deleteHistory = false) {
   if (userId === actingAdmin.id) {
     throw AppError.badRequest("You cannot delete your own account");
   }
@@ -133,6 +148,46 @@ export async function deleteUser(actingAdmin: User, userId: string) {
   const target = await prisma.user.findUnique({ where: { id: userId } });
   if (!target) {
     throw AppError.notFound("User not found");
+  }
+
+  if (target.isMaster) {
+    throw AppError.forbidden("The master user cannot be deleted");
+  }
+
+  if (deleteHistory) {
+    const requestedTickets = await prisma.ticket.findMany({
+      where: { requesterId: userId },
+      select: { id: true },
+    });
+    const requestedTicketIds = requestedTickets.map((ticket) => ticket.id);
+    const ownedAttachments = await prisma.attachment.findMany({
+      where: { OR: [{ uploadedById: userId }, { ticketId: { in: requestedTicketIds } }] },
+      select: { storageKey: true },
+    });
+
+    await prisma.$transaction(async (tx) => {
+      await tx.ticket.updateMany({ where: { assignedUserId: userId }, data: { assignedUserId: null } });
+      await tx.auditLog.updateMany({ where: { actorId: userId }, data: { actorId: null } });
+      await tx.comment.deleteMany({ where: { authorId: userId } });
+      await tx.worklog.deleteMany({ where: { adminId: userId } });
+      await tx.notification.deleteMany({ where: { recipientId: userId } });
+      await tx.attachment.deleteMany({ where: { uploadedById: userId } });
+
+      if (requestedTicketIds.length > 0) {
+        await tx.ticketDeviceSnapshot.deleteMany({ where: { ticketId: { in: requestedTicketIds } } });
+        await tx.comment.deleteMany({ where: { ticketId: { in: requestedTicketIds } } });
+        await tx.worklog.deleteMany({ where: { ticketId: { in: requestedTicketIds } } });
+        await tx.attachment.deleteMany({ where: { ticketId: { in: requestedTicketIds } } });
+        await tx.auditLog.deleteMany({ where: { ticketId: { in: requestedTicketIds } } });
+        await tx.notification.deleteMany({ where: { ticketId: { in: requestedTicketIds } } });
+        await tx.ticket.deleteMany({ where: { id: { in: requestedTicketIds } } });
+      }
+
+      await tx.loginAttempt.deleteMany({ where: { userId } });
+      await tx.user.delete({ where: { id: userId } });
+    });
+
+    return { deleted: true, deletedTicketCount: requestedTicketIds.length, storageKeys: ownedAttachments.map((file) => file.storageKey) };
   }
 
   const [

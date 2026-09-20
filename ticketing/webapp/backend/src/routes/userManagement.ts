@@ -41,8 +41,9 @@ userManagementRouter.post("/:id/reset-password", async (req, res) => {
 });
 
 userManagementRouter.delete("/:id", async (req, res) => {
-  await deleteUser(req.currentUser!, req.params.id);
-  res.status(204).send();
+  const deleteHistory = req.query.deleteHistory === "true";
+  const result = await deleteUser(req.currentUser!, req.params.id, deleteHistory);
+  res.status(200).json(result);
 });
 
 userManagementRouter.post("/import", (req, res, next) => {

@@ -31,6 +31,9 @@ export function AdminUsersPage() {
   const [role, setRole] = useState<Role>("REQUESTER");
   const [teamId, setTeamId] = useState("");
   const [creating, setCreating] = useState(false);
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
+  const [editingEmail, setEditingEmail] = useState("");
+  const [editingName, setEditingName] = useState("");
 
   function load() {
     fetchAllUsers()
@@ -113,9 +116,13 @@ export function AdminUsersPage() {
   }
 
   async function handleDelete(user: ManagedUser) {
+    if (user.isMaster) {
+      setError("The master user cannot be deleted.");
+      return;
+    }
     if (
       !window.confirm(
-        `Permanently delete ${user.email}? This cannot be undone. This only works if the user has no tickets, comments, worklogs, attachments or other activity — otherwise deactivate the account instead.`
+        `Permanently delete ${user.email}? This will also delete all of this user's tickets, comments, worklogs, attachments and notifications. This cannot be undone.`
       )
     ) {
       return;
@@ -123,12 +130,31 @@ export function AdminUsersPage() {
     setError(null);
     setNotice(null);
     try {
-      await deleteManagedUser(user.id);
-      setNotice(`${user.email} was deleted.`);
+      await deleteManagedUser(user.id, true);
+      setNotice(`${user.email} and its ticket history were deleted.`);
       load();
     } catch (err) {
       const message = isAxiosError(err) ? err.response?.data?.error : undefined;
       setError(message ?? "Failed to delete user.");
+    }
+  }
+
+  function startEditing(user: ManagedUser) {
+    setEditingUserId(user.id);
+    setEditingEmail(user.email);
+    setEditingName(user.displayName);
+    setError(null);
+  }
+
+  async function saveUserDetails(user: ManagedUser) {
+    try {
+      await updateManagedUser(user.id, { email: editingEmail, displayName: editingName });
+      setEditingUserId(null);
+      setNotice(`${user.email} details updated.`);
+      load();
+    } catch (err) {
+      const message = isAxiosError(err) ? err.response?.data?.error : undefined;
+      setError(message ?? "Failed to update user details.");
     }
   }
 
@@ -215,8 +241,20 @@ export function AdminUsersPage() {
         <tbody>
           {users.map((u) => (
             <tr key={u.id}>
-              <td>{u.email}</td>
-              <td>{u.displayName}</td>
+              <td>
+                {editingUserId === u.id ? (
+                  <input type="email" value={editingEmail} onChange={(e) => setEditingEmail(e.target.value)} />
+                ) : (
+                  u.email
+                )}
+              </td>
+              <td>
+                {editingUserId === u.id ? (
+                  <input value={editingName} onChange={(e) => setEditingName(e.target.value)} />
+                ) : (
+                  u.displayName
+                )}
+              </td>
               <td>
                 <select value={u.role} onChange={(e) => handleRoleChange(u, e.target.value as Role)}>
                   {ROLES.map((r) => (
@@ -236,11 +274,23 @@ export function AdminUsersPage() {
                   ))}
                 </select>
               </td>
-              <td>{u.active ? "Yes" : "No"}</td>
+              <td>{u.isMaster ? "Master" : u.active ? "Yes" : "No"}</td>
               <td>
-                <button onClick={() => handleToggleActive(u)}>{u.active ? "Deactivate" : "Activate"}</button>{" "}
-                <button onClick={() => handleResetPassword(u)}>Reset password</button>{" "}
-                <button onClick={() => handleDelete(u)}>Delete</button>
+                {editingUserId === u.id ? (
+                  <>
+                    <button onClick={() => saveUserDetails(u)}>Save</button>{" "}
+                    <button onClick={() => setEditingUserId(null)}>Cancel</button>
+                  </>
+                ) : (
+                  <button onClick={() => startEditing(u)}>Edit</button>
+                )}{" "}
+                {!u.isMaster && (
+                  <>
+                    <button onClick={() => handleToggleActive(u)}>{u.active ? "Deactivate" : "Activate"}</button>{" "}
+                    <button onClick={() => handleResetPassword(u)}>Reset password</button>{" "}
+                    <button onClick={() => handleDelete(u)}>Delete</button>
+                  </>
+                )}
               </td>
             </tr>
           ))}
