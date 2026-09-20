@@ -66,6 +66,7 @@ export interface CreateTicketPayload {
   subject: string;
   description: string;
   categoryId: string;
+  otherCategoryDescription?: string;
   priority: Priority;
   deviceId?: string;
   otherDeviceDescription?: string;
