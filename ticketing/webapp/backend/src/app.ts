@@ -35,6 +35,8 @@ export function createApp() {
       contentSecurityPolicy: env.cookieSecure
         ? undefined
         : { useDefaults: true, directives: { upgradeInsecureRequests: null } },
+      crossOriginOpenerPolicy: env.cookieSecure ? undefined : false,
+      originAgentCluster: env.cookieSecure ? undefined : false,
     })
   );
   app.use(
