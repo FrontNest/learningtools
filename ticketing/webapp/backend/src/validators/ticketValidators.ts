@@ -37,4 +37,6 @@ export const listTicketsQuerySchema = z.object({
   unassigned: z.coerce.boolean().optional(),
   createdFrom: z.coerce.date().optional(),
   createdTo: z.coerce.date().optional(),
+  createdByMe: z.coerce.boolean().optional(),
+  assignedToMe: z.coerce.boolean().optional(),
 });

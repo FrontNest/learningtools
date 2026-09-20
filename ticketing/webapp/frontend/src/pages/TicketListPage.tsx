@@ -67,6 +67,20 @@ export function TicketListPage() {
 
       {isAdmin && user && <AdminSummaryBar currentUserId={user.id} onFilter={setFilters} />}
 
+      <div className="ticket-filters">
+        <select
+          value={filters.createdByMe ? "created" : filters.assignedToMe ? "assigned" : ""}
+          onChange={(event) => {
+            updateFilter("createdByMe", event.target.value === "created" ? true : undefined);
+            updateFilter("assignedToMe", event.target.value === "assigned" ? true : undefined);
+          }}
+        >
+          <option value="">All my visible tickets</option>
+          <option value="created">Created by me</option>
+          <option value="assigned">Assigned to me</option>
+        </select>
+      </div>
+
       {isAdmin && (
         <div className="ticket-filters">
           <input

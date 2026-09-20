@@ -45,6 +45,8 @@ export interface TicketFilters {
   assignedUserId?: string;
   unassigned?: boolean;
   search?: string;
+  createdByMe?: boolean;
+  assignedToMe?: boolean;
 }
 
 export async function fetchTickets(filters?: TicketFilters): Promise<TicketSummary[]> {

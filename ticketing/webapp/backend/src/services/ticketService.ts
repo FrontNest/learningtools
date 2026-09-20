@@ -96,6 +96,8 @@ interface ListTicketsFilters {
   unassigned?: boolean;
   createdFrom?: Date;
   createdTo?: Date;
+  createdByMe?: boolean;
+  assignedToMe?: boolean;
 }
 
 export async function listTickets(currentUser: User, filters: ListTicketsFilters) {
@@ -118,6 +120,8 @@ export async function listTickets(currentUser: User, filters: ListTicketsFilters
   if (filters.assignedTeamId) where.assignedTeamId = filters.assignedTeamId;
   if (filters.assignedUserId) where.assignedUserId = filters.assignedUserId;
   if (filters.categoryId) where.categoryId = filters.categoryId;
+  if (filters.createdByMe) where.requesterId = currentUser.id;
+  if (filters.assignedToMe) where.assignedUserId = currentUser.id;
   if (filters.unassigned) {
     where.assignedTeamId = null;
     where.assignedUserId = null;
