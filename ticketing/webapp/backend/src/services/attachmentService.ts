@@ -7,13 +7,14 @@ import { AppError } from "../errors/AppError";
 import { writeAuditLog } from "./auditService";
 import { assertValidAttachment } from "../domain/attachmentRules";
 import { env } from "../config";
+import { canRequesterAccessTicket } from "./ticketService";
 
 async function getAuthorizedTicket(currentUser: User, ticketId: string) {
   const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
   if (!ticket) {
     throw AppError.notFound("Ticket not found");
   }
-  if (currentUser.role === "REQUESTER" && ticket.requesterId !== currentUser.id) {
+  if (!canRequesterAccessTicket(currentUser, ticket)) {
     throw AppError.forbidden();
   }
   return ticket;

@@ -5,13 +5,14 @@ import { writeAuditLog } from "./auditService";
 import { getTicketNotificationRecipients, notify } from "./notificationService";
 import { appConfig } from "../config";
 import type { CommentTypeValue } from "../domain/enums";
+import { canRequesterAccessTicket } from "./ticketService";
 
 export async function listComments(currentUser: User, ticketId: string) {
   const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
   if (!ticket) {
     throw AppError.notFound("Ticket not found");
   }
-  if (currentUser.role === "REQUESTER" && ticket.requesterId !== currentUser.id) {
+  if (!canRequesterAccessTicket(currentUser, ticket)) {
     throw AppError.forbidden();
   }
 
@@ -38,7 +39,7 @@ export async function createComment(
 
   const isRequester = currentUser.role === "REQUESTER";
   if (isRequester) {
-    if (ticket.requesterId !== currentUser.id) {
+    if (!canRequesterAccessTicket(currentUser, ticket)) {
       throw AppError.forbidden();
     }
     if (input.type === "INTERNAL") {

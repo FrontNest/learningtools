@@ -68,7 +68,7 @@ export function NewTicketPage() {
       const ticket = await createTicket({
         subject,
         description,
-        categoryId,
+        categoryId: isOtherCategory ? topCategoryId : categoryId,
         otherCategoryDescription: isOtherCategory ? otherCategoryDescription : undefined,
         priority,
         ...(isOtherDevice

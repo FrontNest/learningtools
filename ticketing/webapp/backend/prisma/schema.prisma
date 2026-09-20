@@ -55,6 +55,7 @@ model Team {
 
   members         User[]
   assignedTickets Ticket[] @relation("AssignedTeamTickets")
+  requesterTickets Ticket[] @relation("RequesterTeamTickets")
 }
 
 model Category {
@@ -101,6 +102,8 @@ model Ticket {
   ticketNumber           String       @unique
   requesterId            String
   requester              User         @relation("RequesterTickets", fields: [requesterId], references: [id])
+  requesterTeamId        String?
+  requesterTeam          Team?        @relation("RequesterTeamTickets", fields: [requesterTeamId], references: [id])
   subject                String
   description            String
   categoryId             String
@@ -129,6 +132,7 @@ model Ticket {
   notifications  Notification[]
 
   @@index([requesterId])
+  @@index([requesterTeamId])
   @@index([assignedTeamId])
   @@index([assignedUserId])
   @@index([status])

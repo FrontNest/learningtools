@@ -42,6 +42,7 @@ export async function createTicket(requester: User, input: CreateTicketInput) {
       data: {
         ticketNumber,
         requesterId: requester.id,
+        requesterTeamId: requester.teamId,
         subject: input.subject,
         description: input.description,
         categoryId: category.id,
@@ -101,7 +102,12 @@ export async function listTickets(currentUser: User, filters: ListTicketsFilters
   const where: Record<string, unknown> = {};
 
   if (currentUser.role === "REQUESTER") {
-    where.requesterId = currentUser.id;
+    where.OR = [
+      { requesterId: currentUser.id },
+      ...(currentUser.teamId
+        ? [{ requesterTeamId: currentUser.teamId, assignedTeamId: currentUser.teamId, assignedUserId: null }]
+        : []),
+    ];
   }
 
   if (filters.status) where.status = filters.status;
@@ -120,10 +126,16 @@ export async function listTickets(currentUser: User, filters: ListTicketsFilters
     };
   }
   if (filters.search) {
-    where.OR = [
+    const searchConditions = [
       { subject: { contains: filters.search } },
       { ticketNumber: { contains: filters.search } },
     ];
+    if (where.OR) {
+      where.AND = [{ OR: where.OR }, { OR: searchConditions }];
+      delete where.OR;
+    } else {
+      where.OR = searchConditions;
+    }
   }
 
   return prisma.ticket.findMany({
@@ -139,12 +151,25 @@ export async function getTicketById(currentUser: User, ticketId: string) {
     throw AppError.notFound("Ticket not found");
   }
 
-  if (currentUser.role === "REQUESTER" && ticket.requesterId !== currentUser.id) {
-    // Requesters must never be able to access another requester's ticket.
+  if (currentUser.role === "REQUESTER" && !canRequesterAccessTicket(currentUser, ticket)) {
     throw AppError.forbidden();
   }
 
   return ticket;
+}
+
+export function canRequesterAccessTicket(
+  currentUser: Pick<User, "id" | "teamId" | "role">,
+  ticket: { requesterId: string; requesterTeamId: string | null; assignedTeamId: string | null; assignedUserId: string | null }
+) {
+  if (currentUser.role !== "REQUESTER") return true;
+  if (ticket.requesterId === currentUser.id) return true;
+  return Boolean(
+    currentUser.teamId &&
+      ticket.requesterTeamId === currentUser.teamId &&
+      ticket.assignedTeamId === currentUser.teamId &&
+      ticket.assignedUserId === null
+  );
 }
 
 interface UpdateTicketInput {
