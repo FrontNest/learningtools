@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { isAxiosError } from "axios";
 import { createTicket, fetchCategories, fetchMyDevices } from "../lib/ticketApi";
 import type { Category, DeviceOption, Priority } from "../types/ticket";
@@ -76,7 +77,10 @@ export function NewTicketPage() {
 
   return (
     <div className="dashboard-page">
-      <h1>New ticket</h1>
+      <header>
+        <h1>New ticket</h1>
+        <Link to="/">Back to tickets</Link>
+      </header>
       <form className="ticket-form" onSubmit={handleSubmit}>
         <label htmlFor="subject">Subject</label>
         <input id="subject" required value={subject} onChange={(e) => setSubject(e.target.value)} />

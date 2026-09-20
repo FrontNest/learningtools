@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { fetchNotifications, markNotificationRead } from "../lib/notificationApi";
 import type { AppNotification } from "../types/ticket";
 
@@ -25,7 +26,10 @@ export function NotificationsPage() {
 
   return (
     <div className="dashboard-page">
-      <h1>Notifications</h1>
+      <header>      
+        <h1>Notifications</h1>
+        <Link to="/">Back to tickets</Link>
+      </header>
       {loading && <p>Loading...</p>}
       {!loading && notifications.length === 0 && <p>No notifications yet.</p>}
       <ul className="notification-list">

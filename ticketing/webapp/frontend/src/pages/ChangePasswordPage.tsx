@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { isAxiosError } from "axios";
 import { changePassword } from "../lib/authApi";
 import { useAuth } from "../auth/AuthContext";
@@ -47,8 +48,12 @@ export function ChangePasswordPage() {
 
   return (
     <div className="auth-page">
+      
       <form className="auth-form" onSubmit={handleSubmit}>
+        <header>
+          <Link to="/">Back to tickets</Link>
         <h1>Change password</h1>
+        </header>
         {user?.mustChangePassword && (
           <p className="hint">
             You must set a new password before continuing (your account was created with a

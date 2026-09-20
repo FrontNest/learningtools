@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { isAxiosError } from "axios";
 import { useAuth } from "../auth/AuthContext";
 import { fetchAdminUsers, fetchTeams, fetchTicket, updateAssignment, updateTicket } from "../lib/ticketApi";
@@ -89,10 +90,12 @@ export function TicketDetailPage() {
 
   return (
     <div className="dashboard-page">
+      <header>
       <h1>
         {ticket.ticketNumber} — {ticket.subject}
       </h1>
-
+      <Link to="/">Back to tickets</Link>
+    </header>
       <div className="ticket-meta">
         <span>Requester: {ticket.requester.displayName}</span>
         <span>Category: {ticket.category.name}</span>

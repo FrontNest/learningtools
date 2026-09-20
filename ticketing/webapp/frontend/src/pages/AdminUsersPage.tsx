@@ -156,8 +156,6 @@ export function AdminUsersPage() {
         <Link to="/">Back to tickets</Link>
       </header>
 
-      {notice && <p className="hint">{notice}</p>}
-      {error && <p className="form-error">{error}</p>}
 
       <h2>New user</h2>
       <form className="ticket-form" onSubmit={handleCreate}>
@@ -199,29 +197,8 @@ export function AdminUsersPage() {
         </button>
       </form>
 
-      <h2>Bulk import (CSV)</h2>
-      <p className="hint">
-        Semicolon-delimited: email;displayName;department;jobTitle;role;team. Existing users are
-        updated (never their password); new users get a generated temporary password shown below.
-      </p>
-      <input ref={fileInputRef} type="file" accept=".csv" onChange={handleImport} />
-      {importResult && (
-        <div className="hint">
-          <p>
-            Created: {importResult.created.length}, Updated: {importResult.updated.length}, Skipped:{" "}
-            {importResult.skipped.length}
-          </p>
-          {importResult.created.length > 0 && (
-            <ul>
-              {importResult.created.map((c) => (
-                <li key={c.email}>
-                  {c.email}: {c.tempPassword}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
+      {notice && <p className="hint">{notice}</p>}
+      {error && <p className="form-error">{error}</p>}
 
       <h2>Users</h2>
       <table className="ticket-table">
@@ -269,6 +246,31 @@ export function AdminUsersPage() {
           ))}
         </tbody>
       </table>
+
+      <h2>Bulk import (CSV)</h2>
+      <p className="hint">
+        Semicolon-delimited: email;displayName;department;jobTitle;role;team. Existing users are
+        updated (never their password); new users get a generated temporary password shown below.
+      </p>
+      <input ref={fileInputRef} type="file" accept=".csv" onChange={handleImport} />
+      {importResult && (
+        <div className="hint">
+          <p>
+            Created: {importResult.created.length}, Updated: {importResult.updated.length}, Skipped:{" "}
+            {importResult.skipped.length}
+          </p>
+          {importResult.created.length > 0 && (
+            <ul>
+              {importResult.created.map((c) => (
+                <li key={c.email}>
+                  {c.email}: {c.tempPassword}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
     </div>
   );
 }
