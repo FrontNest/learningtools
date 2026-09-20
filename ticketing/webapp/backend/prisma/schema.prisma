@@ -105,6 +105,7 @@ model Ticket {
   description            String
   categoryId             String
   category               Category     @relation(fields: [categoryId], references: [id])
+  otherCategoryDescription String?
   priority               String       @default("NORMAL")
   status                 String       @default("NEW")
   assignedTeamId         String?

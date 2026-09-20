@@ -7,6 +7,7 @@ import type { Category, DeviceOption, Priority } from "../types/ticket";
 
 const PRIORITIES: Priority[] = ["LOW", "NORMAL", "HIGH", "CRITICAL"];
 const OTHER_DEVICE_VALUE = "__other__";
+const OTHER_CATEGORY_VALUE = "__other_category__";
 
 export function NewTicketPage() {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ export function NewTicketPage() {
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [categoryId, setCategoryId] = useState("");
+  const [topCategoryId, setTopCategoryId] = useState("");
+  const [otherCategoryDescription, setOtherCategoryDescription] = useState("");
   const [priority, setPriority] = useState<Priority>("NORMAL");
   const [selectedDeviceId, setSelectedDeviceId] = useState("");
   const [otherDeviceDescription, setOtherDeviceDescription] = useState("");
@@ -25,9 +28,11 @@ export function NewTicketPage() {
     fetchCategories()
       .then((cats) => {
         setCategories(cats);
-        // Prefer a leaf category (one that is not a parent of anything) as default.
-        const leaf = cats.find((c) => cats.every((other) => other.parentId !== c.id));
-        if (leaf) setCategoryId(leaf.id);
+        const top = cats.find((category) => !category.parentId);
+        if (top) {
+          setTopCategoryId(top.id);
+          setCategoryId(cats.find((category) => category.parentId === top.id)?.id ?? top.id);
+        }
       })
       .catch(() => setError("Failed to load categories."));
 
@@ -39,10 +44,9 @@ export function NewTicketPage() {
       .catch(() => setSelectedDeviceId(OTHER_DEVICE_VALUE));
   }, []);
 
-  function categoryLabel(category: Category): string {
-    const parent = categories.find((c) => c.id === category.parentId);
-    return parent ? `${parent.name} / ${category.name}` : category.name;
-  }
+  const topCategories = categories.filter((category) => !category.parentId);
+  const subCategories = categories.filter((category) => category.parentId === topCategoryId);
+  const isOtherCategory = categoryId === OTHER_CATEGORY_VALUE;
 
   const isOtherDevice = selectedDeviceId === OTHER_DEVICE_VALUE || selectedDeviceId === "";
 
@@ -54,6 +58,10 @@ export function NewTicketPage() {
       setError("Please describe the affected device.");
       return;
     }
+    if (isOtherCategory && !otherCategoryDescription.trim()) {
+      setError("Please describe the category or problem type.");
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -61,6 +69,7 @@ export function NewTicketPage() {
         subject,
         description,
         categoryId,
+        otherCategoryDescription: isOtherCategory ? otherCategoryDescription : undefined,
         priority,
         ...(isOtherDevice
           ? { otherDeviceDescription }
@@ -94,19 +103,28 @@ export function NewTicketPage() {
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <label htmlFor="category">Category</label>
-        <select id="category" required value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-          <option value="" disabled>
-            Select a category
-          </option>
-          {categories
-            .filter((c) => categories.every((other) => other.parentId !== c.id))
-            .map((c) => (
-              <option key={c.id} value={c.id}>
-                {categoryLabel(c)}
-              </option>
-            ))}
+        <label htmlFor="category-level-one">Category</label>
+        <select id="category-level-one" required value={topCategoryId} onChange={(e) => {
+          const nextTopId = e.target.value;
+          setTopCategoryId(nextTopId);
+          setCategoryId(categories.find((category) => category.parentId === nextTopId)?.id ?? nextTopId);
+          setOtherCategoryDescription("");
+        }}>
+          <option value="" disabled>Select a category group</option>
+          {topCategories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
         </select>
+
+        <label htmlFor="category-level-two">Problem category</label>
+        <select id="category-level-two" required value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+          <option value="" disabled>Select a problem category</option>
+          {subCategories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+          <option value={OTHER_CATEGORY_VALUE}>Other...</option>
+        </select>
+
+        {isOtherCategory && <>
+          <label htmlFor="otherCategoryDescription">Describe the problem category</label>
+          <input id="otherCategoryDescription" required value={otherCategoryDescription} onChange={(e) => setOtherCategoryDescription(e.target.value)} placeholder="Describe the category or problem type" />
+        </>}
 
         <label htmlFor="priority">Priority</label>
         <select id="priority" value={priority} onChange={(e) => setPriority(e.target.value as Priority)}>

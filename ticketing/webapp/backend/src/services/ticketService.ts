@@ -13,6 +13,7 @@ interface CreateTicketInput {
   subject: string;
   description: string;
   categoryId: string;
+  otherCategoryDescription?: string;
   priority: PriorityValue;
   deviceId?: string;
   otherDeviceDescription?: string;
@@ -44,6 +45,7 @@ export async function createTicket(requester: User, input: CreateTicketInput) {
         subject: input.subject,
         description: input.description,
         categoryId: category.id,
+        otherCategoryDescription: input.otherCategoryDescription,
         priority: input.priority,
         status: "NEW",
         deviceId: device?.id,
@@ -148,6 +150,8 @@ export async function getTicketById(currentUser: User, ticketId: string) {
 interface UpdateTicketInput {
   priority?: PriorityValue;
   status?: TicketStatusValue;
+  categoryId?: string;
+  otherCategoryDescription?: string | null;
 }
 
 // Callers (routes) must already restrict this to Admin users.
@@ -159,6 +163,22 @@ export async function updateTicketAsAdmin(admin: User, ticketId: string, input: 
 
   return prisma.$transaction(async (tx) => {
     const data: Record<string, unknown> = {};
+
+    if (input.categoryId && input.categoryId !== ticket.categoryId) {
+      const category = await tx.category.findUnique({ where: { id: input.categoryId } });
+      if (!category || !category.active) throw AppError.badRequest("Invalid category");
+      data.categoryId = input.categoryId;
+      await writeAuditLog(tx, {
+        ticketId,
+        actorId: admin.id,
+        action: "CATEGORY_CHANGED",
+        oldValue: ticket.categoryId,
+        newValue: input.categoryId,
+      });
+    }
+    if (input.otherCategoryDescription !== undefined) {
+      data.otherCategoryDescription = input.otherCategoryDescription;
+    }
 
     if (input.priority && input.priority !== ticket.priority) {
       data.priority = input.priority;

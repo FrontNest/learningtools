@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { isAxiosError } from "axios";
 import { useAuth } from "../auth/AuthContext";
-import { fetchAdminUsers, fetchTeams, fetchTicket, updateAssignment, updateTicket } from "../lib/ticketApi";
-import type { AdminUser, Priority, Team, Ticket, TicketStatus } from "../types/ticket";
+import { fetchAdminUsers, fetchCategories, fetchTeams, fetchTicket, updateAssignment, updateTicket } from "../lib/ticketApi";
+import type { AdminUser, Category, Priority, Team, Ticket, TicketStatus } from "../types/ticket";
 import { STATUS_PROGRESS } from "../types/ticket";
 import { CommentsSection } from "../components/CommentsSection";
 import { WorklogSection } from "../components/WorklogSection";
@@ -21,6 +21,7 @@ const STATUSES: TicketStatus[] = [
   "CLOSED",
 ];
 const PRIORITIES: Priority[] = ["LOW", "NORMAL", "HIGH", "CRITICAL"];
+const OTHER_CATEGORY_VALUE = "__other_category__";
 
 export function TicketDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -30,6 +31,8 @@ export function TicketDetailPage() {
   const [saving, setSaving] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
   const [teamAdmins, setTeamAdmins] = useState<AdminUser[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoryDescription, setCategoryDescription] = useState("");
 
   const isAdmin = user?.role === "ADMIN";
 
@@ -43,6 +46,10 @@ export function TicketDetailPage() {
   useEffect(() => {
     if (!isAdmin) return;
     fetchTeams().then(setTeams).catch(() => undefined);
+  }, [isAdmin]);
+
+  useEffect(() => {
+    if (isAdmin) fetchCategories().then(setCategories).catch(() => undefined);
   }, [isAdmin]);
 
   useEffect(() => {
@@ -65,6 +72,24 @@ export function TicketDetailPage() {
     } catch (err) {
       const message = isAxiosError(err) ? err.response?.data?.error : undefined;
       setError(message ?? "Failed to update ticket.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleCategoryChange(categoryId: string) {
+    if (!id) return;
+    setSaving(true);
+    setError(null);
+    try {
+      const updated = await updateTicket(id, {
+        categoryId: categoryId === OTHER_CATEGORY_VALUE ? ticket?.category.id : categoryId,
+        otherCategoryDescription: categoryId === OTHER_CATEGORY_VALUE ? categoryDescription : null,
+      });
+      setTicket(updated);
+    } catch (err) {
+      const message = isAxiosError(err) ? err.response?.data?.error : undefined;
+      setError(message ?? "Failed to update category.");
     } finally {
       setSaving(false);
     }
@@ -103,6 +128,57 @@ export function TicketDetailPage() {
       </div>
 
       <div className="ticket-meta">
+        {isAdmin && (
+          <label>
+            Category group:{" "}
+            <select
+              disabled={saving}
+              value={findTopCategoryId(categories, ticket.category.id)}
+              onChange={(event) => {
+                const nextGroup = categories.find((category) => category.id === event.target.value);
+                const firstChild = categories.find((category) => category.parentId === nextGroup?.id);
+                if (firstChild) handleCategoryChange(firstChild.id);
+              }}
+            >
+              {categories.filter((category) => !category.parentId).map((category) => (
+                <option key={category.id} value={category.id}>{category.name}</option>
+              ))}
+            </select>
+          </label>
+        )}
+        {isAdmin && (
+          <label>
+            Problem category:{" "}
+            <select
+              disabled={saving}
+              value={ticket.otherCategoryDescription ? OTHER_CATEGORY_VALUE : ticket.category.id}
+              onChange={(event) => {
+                if (event.target.value === OTHER_CATEGORY_VALUE) {
+                  setCategoryDescription(ticket.otherCategoryDescription ?? "");
+                } else {
+                  setCategoryDescription("");
+                  handleCategoryChange(event.target.value);
+                }
+              }}
+            >
+              {categories
+                .filter((category) => category.parentId === findTopCategoryId(categories, ticket.category.id))
+                .map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+              <option value={OTHER_CATEGORY_VALUE}>Other...</option>
+            </select>
+          </label>
+        )}
+        {isAdmin && (ticket.otherCategoryDescription !== null || categoryDescription !== "") && (
+          <label>
+            Category description:{" "}
+            <input
+              value={categoryDescription}
+              onChange={(event) => setCategoryDescription(event.target.value)}
+              onBlur={() => handleCategoryChange(OTHER_CATEGORY_VALUE)}
+              placeholder="Describe the problem category"
+            />
+          </label>
+        )}
         <label>
           Priority:{" "}
           {isAdmin ? (
@@ -191,6 +267,7 @@ export function TicketDetailPage() {
         </>
       )}
       {ticket.otherDeviceDescription && <p>Device: {ticket.otherDeviceDescription}</p>}
+      {ticket.otherCategoryDescription && <p>Category description: {ticket.otherCategoryDescription}</p>}
       {ticket.deviceSnapshot && (
         <p>
           Device: {ticket.deviceSnapshot.deviceName}
@@ -213,4 +290,12 @@ export function TicketDetailPage() {
       {isAdmin && <AuditLogSection ticketId={ticket.id} />}
     </div>
   );
+}
+
+function findTopCategoryId(categories: Category[], categoryId: string): string {
+  let current = categories.find((category) => category.id === categoryId);
+  while (current?.parentId) {
+    current = categories.find((category) => category.id === current?.parentId);
+  }
+  return current?.id ?? categoryId;
 }

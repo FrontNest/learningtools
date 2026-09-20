@@ -67,6 +67,7 @@ export interface TicketSummary {
 
 export interface Ticket extends TicketSummary {
   description: string;
+  otherCategoryDescription: string | null;
   otherDeviceDescription: string | null;
   resolvedAt: string | null;
   autoCloseAt: string | null;

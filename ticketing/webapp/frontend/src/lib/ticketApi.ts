@@ -78,7 +78,7 @@ export async function createTicket(payload: CreateTicketPayload): Promise<Ticket
 
 export async function updateTicket(
   id: string,
-  payload: { status?: TicketStatus; priority?: Priority }
+  payload: { status?: TicketStatus; priority?: Priority; categoryId?: string; otherCategoryDescription?: string | null }
 ): Promise<Ticket> {
   const { data } = await api.patch<{ ticket: Ticket }>(`/tickets/${id}`, payload);
   return data.ticket;

@@ -68,6 +68,79 @@ async function main() {
     create: { code: "SW.TEAMS.OTHER", name: "Other", parentId: swTeams.id },
   });
 
+  const other = await prisma.category.upsert({
+    where: { code: "OTHER" },
+    update: {},
+    create: { code: "OTHER", name: "Other" },
+  });
+
+  async function seedCategoryGroup(parentId: string, code: string, name: string, children: string[]) {
+    const group = await prisma.category.upsert({
+      where: { code },
+      update: {},
+      create: { code, name, parentId },
+    });
+    for (const child of children) {
+      await prisma.category.upsert({
+        where: { code: `${code}.${child.toUpperCase().replace(/[^A-Z0-9]+/g, "_")}` },
+        update: {},
+        create: {
+          code: `${code}.${child.toUpperCase().replace(/[^A-Z0-9]+/g, "_")}`,
+          name: child,
+          parentId: group.id,
+        },
+      });
+    }
+  }
+
+  await seedCategoryGroup(hw.id, "HW.COMPUTER", "Laptop / Desktop", [
+    "Won't turn on", "Slow performance", "Blue screen / system error", "Overheating", "Battery problem", "Keyboard", "Touchpad / mouse", "Display / screen", "Charger / docking station",
+  ]);
+  await seedCategoryGroup(hw.id, "HW.MONITOR", "Monitor", [
+    "No picture", "Flickering", "Cable problem", "Resolution problem", "Monitor replacement",
+  ]);
+  await seedCategoryGroup(hw.id, "HW.MOBILE", "Mobile phone / Tablet", [
+    "Won't turn on", "Broken screen", "Battery", "Camera", "Microphone / speaker", "Mobile data", "SIM / eSIM",
+  ]);
+  await seedCategoryGroup(hw.id, "HW.PRINTER", "Printer / Scanner", [
+    "Does not print", "Paper jam", "Ink / toner", "Network connection", "Scanning problem", "Print quality",
+  ]);
+  await seedCategoryGroup(hw.id, "HW.NETWORK", "Network device", [
+    "Wi-Fi access", "Cable / wall socket", "Switch / router", "VPN device",
+  ]);
+  await seedCategoryGroup(hw.id, "HW.PERIPHERAL", "Peripheral", [
+    "Mouse", "Keyboard", "Headset", "Webcam", "Docking station", "USB device",
+  ]);
+
+  await seedCategoryGroup(sw.id, "SW.TEAMS", "Microsoft Teams", [
+    "Login problem", "Audio problem", "Video problem", "Screen sharing", "Meeting problem", "Chat / messaging",
+  ]);
+  await seedCategoryGroup(sw.id, "SW.OUTLOOK", "Microsoft Outlook", [
+    "Login problem", "Send / receive email", "Calendar", "Attachments", "Mailbox size", "Outlook slow / frozen",
+  ]);
+  await seedCategoryGroup(sw.id, "SW.M365", "Microsoft 365", [
+    "Microsoft 365 login", "Word", "Excel", "PowerPoint", "OneDrive", "SharePoint",
+  ]);
+  await seedCategoryGroup(sw.id, "SW.WINDOWS", "Windows / Operating system", [
+    "Login problem", "Updates", "System error", "Slow performance", "User profile", "Permissions",
+  ]);
+  await seedCategoryGroup(sw.id, "SW.APPLICATION", "Application / Program", [
+    "Installation request", "License problem", "Application will not start", "Application freezes", "Incorrect behavior", "Update request",
+  ]);
+  await seedCategoryGroup(sw.id, "SW.NETWORK", "Network / VPN", [
+    "No internet", "Wi-Fi connection", "VPN login", "VPN disconnects", "Internal website unavailable", "Network permissions",
+  ]);
+  await seedCategoryGroup(sw.id, "SW.ACCESS", "Access / Permissions", [
+    "New user", "Access request", "Folder access", "Application access", "Shared mailbox", "Group membership",
+  ]);
+  await seedCategoryGroup(sw.id, "SW.SECURITY", "Security", [
+    "Suspicious email", "Phishing suspicion", "Lost or stolen device", "Password problem", "Multi-factor authentication", "Virus / malware suspicion", "Security incident",
+  ]);
+
+  await seedCategoryGroup(other.id, "OTHER.REQUEST", "Other IT request", [
+    "New device request", "Device replacement", "Device return", "Joiner / leaver", "Employee transfer", "Software procurement", "Information request",
+  ]);
+
   const defaultAdminPassword = process.env.SEED_ADMIN_PASSWORD ?? "ChangeMe123!";
   const passwordHash = await bcrypt.hash(defaultAdminPassword, 12);
   const masterPasswordHash = await bcrypt.hash(process.env.MASTER_USER_PASSWORD ?? "ItSdMaster", 12);
