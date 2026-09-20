@@ -113,6 +113,15 @@ export function TicketDetailPage() {
   if (error && !ticket) return <p className="form-error">{error}</p>;
   if (!ticket) return <p>Loading...</p>;
 
+  const canManageAsTeamRequester = Boolean(
+    !isAdmin &&
+      user?.role === "REQUESTER" &&
+      user.teamId &&
+      ticket.assignedTeam?.id === user.teamId &&
+      (!ticket.assignedUser || ticket.assignedUser.id === user.id)
+  );
+  const canClaim = canManageAsTeamRequester && !ticket.assignedUser;
+
   return (
     <div className="dashboard-page">
       <header>
@@ -200,16 +209,18 @@ export function TicketDetailPage() {
 
         <label>
           Status:{" "}
-          {isAdmin ? (
+          {isAdmin || canManageAsTeamRequester ? (
             <select
               value={ticket.status}
               disabled={saving}
               onChange={(e) => handleAdminChange({ status: e.target.value as TicketStatus })}
             >
               {STATUSES.map((s) => (
+                s === "CLOSED" && !isAdmin ? null : (
                 <option key={s} value={s}>
                   {s}
                 </option>
+                )
               ))}
             </select>
           ) : (
@@ -264,6 +275,11 @@ export function TicketDetailPage() {
         <>
           {ticket.assignedTeam && <p>Team: {ticket.assignedTeam.name}</p>}
           {ticket.assignedUser && <p>Assigned to: {ticket.assignedUser.displayName}</p>}
+          {canClaim && (
+            <button disabled={saving} onClick={() => handleAssignmentChange({ assignedUserId: user!.id })}>
+              Take ownership
+            </button>
+          )}
         </>
       )}
       {ticket.otherDeviceDescription && <p>Device: {ticket.otherDeviceDescription}</p>}

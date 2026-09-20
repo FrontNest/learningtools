@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { requireAuth, requireRole } from "../middleware/auth";
+import { requireAuth } from "../middleware/auth";
 import { AppError } from "../errors/AppError";
 import {
   createTicketSchema,
@@ -9,6 +9,7 @@ import {
 import { updateAssignmentSchema } from "../validators/assignmentValidators";
 import { createTicket, getTicketById, listTickets, updateTicketAsAdmin } from "../services/ticketService";
 import { updateTicketAssignment } from "../services/assignmentService";
+import { claimTeamTicket, updateTeamRequesterTicket } from "../services/requesterTeamService";
 import { commentsRouter } from "./comments";
 import { worklogsRouter } from "./worklogs";
 import { attachmentsRouter } from "./attachments";
@@ -47,17 +48,31 @@ ticketsRouter.get("/:id", async (req, res) => {
   res.json({ ticket });
 });
 
-ticketsRouter.patch("/:id", requireRole("ADMIN"), async (req, res) => {
+ticketsRouter.patch("/:id", async (req, res) => {
   const parsed = updateTicketSchema.safeParse(req.body);
   if (!parsed.success) {
     throw AppError.badRequest(parsed.error.issues[0]?.message ?? "Invalid update data");
   }
 
-  const ticket = await updateTicketAsAdmin(req.currentUser!, req.params.id, parsed.data);
+  const ticket = req.currentUser!.role === "ADMIN"
+    ? await updateTicketAsAdmin(req.currentUser!, req.params.id, parsed.data)
+    : parsed.data.status
+      ? await updateTeamRequesterTicket(req.currentUser!, req.params.id, parsed.data.status)
+      : (() => { throw AppError.forbidden("Requesters can only change ticket status"); })();
   res.json({ ticket });
 });
 
-ticketsRouter.patch("/:id/assignment", requireRole("ADMIN"), async (req, res) => {
+ticketsRouter.patch("/:id/assignment", async (req, res) => {
+  if (req.currentUser!.role !== "ADMIN") {
+    const assignedUserId = req.body?.assignedUserId;
+    if (assignedUserId !== undefined && assignedUserId !== req.currentUser!.id) {
+      throw AppError.forbidden("Requesters can only assign tickets to themselves");
+    }
+    const ticket = await claimTeamTicket(req.currentUser!, req.params.id);
+    res.json({ ticket });
+    return;
+  }
+
   const parsed = updateAssignmentSchema.safeParse(req.body);
   if (!parsed.success) {
     throw AppError.badRequest(parsed.error.issues[0]?.message ?? "Invalid assignment data");

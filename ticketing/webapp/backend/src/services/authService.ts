@@ -3,7 +3,7 @@ import { prisma } from "../lib/prisma";
 import { AppError } from "../errors/AppError";
 import { logger } from "../lib/logger";
 
-const MAX_FAILED_ATTEMPTS_WINDOW_MIN = 15;
+const MAX_FAILED_ATTEMPTS_WINDOW_MIN = 5;
 const MAX_FAILED_ATTEMPTS = 5;
 
 export async function authenticate(email: string, password: string, ipAddress?: string) {

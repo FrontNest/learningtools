@@ -105,7 +105,10 @@ export async function listTickets(currentUser: User, filters: ListTicketsFilters
     where.OR = [
       { requesterId: currentUser.id },
       ...(currentUser.teamId
-        ? [{ requesterTeamId: currentUser.teamId, assignedTeamId: currentUser.teamId, assignedUserId: null }]
+        ? [
+            { assignedTeamId: currentUser.teamId, assignedUserId: null },
+            { assignedTeamId: currentUser.teamId, assignedUserId: currentUser.id },
+          ]
         : []),
     ];
   }
@@ -166,9 +169,8 @@ export function canRequesterAccessTicket(
   if (ticket.requesterId === currentUser.id) return true;
   return Boolean(
     currentUser.teamId &&
-      ticket.requesterTeamId === currentUser.teamId &&
       ticket.assignedTeamId === currentUser.teamId &&
-      ticket.assignedUserId === null
+      (ticket.assignedUserId === null || ticket.assignedUserId === currentUser.id)
   );
 }
 
