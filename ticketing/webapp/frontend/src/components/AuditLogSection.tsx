@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { fetchAuditLog } from "../lib/ticketApi";
 import type { AuditLogEntry } from "../types/ticket";
 
-export function AuditLogSection({ ticketId }: { ticketId: string }) {
+export function AuditLogSection({ ticketId, refreshToken = 0 }: { ticketId: string; refreshToken?: number }) {
   const [entries, setEntries] = useState<AuditLogEntry[]>([]);
 
   useEffect(() => {
     fetchAuditLog(ticketId).then(setEntries).catch(() => undefined);
-  }, [ticketId]);
+  }, [ticketId, refreshToken]);
 
   return (
     <section>

@@ -209,6 +209,15 @@ export async function updateTicketAsAdmin(admin: User, ticketId: string, input: 
     }
     if (input.otherCategoryDescription !== undefined) {
       data.otherCategoryDescription = input.otherCategoryDescription;
+      if (input.otherCategoryDescription !== ticket.otherCategoryDescription) {
+        await writeAuditLog(tx, {
+          ticketId,
+          actorId: admin.id,
+          action: "CATEGORY_DESCRIPTION_CHANGED",
+          oldValue: ticket.otherCategoryDescription,
+          newValue: input.otherCategoryDescription,
+        });
+      }
     }
 
     if (input.priority && input.priority !== ticket.priority) {

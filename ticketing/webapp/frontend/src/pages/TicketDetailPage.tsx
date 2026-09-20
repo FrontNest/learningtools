@@ -33,6 +33,7 @@ export function TicketDetailPage() {
   const [teamAdmins, setTeamAdmins] = useState<AdminUser[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoryDescription, setCategoryDescription] = useState("");
+  const [auditRefreshToken, setAuditRefreshToken] = useState(0);
 
   const isAdmin = user?.role === "ADMIN";
 
@@ -69,6 +70,7 @@ export function TicketDetailPage() {
     try {
       const updated = await updateTicket(id, patch);
       setTicket(updated);
+      setAuditRefreshToken((token) => token + 1);
     } catch (err) {
       const message = isAxiosError(err) ? err.response?.data?.error : undefined;
       setError(message ?? "Failed to update ticket.");
@@ -87,6 +89,7 @@ export function TicketDetailPage() {
         otherCategoryDescription: categoryId === OTHER_CATEGORY_VALUE ? categoryDescription : null,
       });
       setTicket(updated);
+      setAuditRefreshToken((token) => token + 1);
     } catch (err) {
       const message = isAxiosError(err) ? err.response?.data?.error : undefined;
       setError(message ?? "Failed to update category.");
@@ -102,6 +105,7 @@ export function TicketDetailPage() {
     try {
       const updated = await updateAssignment(id, patch);
       setTicket(updated);
+      setAuditRefreshToken((token) => token + 1);
     } catch (err) {
       const message = isAxiosError(err) ? err.response?.data?.error : undefined;
       setError(message ?? "Failed to update assignment.");
@@ -277,7 +281,7 @@ export function TicketDetailPage() {
           {ticket.assignedUser && <p>Assigned to: {ticket.assignedUser.displayName}</p>}
           {canClaim && (
             <button disabled={saving} onClick={() => handleAssignmentChange({ assignedUserId: user!.id })}>
-              Take ownership
+              Assign to me
             </button>
           )}
         </>
@@ -303,7 +307,7 @@ export function TicketDetailPage() {
       <CommentsSection ticketId={ticket.id} isAdmin={isAdmin} />
       <AttachmentsSection ticketId={ticket.id} />
       {isAdmin && <WorklogSection ticketId={ticket.id} />}
-      {isAdmin && <AuditLogSection ticketId={ticket.id} />}
+      {isAdmin && <AuditLogSection ticketId={ticket.id} refreshToken={auditRefreshToken} />}
     </div>
   );
 }
