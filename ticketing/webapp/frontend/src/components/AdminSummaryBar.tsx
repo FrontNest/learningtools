@@ -42,8 +42,8 @@ export function AdminSummaryBar({
     <div className="summary-bar">
       {cards.map((card) => (
         <button key={card.label} className="summary-card" onClick={() => onFilter(card.filters)}>
-          <span className="summary-value">{card.value}</span>
-          <span className="summary-label">{card.label}</span>
+          <span className="summary-label">{card.label}: </span>
+          <span className="summary-value">{card.value}</span>          
         </button>
       ))}
       {summary.teamCounts.map((t) => (
@@ -52,8 +52,9 @@ export function AdminSummaryBar({
           className="summary-card"
           onClick={() => onFilter({ assignedTeamId: t.teamId })}
         >
+          <span className="summary-label">{t.teamName} queue: </span>
           <span className="summary-value">{t.count}</span>
-          <span className="summary-label">{t.teamName} queue</span>
+          
         </button>
       ))}
     </div>
