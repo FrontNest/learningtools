@@ -9,6 +9,7 @@ export function toPublicUser(user: User) {
     department: user.department,
     jobTitle: user.jobTitle,
     role: user.role,
+    isMaster: user.isMaster,
     teamId: user.teamId,
     mustChangePassword: user.mustChangePassword,
     active: user.active,

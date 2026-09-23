@@ -1,10 +1,12 @@
+import fs from "fs";
+import path from "path";
 import type { User } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { AppError } from "../errors/AppError";
 import { nextTicketNumber } from "./ticketNumberService";
 import { writeAuditLog } from "./auditService";
 import { notify } from "./notificationService";
-import { appConfig } from "../config";
+import { appConfig, env } from "../config";
 import { assertValidStatus } from "../domain/ticketRules";
 import type { PriorityValue, TicketStatusValue } from "../domain/enums";
 import { ticketInclude } from "./ticketInclude";
@@ -275,4 +277,36 @@ export async function updateTicketAsAdmin(admin: User, ticketId: string, input: 
     await tx.ticket.update({ where: { id: ticketId }, data });
     return tx.ticket.findUniqueOrThrow({ where: { id: ticketId }, include: ticketInclude });
   });
+}
+
+export async function deleteTicketAsMaster(master: User, ticketId: string) {
+  if (!master.isMaster) {
+    throw AppError.forbidden("Only the master administrator can delete tickets");
+  }
+
+  const ticket = await prisma.ticket.findUnique({
+    where: { id: ticketId },
+    select: { id: true, attachments: { select: { storageKey: true } } },
+  });
+  if (!ticket) {
+    throw AppError.notFound("Ticket not found");
+  }
+
+  await prisma.$transaction(async (tx) => {
+    await tx.ticketDeviceSnapshot.deleteMany({ where: { ticketId } });
+    await tx.comment.deleteMany({ where: { ticketId } });
+    await tx.worklog.deleteMany({ where: { ticketId } });
+    await tx.attachment.deleteMany({ where: { ticketId } });
+    await tx.auditLog.deleteMany({ where: { ticketId } });
+    await tx.notification.deleteMany({ where: { ticketId } });
+    await tx.ticket.delete({ where: { id: ticketId } });
+  });
+
+  await Promise.all(ticket.attachments.map(async ({ storageKey }) => {
+    const attachmentPath = path.join(env.uploadDir, storageKey);
+    const relativePath = path.relative(path.resolve(env.uploadDir), attachmentPath);
+    if (relativePath && !relativePath.startsWith("..") && !path.isAbsolute(relativePath)) {
+      await fs.promises.unlink(attachmentPath).catch(() => undefined);
+    }
+  }));
 }

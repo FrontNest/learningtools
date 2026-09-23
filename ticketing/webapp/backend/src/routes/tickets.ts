@@ -7,7 +7,7 @@ import {
   updateTicketSchema,
 } from "../validators/ticketValidators";
 import { updateAssignmentSchema } from "../validators/assignmentValidators";
-import { createTicket, getTicketById, listTickets, updateTicketAsAdmin } from "../services/ticketService";
+import { createTicket, deleteTicketAsMaster, getTicketById, listTickets, updateTicketAsAdmin } from "../services/ticketService";
 import { updateTicketAssignment } from "../services/assignmentService";
 import { claimTeamTicket, updateTeamRequesterTicket } from "../services/requesterTeamService";
 import { commentsRouter } from "./comments";
@@ -46,6 +46,11 @@ ticketsRouter.get("/", async (req, res) => {
 ticketsRouter.get("/:id", async (req, res) => {
   const ticket = await getTicketById(req.currentUser!, req.params.id);
   res.json({ ticket });
+});
+
+ticketsRouter.delete("/:id", async (req, res) => {
+  await deleteTicketAsMaster(req.currentUser!, req.params.id);
+  res.status(204).send();
 });
 
 ticketsRouter.patch("/:id", async (req, res) => {

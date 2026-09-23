@@ -64,6 +64,10 @@ export async function fetchTicket(id: string): Promise<Ticket> {
   return data.ticket;
 }
 
+export async function deleteTicket(id: string): Promise<void> {
+  await api.delete(`/tickets/${id}`);
+}
+
 export interface CreateTicketPayload {
   subject: string;
   description: string;

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { isAxiosError } from "axios";
 import { useAuth } from "../auth/AuthContext";
-import { fetchAdminUsers, fetchCategories, fetchTeams, fetchTicket, updateAssignment, updateTicket } from "../lib/ticketApi";
+import { deleteTicket, fetchAdminUsers, fetchCategories, fetchTeams, fetchTicket, updateAssignment, updateTicket } from "../lib/ticketApi";
 import type { AdminUser, Category, Priority, Team, Ticket, TicketStatus } from "../types/ticket";
 import { STATUS_PROGRESS } from "../types/ticket";
 import { CommentsSection } from "../components/CommentsSection";
@@ -25,10 +25,12 @@ const OTHER_CATEGORY_VALUE = "__other_category__";
 
 export function TicketDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
   const [teamAdmins, setTeamAdmins] = useState<AdminUser[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -36,6 +38,7 @@ export function TicketDetailPage() {
   const [auditRefreshToken, setAuditRefreshToken] = useState(0);
 
   const isAdmin = user?.role === "ADMIN";
+  const isMaster = Boolean(user?.isMaster);
 
   useEffect(() => {
     if (!id) return;
@@ -111,6 +114,20 @@ export function TicketDetailPage() {
       setError(message ?? "Failed to update assignment.");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleDeleteTicket() {
+    if (!id || !window.confirm("Delete this ticket and all of its history permanently?")) return;
+    setDeleting(true);
+    setError(null);
+    try {
+      await deleteTicket(id);
+      navigate("/", { replace: true });
+    } catch (err) {
+      const message = isAxiosError(err) ? err.response?.data?.error : undefined;
+      setError(message ?? "Failed to delete ticket.");
+      setDeleting(false);
     }
   }
 
@@ -321,6 +338,12 @@ export function TicketDetailPage() {
       <p className="ticket-description">{ticket.description}</p>
 
       {error && <p className="form-error">{error}</p>}
+
+      {isMaster && (
+        <button className="danger-button" disabled={deleting} onClick={handleDeleteTicket}>
+          {deleting ? "Deleting..." : "Delete ticket"}
+        </button>
+      )}
 
       <CommentsSection ticketId={ticket.id} isAdmin={isAdmin} />
       <AttachmentsSection ticketId={ticket.id} />

@@ -7,6 +7,7 @@ export interface CurrentUser {
   department: string | null;
   jobTitle: string | null;
   role: Role;
+  isMaster: boolean;
   teamId: string | null;
   mustChangePassword: boolean;
   active: boolean;

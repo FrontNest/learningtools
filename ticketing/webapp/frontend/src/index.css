@@ -66,6 +66,20 @@ body {
   font-size: 0.9rem;
 }
 
+.danger-button {
+  padding: 0.5rem 1rem;
+  color: #fff;
+  background: var(--danger);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.danger-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .dashboard-page {
   max-width: 960px;
   margin: 0 auto;
