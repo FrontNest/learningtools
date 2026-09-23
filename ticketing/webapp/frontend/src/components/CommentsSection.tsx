@@ -3,7 +3,7 @@ import { isAxiosError } from "axios";
 import { createComment, fetchComments } from "../lib/ticketApi";
 import type { Comment, CommentType } from "../types/ticket";
 
-export function CommentsSection({ ticketId, isAdmin }: { ticketId: string; isAdmin: boolean }) {
+export function CommentsSection({ ticketId, isAdmin, canComment }: { ticketId: string; isAdmin: boolean; canComment: boolean }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [text, setText] = useState("");
   const [type, setType] = useState<CommentType>("PUBLIC");
@@ -53,7 +53,7 @@ export function CommentsSection({ ticketId, isAdmin }: { ticketId: string; isAdm
         ))}
       </ul>
 
-      <form className="ticket-form" onSubmit={handleSubmit}>
+      {canComment ? <form className="ticket-form" onSubmit={handleSubmit}>
         <label htmlFor="comment-text">Add comment</label>
         <textarea
           id="comment-text"
@@ -75,7 +75,7 @@ export function CommentsSection({ ticketId, isAdmin }: { ticketId: string; isAdm
         <button type="submit" disabled={submitting}>
           {submitting ? "Posting..." : "Post comment"}
         </button>
-      </form>
+      </form> : <p className="hint">Closed tickets cannot receive new comments.</p>}
     </section>
   );
 }

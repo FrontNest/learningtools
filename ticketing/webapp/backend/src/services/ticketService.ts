@@ -164,7 +164,11 @@ export async function getTicketById(currentUser: User, ticketId: string) {
     throw AppError.forbidden();
   }
 
-  return ticket;
+  const canReopen = ticket.status === "CLOSED"
+    ? currentUser.isMaster
+    : ticket.status === "RESOLVED" && await canAdminReopenResolvedTicket(currentUser, ticket);
+
+  return { ...ticket, canReopen };
 }
 
 export function canRequesterAccessTicket(
@@ -195,6 +199,18 @@ export async function updateTicketAsAdmin(admin: User, ticketId: string, input: 
   });
   if (!ticket) {
     throw AppError.notFound("Ticket not found");
+  }
+
+  const isReopening = input.status === "IN_PROGRESS";
+  if (ticket.status === "CLOSED") {
+    if (!admin.isMaster || !isReopening || Object.keys(input).length !== 1) {
+      throw AppError.forbidden("Closed tickets can only be reopened by the master administrator");
+    }
+  }
+  if (ticket.status === "RESOLVED") {
+    if (!isReopening || Object.keys(input).length !== 1 || !await canAdminReopenResolvedTicket(admin, ticket)) {
+      throw AppError.forbidden("Only the resolving Admin can reopen this ticket after a requester follow-up within five days");
+    }
   }
 
   return prisma.$transaction(async (tx) => {
@@ -241,6 +257,11 @@ export async function updateTicketAsAdmin(admin: User, ticketId: string, input: 
       const now = new Date();
 
       data.status = input.status;
+      if (isReopening) {
+        data.resolvedAt = null;
+        data.autoCloseAt = null;
+        data.closedAt = null;
+      }
       if (input.status === "RESOLVED") {
         data.resolvedAt = now;
         data.autoCloseAt = new Date(now.getTime() + appConfig.autoCloseAfterDays * 24 * 60 * 60 * 1000);
@@ -277,6 +298,26 @@ export async function updateTicketAsAdmin(admin: User, ticketId: string, input: 
     await tx.ticket.update({ where: { id: ticketId }, data });
     return tx.ticket.findUniqueOrThrow({ where: { id: ticketId }, include: ticketInclude });
   });
+}
+
+async function canAdminReopenResolvedTicket(admin: User, ticket: { id: string; requesterId: string }) {
+  if (admin.role !== "ADMIN") return false;
+
+  const resolution = await prisma.auditLog.findFirst({
+    where: { ticketId: ticket.id, action: "STATUS_CHANGED", newValue: "RESOLVED" },
+    orderBy: { createdAt: "desc" },
+  });
+  if (!resolution || resolution.actorId !== admin.id) return false;
+
+  const followUpDeadline = new Date(resolution.createdAt.getTime() + appConfig.autoCloseAfterDays * 24 * 60 * 60 * 1000);
+  const followUp = await prisma.comment.findFirst({
+    where: {
+      ticketId: ticket.id,
+      authorId: ticket.requesterId,
+      createdAt: { gte: resolution.createdAt, lte: followUpDeadline },
+    },
+  });
+  return Boolean(followUp);
 }
 
 export async function deleteTicketAsMaster(master: User, ticketId: string) {

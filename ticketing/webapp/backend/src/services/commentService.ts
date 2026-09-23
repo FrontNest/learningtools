@@ -12,6 +12,9 @@ export async function listComments(currentUser: User, ticketId: string) {
   if (!ticket) {
     throw AppError.notFound("Ticket not found");
   }
+  if (ticket.status === "CLOSED") {
+    throw AppError.forbidden("Closed tickets cannot receive new comments");
+  }
   if (!canRequesterAccessTicket(currentUser, ticket)) {
     throw AppError.forbidden();
   }
@@ -62,7 +65,7 @@ export async function createComment(
 
     // Requester comment while Resolved: keep status, reset the auto-close timer,
     // never auto-reopen (spec section 12.1).
-    if (isRequester && ticket.status === "RESOLVED") {
+    if (isRequester && ticket.status === "RESOLVED" && ticket.resolvedAt && Date.now() <= ticket.resolvedAt.getTime() + appConfig.autoCloseAfterDays * 24 * 60 * 60 * 1000) {
       const newAutoCloseAt = new Date(Date.now() + appConfig.autoCloseAfterDays * 24 * 60 * 60 * 1000);
       await tx.ticket.update({ where: { id: ticketId }, data: { autoCloseAt: newAutoCloseAt } });
       await writeAuditLog(tx, {

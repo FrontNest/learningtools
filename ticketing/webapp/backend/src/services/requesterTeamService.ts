@@ -12,6 +12,9 @@ export async function claimTeamTicket(requester: User, ticketId: string) {
     include: { assignedTeam: true, assignedUser: true },
   });
   if (!ticket) throw AppError.notFound("Ticket not found");
+  if (ticket.status === "RESOLVED" || ticket.status === "CLOSED") {
+    throw AppError.forbidden("Resolved and closed tickets cannot be claimed");
+  }
   if (!requester.teamId || ticket.assignedTeamId !== requester.teamId || ticket.assignedUserId) {
     throw AppError.forbidden("You can only claim unassigned tickets in your own team queue");
   }
@@ -36,6 +39,9 @@ export async function updateTeamRequesterTicket(requester: User, ticketId: strin
   const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
   if (!ticket) throw AppError.notFound("Ticket not found");
   if (!canRequesterAccessTicket(requester, ticket)) throw AppError.forbidden();
+  if (ticket.status === "RESOLVED" || ticket.status === "CLOSED") {
+    throw AppError.forbidden("Resolved and closed tickets cannot have their status changed");
+  }
   if (status === "CLOSED") throw AppError.forbidden("Requesters cannot close tickets");
 
   return prisma.$transaction(async (tx) => {

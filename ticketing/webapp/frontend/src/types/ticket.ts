@@ -72,6 +72,7 @@ export interface Ticket extends TicketSummary {
   resolvedAt: string | null;
   autoCloseAt: string | null;
   closedAt: string | null;
+  canReopen: boolean;
   deviceSnapshot: {
     deviceName: string | null;
     model: string | null;

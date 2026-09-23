@@ -131,6 +131,22 @@ export function TicketDetailPage() {
     }
   }
 
+  async function handleReopenTicket() {
+    if (!id) return;
+    setSaving(true);
+    setError(null);
+    try {
+      const updated = await updateTicket(id, { status: "IN_PROGRESS" });
+      setTicket(updated);
+      setAuditRefreshToken((token) => token + 1);
+    } catch (err) {
+      const message = isAxiosError(err) ? err.response?.data?.error : undefined;
+      setError(message ?? "Failed to reopen ticket.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
   if (error && !ticket) return <p className="form-error">{error}</p>;
   if (!ticket) return <p>Loading...</p>;
 
@@ -142,6 +158,9 @@ export function TicketDetailPage() {
       (!ticket.assignedUser || ticket.assignedUser.id === user.id)
   );
   const canClaim = canManageAsTeamRequester && !ticket.assignedUser;
+  const isFinalized = ticket.status === "RESOLVED" || ticket.status === "CLOSED";
+  const canEditTicketMeta = isAdmin && !isFinalized;
+  const canChangeStatus = (isAdmin || canManageAsTeamRequester) && !isFinalized;
 
   return (
     <div className="dashboard-page">
@@ -158,7 +177,7 @@ export function TicketDetailPage() {
       </div>
 
       <div className="ticket-meta">
-        {isAdmin && (
+        {canEditTicketMeta && (
           <label>
             Category group:{" "}
             <select
@@ -176,7 +195,7 @@ export function TicketDetailPage() {
             </select>
           </label>
         )}
-        {isAdmin && (
+        {canEditTicketMeta && (
           <label>
             Problem category:{" "}
             <select
@@ -199,7 +218,7 @@ export function TicketDetailPage() {
             </select>
           </label>
         )}
-        {isAdmin && !ticket.otherCategoryDescription && (() => {
+        {canEditTicketMeta && !ticket.otherCategoryDescription && (() => {
           const problemCategoryId = findProblemCategoryId(categories, ticket.category.id);
           const subcategories = categories.filter((category) => category.parentId === problemCategoryId);
           if (subcategories.length === 0) return null;
@@ -216,7 +235,7 @@ export function TicketDetailPage() {
             </label>
           );
         })()}
-        {isAdmin && (ticket.otherCategoryDescription !== null || categoryDescription !== "") && (
+        {canEditTicketMeta && (ticket.otherCategoryDescription !== null || categoryDescription !== "") && (
           <label>
             Category description:{" "}
             <input
@@ -229,7 +248,7 @@ export function TicketDetailPage() {
         )}
         <label>
           Priority:{" "}
-          {isAdmin ? (
+          {canEditTicketMeta ? (
             <select
               value={ticket.priority}
               disabled={saving}
@@ -248,7 +267,7 @@ export function TicketDetailPage() {
 
         <label>
           Status:{" "}
-          {isAdmin || canManageAsTeamRequester ? (
+          {canChangeStatus ? (
             <select
               value={ticket.status}
               disabled={saving}
@@ -265,12 +284,17 @@ export function TicketDetailPage() {
           ) : (
             ticket.status
           )}
+          {ticket.canReopen && (
+            <button className="link-button" disabled={saving} onClick={handleReopenTicket}>
+              REOPEN
+            </button>
+          )}
         </label>
 
         <span>Progress: {STATUS_PROGRESS[ticket.status]}%</span>
       </div>
 
-      {isAdmin ? (
+      {canEditTicketMeta ? (
         <div className="ticket-meta">
           <label>
             Team:{" "}
@@ -314,7 +338,7 @@ export function TicketDetailPage() {
         <>
           {ticket.assignedTeam && <p>Team: {ticket.assignedTeam.name}</p>}
           {ticket.assignedUser && <p>Assigned to: {ticket.assignedUser.displayName}</p>}
-          {canClaim && (
+          {canClaim && !isFinalized && (
             <button disabled={saving} onClick={() => handleAssignmentChange({ assignedUserId: user!.id })}>
               Assign to me
             </button>
@@ -345,7 +369,7 @@ export function TicketDetailPage() {
         </button>
       )}
 
-      <CommentsSection ticketId={ticket.id} isAdmin={isAdmin} />
+      <CommentsSection ticketId={ticket.id} isAdmin={isAdmin} canComment={ticket.status !== "CLOSED"} />
       <AttachmentsSection ticketId={ticket.id} />
       {isAdmin && <WorklogSection ticketId={ticket.id} />}
       {isAdmin && <AuditLogSection ticketId={ticket.id} refreshToken={auditRefreshToken} />}

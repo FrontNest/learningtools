@@ -19,6 +19,9 @@ export async function updateTicketAssignment(admin: User, ticketId: string, inpu
   if (!ticket) {
     throw AppError.notFound("Ticket not found");
   }
+  if (ticket.status === "RESOLVED" || ticket.status === "CLOSED") {
+    throw AppError.forbidden("Reopen the ticket before changing its assignment");
+  }
 
   const nextTeamId = input.assignedTeamId !== undefined ? input.assignedTeamId : ticket.assignedTeamId;
   const nextUserId = input.assignedUserId !== undefined ? input.assignedUserId : ticket.assignedUserId;
