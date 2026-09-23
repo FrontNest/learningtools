@@ -46,6 +46,30 @@ body {
   border-radius: 4px;
 }
 
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  width: 100%;
+  padding-right: 2.75rem;
+}
+
+.auth-form .password-reveal {
+  position: absolute;
+  top: 50%;
+  right: 0.25rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin: 0;
+  padding: 0;
+  transform: translateY(-50%);
+  color: var(--text);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
 .auth-form button {
   margin-top: 1rem;
   padding: 0.6rem;

@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { isAxiosError } from "axios";
+import { PasswordInput } from "../components/PasswordInput";
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -40,9 +41,8 @@ export function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
         />
         <label htmlFor="password">Password</label>
-        <input
+        <PasswordInput
           id="password"
-          type="password"
           autoComplete="current-password"
           required
           value={password}

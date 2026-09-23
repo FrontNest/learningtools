@@ -5,6 +5,7 @@ import { isAxiosError } from "axios";
 import { changePassword } from "../lib/authApi";
 import { useAuth } from "../auth/AuthContext";
 import { validatePasswordPolicy, PASSWORD_MIN_LENGTH } from "../constants/passwordPolicy";
+import { PasswordInput } from "../components/PasswordInput";
 
 export function ChangePasswordPage() {
   const { user, refresh, logout } = useAuth();
@@ -61,18 +62,16 @@ export function ChangePasswordPage() {
           </p>
         )}
         <label htmlFor="currentPassword">Current password</label>
-        <input
+        <PasswordInput
           id="currentPassword"
-          type="password"
           autoComplete="current-password"
           required
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
         />
         <label htmlFor="newPassword">New password</label>
-        <input
+        <PasswordInput
           id="newPassword"
-          type="password"
           autoComplete="new-password"
           required
           minLength={PASSWORD_MIN_LENGTH}
@@ -84,9 +83,8 @@ export function ChangePasswordPage() {
           number, and a special character. Must differ from your current password.
         </p>
         <label htmlFor="confirmPassword">Confirm new password</label>
-        <input
+        <PasswordInput
           id="confirmPassword"
-          type="password"
           autoComplete="new-password"
           required
           minLength={PASSWORD_MIN_LENGTH}
