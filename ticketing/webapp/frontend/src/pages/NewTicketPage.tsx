@@ -17,6 +17,7 @@ export function NewTicketPage() {
   const [description, setDescription] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [topCategoryId, setTopCategoryId] = useState("");
+  const [problemCategoryId, setProblemCategoryId] = useState("");
   const [otherCategoryDescription, setOtherCategoryDescription] = useState("");
   const [priority, setPriority] = useState<Priority>("NORMAL");
   const [selectedDeviceId, setSelectedDeviceId] = useState("");
@@ -31,7 +32,9 @@ export function NewTicketPage() {
         const top = cats.find((category) => !category.parentId);
         if (top) {
           setTopCategoryId(top.id);
-          setCategoryId(cats.find((category) => category.parentId === top.id)?.id ?? top.id);
+          const problemCategory = cats.find((category) => category.parentId === top.id);
+          setProblemCategoryId(problemCategory?.id ?? top.id);
+          setCategoryId(problemCategory?.id ?? top.id);
         }
       })
       .catch(() => setError("Failed to load categories."));
@@ -46,6 +49,7 @@ export function NewTicketPage() {
 
   const topCategories = categories.filter((category) => !category.parentId);
   const subCategories = categories.filter((category) => category.parentId === topCategoryId);
+  const problemSubcategories = categories.filter((category) => category.parentId === problemCategoryId);
   const isOtherCategory = categoryId === OTHER_CATEGORY_VALUE;
 
   const isOtherDevice = selectedDeviceId === OTHER_DEVICE_VALUE || selectedDeviceId === "";
@@ -106,8 +110,10 @@ export function NewTicketPage() {
         <label htmlFor="category-level-one">Category</label>
         <select id="category-level-one" required value={topCategoryId} onChange={(e) => {
           const nextTopId = e.target.value;
+          const nextProblemCategory = categories.find((category) => category.parentId === nextTopId);
           setTopCategoryId(nextTopId);
-          setCategoryId(categories.find((category) => category.parentId === nextTopId)?.id ?? nextTopId);
+          setProblemCategoryId(nextProblemCategory?.id ?? nextTopId);
+          setCategoryId(nextProblemCategory?.id ?? nextTopId);
           setOtherCategoryDescription("");
         }}>
           <option value="" disabled>Select a category group</option>
@@ -115,11 +121,27 @@ export function NewTicketPage() {
         </select>
 
         <label htmlFor="category-level-two">Problem category</label>
-        <select id="category-level-two" required value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+        <select id="category-level-two" required value={isOtherCategory ? OTHER_CATEGORY_VALUE : problemCategoryId} onChange={(e) => {
+          const nextProblemCategoryId = e.target.value;
+          if (nextProblemCategoryId === OTHER_CATEGORY_VALUE) {
+            setCategoryId(OTHER_CATEGORY_VALUE);
+            return;
+          }
+          setProblemCategoryId(nextProblemCategoryId);
+          setCategoryId(categories.find((category) => category.parentId === nextProblemCategoryId)?.id ?? nextProblemCategoryId);
+          setOtherCategoryDescription("");
+        }}>
           <option value="" disabled>Select a problem category</option>
           {subCategories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
           <option value={OTHER_CATEGORY_VALUE}>Other...</option>
         </select>
+
+        {!isOtherCategory && problemSubcategories.length > 0 && <>
+          <label htmlFor="category-level-three">Problem subcategory</label>
+          <select id="category-level-three" required value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+            {problemSubcategories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+          </select>
+        </>}
 
         {isOtherCategory && <>
           <label htmlFor="otherCategoryDescription">Describe the problem category</label>

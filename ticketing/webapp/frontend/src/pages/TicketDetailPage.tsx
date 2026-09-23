@@ -164,13 +164,14 @@ export function TicketDetailPage() {
             Problem category:{" "}
             <select
               disabled={saving}
-              value={ticket.otherCategoryDescription ? OTHER_CATEGORY_VALUE : ticket.category.id}
+              value={ticket.otherCategoryDescription ? OTHER_CATEGORY_VALUE : findProblemCategoryId(categories, ticket.category.id)}
               onChange={(event) => {
                 if (event.target.value === OTHER_CATEGORY_VALUE) {
                   setCategoryDescription(ticket.otherCategoryDescription ?? "");
                 } else {
                   setCategoryDescription("");
-                  handleCategoryChange(event.target.value);
+                  const firstSubcategory = categories.find((category) => category.parentId === event.target.value);
+                  handleCategoryChange(firstSubcategory?.id ?? event.target.value);
                 }
               }}
             >
@@ -181,6 +182,23 @@ export function TicketDetailPage() {
             </select>
           </label>
         )}
+        {isAdmin && !ticket.otherCategoryDescription && (() => {
+          const problemCategoryId = findProblemCategoryId(categories, ticket.category.id);
+          const subcategories = categories.filter((category) => category.parentId === problemCategoryId);
+          if (subcategories.length === 0) return null;
+          return (
+            <label>
+              Problem subcategory:{" "}
+              <select
+                disabled={saving}
+                value={ticket.category.id}
+                onChange={(event) => handleCategoryChange(event.target.value)}
+              >
+                {subcategories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+              </select>
+            </label>
+          );
+        })()}
         {isAdmin && (ticket.otherCategoryDescription !== null || categoryDescription !== "") && (
           <label>
             Category description:{" "}
@@ -316,6 +334,16 @@ function findTopCategoryId(categories: Category[], categoryId: string): string {
   let current = categories.find((category) => category.id === categoryId);
   while (current?.parentId) {
     current = categories.find((category) => category.id === current?.parentId);
+  }
+  return current?.id ?? categoryId;
+}
+
+function findProblemCategoryId(categories: Category[], categoryId: string): string {
+  let current = categories.find((category) => category.id === categoryId);
+  while (current?.parentId) {
+    const parent = categories.find((category) => category.id === current?.parentId);
+    if (!parent?.parentId) return current.id;
+    current = parent;
   }
   return current?.id ?? categoryId;
 }
