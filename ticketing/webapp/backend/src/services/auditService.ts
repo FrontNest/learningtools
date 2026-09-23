@@ -28,9 +28,29 @@ export async function writeAuditLog(tx: TxClient, entry: AuditEntryInput) {
 // Admin-only activity view (spec section 20/30). Actor is null for SYSTEM
 // (e.g. automatic closure) entries.
 export async function listAuditLogsForTicket(tx: TxClient, ticketId: string) {
-  return tx.auditLog.findMany({
+  const auditLogs = await tx.auditLog.findMany({
     where: { ticketId },
     include: { actor: { select: { id: true, displayName: true } } },
     orderBy: { createdAt: "asc" },
   });
+
+  const categoryIds = auditLogs
+    .filter((entry) => entry.action === "CATEGORY_CHANGED")
+    .flatMap((entry) => [entry.oldValue, entry.newValue])
+    .filter((value): value is string => value !== null);
+  const categories = categoryIds.length === 0
+    ? []
+    : await tx.category.findMany({
+      where: { id: { in: categoryIds } },
+      select: { id: true, name: true },
+    });
+  const categoryNames = new Map(categories.map((category) => [category.id, category.name]));
+
+  return auditLogs.map((entry) => entry.action === "CATEGORY_CHANGED"
+    ? {
+      ...entry,
+      oldValue: entry.oldValue ? categoryNames.get(entry.oldValue) ?? entry.oldValue : null,
+      newValue: entry.newValue ? categoryNames.get(entry.newValue) ?? entry.newValue : null,
+    }
+    : entry);
 }

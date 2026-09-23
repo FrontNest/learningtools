@@ -187,7 +187,10 @@ interface UpdateTicketInput {
 
 // Callers (routes) must already restrict this to Admin users.
 export async function updateTicketAsAdmin(admin: User, ticketId: string, input: UpdateTicketInput) {
-  const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+  const ticket = await prisma.ticket.findUnique({
+    where: { id: ticketId },
+    include: { category: { select: { name: true } } },
+  });
   if (!ticket) {
     throw AppError.notFound("Ticket not found");
   }
@@ -203,8 +206,8 @@ export async function updateTicketAsAdmin(admin: User, ticketId: string, input: 
         ticketId,
         actorId: admin.id,
         action: "CATEGORY_CHANGED",
-        oldValue: ticket.categoryId,
-        newValue: input.categoryId,
+        oldValue: ticket.category.name,
+        newValue: category.name,
       });
     }
     if (input.otherCategoryDescription !== undefined) {
