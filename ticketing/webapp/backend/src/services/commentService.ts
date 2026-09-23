@@ -79,11 +79,23 @@ export async function createComment(
 
     if (isRequester) {
       const recipients = await getTicketNotificationRecipients(tx, ticket);
+      if (ticket.status === "RESOLVED") {
+        const resolution = await tx.auditLog.findFirst({
+          where: { ticketId, action: "STATUS_CHANGED", newValue: "RESOLVED" },
+          orderBy: { createdAt: "desc" },
+          include: { actor: true },
+        });
+        if (resolution?.actor?.active && !recipients.some((recipient) => recipient.id === resolution.actor!.id)) {
+          recipients.push(resolution.actor);
+        }
+      }
       await notify(tx, {
         ticketId,
         recipients,
         type: "REQUESTER_COMMENTED",
-        message: `${currentUser.displayName} commented on ${ticket.ticketNumber}`,
+        message: ticket.status === "RESOLVED"
+          ? `${currentUser.displayName} commented after ${ticket.ticketNumber} was resolved; review reopening`
+          : `${currentUser.displayName} commented on ${ticket.ticketNumber}`,
       });
     } else if (input.type === "PUBLIC") {
       const requester = await tx.user.findUnique({ where: { id: ticket.requesterId } });

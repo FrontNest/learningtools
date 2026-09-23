@@ -9,11 +9,13 @@ import { NotificationsPage } from "./pages/NotificationsPage";
 import { ChangePasswordPage } from "./pages/ChangePasswordPage";
 import { AdminUsersPage } from "./pages/AdminUsersPage";
 import { AdminCategoriesPage } from "./pages/AdminCategoriesPage";
+import { BrowserNotificationWatcher } from "./components/BrowserNotificationWatcher";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <BrowserNotificationWatcher />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route

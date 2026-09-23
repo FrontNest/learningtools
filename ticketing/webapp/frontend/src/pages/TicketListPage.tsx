@@ -6,6 +6,7 @@ import { fetchNotifications } from "../lib/notificationApi";
 import type { AdminUser, Priority, Team, TicketStatus, TicketSummary } from "../types/ticket";
 import { TicketTable } from "../components/TicketTable";
 import { AdminSummaryBar } from "../components/AdminSummaryBar";
+import { BrowserNotificationButton } from "../components/BrowserNotificationWatcher";
 
 export function TicketListPage() {
   const { user, logout } = useAuth();
@@ -56,6 +57,7 @@ export function TicketListPage() {
           <p>Signed in as {user?.displayName} ({user?.role})</p>
         </div>
         <div className="header-actions">
+          <BrowserNotificationButton />
           <Link to="/notifications">Notifications{unreadCount > 0 ? ` (${unreadCount})` : ""}</Link>
           {isAdmin && <Link to="/admin/users">Manage users</Link>}
           {isAdmin && <Link to="/admin/categories">Manage categories</Link>}
