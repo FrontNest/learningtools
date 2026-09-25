@@ -125,11 +125,13 @@ export function AdminCategoriesPage() {
                 ) : category.parentId ? categoryNames.get(category.parentId) : "Top-level"}
               </td>
               <td>{category.active ? "Active" : "Inactive"}</td>
-              <td>
+              <td className="admin-action-cell">
+                <div className="admin-action-stack">
                 {editingId === category.id ? (
-                  <><button className="saveButton" onClick={() => saveEditing(category)}>Save</button>{" "}<button className="cancelButton" onClick={() => setEditingId(null)}>Cancel</button></>
-                ) : <button className="editButton" onClick={() => startEditing(category)}>Edit</button>}{" "}
+                  <><button className="saveButton" onClick={() => saveEditing(category)}>Save</button><button className="cancelButton" onClick={() => setEditingId(null)}>Cancel</button></>
+                ) : <button className="editButton" onClick={() => startEditing(category)}>Edit</button>}
                 <button className="statusButton" onClick={() => toggleActive(category)}>{category.active ? "Deactivate" : "Activate"}</button>
+                </div>
               </td>
             </tr>
           ))}

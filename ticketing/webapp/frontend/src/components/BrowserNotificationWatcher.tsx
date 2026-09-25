@@ -56,7 +56,16 @@ export function BrowserNotificationButton() {
     setPermission(nextPermission);
   }
 
-  return <button onClick={() => void requestPermission()}>Enable browser alerts</button>;
+  return (
+    <button
+      id="nav-enable-browser-alerts"
+      className="header-menu-button"
+      data-name="enable-browser-alerts"
+      onClick={() => void requestPermission()}
+    >
+      Enable browser alerts
+    </button>
+  );
 }
 
 function showBrowserNotification(notification: AppNotification) {

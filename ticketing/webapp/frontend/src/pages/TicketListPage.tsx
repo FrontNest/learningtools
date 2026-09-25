@@ -51,19 +51,19 @@ export function TicketListPage() {
 
   return (
     <div className="dashboard-page">
-      <header>
+      <header className="ticket-list-header">
         <div>
           <h1>{isAdmin ? "All tickets" : "My tickets"}</h1>
           <p>Signed in as {user?.displayName} ({user?.role})</p>
         </div>
         <div className="header-actions">
           <BrowserNotificationButton />
-          <Link id="nav-notifications" className="nav-button" data-name="notifications" to="/notifications">Notifications{unreadCount > 0 ? ` (${unreadCount})` : ""}</Link>
-          {isAdmin && <Link id="nav-manage-users" className="nav-button" data-name="manage-users" to="/admin/users">Manage users</Link>}
-          {isAdmin && <Link id="nav-manage-categories" className="nav-button" data-name="manage-categories" to="/admin/categories">Manage categories</Link>}
-          <Link id="nav-change-password" className="nav-button" data-name="change-password" to="/change-password">Change password</Link>
-          <Link id="nav-new-ticket" className="nav-button" data-name="new-ticket" to="/tickets/new">New ticket</Link>
-          <button className="signOutButton" onClick={() => logout()}>Sign out</button>
+          <Link id="nav-notifications" className="nav-button header-menu-button" data-name="notifications" to="/notifications">Notifications{unreadCount > 0 ? ` (${unreadCount})` : ""}</Link>
+          {isAdmin && <Link id="nav-manage-users" className="nav-button header-menu-button" data-name="manage-users" to="/admin/users">Manage users</Link>}
+          {isAdmin && <Link id="nav-manage-categories" className="nav-button header-menu-button" data-name="manage-categories" to="/admin/categories">Manage categories</Link>}
+          <Link id="nav-change-password" className="nav-button header-menu-button" data-name="change-password" to="/change-password">Change password</Link>
+          <Link id="nav-new-ticket" className="nav-button header-menu-button" data-name="new-ticket" to="/tickets/new">New ticket</Link>
+          <button className="signOutButton header-menu-button" onClick={() => logout()}>Sign out</button>
         </div>
       </header>
 

@@ -275,22 +275,24 @@ export function AdminUsersPage() {
                 </select>
               </td>
               <td>{u.isMaster ? "Master" : u.active ? "Yes" : "No"}</td>
-              <td>
+              <td className="admin-action-cell">
+                <div className="admin-action-stack">
                 {editingUserId === u.id ? (
                   <>
-                    <button className="saveButton" onClick={() => saveUserDetails(u)}>Save</button>{" "}
+                    <button className="saveButton" onClick={() => saveUserDetails(u)}>Save</button>
                     <button className="cancelButton" onClick={() => setEditingUserId(null)}>Cancel</button>
                   </>
                 ) : (
                   <button className="editButton" onClick={() => startEditing(u)}>Edit</button>
-                )}{" "}
+                )}
                 {!u.isMaster && (
                   <>
-                    <button className="statusButton" onClick={() => handleToggleActive(u)}>{u.active ? "Deactivate" : "Activate"}</button>{" "}
-                    <button className="resetPasswordButton" onClick={() => handleResetPassword(u)}>Reset password</button>{" "}
+                    <button className="statusButton" onClick={() => handleToggleActive(u)}>{u.active ? "Deactivate" : "Activate"}</button>
+                    <button className="resetPasswordButton" onClick={() => handleResetPassword(u)}>Reset password</button>
                     <button className="deleteButton" onClick={() => handleDelete(u)}>Delete</button>
                   </>
                 )}
+                </div>
               </td>
             </tr>
           ))}
