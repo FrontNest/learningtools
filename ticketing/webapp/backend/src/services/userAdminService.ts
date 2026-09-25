@@ -144,6 +144,9 @@ export async function resetUserPassword(userId: string) {
 // otherwise it would either violate referential integrity or silently erase
 // audit trail data. Anything with history must be deactivated instead.
 export async function deleteUser(actingAdmin: User, userId: string, deleteHistory = false) {
+  if (!actingAdmin.isMaster) {
+    throw AppError.forbidden("Only the master user can delete accounts");
+  }
   if (userId === actingAdmin.id) {
     throw AppError.badRequest("You cannot delete your own account");
   }

@@ -12,12 +12,14 @@ import {
   type ManagedUser,
 } from "../lib/userAdminApi";
 import { fetchTeams } from "../lib/ticketApi";
+import { useAuth } from "../auth/AuthContext";
 import type { Team } from "../types/ticket";
 import type { Role } from "../types/user";
 
 const ROLES: Role[] = ["REQUESTER", "ADMIN"];
 
 export function AdminUsersPage() {
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState<ManagedUser[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -289,7 +291,7 @@ export function AdminUsersPage() {
                   <>
                     <button className="statusButton" onClick={() => handleToggleActive(u)}>{u.active ? "Deactivate" : "Activate"}</button>
                     <button className="resetPasswordButton" onClick={() => handleResetPassword(u)}>Reset password</button>
-                    <button className="deleteButton" onClick={() => handleDelete(u)}>Delete</button>
+                    {currentUser?.isMaster && <button className="deleteButton" onClick={() => handleDelete(u)}>Delete</button>}
                   </>
                 )}
                 </div>
