@@ -4,6 +4,10 @@ import { Link } from "react-router-dom";
 import { fetchNotifications, markNotificationRead, setAllNotificationsReadState } from "../lib/notificationApi";
 import type { AppNotification } from "../types/ticket";
 
+function normalizeTicketNumber(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
 export function NotificationsPage() {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
@@ -46,7 +50,7 @@ export function NotificationsPage() {
   const filteredNotifications = useMemo(() => {
     const fromDate = dateFrom ? new Date(`${dateFrom}T00:00:00`) : null;
     const toDate = dateTo ? new Date(`${dateTo}T23:59:59.999`) : null;
-    const ticketNumber = ticketNumberFilter.trim().toLowerCase();
+    const ticketNumber = normalizeTicketNumber(ticketNumberFilter);
 
     return notifications
       .filter((notification) => {
@@ -55,7 +59,7 @@ export function NotificationsPage() {
         if (readFilter === "read" && !notification.readAt) return false;
         if (fromDate && createdAt < fromDate) return false;
         if (toDate && createdAt > toDate) return false;
-        return !ticketNumber || notification.ticket?.ticketNumber.toLowerCase().includes(ticketNumber);
+        return !ticketNumber || normalizeTicketNumber(notification.ticket?.ticketNumber ?? "").includes(ticketNumber);
       })
       .sort((first, second) => {
         if (sortOrder === "oldest") return new Date(first.createdAt).getTime() - new Date(second.createdAt).getTime();
