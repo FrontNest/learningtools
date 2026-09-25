@@ -119,7 +119,10 @@ export function NotificationsPage() {
           key={group.id}
           className="notification-group"
           open={expandedGroups[group.id] ?? group.defaultOpen}
-          onToggle={(event) => setExpandedGroups((current) => ({ ...current, [group.id]: event.currentTarget.open }))}
+          onToggle={(event) => {
+            const isOpen = event.currentTarget.open;
+            setExpandedGroups((current) => ({ ...current, [group.id]: isOpen }));
+          }}
         >
           <summary>
             <span>{group.label}</span>
