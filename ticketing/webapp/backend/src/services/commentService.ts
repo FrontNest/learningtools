@@ -12,9 +12,6 @@ export async function listComments(currentUser: User, ticketId: string) {
   if (!ticket) {
     throw AppError.notFound("Ticket not found");
   }
-  if (ticket.status === "CLOSED") {
-    throw AppError.forbidden("Closed tickets cannot receive new comments");
-  }
   if (!canRequesterAccessTicket(currentUser, ticket)) {
     throw AppError.forbidden();
   }
@@ -38,6 +35,9 @@ export async function createComment(
   const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
   if (!ticket) {
     throw AppError.notFound("Ticket not found");
+  }
+  if (ticket.status === "CLOSED") {
+    throw AppError.forbidden("Closed tickets cannot receive new comments");
   }
 
   const isRequester = currentUser.role === "REQUESTER";
