@@ -159,8 +159,8 @@ export function TicketDetailPage() {
   );
   const canClaim = canManageAsTeamRequester && !ticket.assignedUser;
   const isFinalized = ticket.status === "RESOLVED" || ticket.status === "CLOSED";
-  const canEditTicketMeta = isAdmin && !isFinalized;
-  const canChangeStatus = (isAdmin || canManageAsTeamRequester) && !isFinalized;
+  const canEditTicketMeta = isAdmin && (!isFinalized || isMaster);
+  const canChangeStatus = (isAdmin || canManageAsTeamRequester) && (!isFinalized || isMaster);
 
   return (
     <div className="dashboard-page">

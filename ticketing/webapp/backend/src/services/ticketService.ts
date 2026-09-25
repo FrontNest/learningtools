@@ -119,7 +119,9 @@ export async function listTickets(currentUser: User, filters: ListTicketsFilters
   }
 
   if (filters.status) where.status = filters.status;
-  if (filters.openOnly) where.status = { in: ["NEW", "ASSIGNED", "IN_PROGRESS", "WAITING_FOR_USER", "WAITING_FOR_THIRD_PARTY"] };
+  if (filters.openOnly && !filters.status) {
+    where.status = { in: ["NEW", "ASSIGNED", "IN_PROGRESS", "WAITING_FOR_USER", "WAITING_FOR_THIRD_PARTY"] };
+  }
   if (filters.priority) where.priority = filters.priority;
   if (filters.assignedTeamId) where.assignedTeamId = filters.assignedTeamId;
   if (filters.assignedUserId) where.assignedUserId = filters.assignedUserId;
@@ -204,12 +206,14 @@ export async function updateTicketAsAdmin(admin: User, ticketId: string, input: 
   }
 
   const isReopening = input.status === "IN_PROGRESS";
-  if (ticket.status === "CLOSED") {
-    if (!admin.isMaster || !isReopening || Object.keys(input).length !== 1) {
+  const isFinalized = ticket.status === "RESOLVED" || ticket.status === "CLOSED";
+  const isMasterFinalizedUpdate = admin.isMaster && isFinalized;
+  if (ticket.status === "CLOSED" && !isMasterFinalizedUpdate) {
+    if (!isReopening || Object.keys(input).length !== 1) {
       throw AppError.forbidden("Closed tickets can only be reopened by the master administrator");
     }
   }
-  if (ticket.status === "RESOLVED") {
+  if (ticket.status === "RESOLVED" && !isMasterFinalizedUpdate) {
     if (!isReopening || Object.keys(input).length !== 1 || !await canAdminReopenResolvedTicket(admin, ticket)) {
       throw AppError.forbidden("Only the resolving Admin can reopen this ticket after a requester follow-up within five days");
     }
@@ -259,7 +263,8 @@ export async function updateTicketAsAdmin(admin: User, ticketId: string, input: 
       const now = new Date();
 
       data.status = input.status;
-      if (isReopening) {
+      const isLeavingFinalizedStatus = isFinalized && input.status !== "RESOLVED" && input.status !== "CLOSED";
+      if (isLeavingFinalizedStatus) {
         data.resolvedAt = null;
         data.autoCloseAt = null;
         data.closedAt = null;
@@ -267,9 +272,11 @@ export async function updateTicketAsAdmin(admin: User, ticketId: string, input: 
       if (input.status === "RESOLVED") {
         data.resolvedAt = now;
         data.autoCloseAt = new Date(now.getTime() + appConfig.autoCloseAfterDays * 24 * 60 * 60 * 1000);
+        data.closedAt = null;
       }
       if (input.status === "CLOSED") {
         data.closedAt = now;
+        data.autoCloseAt = null;
       }
 
       await writeAuditLog(tx, {

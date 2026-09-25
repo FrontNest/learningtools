@@ -19,7 +19,7 @@ export async function updateTicketAssignment(admin: User, ticketId: string, inpu
   if (!ticket) {
     throw AppError.notFound("Ticket not found");
   }
-  if (ticket.status === "RESOLVED" || ticket.status === "CLOSED") {
+  if ((ticket.status === "RESOLVED" || ticket.status === "CLOSED") && !admin.isMaster) {
     throw AppError.forbidden("Reopen the ticket before changing its assignment");
   }
 
