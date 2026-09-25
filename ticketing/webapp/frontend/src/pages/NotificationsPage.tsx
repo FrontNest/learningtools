@@ -28,7 +28,7 @@ export function NotificationsPage() {
     <div className="dashboard-page">
       <header>      
         <h1>Notifications</h1>
-        <Link to="/">Back to tickets</Link>
+        <Link id="nav-back-to-tickets-notifications" className="nav-button" data-name="back-to-tickets" to="/">Back to tickets</Link>
       </header>
       {loading && <p>Loading...</p>}
       {!loading && notifications.length === 0 && <p>No notifications yet.</p>}

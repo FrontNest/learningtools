@@ -122,12 +122,26 @@ body {
   align-items: center;
 }
 
-.button-link {
+.nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.5rem 1rem;
   background: var(--accent);
   color: #fff;
+  border: none;
   border-radius: 4px;
   text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-button:hover {
+  filter: brightness(0.92);
+}
+
+.nav-button:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
 }
 
 .ticket-table {

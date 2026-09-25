@@ -168,7 +168,7 @@ export function TicketDetailPage() {
       <h1>
         {ticket.ticketNumber} — {ticket.subject}
       </h1>
-      <Link to="/">Back to tickets</Link>
+      <Link id="nav-back-to-tickets-detail" className="nav-button" data-name="back-to-tickets" to="/">Back to tickets</Link>
     </header>
       <div className="ticket-meta">
         <span>Requester: {ticket.requester.displayName}</span>

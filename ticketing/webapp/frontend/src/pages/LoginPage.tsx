@@ -30,7 +30,7 @@ export function LoginPage() {
   return (
     <div className="auth-page">
       <form className="auth-form" onSubmit={handleSubmit}>
-        <h1>HUA-IT Ticketing Login</h1>
+        <h1>ITSD Ticketing Login</h1>
         <label htmlFor="email">Email</label>
         <input
           id="email"

@@ -52,7 +52,7 @@ export function ChangePasswordPage() {
       
       <form className="auth-form" onSubmit={handleSubmit}>
         <header>
-          <Link to="/">Back to tickets</Link>
+          <Link id="nav-back-to-tickets-password" className="nav-button" data-name="back-to-tickets" to="/">Back to tickets</Link>
         <h1>Change password</h1>
         </header>
         {user?.mustChangePassword && (

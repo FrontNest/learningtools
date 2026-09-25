@@ -58,11 +58,11 @@ export function TicketListPage() {
         </div>
         <div className="header-actions">
           <BrowserNotificationButton />
-          <Link to="/notifications">Notifications{unreadCount > 0 ? ` (${unreadCount})` : ""}</Link>
-          {isAdmin && <Link to="/admin/users">Manage users</Link>}
-          {isAdmin && <Link to="/admin/categories">Manage categories</Link>}
-          <Link to="/change-password">Change password</Link>
-          <Link to="/tickets/new" className="button-link">New ticket</Link>
+          <Link id="nav-notifications" className="nav-button" data-name="notifications" to="/notifications">Notifications{unreadCount > 0 ? ` (${unreadCount})` : ""}</Link>
+          {isAdmin && <Link id="nav-manage-users" className="nav-button" data-name="manage-users" to="/admin/users">Manage users</Link>}
+          {isAdmin && <Link id="nav-manage-categories" className="nav-button" data-name="manage-categories" to="/admin/categories">Manage categories</Link>}
+          <Link id="nav-change-password" className="nav-button" data-name="change-password" to="/change-password">Change password</Link>
+          <Link id="nav-new-ticket" className="nav-button" data-name="new-ticket" to="/tickets/new">New ticket</Link>
           <button onClick={() => logout()}>Sign out</button>
         </div>
       </header>

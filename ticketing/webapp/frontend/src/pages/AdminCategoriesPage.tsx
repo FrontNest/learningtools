@@ -84,7 +84,7 @@ export function AdminCategoriesPage() {
     <div className="dashboard-page">
       <header>
         <h1>Manage categories</h1>
-        <Link to="/">Back to tickets</Link>
+        <Link id="nav-back-to-tickets-categories" className="nav-button" data-name="back-to-tickets" to="/">Back to tickets</Link>
       </header>
 
       {notice && <p className="hint">{notice}</p>}
