@@ -382,9 +382,18 @@ select option:checked {
   gap: 1rem;
 }
 
+.notification-list .notification-read {
+  color: #456173;
+  background: #cbd9e1;
+  border-color: #b1c4cf;
+}
+
 .notification-unread {
+  color: #1d455e;
+  background: #f1f9fc !important;
   font-weight: 600;
-  border-left: 3px solid var(--accent) !important;
+  border-color: #b5d9ea;
+  border-left: 3px solid #397b9c !important;
 }
 
 .comment-list {
