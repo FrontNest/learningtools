@@ -13,6 +13,7 @@ export function NotificationsPage() {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [sortOrder, setSortOrder] = useState("newest");
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({ unread: true, read: false });
 
   useEffect(() => {
     fetchNotifications()
@@ -114,7 +115,12 @@ export function NotificationsPage() {
       )}
       {!loading && notifications.length > 0 && filteredNotifications.length === 0 && <p className="hint">No notifications match these filters.</p>}
       {notificationGroups.map((group) => (
-        <details key={group.id} className="notification-group" defaultOpen={group.defaultOpen}>
+        <details
+          key={group.id}
+          className="notification-group"
+          open={expandedGroups[group.id] ?? group.defaultOpen}
+          onToggle={(event) => setExpandedGroups((current) => ({ ...current, [group.id]: event.currentTarget.open }))}
+        >
           <summary>
             <span>{group.label}</span>
             <span className="notification-group-count">{group.notifications.length}</span>
