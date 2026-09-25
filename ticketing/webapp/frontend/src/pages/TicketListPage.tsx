@@ -63,7 +63,7 @@ export function TicketListPage() {
           {isAdmin && <Link id="nav-manage-categories" className="nav-button" data-name="manage-categories" to="/admin/categories">Manage categories</Link>}
           <Link id="nav-change-password" className="nav-button" data-name="change-password" to="/change-password">Change password</Link>
           <Link id="nav-new-ticket" className="nav-button" data-name="new-ticket" to="/tickets/new">New ticket</Link>
-          <button onClick={() => logout()}>Sign out</button>
+          <button className="signOutButton" onClick={() => logout()}>Sign out</button>
         </div>
       </header>
 

@@ -103,7 +103,7 @@ export function AdminCategoriesPage() {
             <option key={category.id} value={category.id}>{category.code} — {category.name}</option>
           ))}
         </select>
-        <button type="submit">Create category</button>
+        <button className="createButton" type="submit">Create category</button>
       </form>
 
       <h2>Categories</h2>
@@ -127,9 +127,9 @@ export function AdminCategoriesPage() {
               <td>{category.active ? "Active" : "Inactive"}</td>
               <td>
                 {editingId === category.id ? (
-                  <><button onClick={() => saveEditing(category)}>Save</button>{" "}<button onClick={() => setEditingId(null)}>Cancel</button></>
-                ) : <button onClick={() => startEditing(category)}>Edit</button>}{" "}
-                <button onClick={() => toggleActive(category)}>{category.active ? "Deactivate" : "Activate"}</button>
+                  <><button className="saveButton" onClick={() => saveEditing(category)}>Save</button>{" "}<button className="cancelButton" onClick={() => setEditingId(null)}>Cancel</button></>
+                ) : <button className="editButton" onClick={() => startEditing(category)}>Edit</button>}{" "}
+                <button className="statusButton" onClick={() => toggleActive(category)}>{category.active ? "Deactivate" : "Activate"}</button>
               </td>
             </tr>
           ))}

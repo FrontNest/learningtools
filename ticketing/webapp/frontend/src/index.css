@@ -122,7 +122,16 @@ body {
   align-items: center;
 }
 
-.nav-button {
+.nav-button,
+.editButton,
+.statusButton,
+.resetPasswordButton,
+.deleteButton,
+.createButton,
+.saveButton,
+.cancelButton,
+.signInButton,
+.signOutButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -135,11 +144,29 @@ body {
   cursor: pointer;
 }
 
-.nav-button:hover {
+.nav-button:hover,
+.editButton:hover,
+.statusButton:hover,
+.resetPasswordButton:hover,
+.deleteButton:hover,
+.createButton:hover,
+.saveButton:hover,
+.cancelButton:hover,
+.signInButton:hover,
+.signOutButton:hover {
   filter: brightness(0.92);
 }
 
-.nav-button:focus-visible {
+.nav-button:focus-visible,
+.editButton:focus-visible,
+.statusButton:focus-visible,
+.resetPasswordButton:focus-visible,
+.deleteButton:focus-visible,
+.createButton:focus-visible,
+.saveButton:focus-visible,
+.cancelButton:focus-visible,
+.signInButton:focus-visible,
+.signOutButton:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: 2px;
 }

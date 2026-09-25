@@ -218,7 +218,7 @@ export function AdminUsersPage() {
           ))}
         </select>
 
-        <button type="submit" disabled={creating}>
+        <button className="createButton" type="submit" disabled={creating}>
           {creating ? "Creating..." : "Create user"}
         </button>
       </form>
@@ -278,17 +278,17 @@ export function AdminUsersPage() {
               <td>
                 {editingUserId === u.id ? (
                   <>
-                    <button onClick={() => saveUserDetails(u)}>Save</button>{" "}
-                    <button onClick={() => setEditingUserId(null)}>Cancel</button>
+                    <button className="saveButton" onClick={() => saveUserDetails(u)}>Save</button>{" "}
+                    <button className="cancelButton" onClick={() => setEditingUserId(null)}>Cancel</button>
                   </>
                 ) : (
-                  <button onClick={() => startEditing(u)}>Edit</button>
+                  <button className="editButton" onClick={() => startEditing(u)}>Edit</button>
                 )}{" "}
                 {!u.isMaster && (
                   <>
-                    <button onClick={() => handleToggleActive(u)}>{u.active ? "Deactivate" : "Activate"}</button>{" "}
-                    <button onClick={() => handleResetPassword(u)}>Reset password</button>{" "}
-                    <button onClick={() => handleDelete(u)}>Delete</button>
+                    <button className="statusButton" onClick={() => handleToggleActive(u)}>{u.active ? "Deactivate" : "Activate"}</button>{" "}
+                    <button className="resetPasswordButton" onClick={() => handleResetPassword(u)}>Reset password</button>{" "}
+                    <button className="deleteButton" onClick={() => handleDelete(u)}>Delete</button>
                   </>
                 )}
               </td>

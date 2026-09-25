@@ -100,7 +100,7 @@ export function ChangePasswordPage() {
             Cancel
           </button>
         )}
-        <button type="button" onClick={() => logout()}>
+        <button className="signOutButton" type="button" onClick={() => logout()}>
           Sign out
         </button>
       </form>

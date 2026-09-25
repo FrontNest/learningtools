@@ -92,7 +92,7 @@ export function NewTicketPage() {
     <div className="dashboard-page">
       <header>
         <h1>New ticket</h1>
-        <h3><Link id="nav-back-to-tickets-new" className="nav-button" data-name="back-to-tickets" to="/">Back to tickets</Link></h3>
+        <Link id="nav-back-to-tickets-new" className="nav-button" data-name="back-to-tickets" to="/">Back to tickets</Link>
       </header>
       <form className="ticket-form" onSubmit={handleSubmit}>
         <label htmlFor="subject">Subject</label>

@@ -49,7 +49,7 @@ export function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
         />
         {error && <p className="form-error">{error}</p>}
-        <button type="submit" disabled={submitting}>
+        <button className="signInButton" type="submit" disabled={submitting}>
           {submitting ? "Signing in..." : "Sign in"}
         </button>
       </form>
