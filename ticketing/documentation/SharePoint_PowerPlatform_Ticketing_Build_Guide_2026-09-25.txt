@@ -1,6 +1,44 @@
 SHAREPOINT + POWER PLATFORM TICKETING BUILD GUIDE
 ==================================================
+Updated todo list
 
+I'll review the existing ticketing specification and identify which SharePoint/Power Platform capabilities can faithfully replace the current backend, then create a practical build guide and a Copilot prompt suited to the click-based tools you have.
+
+
+
+Fetched 4 resources
+
+A gyakorlati út a sima SharePoint-lista űrlap helyett egy SharePoint site + Microsoft Lists + beágyazott Power Apps canvas app + Power Automate felépítés. Ez tudja legjobban leképezni a mostani jogosultságokat és a bonyolult resolved/reopen szabályt; a kattintgatós folyamatokhoz részletes trigger/action/condition lépéseket is beleírok.
+
+Generating patch (821 lines) in 
+
+
+```
+
+```
+Elkészült az új Power Platform build guide: tartalmazza a javasolt architektúrát, listák mezőit, jogosultsági döntéseket, a hat konkrét folyamat lépéseit és a több lépcsős Copilot promptokat. Most ellenőrzöm, hogy a dokumentum teljesen létrejött és a kritikus fejezetek benne vannak.
+
+Ran terminal command:  test -s /c/Users/lol/______ORSI/GitHub/FrontnestStudio/ticketing/documentation/SharePoint_PowerPlatform_Ticketing_Build_Guide_2026-09-25.txt && grep -nE '^(0|1|2|3|4|5|6|7|8|9|10|11)\. ' /c/Users/lol/______ORSI/GitHub/FrontnestStudio/ticketing/documentation/SharePoint_PowerPlatform_Ticketing_Build_Guide_2026-09-25.txt | wc -l && wc -l /c/Users/lol/______ORSI/GitHub/FrontnestStudio/ticketing/documentation/SharePoint_PowerPlatform_Ticketing_Build_Guide_2026-09-25.txt
+
+Igen. Elkészítettem a részletes, lépésről lépésre használható SharePoint/Power Platform építési útmutatót:
+
+`SharePoint_PowerPlatform_Ticketing_Build_Guide_2026-09-25.txt`
+
+Tartalmazza:
+- a javasolt SharePoint Site + Lists + Canvas App + Power Automate architektúrát;
+- az Entra security groupokat;
+- minden szükséges lista mezőit, lookup kapcsolatait és indexeit;
+- a jogosultsági modellt, külön kiemelve, hogy a Power Apps UI elrejtése nem biztonsági védelem;
+- a ticket számozás, státuszváltozás, komment, automatikus zárás és controlled reopen flow-k konkrét Power Automate lépéseit;
+- Power Fx mintákat a kategória-cascade-hoz, role checkhez és `REOPEN` gombhoz;
+- több, kis lépésekre bontott Copilot promptot;
+- 12 pontos tesztlistát.
+
+A dokumentum 817 soros, és ellenőriztem, hogy minden fő fejezet benne van.
+
+A lényegi javaslatom: ne sima SharePoint list formokat építs, hanem egy beágyazott Power Apps Canvas Appot. A mostani rendszer resolved/reopen, auditlog és jogosultsági szabályai így valósíthatók meg kezelhetően.
+
+--------------------------------
 Purpose
 -------
 This is a practical, click-by-click build specification for recreating the
