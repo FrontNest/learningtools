@@ -44,6 +44,7 @@ export interface TicketFilters {
   assignedTeamId?: string;
   assignedUserId?: string;
   unassigned?: boolean;
+  openOnly?: boolean;
   search?: string;
   createdByMe?: boolean;
   assignedToMe?: boolean;

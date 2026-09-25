@@ -25,17 +25,17 @@ export function AdminSummaryBar({
   if (!summary) return null;
 
   const cards: Card[] = [
-    { label: "Total open", value: summary.totalOpen, filters: {} },
-    { label: "Unassigned", value: summary.unassigned, filters: { unassigned: true } },
-    { label: "High priority", value: summary.highPriority, filters: { priority: "HIGH" } },
-    { label: "Critical priority", value: summary.criticalPriority, filters: { priority: "CRITICAL" } },
-    { label: "Waiting for User", value: summary.waitingForUser, filters: { status: "WAITING_FOR_USER" } },
+    { label: "Active work", value: summary.totalOpen, filters: { openOnly: true } },
+    { label: "Unassigned", value: summary.unassigned, filters: { unassigned: true, openOnly: true } },
+    { label: "High priority", value: summary.highPriority, filters: { priority: "HIGH", openOnly: true } },
+    { label: "Critical priority", value: summary.criticalPriority, filters: { priority: "CRITICAL", openOnly: true } },
+    { label: "Waiting for User", value: summary.waitingForUser, filters: { status: "WAITING_FOR_USER", openOnly: true } },
     {
       label: "Waiting for 3rd Party",
       value: summary.waitingForThirdParty,
-      filters: { status: "WAITING_FOR_THIRD_PARTY" },
+      filters: { status: "WAITING_FOR_THIRD_PARTY", openOnly: true },
     },
-    { label: "My assigned", value: summary.myAssigned, filters: { assignedUserId: currentUserId } },
+    { label: "My active", value: summary.myAssigned, filters: { assignedUserId: currentUserId, openOnly: true } },
   ];
 
   return (
@@ -50,9 +50,9 @@ export function AdminSummaryBar({
         <button
           key={t.teamId}
           className="summary-card"
-          onClick={() => onFilter({ assignedTeamId: t.teamId })}
+          onClick={() => onFilter({ assignedTeamId: t.teamId, openOnly: true })}
         >
-          <span className="summary-label">{t.teamName} queue: </span>
+          <span className="summary-label">{t.teamName} active: </span>
           <span className="summary-value">{t.count}</span>
           
         </button>

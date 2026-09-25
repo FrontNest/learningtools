@@ -25,12 +25,12 @@ export async function getDashboardSummary(admin: User) {
     recentlyUpdated,
   ] = await Promise.all([
     prisma.ticket.count({ where: { status: { in: [...OPEN_STATUSES] } } }),
-    prisma.ticket.count({ where: { assignedTeamId: null, assignedUserId: null } }),
+    prisma.ticket.count({ where: { assignedTeamId: null, assignedUserId: null, status: { in: [...OPEN_STATUSES] } } }),
     prisma.ticket.count({ where: { priority: "HIGH", status: { in: [...OPEN_STATUSES] } } }),
     prisma.ticket.count({ where: { priority: "CRITICAL", status: { in: [...OPEN_STATUSES] } } }),
     prisma.ticket.count({ where: { status: "WAITING_FOR_USER" } }),
     prisma.ticket.count({ where: { status: "WAITING_FOR_THIRD_PARTY" } }),
-    prisma.ticket.count({ where: { assignedUserId: admin.id } }),
+    prisma.ticket.count({ where: { assignedUserId: admin.id, status: { in: [...OPEN_STATUSES] } } }),
     prisma.team.findMany({ where: { active: true } }),
     prisma.ticket.findMany({
       include: ticketInclude,
@@ -43,7 +43,7 @@ export async function getDashboardSummary(admin: User) {
     teams.map(async (team) => ({
       teamId: team.id,
       teamName: team.name,
-      count: await prisma.ticket.count({ where: { assignedTeamId: team.id } }),
+      count: await prisma.ticket.count({ where: { assignedTeamId: team.id, status: { in: [...OPEN_STATUSES] } } }),
     }))
   );
 

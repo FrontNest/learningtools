@@ -96,6 +96,7 @@ interface ListTicketsFilters {
   categoryId?: string;
   search?: string;
   unassigned?: boolean;
+  openOnly?: boolean;
   createdFrom?: Date;
   createdTo?: Date;
   createdByMe?: boolean;
@@ -118,6 +119,7 @@ export async function listTickets(currentUser: User, filters: ListTicketsFilters
   }
 
   if (filters.status) where.status = filters.status;
+  if (filters.openOnly) where.status = { in: ["NEW", "ASSIGNED", "IN_PROGRESS", "WAITING_FOR_USER", "WAITING_FOR_THIRD_PARTY"] };
   if (filters.priority) where.priority = filters.priority;
   if (filters.assignedTeamId) where.assignedTeamId = filters.assignedTeamId;
   if (filters.assignedUserId) where.assignedUserId = filters.assignedUserId;

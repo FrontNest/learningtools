@@ -35,6 +35,7 @@ export const listTicketsQuerySchema = z.object({
   categoryId: z.string().uuid().optional(),
   search: z.string().trim().max(200).optional(),
   unassigned: z.coerce.boolean().optional(),
+  openOnly: z.coerce.boolean().optional(),
   createdFrom: z.coerce.date().optional(),
   createdTo: z.coerce.date().optional(),
   createdByMe: z.coerce.boolean().optional(),
