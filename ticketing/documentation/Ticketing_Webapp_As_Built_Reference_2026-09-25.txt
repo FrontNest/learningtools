@@ -1,0 +1,476 @@
+IT SERVICE DESK TICKETING WEBAPP - AS-BUILT RECONSTRUCTION REFERENCE
+=====================================================================
+
+Purpose
+-------
+This document describes the currently implemented standalone internal IT
+service-desk application. It is intended to let an AI or engineering team
+recreate equivalent behavior on another system. It describes actual product
+behavior and implementation contracts, not merely a future plan.
+
+The application manages internal IT tickets, user/admin accounts, teams,
+three-level category trees, comments, worklogs, attachments, audit history,
+notifications, and automatic ticket closure.
+
+
+1. TARGET ARCHITECTURE
+----------------------
+
+Current stack:
+- Frontend: React 19, TypeScript, Vite, React Router, Axios.
+- Backend: Node.js, TypeScript, Express 4, Zod validation.
+- Database: SQLite through Prisma 5. The logical design must remain portable
+  to PostgreSQL or SQL Server.
+- Authentication: email/password with bcrypt password hashes and an httpOnly
+  server-side session cookie (express-session). Do not trust role data sent
+  from a client.
+- Storage: attachments are files on disk. The database stores only metadata
+  and a generated relative storage key.
+- Jobs: node-cron runs automatic closure every 15 minutes in the backend
+  process.
+
+Project layout:
+- ticketing/webapp/frontend: React client.
+- ticketing/webapp/backend: Express API, Prisma schema and local data.
+- ticketing/documentation: original specifications and this as-built document.
+
+Development addresses:
+- API: http://localhost:4000
+- Vite frontend: http://localhost:5173, proxying /api to the backend.
+
+LAN/single-origin mode:
+- Build the frontend, configure SERVE_FRONTEND_DIST=../frontend/dist, then
+  run the backend. Express serves the SPA and API on one port (normally 4000).
+- Plain HTTP is acceptable only for a temporary internal demo. Long-lived
+  deployments must use TLS and COOKIE_SECURE=true.
+
+
+2. CONFIGURATION AND SECURITY BASELINE
+--------------------------------------
+
+Environment variables (backend/.env):
+- NODE_ENV (development by default)
+- PORT (4000 by default)
+- SESSION_SECRET (mandatory, long random secret)
+- DATABASE_URL (SQLite: file:./data/dev.db)
+- UPLOAD_DIR (default ./data/uploads)
+- MAX_ATTACHMENT_SIZE_MB (default 10)
+- FRONTEND_ORIGIN (default http://localhost:5173)
+- DEVICE_INVENTORY_CSV_PATH (CSV inventory input)
+- COOKIE_SECURE (true only behind HTTPS)
+- SERVE_FRONTEND_DIST (optional built SPA path)
+- SEED_ADMIN_PASSWORD and MASTER_USER_PASSWORD only for seeding
+
+Non-secret app settings are in backend/config/app.config.json:
+- appName, appShortName, favicon, supportContact
+- ticketNumberPrefix (default TCK)
+- autoCloseAfterDays (default 5)
+- worklogMaxLines and worklogMaxChars
+- allowed attachment extensions
+- deviceProvider (INVENTORY currently)
+- predefined IT teams
+
+Security requirements:
+- Hash passwords with bcrypt (12 rounds in the seed implementation).
+- Never expose passwordHash in API responses.
+- Regenerate the session after login to prevent session fixation.
+- Use httpOnly session cookies; use Secure cookies under HTTPS.
+- Use Helmet, CORS limited to FRONTEND_ORIGIN in split dev mode, input
+  validation, route authorization and login rate limiting.
+- Any current user must be reloaded from the database for protected requests;
+  inactive accounts become unauthorized and their sessions are destroyed.
+- A frontend control is not authorization. Every permission below must be
+  enforced by backend services/routes too.
+
+
+3. ROLES AND VISIBILITY
+-----------------------
+
+Role values:
+- REQUESTER
+- ADMIN
+
+Additionally, User.isMaster is a separate boolean. A master is an ADMIN with
+additional irreversible capabilities. It is not a third general role.
+
+Requester visibility:
+- Can see tickets they created.
+- If the requester belongs to a team, can also see tickets assigned to that
+  team where assignedUserId is null or equals that user.
+- Cannot see internal comments.
+
+Admin visibility:
+- Can see all tickets.
+- Can manage ticket metadata and assignments while a ticket is not finalized.
+
+Master-only operations:
+- Permanently delete a ticket and all dependent data/files.
+- Reopen a CLOSED ticket.
+
+User administration must protect master accounts from deletion or demotion.
+Users with history should normally be deactivated rather than hard-deleted.
+
+
+4. DATA MODEL
+-------------
+
+Use UUID primary keys and createdAt/updatedAt timestamps where shown.
+
+User
+- id, email (unique), displayName, department?, jobTitle?
+- passwordHash, mustChangePassword, role, isMaster, teamId?, active
+- relations: requested tickets, assigned tickets, comments, worklogs,
+  uploaded attachments, acted audit logs, notifications, login attempts.
+
+Team
+- id, name (unique), type (REQUESTER_TEAM or IT_TEAM), active.
+- relations: members, assigned tickets, requester-team tickets.
+
+Category
+- id, parentId? self-relation, code (unique), name, active.
+- Hierarchical data, no fixed schema level limit. The ticket UI currently
+  presents three levels: top category -> problem category -> subcategory.
+- Ticket category should be a leaf whenever a third-level option exists.
+
+Device
+- id, source, deviceName, primaryUserEmail?, Entra/Intune identifiers,
+  serialNumber?, manufacturer?, model?, OS fields, compliance/management
+  state, lastCheckIn?, IP address and timestamps.
+
+Ticket
+- id, ticketNumber (unique, TCK-YYYY-0000001 style)
+- requesterId, requesterTeamId?
+- subject, description, categoryId, otherCategoryDescription?
+- priority: LOW | NORMAL | HIGH | CRITICAL
+- status: NEW | ASSIGNED | IN_PROGRESS | WAITING_FOR_USER |
+  WAITING_FOR_THIRD_PARTY | RESOLVED | CLOSED
+- assignedTeamId?, assignedUserId?
+- deviceId?, otherDeviceDescription?
+- resolvedAt?, autoCloseAt?, closedAt?, createdAt, updatedAt.
+
+TicketDeviceSnapshot
+- One row per ticket when an inventory device is selected at creation.
+- Stores all relevant device attributes at creation time, preserving historical
+  facts even when inventory data later changes.
+
+Comment
+- ticketId, authorId, type PUBLIC | INTERNAL, text, createdAt.
+
+Worklog
+- ticketId, adminId, durationMinutes, description, createdAt.
+
+Attachment
+- ticketId, uploadedById, originalFileName, mimeType, fileSize, storageKey,
+  createdAt.
+- storageKey format: tickets/<ticket-id>/<generated-uuid>.<extension>.
+
+AuditLog
+- ticketId?, actorId? (null means SYSTEM), action, oldValue?, newValue?,
+  details?, createdAt.
+- Append-only for normal operations. Store human-readable category names for
+  new CATEGORY_CHANGED records. When rendering old UUID-based category audit
+  entries, translate UUID values to the current category names if possible.
+
+Notification
+- ticketId?, recipientId, type, status (PENDING/SENT/FAILED), message,
+  createdAt, readAt?, errorMessage?.
+- In this local MVP, notifications are in-app database rows. No outbound email.
+
+LoginAttempt
+- userId?, email, success, ipAddress?, createdAt.
+
+TicketSequence
+- year primary key and lastNumber. Increment inside a transaction to produce
+  concurrency-safe per-year ticket numbers.
+
+
+5. CATEGORIES AND TICKET CREATION
+---------------------------------
+
+Seeded root groups:
+- Hardware
+- Software
+- Other
+
+Seeded examples include hardware devices, Microsoft Teams, Outlook, Microsoft
+365, Windows, Network/VPN, Access/Permissions and Security. Security has
+children including Suspicious email, Phishing suspicion, Lost/stolen device,
+Password problem, MFA, Virus/malware suspicion and Security incident.
+
+The new-ticket form must show a cascade:
+1. Category group (root): Software / Hardware / Other.
+2. Problem category: direct child of the root, for example Security.
+3. Problem subcategory: child of the selected problem category, when any.
+
+On parent selection, auto-select the first child/leaf. Send the deepest
+selected category ID to the API. If no suitable predefined category applies,
+the user can choose Other and must provide otherCategoryDescription.
+
+Required creation fields:
+- subject (1..200 characters)
+- description (1..10000 characters)
+- categoryId (UUID)
+- priority
+- either deviceId or otherDeviceDescription (1..500 characters)
+
+Validate that the selected category is active. If a device is chosen, validate
+that it exists and store its snapshot.
+
+
+6. TICKET WORKFLOW AND FINALIZATION RULES
+-----------------------------------------
+
+Progress display mapping:
+- NEW: 0 percent
+- ASSIGNED: 10 percent
+- IN_PROGRESS / WAITING_FOR_USER / WAITING_FOR_THIRD_PARTY: 50 percent
+- RESOLVED: 90 percent
+- CLOSED: 100 percent
+
+Assignments:
+- An admin can set/clear the assigned team and assigned admin.
+- An individually assigned admin must be active, have role ADMIN, and belong
+  to the selected team.
+- Assigning a team to a NEW ticket automatically changes it to ASSIGNED.
+- A requester-team user can claim a visible unassigned ticket from their own
+  team queue; they cannot claim finalized tickets.
+
+Resolved workflow:
+- An admin changing status to RESOLVED sets resolvedAt=now and
+  autoCloseAt=now + autoCloseAfterDays (normally 5 days).
+- A requester can add a public comment to a RESOLVED ticket. A comment within
+  the original five-day resolved window resets autoCloseAt to now + five days.
+- RESOLVED ticket metadata is locked in the UI and backend: no category,
+  priority, assignment, team or normal status edits.
+- The admin who made the latest RESOLVED status change is the resolver.
+- Only that resolver can reopen a RESOLVED ticket, only if the original
+  requester wrote a comment after resolution and within five days of that
+  resolution. The requester complaint is intentionally reviewed by the admin;
+  the text does not need automatic sentiment analysis.
+- The REOPEN control appears beside the displayed RESOLVED status only when
+  the backend supplies canReopen=true for the current user.
+- Reopening changes status to IN_PROGRESS and clears resolvedAt, autoCloseAt
+  and closedAt. Normal admin editing is then enabled again.
+
+Closed workflow:
+- A scheduled job runs every 15 minutes. It changes RESOLVED tickets with
+  autoCloseAt <= now to CLOSED and writes AUTOMATIC_CLOSURE audit data.
+- CLOSED tickets are fully locked: no ticket metadata/assignment/status change
+  and no new comments.
+- Only a master admin may reopen CLOSED. This also sets IN_PROGRESS and clears
+  resolvedAt, autoCloseAt and closedAt.
+- A requester who needs new work after final closure can create a new ticket.
+
+Ticket deletion:
+- DELETE /api/tickets/:id is hard delete and master-only.
+- Delete TicketDeviceSnapshot, comments, worklogs, attachments, audit logs,
+  notifications and the ticket in one database transaction.
+- After database deletion, delete each attachment file under UPLOAD_DIR, but
+  only after validating that its resolved path remains inside UPLOAD_DIR.
+- The frontend must ask for explicit irreversible-action confirmation.
+
+
+7. COMMENTS, WORKLOGS, ATTACHMENTS AND AUDIT
+---------------------------------------------
+
+Comments:
+- Requesters can only create PUBLIC comments and only on tickets they can see.
+- Admins can create PUBLIC comments and INTERNAL notes.
+- Requesters never receive or view INTERNAL notes.
+- CLOSED tickets reject comments from everyone.
+- Record COMMENT_ADDED or INTERNAL_NOTE_ADDED audit entries.
+
+Worklogs:
+- Admin-only.
+- Enforce configured duration/line/character restrictions.
+- Record a worklog audit entry.
+
+Attachments:
+- Validate configured filename extensions, MIME type rules and max size.
+- Store uploads under UPLOAD_DIR using generated UUID filenames; never trust
+  the original filename for the on-disk path.
+- Database stores only original name, MIME type, size and storageKey.
+- Download endpoint authorizes the current user against the ticket before
+  resolving and serving the file.
+- Record ATTACHMENT_UPLOADED audit data.
+
+Audit actions to support include:
+- TICKET_CREATED
+- CATEGORY_CHANGED, CATEGORY_DESCRIPTION_CHANGED
+- PRIORITY_CHANGED, STATUS_CHANGED, ASSIGNMENT_CHANGED
+- REQUESTER_CLAIMED_TICKET
+- COMMENT_ADDED, INTERNAL_NOTE_ADDED
+- ATTACHMENT_UPLOADED, worklog-related action
+- AUTO_CLOSE_TIMER_RESET, AUTOMATIC_CLOSURE
+
+Audit log is admin-only in the UI/API. Render: localized timestamp, actor
+display name (or SYSTEM), action, and old/new values. For category changes,
+names must be displayed instead of UUIDs.
+
+
+8. NOTIFICATIONS
+----------------
+
+Create in-app notification rows for meaningful events, avoiding redundant
+noise. Existing behavior:
+- Assignment/reassignment: notify the newly assigned individual admin. If only
+  a team is assigned, notify active admins in that team.
+- Requester comment: notify the current ticket recipients.
+- Requester comment on RESOLVED: additionally notify the resolving admin even
+  if assignment has since changed; message must make clear that reopening needs
+  review. Deduplicate recipients.
+- Admin public comment: notify the requester, unless the commenter is the
+  requester.
+- Status RESOLVED/CLOSED/other admin status changes: notify active requester.
+- Automatic closure: notify active requester.
+
+Notification page:
+- List the latest 50 notifications with ticket number, message, timestamp and
+  read/unread appearance.
+- Opening a notification marks it read and navigates to the ticket when it
+  still exists.
+
+Browser notifications:
+- Globally poll /api/notifications every 30 seconds for authenticated users.
+- Update the browser document title to "(n) HUA-IT Ticketing" for n unread
+  entries; restore the normal title when there are none.
+- Replace the favicon with a red, numbered badge when unread entries exist.
+  A web app cannot reliably set the browser's native tab-strip color.
+- Provide an explicit "Enable browser alerts" user-action button. Only after
+  the user grants Web Notifications permission, display desktop/browser alerts
+  for newly observed unread notification IDs. Clicking one focuses the window
+  and navigates to its ticket.
+- Web Notifications generally require HTTPS, except localhost. They should not
+  be expected to work reliably on plain HTTP LAN IP addresses.
+
+
+9. USER EXPERIENCE REQUIREMENTS
+-------------------------------
+
+Pages/routes:
+- /login: email/password login.
+- /change-password: current/new/confirmation and policy enforcement.
+- /: requester ticket sections or admin all-ticket dashboard and filters.
+- /tickets/new: creation form with category cascade/device input.
+- /tickets/:id: ticket detail, meta controls according to permissions,
+  comments, attachments, admin worklogs and audit log.
+- /notifications
+- /admin/users (admin only)
+- /admin/categories (admin only)
+
+Password fields:
+- Login and every change-password password field has an eye button.
+- Password text is shown only while the user holds the button down; hide it on
+  pointer/key release, pointer leave or cancellation.
+- Support mouse, touch, and Space/Enter keyboard hold. Provide accessible
+  title/aria label.
+
+Ticket detail controls:
+- Normal admins can edit category cascade, priority, status and assignment only
+  while not RESOLVED or CLOSED.
+- On RESOLVED/CLOSED show values as text rather than editable controls.
+- Place REOPEN next to status only if ticket.canReopen is true from API.
+- Show master-only Delete ticket control with confirmation.
+- Hide comment form on CLOSED tickets and display a brief explanatory message.
+
+
+10. API CONTRACT OVERVIEW
+-------------------------
+
+All API paths are rooted at /api. Use JSON except multipart attachment upload.
+All routes except login are authenticated as appropriate.
+
+Auth:
+- POST /auth/login { email, password } -> public user and session cookie.
+- POST /auth/logout -> 204.
+- GET /auth/me -> public user (include isMaster).
+- POST /auth/change-password { currentPassword, newPassword } -> 204.
+
+Tickets:
+- POST /tickets -> create.
+- GET /tickets -> filters: status, priority, assignedTeamId, assignedUserId,
+  categoryId, search, unassigned, createdFrom, createdTo, createdByMe,
+  assignedToMe.
+- GET /tickets/:id -> detailed ticket. Add boolean canReopen computed for the
+  current authenticated user.
+- PATCH /tickets/:id -> admin metadata/status update or limited requester-team
+  status handling. Enforce finalized workflow rules server-side.
+- PATCH /tickets/:id/assignment -> admin assignment change or permitted
+  requester-team self-claim.
+- DELETE /tickets/:id -> master-only hard delete, 204.
+
+Nested ticket resources:
+- GET/POST /tickets/:id/comments
+- GET/POST /tickets/:id/worklogs (admin operations)
+- GET/POST /tickets/:id/attachments, GET /tickets/:id/attachments/:attachmentId
+- GET /tickets/:id/audit (admin only)
+
+Reference/catalogue routes:
+- GET /categories (active categories, authenticated)
+- GET /teams
+- GET /admin/users?teamId=... (active admins, admin only)
+- GET /me/devices
+- Admin category CRUD under /admin/categories
+- User management under /admin/users or the app's user-management route
+- GET /dashboard/summary (admin dashboard counters)
+- GET /notifications and PATCH /notifications/:id/read
+- GET /health
+
+Return structured error JSON with a safe error message and correct status:
+400 invalid input, 401 unauthenticated, 403 forbidden, 404 absent, 409
+conflict. Never expose stack traces to clients.
+
+
+11. INITIAL SEED DATA
+---------------------
+
+Create IT teams SD and L2, the category hierarchy described above, and these
+development accounts:
+- admin.master@company.example: ADMIN, isMaster=true, SD team. Password from
+  MASTER_USER_PASSWORD (legacy default was ItSdMaster). No forced password
+  change in seed.
+- admin.sd@company.example: ADMIN, SD team.
+- admin.l2@company.example: ADMIN, L2 team.
+- requester.demo@company.example: REQUESTER.
+
+Non-master seeded accounts use SEED_ADMIN_PASSWORD or default ChangeMe123!,
+and mustChangePassword=true. Do not retain known default credentials in a
+production deployment.
+
+
+12. BUILD, RUN AND VALIDATION
+-----------------------------
+
+Backend:
+  npm install
+  npx prisma migrate dev
+  npm run build
+  npm start
+Development auto-restart:
+  npm run dev
+
+Frontend:
+  npm install
+  npm run build
+  npm run dev
+
+When serving a built frontend through the backend, each frontend source change
+requires rebuilding frontend before it is visible; backend TypeScript changes
+require npm run build and restarting npm start. In development, Vite hot
+reloads frontend changes and ts-node-dev restarts backend code.
+
+Minimum behavioral validation scenarios:
+1. Create a Software -> Security -> Phishing suspicion ticket and confirm the
+   leaf category saves.
+2. Assign it to an admin, confirm ASSIGNED and a notification.
+3. Resolve it; verify metadata is locked and requester gets status notification.
+4. Have requester comment within five days; verify resolver receives a
+   follow-up notification and can reopen, while other admins cannot.
+5. Close it or let auto-close run; verify no comments or edits are possible,
+   except master REOPEN.
+6. Attach/download a permitted image and verify a file exists under uploads
+   while Attachment stores only storageKey and metadata.
+7. Master-delete a test ticket and confirm dependent database rows and uploaded
+   files disappear.
+8. Enable browser alerts, create an unread notification as another user, and
+   confirm title/favicons update and a permitted desktop alert appears.
