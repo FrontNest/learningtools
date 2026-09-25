@@ -429,6 +429,13 @@ select option:checked {
   padding: 0 0.65rem 0.65rem;
 }
 
+.notification-bulk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+}
+
 .comment-list {
   list-style: none;
   padding: 0;

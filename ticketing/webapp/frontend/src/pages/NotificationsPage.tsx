@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { fetchNotifications, markNotificationRead } from "../lib/notificationApi";
+import { fetchNotifications, markNotificationRead, setAllNotificationsReadState } from "../lib/notificationApi";
 import type { AppNotification } from "../types/ticket";
 
 export function NotificationsPage() {
@@ -14,6 +14,7 @@ export function NotificationsPage() {
   const [dateTo, setDateTo] = useState("");
   const [sortOrder, setSortOrder] = useState("newest");
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({ unread: true, read: false });
+  const [updatingReadState, setUpdatingReadState] = useState(false);
 
   useEffect(() => {
     fetchNotifications()
@@ -28,6 +29,17 @@ export function NotificationsPage() {
     }
     if (notification.ticket) {
       navigate(`/tickets/${notification.ticket.id}`);
+    }
+  }
+
+  async function handleSetAllReadState(read: boolean) {
+    setUpdatingReadState(true);
+    try {
+      await setAllNotificationsReadState(read);
+      const readAt = read ? new Date().toISOString() : null;
+      setNotifications((current) => current.map((notification) => ({ ...notification, readAt })));
+    } finally {
+      setUpdatingReadState(false);
     }
   }
 
@@ -88,30 +100,36 @@ export function NotificationsPage() {
       {loading && <p>Loading...</p>}
       {!loading && notifications.length === 0 && <p>No notifications yet.</p>}
       {!loading && notifications.length > 0 && (
-        <div className="ticket-filters notification-filters">
-          <select value={readFilter} onChange={(event) => setReadFilter(event.target.value)}>
-            <option value="all">All notifications</option>
-            <option value="unread">Unread only</option>
-            <option value="read">Read only</option>
-          </select>
-          <input
-            type="search"
-            placeholder="Ticket number"
-            value={ticketNumberFilter}
-            onChange={(event) => setTicketNumberFilter(event.target.value)}
-          />
-          <input type="date" aria-label="Created from" value={dateFrom} onChange={(event) => setDateFrom(event.target.value)} />
-          <input type="date" aria-label="Created to" value={dateTo} onChange={(event) => setDateTo(event.target.value)} />
-          <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
-            <option value="newest">Newest first</option>
-            <option value="oldest">Oldest first</option>
-            <option value="ticket-ascending">Ticket number A-Z</option>
-            <option value="ticket-descending">Ticket number Z-A</option>
-            <option value="unread-first">Unread first</option>
-            <option value="read-first">Read first</option>
-          </select>
-          {hasFilters && <button className="link-button" onClick={clearFilters}>Clear filters</button>}
-        </div>
+        <>
+          <div className="notification-bulk-actions">
+            <button disabled={updatingReadState} onClick={() => void handleSetAllReadState(true)}>Mark all read</button>
+            <button disabled={updatingReadState} onClick={() => void handleSetAllReadState(false)}>Mark all unread</button>
+          </div>
+          <div className="ticket-filters notification-filters">
+            <select value={readFilter} onChange={(event) => setReadFilter(event.target.value)}>
+              <option value="all">All notifications</option>
+              <option value="unread">Unread only</option>
+              <option value="read">Read only</option>
+            </select>
+            <input
+              type="search"
+              placeholder="Ticket number"
+              value={ticketNumberFilter}
+              onChange={(event) => setTicketNumberFilter(event.target.value)}
+            />
+            <input type="date" aria-label="Created from" value={dateFrom} onChange={(event) => setDateFrom(event.target.value)} />
+            <input type="date" aria-label="Created to" value={dateTo} onChange={(event) => setDateTo(event.target.value)} />
+            <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="ticket-ascending">Ticket number A-Z</option>
+              <option value="ticket-descending">Ticket number Z-A</option>
+              <option value="unread-first">Unread first</option>
+              <option value="read-first">Read first</option>
+            </select>
+            {hasFilters && <button className="link-button" onClick={clearFilters}>Clear filters</button>}
+          </div>
+        </>
       )}
       {!loading && notifications.length > 0 && filteredNotifications.length === 0 && <p className="hint">No notifications match these filters.</p>}
       {notificationGroups.map((group) => (

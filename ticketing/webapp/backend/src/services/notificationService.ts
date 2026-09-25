@@ -64,3 +64,14 @@ export async function markNotificationRead(user: User, notificationId: string) {
   });
 }
 
+export async function setAllNotificationsReadState(user: User, read: boolean) {
+  const result = await prisma.notification.updateMany({
+    where: {
+      recipientId: user.id,
+      readAt: read ? null : { not: null },
+    },
+    data: { readAt: read ? new Date() : null },
+  });
+  return { updated: result.count };
+}
+
