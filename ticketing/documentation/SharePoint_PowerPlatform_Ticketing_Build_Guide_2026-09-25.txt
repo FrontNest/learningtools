@@ -1,0 +1,817 @@
+SHAREPOINT + POWER PLATFORM TICKETING BUILD GUIDE
+==================================================
+
+Purpose
+-------
+This is a practical, click-by-click build specification for recreating the
+current IT Service Desk ticketing application in Microsoft 365, using:
+
+- A dedicated SharePoint Team Site.
+- Microsoft Lists as the data store.
+- A Power Apps Canvas App as the real ticketing user interface, embedded in a
+  SharePoint page.
+- Power Automate cloud flows for server-like workflow, notifications, audit
+  records, ticket numbering and automatic closure.
+- Entra ID security groups for roles and administration.
+
+This is a rebuild, not a way to upload the React/Node application to
+SharePoint. The existing React frontend and Node/SQLite backend cannot simply
+run in SharePoint Online. SharePoint Lists, Power Apps and Power Automate
+replace them.
+
+IMPORTANT: Do not start by building a standard SharePoint list form. The
+ticket lifecycle, nested categories, role-based controls, audit log and
+reopen rule are complex enough to require a Canvas App. A customized List
+form is suitable only for a simple create/edit form, not the full application.
+
+
+0. REALISTIC SCOPE AND DECISIONS TO MAKE FIRST
+----------------------------------------------
+
+Recommended no/low-code architecture:
+
+    Entra groups
+          |
+    SharePoint site
+          |
+    Lists + document library <----> Power Automate flows
+          |
+    Canvas App embedded in a SharePoint page
+
+This design uses standard Microsoft 365 SharePoint, Power Apps and Power
+Automate connectors. Before building, ask the tenant Power Platform admin:
+
+1. Can makers create Canvas Apps and cloud flows in the target environment?
+2. Can the SharePoint, Office 365 Users, Office 365 Groups and Teams
+   connectors be used? These are normally standard connectors.
+3. Is a service account available as the owner of production flows? Use an
+   IT automation/service account, not a personal account, so flows do not
+   break when an employee leaves.
+4. Is sending Teams messages allowed? This is strongly preferred for real-time
+   alerts. SharePoint/Power Apps alone cannot reliably reproduce a red browser
+   tab or background desktop notification behavior.
+5. Is strict item-level ticket confidentiality required? If yes, plan and test
+   per-item permissions. Do not assume hiding controls in Power Apps secures a
+   SharePoint list.
+
+Start in a dedicated DEV site. Build and test there before repeating the
+setup in PROD. Use distinct flow names and a distinct service account in each
+environment.
+
+
+1. CREATE ENTRA ID SECURITY GROUPS
+----------------------------------
+
+Create these Entra security groups, preferably security groups rather than
+Microsoft 365 groups:
+
+- SG-ITSD-Masters
+  Master administrators. Small and tightly controlled.
+- SG-ITSD-Admins
+  All service-desk admins.
+- SG-ITSD-SD
+  SD team admins.
+- SG-ITSD-L2
+  L2 team admins.
+- SG-ITSD-Requesters
+  The pilot population or permitted requesters.
+- SG-ITSD-Flow-Owners (optional)
+  Controlled owner/co-owner access for the production flows.
+
+Add test users to every role. A master user must also be in SG-ITSD-Admins.
+
+Do not use a group display name as a system key. Record the group name and
+object ID in the project notes. Use email or Entra object ID for matching
+inside the app where possible.
+
+
+2. CREATE THE SHAREPOINT SITE AND PAGES
+---------------------------------------
+
+1. Create a new private Team Site named, for example, "IT Service Desk".
+2. In Site permissions:
+   - Put SG-ITSD-Masters in Site Owners.
+   - Put flow service account in Site Owners during setup; afterwards keep the
+     minimum necessary permission but ensure flows can create/update all lists.
+   - Do NOT broadly add all requesters as site Members if strict list access is
+     required. See Section 5 before setting requester permissions.
+3. Create these modern pages:
+   - Home: dashboard and embedded Canvas App.
+   - My Tickets: optional app-focused page.
+   - Administration: master/admin documentation and management links; only
+     visible to admins/masters.
+   - Help: simple requester instructions and support contact.
+4. Add a Power Apps web part to Home after the Canvas App exists.
+5. Do not expose raw operational lists in site navigation to requesters. The
+   Canvas App should be the primary user interface.
+
+
+3. CREATE SHAREPOINT LISTS AND LIBRARY
+--------------------------------------
+
+Use one list per business entity. Use these exact names initially to make the
+Power Apps formulas and flows easier to follow. You can change display names
+later, but record any changes.
+
+3.1 List: ITSD Tickets
+----------------------
+
+Keep the default ID column. Do not use the Title field as the ticket subject;
+rename the visible Title label to "Subject" or create a separate Subject field
+and hide Title. Recommended columns:
+
+- TicketNumber: Single line of text, unique values enabled if available.
+- Subject: Single line of text, required, max 200.
+- Description: Multiple lines of plain text, required.
+- Status: Choice, required. Choices:
+  NEW, ASSIGNED, IN_PROGRESS, WAITING_FOR_USER, WAITING_FOR_THIRD_PARTY,
+  RESOLVED, CLOSED. Default NEW.
+- Priority: Choice, required. LOW, NORMAL, HIGH, CRITICAL. Default NORMAL.
+- Requester: Person, required, single selection.
+- RequesterTeam: Single line of text or Lookup to ITSD Teams.
+- AssignedTeam: Lookup to ITSD Teams, optional, single selection.
+- AssignedAdmin: Person, optional, single selection.
+- CategoryLevel1: Lookup to ITSD Categories, optional.
+- CategoryLevel2: Lookup to ITSD Categories, optional.
+- CategoryLevel3: Lookup to ITSD Categories, optional.
+- CategoryLeaf: Lookup to ITSD Categories, required unless Other category is
+  selected. This is the canonical reporting/filtering category.
+- OtherCategoryDescription: Multiple lines of plain text, optional.
+- Device: Lookup to ITSD Devices, optional.
+- OtherDeviceDescription: Single line or multiple lines, optional.
+- ResolvedAt: Date and Time, optional.
+- ResolvedBy: Person, optional.
+- AutoCloseAt: Date and Time, optional.
+- ClosedAt: Date and Time, optional.
+- ReopenEligible: Yes/No, default No. Convenience field only; the flow/app
+  must calculate and enforce the actual rule.
+- LastLifecycleAction: Single line of text, optional. Used to avoid flow loops
+  if necessary.
+
+Enable attachments on this list if built-in list attachments are acceptable.
+They are stored as SharePoint files, not in a database column. This is the
+simplest first version and works with an Attachments control in Canvas Apps.
+
+If files must be managed independently, create the document library described
+in 3.7 instead. Do not implement both in the first version.
+
+Create indexes on Status, Requester, AssignedAdmin, AssignedTeam, TicketNumber,
+AutoCloseAt and Created. Create views for My Open Tickets, Team Queue, All
+Open, Resolved and Closed. Indexing protects the system from SharePoint list
+view threshold problems as item count grows.
+
+3.2 List: ITSD Categories
+-------------------------
+
+- Title: category name, required.
+- CategoryCode: Single line, required, unique (examples SW, SW.SECURITY,
+  SW.SECURITY.PHISHING).
+- ParentCategory: Lookup to ITSD Categories, optional.
+- Level: Number, required (1, 2 or 3).
+- Active: Yes/No, default Yes.
+- SortOrder: Number, optional.
+
+Seed root categories Hardware, Software and Other. Then seed level 2 and
+level 3 values. The existing system's category set can be copied from
+Ticketing_Webapp_As_Built_Reference_2026-09-25.txt.
+
+Examples:
+- Software (level 1)
+  - Security (level 2)
+    - Suspicious email (level 3)
+    - Phishing suspicion (level 3)
+    - Lost or stolen device (level 3)
+    - Password problem (level 3)
+    - Multi-factor authentication (level 3)
+    - Virus / malware suspicion (level 3)
+    - Security incident (level 3)
+- Hardware (level 1)
+  - Laptop / Desktop (level 2)
+    - Battery problem (level 3), Keyboard, Display / screen, etc.
+
+Index ParentCategory, Level and Active.
+
+3.3 List: ITSD Teams
+--------------------
+
+- Title: SD, L2, etc. Required and unique.
+- TeamType: Choice: IT_TEAM or REQUESTER_TEAM.
+- AdminGroupId: Single line text (Entra group object ID), optional but useful.
+- Active: Yes/No, default Yes.
+
+Create SD and L2. The app can map admin users to a team using a separate
+admin configuration list, which is simpler than dynamically resolving group
+membership on every screen.
+
+3.4 List: ITSD Admin Configuration
+-----------------------------------
+
+- Admin: Person, required, unique.
+- Team: Lookup to ITSD Teams, required.
+- IsMaster: Yes/No, default No.
+- Active: Yes/No, default Yes.
+
+Seed every admin and one or more masters. This list is the app's simple,
+auditable role mapping. Maintain it only from the Administration screen or by
+site owners. Do not let requesters edit it.
+
+3.5 List: ITSD Comments
+-----------------------
+
+- Ticket: Lookup to ITSD Tickets, required.
+- CommentText: Multiple lines of plain text, required.
+- CommentType: Choice: PUBLIC or INTERNAL. Default PUBLIC.
+- Author: Person, required.
+- CreatedAt: Date and Time, required.
+
+Use this separate list rather than multiline ticket comments so comments are
+immutable history. Requesters must never receive/show INTERNAL comments.
+Index Ticket, Author and CreatedAt.
+
+3.6 List: ITSD Worklogs
+-----------------------
+
+- Ticket: Lookup, required.
+- Admin: Person, required.
+- DurationMinutes: Number, required.
+- Description: Multiple lines plain text, required.
+- CreatedAt: Date and Time, required.
+
+Only admins may create worklogs. Index Ticket and CreatedAt.
+
+3.7 List: ITSD Audit Log
+-------------------------
+
+- Ticket: Lookup to ITSD Tickets, optional for system events.
+- Actor: Person, optional; blank means SYSTEM.
+- Action: Single line text, required.
+- OldValue: Multiple lines plain text, optional.
+- NewValue: Multiple lines plain text, optional.
+- Details: Multiple lines plain text, optional.
+- CreatedAt: Date and Time, required.
+
+Examples: TICKET_CREATED, CATEGORY_CHANGED, PRIORITY_CHANGED, STATUS_CHANGED,
+ASSIGNMENT_CHANGED, COMMENT_ADDED, INTERNAL_NOTE_ADDED, WORKLOG_ADDED,
+AUTO_CLOSE_TIMER_RESET, AUTOMATIC_CLOSURE.
+
+Store readable category names in category-change audit rows, not IDs.
+Make this list read-only for normal admins if possible; create via flows and
+trusted app logic only. Index Ticket and CreatedAt.
+
+3.8 List: ITSD Notifications
+-----------------------------
+
+- Recipient: Person, required.
+- Ticket: Lookup to ITSD Tickets, optional.
+- NotificationType: Choice/text, required.
+- Message: Multiple lines or single line text, required.
+- ReadAt: Date and Time, optional.
+- CreatedAt: Date and Time, required.
+- DeliveryStatus: Choice/text: SENT, PENDING, FAILED (optional for in-app).
+
+Index Recipient, ReadAt and CreatedAt.
+
+3.9 List: ITSD Ticket Sequence
+------------------------------
+
+- Title: Year, for example 2026. Unique.
+- LastNumber: Number, required, default 0.
+
+This preserves ticket numbers TCK-YYYY-0000001. The ticket creation flow must
+run with concurrency control set to 1, then read/update this row safely.
+
+3.10 List: ITSD Devices (optional first phase)
+------------------------------------------------
+
+Only create this if device lookup is needed immediately. Columns can mirror
+the existing inventory: DeviceName, PrimaryUserEmail, Manufacturer, Model,
+SerialNumber, OperatingSystem, Source, Active. If not needed, keep the
+OtherDeviceDescription field and add a device list later.
+
+3.11 Document library: ITSD Ticket Files (alternative to list attachments)
+---------------------------------------------------------------------------
+
+Use this only instead of built-in ticket attachments.
+- Add Ticket lookup/number metadata.
+- Create a folder per TicketNumber.
+- Upload only via a flow/app interface that validates filename/size and grants
+the correct permissions.
+
+The document library approach is more flexible and closer to the existing
+local-file architecture, but it takes more flow work. Start with built-in list
+attachments unless this flexibility is genuinely needed.
+
+
+4. DATA SEEDING ORDER
+---------------------
+
+1. Create ITSD Teams.
+2. Create ITSD Categories: all level 1 roots, then level 2 entries, then
+   level 3 entries because ParentCategory needs an existing item.
+3. Create ITSD Admin Configuration rows for master/admin test users.
+4. Add at least one requester test account.
+5. Add a Ticket Sequence row for the current year with LastNumber=0.
+6. Create test tickets only after flows are enabled.
+
+For bulk category entry, use the Grid view in Microsoft Lists or import a
+CSV. Check every ParentCategory lookup after import.
+
+
+5. PERMISSIONS: IMPORTANT SECURITY DESIGN
+-----------------------------------------
+
+There are two levels of protection:
+
+A. Canvas App visibility. Hide controls and filter data by current user.
+B. SharePoint permissions. This is the real data protection boundary.
+
+Do not rely on A alone. A requester who has broad list permissions may open
+the raw list URL or call SharePoint directly.
+
+Practical phased approach:
+
+Phase 1 pilot (fast):
+- Site owners/masters: Full Control.
+- Admin group: Edit/Contribute to operational lists.
+- Requester group: Add/edit access needed for Tickets and Comments.
+- Keep site/list navigation clean and use the Canvas App as the interface.
+- Use only a trusted internal pilot population. Document this as not strict
+  ticket-level confidentiality.
+
+Phase 2 strict visibility (required for production confidential tickets):
+- The ticket-creation flow breaks permission inheritance on each new ticket.
+- Grant the requester read/edit to their ticket, the assigned team/admins the
+  required access, and masters full access.
+- Update item permissions when team or assignee changes.
+- Grant corresponding limited access to linked comments/attachments, or keep
+  these lists inaccessible directly and show them through controlled flows.
+- Test that a requester cannot read another requester's ticket by URL,
+  list search, Power Apps, REST API or attachment link.
+
+Item-level permissions in SharePoint can become hard to maintain at very high
+volume. Establish expected ticket volume and retention before choosing it.
+If strict authorization and high volume are essential, Dataverse plus a
+model-driven/canvas app is a better long-term backend than SharePoint Lists.
+
+
+6. POWER AUTOMATE FLOWS - BUILD IN THIS ORDER
+---------------------------------------------
+
+Use the production service account connection for SharePoint/Teams actions.
+Name flows with a numeric prefix. Keep every flow's notes updated with owner,
+connections and purpose. Start each flow with a Compose named "Flow version"
+so it is easy to identify deployed revisions.
+
+6.1 Flow 01 - Ticket Created and Numbered
+------------------------------------------
+
+Name: ITSD-01-Ticket-Created
+Trigger: SharePoint - When an item is created (ITSD Tickets).
+
+Actions:
+1. Initialize variables:
+   - varYear = formatDateTime(utcNow(),'yyyy')
+   - varNextNumber (integer)
+   - varTicketNumber (string)
+2. Get items from ITSD Ticket Sequence with Filter Query:
+   Title eq '@{variables('varYear')}'
+   Limit the result to 1.
+3. Condition: was a sequence row found?
+   Yes:
+   - Set varNextNumber to add(int(first(body('Get_items')?['value'])?['LastNumber']),1).
+   - Update that sequence item LastNumber = varNextNumber.
+   No:
+   - Set varNextNumber = 1.
+   - Create sequence item: Title = varYear, LastNumber = 1.
+4. Compose varTicketNumber using:
+   concat('TCK-', variables('varYear'), '-', padLeft(string(variables('varNextNumber')), 7, '0'))
+5. Update the triggering Ticket:
+   TicketNumber = varTicketNumber
+   Status = NEW
+   Requester = Created By or the Requester field set by the app
+6. Create ITSD Audit Log item:
+   Ticket = ID, Actor = Requester, Action = TICKET_CREATED,
+   NewValue = varTicketNumber, CreatedAt = utcNow().
+7. Optional: create a notification for a configured triage group/team.
+
+CRITICAL: In the trigger Settings, turn Concurrency Control ON and set Degree
+of Parallelism to 1. Otherwise two concurrent tickets can obtain the same
+sequence number.
+
+6.2 Flow 02 - Ticket Change Audit and Notifications
+----------------------------------------------------
+
+Name: ITSD-02-Ticket-Changed
+Trigger: SharePoint - When an item is modified (ITSD Tickets).
+
+Use SharePoint action "Get changes for an item or a file (properties only)".
+Its Since field should use the trigger's "Trigger Window Start Token". This
+lets the flow detect changes to Status, Priority, AssignedTeam, AssignedAdmin,
+CategoryLeaf and other tracked fields.
+
+Branch rules:
+- Status changed to RESOLVED:
+  1. Update ticket ResolvedAt=utcNow(), ResolvedBy=Modified By,
+     AutoCloseAt=addDays(utcNow(),5), ReopenEligible=No.
+  2. Create STATUS_CHANGED audit row with old/new values.
+  3. Create notification for requester: "TCK... status changed to RESOLVED".
+- Status changed to CLOSED manually:
+  create audit row and notify requester.
+- Status changed to another non-final status:
+  create STATUS_CHANGED audit row and requester notification as appropriate.
+- Priority changed: create PRIORITY_CHANGED audit row.
+- AssignedAdmin changed: create ASSIGNMENT_CHANGED audit row and notification
+  for the new assignee. Avoid notifying the actor about their own action.
+- AssignedTeam changed: create ASSIGNMENT_CHANGED audit row. Optionally notify
+  active admins in that team.
+- CategoryLeaf changed: create CATEGORY_CHANGED audit row using the old/new
+  category DISPLAY NAMES, never lookup IDs.
+
+Avoid flow recursion:
+- Updating the ticket from this flow fires the trigger again.
+- Add a condition at the beginning which exits when Editor is the service
+  account AND LastLifecycleAction equals the flow's own marker, or use a
+  dedicated helper/action design where only the Canvas App updates lifecycle
+  fields.
+- Test every update in an isolated DEV list and inspect run history until one
+  user action produces exactly one expected audit/notification set.
+
+6.3 Flow 03 - Comment Created
+-----------------------------
+
+Name: ITSD-03-Comment-Created
+Trigger: SharePoint - When an item is created (ITSD Comments).
+
+Actions:
+1. Get the related ticket.
+2. Create Audit Log row: COMMENT_ADDED or INTERNAL_NOTE_ADDED.
+3. If Author equals Ticket.Requester and ticket Status is RESOLVED:
+   - Check utcNow() <= addDays(Ticket.ResolvedAt,5).
+   - If true, update ticket AutoCloseAt = addDays(utcNow(),5).
+   - Add AUTO_CLOSE_TIMER_RESET audit row.
+   - Find Ticket.ResolvedBy and create an in-app notification for that person:
+     "<requester> commented after TCK... was resolved; review reopening".
+   - If that person is already in the recipient collection, do not duplicate.
+4. If the author is requester, notify current assignee. If no individual
+   assignee exists, optionally notify team admins.
+5. If the author is an admin and CommentType is PUBLIC, notify the requester.
+6. Never send INTERNAL comments to requesters.
+
+For simple first build, use one "Create item" action per recipient. For team
+notifications, use Get items on ITSD Admin Configuration filtered by Team and
+Active, then Apply to each. Put notification creation inside that loop.
+
+6.4 Flow 04 - Automatic Closure
+--------------------------------
+
+Name: ITSD-04-Auto-Close-Resolved-Tickets
+Trigger: Recurrence every 15 minutes.
+
+Actions:
+1. Get items from ITSD Tickets with Status=RESOLVED. Ensure Status and
+   AutoCloseAt are indexed.
+2. Filter array for records where AutoCloseAt is not empty and is less than or
+   equal to utcNow().
+3. Apply to each filtered ticket:
+   - Re-read/get the item immediately before update to avoid acting on an item
+     that was reopened or had its timer reset.
+   - If status is still RESOLVED and AutoCloseAt is still due:
+     update Status=CLOSED, ClosedAt=utcNow(), ReopenEligible=No.
+   - Create AUTOMATIC_CLOSURE audit item with Actor blank/SYSTEM.
+   - Create requester notification: "TCK... was automatically closed".
+
+6.5 Flow 05 - Controlled Reopen (recommended)
+----------------------------------------------
+
+Do not allow a generic edit form to change finalized status. Use an Instant
+cloud flow triggered by Power Apps (V2), named ITSD-05-Reopen-Ticket.
+
+Inputs from Power Apps:
+- TicketID
+- RequestedByEmail
+
+The flow must get the ticket, look up RequestedByEmail in ITSD Admin
+Configuration, and return a result record/message to the app.
+
+Logic:
+- If Ticket.Status = CLOSED: only proceed when requester's IsMaster=true.
+- If Ticket.Status = RESOLVED:
+  1. requestedBy must equal Ticket.ResolvedBy email.
+  2. Get ITSD Comments where Ticket=TicketID, Author=Ticket.Requester and
+     CreatedAt is after ResolvedAt but before addDays(ResolvedAt,5).
+  3. Proceed only if at least one matching requester comment exists.
+- Otherwise reject: ticket is not finalized.
+- On success update Status=IN_PROGRESS and clear ResolvedAt, ResolvedBy,
+  AutoCloseAt, ClosedAt and ReopenEligible.
+- Create STATUS_CHANGED audit row: RESOLVED/CLOSED -> IN_PROGRESS with details
+  "Reopened by authorized user".
+- Notify requester and/or current assignee as agreed.
+
+Security note: Power Apps input values can be manipulated by an advanced user.
+For a strict implementation, the flow must identify the actual caller through
+the run-only connection/context and restrict who can run the flow. At minimum,
+do not expose the flow to requesters and use SharePoint permissions so they
+cannot directly edit lifecycle fields. Test the negative cases explicitly.
+
+6.6 Flow 06 - Attachment/Worklog Audit (optional separate flows)
+-----------------------------------------------------------------
+
+For attachments or worklogs created in separate lists/libraries, create an
+audit row and enforce admin-only worklog creation. If built-in list attachments
+are used, attachment event capture is more difficult; it can be postponed for
+the first version or handled through an upload-to-library flow.
+
+
+7. BUILD THE CANVAS APP
+-----------------------
+
+Create a Canvas App (tablet layout is usually best for a service desk) in the
+same Power Platform environment. Add data sources:
+
+- ITSD Tickets
+- ITSD Categories
+- ITSD Teams
+- ITSD Admin Configuration
+- ITSD Comments
+- ITSD Worklogs
+- ITSD Audit Log
+- ITSD Notifications
+- ITSD Devices, if used
+- Office 365 Users
+- ITSD-05-Reopen-Ticket flow
+
+Use one app with these screens:
+
+1. scrDashboard
+   - Current-user header, notification bell/count, KPI cards for admins.
+   - Gallery: requester sees own/authorized team tickets; admin sees all.
+   - Filters: search, status, priority, team, assignee.
+2. scrNewTicket
+   - Subject, description, category cascade, priority, device/other device,
+     attachments.
+3. scrTicketDetail
+   - Header with TicketNumber, subject and status.
+   - Metadata section; conditionally editable only before finalization.
+   - Comments, attachments, worklogs, audit (admin only).
+   - REOPEN only when allowed.
+4. scrNotifications
+   - Unread/read list and navigation to ticket.
+5. scrAdminCategories
+6. scrAdminUsersAndTeams
+
+7.1 App startup role variables
+------------------------------
+
+App.OnStart or first dashboard OnVisible (adjust list names if yours differ):
+
+Set(varMeEmail, Lower(User().Email));
+Set(varAdminConfig, LookUp('ITSD Admin Configuration', Lower(Admin.Email) = varMeEmail && Active = true));
+Set(varIsAdmin, !IsBlank(varAdminConfig));
+Set(varIsMaster, varIsAdmin && varAdminConfig.IsMaster);
+
+For a very large organization, use an Entra group membership/Dataverse-backed
+role approach instead. The configuration-list method is easy to maintain and
+matches the existing master/admin requirement.
+
+7.2 Ticket gallery visibility formula
+-------------------------------------
+
+For a pilot, a basic Items formula is:
+
+If(
+  varIsAdmin,
+  SortByColumns('ITSD Tickets', "Created", SortOrder.Descending),
+  SortByColumns(
+    Filter('ITSD Tickets', Lower(Requester.Email) = varMeEmail),
+    "Created",
+    SortOrder.Descending
+  )
+)
+
+Extend it for requester-team visibility only after the SharePoint permissions
+and data model are tested. Do not load thousands of records into collections;
+keep filters delegable and create list indexes.
+
+7.3 Cascading category controls
+-------------------------------
+
+Level 1 combo box Items:
+  SortByColumns(Filter('ITSD Categories', Level = 1 && Active = true), "Title")
+
+Level 2 combo box Items:
+  SortByColumns(
+    Filter('ITSD Categories', Level = 2 && Active = true && ParentCategory.Id = cmbCategory1.Selected.ID),
+    "Title"
+  )
+
+Level 3 combo box Items:
+  SortByColumns(
+    Filter('ITSD Categories', Level = 3 && Active = true && ParentCategory.Id = cmbCategory2.Selected.ID),
+    "Title"
+  )
+
+OnChange of level 1, reset level 2 and level 3. OnChange of level 2, reset
+level 3. Save CategoryLeaf as level 3 when selected, otherwise level 2; only
+allow category-level fallback if the selected category truly has no children.
+
+7.4 Ticket submit
+-----------------
+
+Use Patch or an Edit Form. A Patch outline:
+
+Set(
+  varCreatedTicket,
+  Patch(
+    'ITSD Tickets',
+    Defaults('ITSD Tickets'),
+    {
+      Subject: txtSubject.Text,
+      Description: txtDescription.Text,
+      Requester: {
+        '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        Claims: "i:0#.f|membership|" & varMeEmail,
+        DisplayName: User().FullName,
+        Email: varMeEmail
+      },
+      Status: {Value: "NEW"},
+      Priority: {Value: cmbPriority.Selected.Value},
+      CategoryLevel1: cmbCategory1.Selected,
+      CategoryLevel2: cmbCategory2.Selected,
+      CategoryLevel3: cmbCategory3.Selected,
+      CategoryLeaf: Coalesce(cmbCategory3.Selected, cmbCategory2.Selected),
+      OtherCategoryDescription: txtOtherCategory.Text,
+      OtherDeviceDescription: txtOtherDevice.Text
+    }
+  )
+);
+Navigate(scrTicketDetail);
+
+The exact expanded lookup/person record shape may be generated automatically
+by Power Apps. Let Power Apps create a simple test Patch first, then keep its
+generated schema rather than manually guessing it.
+
+7.5 Finalized-ticket controls
+-----------------------------
+
+Set:
+  varIsFinalized = varSelectedTicket.Status.Value = "RESOLVED" || varSelectedTicket.Status.Value = "CLOSED"
+
+Metadata control DisplayMode:
+  If(varIsAdmin && !varIsFinalized, DisplayMode.Edit, DisplayMode.View)
+
+Comment submit button DisplayMode:
+  If(varSelectedTicket.Status.Value = "CLOSED", DisplayMode.Disabled, DisplayMode.Edit)
+
+REOPEN button Visible:
+  varIsMaster || (
+    varIsAdmin &&
+    varSelectedTicket.Status.Value = "RESOLVED" &&
+    Lower(varSelectedTicket.ResolvedBy.Email) = varMeEmail &&
+    CountRows(
+      Filter(
+        'ITSD Comments',
+        Ticket.Id = varSelectedTicket.ID &&
+        Lower(Author.Email) = Lower(varSelectedTicket.Requester.Email) &&
+        CreatedAt >= varSelectedTicket.ResolvedAt &&
+        CreatedAt <= DateAdd(varSelectedTicket.ResolvedAt, 5, TimeUnit.Days)
+      )
+    ) > 0
+  )
+
+Do not trust this visibility formula alone. Button OnSelect calls the controlled
+reopen flow, which repeats validation.
+
+7.6 Notifications in Canvas App
+--------------------------------
+
+Unread bell label:
+  CountRows(Filter('ITSD Notifications', Lower(Recipient.Email) = varMeEmail && IsBlank(ReadAt)))
+
+On screen visible, Refresh('ITSD Notifications'). In Power Apps, no reliable
+always-on browser-tab color change exists. Use Teams/email notifications for
+important events, and use the app's bell/count for in-app visibility.
+
+
+8. COPILOT PROMPTS: USE IN SMALL STAGES
+---------------------------------------
+
+Do not ask SharePoint/Power Platform Copilot to build the entire application
+in one prompt. It may create partial lists/flows but cannot reliably verify
+cross-product permissions and lifecycle rules. Use the following staged prompts
+and inspect every generated result before moving to the next stage.
+
+Prompt 1 - Site and data model:
+
+"I am building an internal IT Service Desk on this SharePoint site. Do not
+create flows yet. Create or describe the Microsoft Lists named ITSD Tickets,
+ITSD Categories, ITSD Teams, ITSD Admin Configuration, ITSD Comments, ITSD
+Worklogs, ITSD Audit Log, ITSD Notifications and ITSD Ticket Sequence. Use the
+field names, types, choices, lookup relationships and indexes in the file
+SharePoint_PowerPlatform_Ticketing_Build_Guide_2026-09-25.txt, section 3.
+Before applying changes, show a concise table of every list and column and ask
+for confirmation."
+
+Prompt 2 - Categories and test configuration:
+
+"Create the IT service-desk category hierarchy in ITSD Categories: root
+Hardware, Software and Other; then level 2 and level 3 children. Include
+Software > Security > Suspicious email, Phishing suspicion, Lost or stolen
+device, Password problem, Multi-factor authentication, Virus / malware
+suspicion and Security incident. Also create SD and L2 in ITSD Teams. Do not
+change ticket data. Show the parent/child result for confirmation."
+
+Prompt 3 - Ticket number flow:
+
+"Create a Power Automate cloud flow named ITSD-01-Ticket-Created. Trigger on a
+new ITSD Tickets item. Allocate a unique yearly ticket number in the exact
+format TCK-YYYY-0000001 by reading/updating ITSD Ticket Sequence, update the
+ticket, and create a TICKET_CREATED entry in ITSD Audit Log. Configure trigger
+concurrency to 1. Do not use raw JSON editing; describe every action, dynamic
+content selection, expression and field mapping before saving."
+
+Prompt 4 - Resolved/comment/closure flows:
+
+"Create Power Automate flow designs for ITSD-02-Ticket-Changed,
+ITSD-03-Comment-Created and ITSD-04-Auto-Close-Resolved-Tickets. Implement
+this rule exactly: resolving stores ResolvedAt, ResolvedBy and AutoCloseAt five
+days later; a requester comment within the original five-day window resets
+AutoCloseAt and notifies ResolvedBy; a recurrence every 15 minutes closes due
+RESOLVED tickets. Write readable audit rows and in-app notifications. Explain
+how each flow avoids recursive triggers. Show the flow steps for approval
+before creating them."
+
+Prompt 5 - Canvas App:
+
+"Create a Canvas App for the SharePoint lists ITSD Tickets, ITSD Categories,
+ITSD Teams, ITSD Admin Configuration, ITSD Comments, ITSD Worklogs, ITSD Audit
+Log and ITSD Notifications. Create dashboard, new ticket, ticket detail,
+notifications and admin screens. Use three cascading category controls:
+Category group, Problem category, Problem subcategory. Requesters see their
+tickets; admins see all tickets. RESOLVED and CLOSED tickets must have locked
+metadata controls. Show generated Power Fx formulas before applying them."
+
+Prompt 6 - Reopen flow:
+
+"Create an instant Power Apps (V2) flow named ITSD-05-Reopen-Ticket. It must
+only reopen a CLOSED ticket for a master admin. It must only reopen a RESOLVED
+ticket for the same admin in ResolvedBy when the original requester has added a
+comment after ResolvedAt and within five days of ResolvedAt. On success set
+Status to IN_PROGRESS, clear resolved/closed timestamps, write an audit row,
+and return success/error to Power Apps. Explain how caller authorization is
+enforced and do not rely only on a client-provided email input."
+
+
+9. TEST CHECKLIST
+-----------------
+
+Use separate master, SD admin, L2 admin and requester test accounts.
+
+1. Requester creates Software > Security > Phishing suspicion ticket.
+2. Ticket receives unique yearly TCK number and creation audit entry.
+3. Admin assigns team/admin; new assignee receives one notification.
+4. Admin resolves; requester gets notification, metadata locks.
+5. Requester posts a public complaint comment within five days; resolver gets
+   one notification and can reopen; a different admin cannot.
+6. Reopened ticket becomes IN_PROGRESS and normal admin editing is enabled.
+7. Closed ticket rejects comments and edits; only master can reopen.
+8. Requester cannot view internal comments.
+9. Requester cannot access another requester's ticket or attachment by direct
+   URL, if strict permission design is enabled.
+10. Ticket deletion is master-only and removes related records/files according
+    to the approved retention policy.
+11. Create 10 tickets quickly and confirm no duplicate ticket numbers.
+12. Inspect every flow run history for duplicate audit rows/notifications.
+
+
+10. IMPORTANT LIMITATIONS AND UPGRADE PATH
+------------------------------------------
+
+- Power Automate's graphical designer is normal. Use Compose actions and the
+  Expression tab (fx) for formulas; keep a written action-by-action design.
+- A Power Automate flow is not source control. Export solution packages and
+  document connections, variables, expressions and owners.
+- SharePoint Lists work well for a modest internal service desk. For large
+  volume, complex relational reporting, strict row-level security or robust
+  ALM, use Dataverse and Power Platform Solutions instead.
+- Browser push/desktop notification behavior of the existing React app should
+  be replaced by Teams messages or email for important production alerts.
+- Existing SQLite ticket data will not migrate automatically. Export selected
+  data to CSV, import reference lists first, then import tickets, comments,
+  worklogs and audit entries with a tested mapping. Plan attachment migration
+  separately into list attachments or the document library.
+
+
+11. OFFICIAL REFERENCES
+-----------------------
+
+Microsoft Learn pages to keep open while building:
+- Power Apps SharePoint form integration:
+  https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/sharepoint-form-integration
+- Power Automate and SharePoint overview:
+  https://learn.microsoft.com/en-us/power-automate/sharepoint-overview
+- Power Automate SharePoint connector actions/triggers:
+  https://learn.microsoft.com/en-us/connectors/sharepointonline/
+
+The official Power Apps documentation notes that users with access to the
+linked SharePoint list inherit access to its customized form. This reinforces
+the requirement to design SharePoint permissions, not merely hide UI controls.
