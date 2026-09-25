@@ -63,6 +63,20 @@ export function NotificationsPage() {
   }
 
   const hasFilters = readFilter !== "all" || ticketNumberFilter !== "" || dateFrom !== "" || dateTo !== "" || sortOrder !== "newest";
+  const notificationGroups = [
+    {
+      id: "unread",
+      label: "Unread notifications",
+      notifications: filteredNotifications.filter((notification) => !notification.readAt),
+      defaultOpen: true,
+    },
+    {
+      id: "read",
+      label: "Read notifications",
+      notifications: filteredNotifications.filter((notification) => notification.readAt),
+      defaultOpen: false,
+    },
+  ].filter((group) => group.notifications.length > 0);
 
   return (
     <div className="dashboard-page">
@@ -99,20 +113,28 @@ export function NotificationsPage() {
         </div>
       )}
       {!loading && notifications.length > 0 && filteredNotifications.length === 0 && <p className="hint">No notifications match these filters.</p>}
-      <ul className="notification-list">
-        {filteredNotifications.map((n) => (
-          <li
-            key={n.id}
-            className={n.readAt ? "notification-read" : "notification-unread"}
-            onClick={() => handleOpen(n)}
-          >
-            <div>
-              <strong>{n.ticket?.ticketNumber}</strong> — {n.message}
-            </div>
-            <span className="hint">{new Date(n.createdAt).toLocaleString()}</span>
-          </li>
-        ))}
-      </ul>
+      {notificationGroups.map((group) => (
+        <details key={group.id} className="notification-group" defaultOpen={group.defaultOpen}>
+          <summary>
+            <span>{group.label}</span>
+            <span className="notification-group-count">{group.notifications.length}</span>
+          </summary>
+          <ul className="notification-list">
+            {group.notifications.map((n) => (
+              <li
+                key={n.id}
+                className={n.readAt ? "notification-read" : "notification-unread"}
+                onClick={() => handleOpen(n)}
+              >
+                <div>
+                  <strong>{n.ticket?.ticketNumber}</strong> — {n.message}
+                </div>
+                <span className="hint">{new Date(n.createdAt).toLocaleString()}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ))}
     </div>
   );
 }

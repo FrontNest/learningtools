@@ -396,6 +396,39 @@ select option:checked {
   border-left: 3px solid #397b9c !important;
 }
 
+.notification-group {
+  margin: 0.75rem 0;
+  color: var(--surface-text);
+  background: rgb(223 237 244 / 78%);
+  border: 1px solid rgb(184 207 220 / 82%);
+  border-radius: 6px;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 65%);
+}
+
+.notification-group summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.8rem;
+  color: #244b63;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.notification-group-count {
+  min-width: 1.75rem;
+  padding: 0.1rem 0.45rem;
+  color: #1d455e;
+  text-align: center;
+  background: rgb(245 252 255 / 75%);
+  border: 1px solid rgb(255 255 255 / 80%);
+  border-radius: 999px;
+}
+
+.notification-group .notification-list {
+  padding: 0 0.65rem 0.65rem;
+}
+
 .comment-list {
   list-style: none;
   padding: 0;
