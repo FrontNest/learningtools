@@ -144,6 +144,7 @@ export type NotificationType =
   | "COMMENT_ADDED"
   | "INTERNAL_NOTE_ADDED"
   | "WORKLOG_ADDED"
+  | "ASSIGNMENT_UPDATED"
   | "TICKET_RESOLVED"
   | "TICKET_CLOSED";
 

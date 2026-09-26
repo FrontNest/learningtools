@@ -106,6 +106,18 @@ export async function updateTicketAssignment(admin: User, ticketId: string, inpu
       });
     }
 
+    // Also notify the requester whenever the team/assigned admin actually
+    // changes — they never see this from the admin-facing notification above.
+    const requester = await tx.user.findUnique({ where: { id: ticket.requesterId } });
+    if (requester && requester.active) {
+      await notify(tx, {
+        ticketId,
+        recipients: [requester],
+        type: "ASSIGNMENT_UPDATED",
+        message: `${ticket.ticketNumber} is now assigned to ${newLabel}`,
+      });
+    }
+
     return tx.ticket.findUniqueOrThrow({ where: { id: ticketId }, include: ticketInclude });
   });
 }
