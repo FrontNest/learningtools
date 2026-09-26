@@ -5,6 +5,7 @@ import { env } from "../config";
 import { attachmentUploadRateLimiter } from "../middleware/rateLimiters";
 import {
   createAttachment,
+  deleteAttachmentAsMaster,
   getAttachmentForDownload,
   listAttachments,
 } from "../services/attachmentService";
@@ -53,4 +54,10 @@ attachmentsRouter.get("/:attachmentId", async (req, res) => {
   res.setHeader("Content-Type", mimeType);
   res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(originalFileName)}"`);
   res.sendFile(absolutePath);
+});
+
+attachmentsRouter.delete("/:attachmentId", async (req, res) => {
+  const params = req.params as unknown as { id: string; attachmentId: string };
+  await deleteAttachmentAsMaster(req.currentUser!, params.id, params.attachmentId);
+  res.status(204).send();
 });

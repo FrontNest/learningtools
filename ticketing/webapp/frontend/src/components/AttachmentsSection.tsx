@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { isAxiosError } from "axios";
-import { attachmentDownloadUrl, fetchAttachments, uploadAttachment } from "../lib/ticketApi";
+import { attachmentDownloadUrl, deleteAttachment, fetchAttachments, uploadAttachment } from "../lib/ticketApi";
 import type { Attachment } from "../types/ticket";
 import { ALLOWED_ATTACHMENT_EXTENSIONS, MAX_ATTACHMENT_SIZE_MB } from "../constants/attachments";
+import { useAuth } from "../auth/AuthContext";
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -16,9 +17,12 @@ function extensionOf(fileName: string): string {
 }
 
 export function AttachmentsSection({ ticketId }: { ticketId: string }) {
+  const { user } = useAuth();
+  const isMaster = Boolean(user?.isMaster);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function load() {
@@ -59,6 +63,23 @@ export function AttachmentsSection({ ticketId }: { ticketId: string }) {
     }
   }
 
+  async function handleDelete(attachment: Attachment) {
+    if (!window.confirm(`Permanently delete "${attachment.originalFileName}"? This cannot be undone.`)) {
+      return;
+    }
+    setError(null);
+    setDeletingId(attachment.id);
+    try {
+      await deleteAttachment(ticketId, attachment.id);
+      load();
+    } catch (err) {
+      const message = isAxiosError(err) ? err.response?.data?.error : undefined;
+      setError(message ?? "Failed to delete attachment.");
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   return (
     <section>
       <h2>Attachments</h2>
@@ -71,7 +92,17 @@ export function AttachmentsSection({ ticketId }: { ticketId: string }) {
             </a>{" "}
             <span className="hint">
               ({formatSize(a.fileSize)}, uploaded by {a.uploadedBy.displayName})
-            </span>
+            </span>{" "}
+            {isMaster && (
+              <button
+                type="button"
+                className="deleteButton"
+                disabled={deletingId === a.id}
+                onClick={() => handleDelete(a)}
+              >
+                Delete
+              </button>
+            )}
           </li>
         ))}
       </ul>

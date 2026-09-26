@@ -146,6 +146,7 @@ export type NotificationType =
   | "WORKLOG_ADDED"
   | "ASSIGNMENT_UPDATED"
   | "ATTACHMENT_ADDED"
+  | "ATTACHMENT_DELETED"
   | "TICKET_RESOLVED"
   | "TICKET_CLOSED";
 

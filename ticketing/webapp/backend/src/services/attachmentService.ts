@@ -131,3 +131,61 @@ export async function getAttachmentForDownload(currentUser: User, ticketId: stri
 
   return { absolutePath, originalFileName: attachment.originalFileName, mimeType: attachment.mimeType };
 }
+
+// Master-only: remove a single attachment without touching the rest of the
+// ticket (comments/worklogs/status/etc. are untouched).
+export async function deleteAttachmentAsMaster(master: User, ticketId: string, attachmentId: string) {
+  if (!master.isMaster) {
+    throw AppError.forbidden("Only the master administrator can delete attachments");
+  }
+
+  const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+  if (!ticket) {
+    throw AppError.notFound("Ticket not found");
+  }
+
+  const attachment = await prisma.attachment.findUnique({
+    where: { id: attachmentId },
+    include: { uploadedBy: true },
+  });
+  if (!attachment || attachment.ticketId !== ticketId) {
+    throw AppError.notFound("Attachment not found");
+  }
+
+  await prisma.$transaction(async (tx) => {
+    await tx.attachment.delete({ where: { id: attachmentId } });
+
+    await writeAuditLog(tx, {
+      ticketId,
+      actorId: master.id,
+      action: "ATTACHMENT_DELETED",
+      oldValue: attachment.originalFileName,
+    });
+
+    const recipients: User[] = [];
+    const addRecipient = (user: User | null | undefined) => {
+      if (user && user.active && user.id !== master.id && !recipients.some((existing) => existing.id === user.id)) {
+        recipients.push(user);
+      }
+    };
+
+    addRecipient(attachment.uploadedBy);
+    const requester = await tx.user.findUnique({ where: { id: ticket.requesterId } });
+    addRecipient(requester);
+    const assignedRecipients = await getTicketNotificationRecipients(tx, ticket);
+    assignedRecipients.forEach(addRecipient);
+
+    await notify(tx, {
+      ticketId,
+      recipients,
+      type: "ATTACHMENT_DELETED",
+      message: `${master.displayName} removed the attachment "${attachment.originalFileName}" from ${ticket.ticketNumber}`,
+    });
+  });
+
+  const absolutePath = path.join(env.uploadDir, attachment.storageKey);
+  const relativePath = path.relative(path.resolve(env.uploadDir), absolutePath);
+  if (relativePath && !relativePath.startsWith("..") && !path.isAbsolute(relativePath)) {
+    await fs.promises.unlink(absolutePath).catch(() => undefined);
+  }
+}

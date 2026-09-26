@@ -146,6 +146,10 @@ export function attachmentDownloadUrl(ticketId: string, attachmentId: string): s
   return `/api/tickets/${ticketId}/attachments/${attachmentId}`;
 }
 
+export async function deleteAttachment(ticketId: string, attachmentId: string): Promise<void> {
+  await api.delete(`/tickets/${ticketId}/attachments/${attachmentId}`);
+}
+
 export async function fetchAuditLog(ticketId: string): Promise<AuditLogEntry[]> {
   const { data } = await api.get<{ auditLogs: AuditLogEntry[] }>(`/tickets/${ticketId}/audit`);
   return data.auditLogs;
