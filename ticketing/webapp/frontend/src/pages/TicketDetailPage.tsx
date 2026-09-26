@@ -3,24 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { isAxiosError } from "axios";
 import { useAuth } from "../auth/AuthContext";
-import { deleteTicket, fetchAdminUsers, fetchCategories, fetchTeams, fetchTicket, updateAssignment, updateTicket } from "../lib/ticketApi";
-import type { AdminUser, Category, Priority, Team, Ticket, TicketStatus } from "../types/ticket";
+import { deleteTicket, fetchAdminUsers, fetchCategories, fetchPriorities, fetchStatusLabels, fetchTeams, fetchTicket, updateAssignment, updateTicket } from "../lib/ticketApi";
+import type { AdminUser, Category, Priority, PriorityOption, StatusLabelOption, Team, Ticket, TicketStatus } from "../types/ticket";
 import { STATUS_PROGRESS } from "../types/ticket";
 import { CommentsSection } from "../components/CommentsSection";
 import { WorklogSection } from "../components/WorklogSection";
 import { AttachmentsSection } from "../components/AttachmentsSection";
 import { AuditLogSection } from "../components/AuditLogSection";
 
-const STATUSES: TicketStatus[] = [
-  "NEW",
-  "ASSIGNED",
-  "IN_PROGRESS",
-  "WAITING_FOR_USER",
-  "WAITING_FOR_THIRD_PARTY",
-  "RESOLVED",
-  "CLOSED",
-];
-const PRIORITIES: Priority[] = ["LOW", "NORMAL", "HIGH", "CRITICAL"];
 const OTHER_CATEGORY_VALUE = "__other_category__";
 
 export function TicketDetailPage() {
@@ -34,11 +24,17 @@ export function TicketDetailPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [teamAdmins, setTeamAdmins] = useState<AdminUser[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [priorities, setPriorities] = useState<PriorityOption[]>([]);
+  const [statusLabels, setStatusLabels] = useState<StatusLabelOption[]>([]);
   const [categoryDescription, setCategoryDescription] = useState("");
   const [auditRefreshToken, setAuditRefreshToken] = useState(0);
 
   const isAdmin = user?.role === "ADMIN";
   const isMaster = Boolean(user?.isMaster);
+
+  function statusLabel(status: TicketStatus): string {
+    return statusLabels.find((s) => s.key === status)?.label ?? status;
+  }
 
   useEffect(() => {
     if (!id) return;
@@ -55,6 +51,11 @@ export function TicketDetailPage() {
   useEffect(() => {
     if (isAdmin) fetchCategories().then(setCategories).catch(() => undefined);
   }, [isAdmin]);
+
+  useEffect(() => {
+    fetchPriorities().then(setPriorities).catch(() => undefined);
+    fetchStatusLabels().then(setStatusLabels).catch(() => undefined);
+  }, []);
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -252,16 +253,16 @@ export function TicketDetailPage() {
             <select
               value={ticket.priority}
               disabled={saving}
-              onChange={(e) => handleAdminChange({ priority: e.target.value as Priority })}
+              onChange={(e) => handleAdminChange({ priority: e.target.value })}
             >
-              {PRIORITIES.map((p) => (
-                <option key={p} value={p}>
-                  {p}
+              {priorities.map((p) => (
+                <option key={p.key} value={p.key}>
+                  {p.label}
                 </option>
               ))}
             </select>
           ) : (
-            ticket.priority
+            priorities.find((p) => p.key === ticket.priority)?.label ?? ticket.priority
           )}
         </label>
 
@@ -273,16 +274,16 @@ export function TicketDetailPage() {
               disabled={saving}
               onChange={(e) => handleAdminChange({ status: e.target.value as TicketStatus })}
             >
-              {STATUSES.map((s) => (
+              {statusLabels.map(({ key: s, label }) => (
                 s === "CLOSED" && !isAdmin ? null : (
                 <option key={s} value={s}>
-                  {s}
+                  {label}
                 </option>
                 )
               ))}
             </select>
           ) : (
-            ticket.status
+            statusLabel(ticket.status)
           )}
           {ticket.canReopen && (
             <button className="link-button" disabled={saving} onClick={handleReopenTicket}>

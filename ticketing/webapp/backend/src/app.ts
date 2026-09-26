@@ -15,6 +15,8 @@ import { healthRouter } from "./routes/health";
 import { authRouter } from "./routes/auth";
 import { ticketsRouter } from "./routes/tickets";
 import { categoriesRouter } from "./routes/categories";
+import { prioritiesRouter } from "./routes/priorities";
+import { statusesRouter } from "./routes/statuses";
 import { teamsRouter } from "./routes/teams";
 import { adminUsersRouter } from "./routes/adminUsers";
 import { adminDevicesRouter } from "./routes/adminDevices";
@@ -24,6 +26,8 @@ import { notificationsRouter } from "./routes/notifications";
 import { dashboardRouter } from "./routes/dashboard";
 import { userManagementRouter } from "./routes/userManagement";
 import { categoryManagementRouter } from "./routes/categoryManagement";
+import { priorityManagementRouter } from "./routes/priorityManagement";
+import { statusManagementRouter } from "./routes/statusManagement";
 import { adminEmailSettingsRouter } from "./routes/adminEmailSettings";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
@@ -78,6 +82,8 @@ export function createApp() {
   app.use("/api/auth", authRouter);
   app.use("/api/tickets", ticketsRouter);
   app.use("/api/categories", categoriesRouter);
+  app.use("/api/priorities", prioritiesRouter);
+  app.use("/api/statuses", statusesRouter);
   app.use("/api/teams", teamsRouter);
   app.use("/api/admin/users", adminUsersRouter);
   app.use("/api/admin/devices", adminDevicesRouter);
@@ -87,6 +93,8 @@ export function createApp() {
   app.use("/api/dashboard", dashboardRouter);
   app.use("/api/admin/user-management", userManagementRouter);
   app.use("/api/admin/category-management", categoryManagementRouter);
+  app.use("/api/admin/priority-management", priorityManagementRouter);
+  app.use("/api/admin/status-management", statusManagementRouter);
   app.use("/api/admin/email-settings", adminEmailSettingsRouter);
 
   app.use("/api", notFoundHandler);

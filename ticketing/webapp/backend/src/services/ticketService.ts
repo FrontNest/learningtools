@@ -10,6 +10,7 @@ import { appConfig, env } from "../config";
 import { assertValidStatus } from "../domain/ticketRules";
 import type { PriorityValue, TicketStatusValue } from "../domain/enums";
 import { ticketInclude } from "./ticketInclude";
+import { isValidActivePriorityKey } from "./priorityAdminService";
 
 interface CreateTicketInput {
   subject: string;
@@ -25,6 +26,9 @@ export async function createTicket(requester: User, input: CreateTicketInput) {
   const category = await prisma.category.findUnique({ where: { id: input.categoryId } });
   if (!category || !category.active) {
     throw AppError.badRequest("Invalid category");
+  }
+  if (!await isValidActivePriorityKey(input.priority)) {
+    throw AppError.badRequest("Invalid priority");
   }
 
   let device = null;
@@ -248,6 +252,9 @@ export async function updateTicketAsAdmin(admin: User, ticketId: string, input: 
     }
 
     if (input.priority && input.priority !== ticket.priority) {
+      if (!await isValidActivePriorityKey(input.priority, tx)) {
+        throw AppError.badRequest("Invalid priority");
+      }
       data.priority = input.priority;
       await writeAuditLog(tx, {
         ticketId,

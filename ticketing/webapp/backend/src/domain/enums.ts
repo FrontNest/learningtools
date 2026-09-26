@@ -9,8 +9,12 @@ export type RoleValue = (typeof ROLES)[number];
 export const TEAM_TYPES = ["REQUESTER_TEAM", "IT_TEAM"] as const;
 export type TeamTypeValue = (typeof TEAM_TYPES)[number];
 
+// Default seed keys only — the live, master-manageable priority list lives in
+// the TicketPriority table (see priorityAdminService). Priority is no longer
+// a fixed enum: Ticket.priority stores whatever active TicketPriority.key
+// the master has configured.
 export const PRIORITIES = ["LOW", "NORMAL", "HIGH", "CRITICAL"] as const;
-export type PriorityValue = (typeof PRIORITIES)[number];
+export type PriorityValue = string;
 
 export const TICKET_STATUSES = [
   "NEW",

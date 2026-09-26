@@ -12,6 +12,9 @@ const OPEN_STATUSES = [
 
 // Admin dashboard summary (spec section 18). Both SD and L2 Admins see the
 // same totals across all tickets — visibility is not restricted by team.
+// NOTE: highPriority/criticalPriority below assume the default HIGH/CRITICAL
+// priority keys still exist and are active; if a master renames or
+// deactivates them these widgets will simply read 0 (see priorityAdminService).
 export async function getDashboardSummary(admin: User) {
   const [
     totalOpen,

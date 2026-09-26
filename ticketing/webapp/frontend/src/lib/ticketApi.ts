@@ -9,6 +9,8 @@ import type {
   DashboardSummary,
   DeviceOption,
   Priority,
+  PriorityOption,
+  StatusLabelOption,
   Team,
   Ticket,
   TicketStatus,
@@ -19,6 +21,16 @@ import type {
 export async function fetchCategories(): Promise<Category[]> {
   const { data } = await api.get<{ categories: Category[] }>("/categories");
   return data.categories;
+}
+
+export async function fetchPriorities(): Promise<PriorityOption[]> {
+  const { data } = await api.get<{ priorities: PriorityOption[] }>("/priorities");
+  return data.priorities;
+}
+
+export async function fetchStatusLabels(): Promise<StatusLabelOption[]> {
+  const { data } = await api.get<{ statuses: StatusLabelOption[] }>("/statuses");
+  return data.statuses;
 }
 
 export async function fetchTeams(): Promise<Team[]> {

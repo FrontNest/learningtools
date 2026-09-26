@@ -1,4 +1,12 @@
-export type Priority = "LOW" | "NORMAL" | "HIGH" | "CRITICAL";
+// Priorities are master-manageable (Manage priorities/statuses admin page),
+// so this is no longer a fixed union — the actual key/label pairs come from
+// GET /api/priorities at runtime.
+export type Priority = string;
+
+export interface PriorityOption {
+  key: string;
+  label: string;
+}
 
 export type TicketStatus =
   | "NEW"
@@ -8,6 +16,11 @@ export type TicketStatus =
   | "WAITING_FOR_THIRD_PARTY"
   | "RESOLVED"
   | "CLOSED";
+
+export interface StatusLabelOption {
+  key: TicketStatus;
+  label: string;
+}
 
 // Single source of truth for status -> progress mapping in the UI
 // (must stay in sync with backend src/domain/enums.ts).

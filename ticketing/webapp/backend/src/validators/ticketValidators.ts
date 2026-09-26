@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { PRIORITIES, TICKET_STATUSES } from "../domain/enums";
+import { TICKET_STATUSES } from "../domain/enums";
+
+// Priority keys are master-manageable (see priorityAdminService) so they are
+// no longer a fixed enum here — the actual key is validated against the
+// active TicketPriority rows in the service layer, mirroring categoryId.
+const prioritySchema = z.string().trim().min(1).max(50);
 
 export const createTicketSchema = z
   .object({
@@ -7,7 +12,7 @@ export const createTicketSchema = z
     description: z.string().trim().min(1).max(10000),
     categoryId: z.string().uuid(),
     otherCategoryDescription: z.string().trim().min(1).max(500).optional(),
-    priority: z.enum(PRIORITIES).default("NORMAL"),
+    priority: prioritySchema.default("NORMAL"),
     deviceId: z.string().uuid().optional(),
     otherDeviceDescription: z.string().trim().min(1).max(500).optional(),
   })
@@ -18,7 +23,7 @@ export const createTicketSchema = z
 
 export const updateTicketSchema = z
   .object({
-    priority: z.enum(PRIORITIES).optional(),
+    priority: prioritySchema.optional(),
     status: z.enum(TICKET_STATUSES).optional(),
     categoryId: z.string().uuid().optional(),
     otherCategoryDescription: z.string().trim().min(1).max(500).nullable().optional(),
@@ -29,7 +34,7 @@ export const updateTicketSchema = z
 
 export const listTicketsQuerySchema = z.object({
   status: z.enum(TICKET_STATUSES).optional(),
-  priority: z.enum(PRIORITIES).optional(),
+  priority: prioritySchema.optional(),
   assignedTeamId: z.string().uuid().optional(),
   assignedUserId: z.string().uuid().optional(),
   categoryId: z.string().uuid().optional(),
@@ -41,3 +46,4 @@ export const listTicketsQuerySchema = z.object({
   createdByMe: z.coerce.boolean().optional(),
   assignedToMe: z.coerce.boolean().optional(),
 });
+

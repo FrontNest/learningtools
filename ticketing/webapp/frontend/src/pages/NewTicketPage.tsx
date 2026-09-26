@@ -2,16 +2,16 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { isAxiosError } from "axios";
-import { createTicket, fetchCategories, fetchMyDevices } from "../lib/ticketApi";
-import type { Category, DeviceOption, Priority } from "../types/ticket";
+import { createTicket, fetchCategories, fetchMyDevices, fetchPriorities } from "../lib/ticketApi";
+import type { Category, DeviceOption, Priority, PriorityOption } from "../types/ticket";
 
-const PRIORITIES: Priority[] = ["LOW", "NORMAL", "HIGH", "CRITICAL"];
 const OTHER_DEVICE_VALUE = "__other__";
 const OTHER_CATEGORY_VALUE = "__other_category__";
 
 export function NewTicketPage() {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [priorities, setPriorities] = useState<PriorityOption[]>([]);
   const [devices, setDevices] = useState<DeviceOption[]>([]);
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
@@ -39,6 +39,15 @@ export function NewTicketPage() {
       })
       .catch(() => setError("Failed to load categories."));
 
+    fetchPriorities()
+      .then((options) => {
+        setPriorities(options);
+        if (options.length > 0 && !options.some((option) => option.key === "NORMAL")) {
+          setPriority(options[0].key);
+        }
+      })
+      .catch(() => setError("Failed to load priorities."));
+
     fetchMyDevices()
       .then((devs) => {
         setDevices(devs);
@@ -46,6 +55,7 @@ export function NewTicketPage() {
       })
       .catch(() => setSelectedDeviceId(OTHER_DEVICE_VALUE));
   }, []);
+
 
   const topCategories = categories.filter((category) => !category.parentId);
   const subCategories = categories.filter((category) => category.parentId === topCategoryId);
@@ -149,10 +159,10 @@ export function NewTicketPage() {
         </>}
 
         <label htmlFor="priority">Priority</label>
-        <select id="priority" value={priority} onChange={(e) => setPriority(e.target.value as Priority)}>
-          {PRIORITIES.map((p) => (
-            <option key={p} value={p}>
-              {p}
+        <select id="priority" value={priority} onChange={(e) => setPriority(e.target.value)}>
+          {priorities.map((p) => (
+            <option key={p.key} value={p.key}>
+              {p.label}
             </option>
           ))}
         </select>

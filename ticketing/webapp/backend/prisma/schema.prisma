@@ -289,3 +289,29 @@ model Session {
 
   @@index([expiresAt])
 }
+
+// Master-manageable priority list. "key" is generated once at creation time
+// and is what Ticket.priority actually stores — it never changes afterwards,
+// so renaming/deactivating a priority never orphans existing tickets. Full
+// CRUD (add/rename/reorder/deactivate/hard-delete-if-unused) is master-only.
+model TicketPriority {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  label     String
+  sortOrder Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Display label overrides for the 7 fixed ticket-status keys. The keys
+// themselves are NOT editable here — they drive core workflow logic
+// (finalization, auto-close, reopen rules) across many services — only the
+// human-facing label a master sets is stored/edited.
+model TicketStatusLabel {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  label     String
+  updatedAt DateTime @updatedAt
+}
+

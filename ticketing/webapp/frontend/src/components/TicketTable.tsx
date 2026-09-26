@@ -1,11 +1,28 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import type { TicketSummary } from "../types/ticket";
+import type { PriorityOption, StatusLabelOption, TicketSummary } from "../types/ticket";
 import { STATUS_PROGRESS } from "../types/ticket";
 
-export function TicketTable({ tickets, emptyLabel }: { tickets: TicketSummary[]; emptyLabel: string }) {
+export function TicketTable({
+  tickets,
+  emptyLabel,
+  priorities = [],
+  statusLabels = [],
+}: {
+  tickets: TicketSummary[];
+  emptyLabel: string;
+  priorities?: PriorityOption[];
+  statusLabels?: StatusLabelOption[];
+}) {
   const [sortKey, setSortKey] = useState<SortKey>("ticketNumber");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+
+  function priorityLabel(key: string): string {
+    return priorities.find((p) => p.key === key)?.label ?? key;
+  }
+  function statusLabel(key: string): string {
+    return statusLabels.find((s) => s.key === key)?.label ?? key;
+  }
 
   const sortedTickets = useMemo(() => {
     return [...tickets].sort((left, right) => {
@@ -57,8 +74,8 @@ export function TicketTable({ tickets, emptyLabel }: { tickets: TicketSummary[];
             </td>
             <td>{ticket.subject}</td>
             <td>{ticket.requester.displayName}</td>
-            <td>{ticket.priority}</td>
-            <td>{ticket.status}</td>
+            <td>{priorityLabel(ticket.priority)}</td>
+            <td>{statusLabel(ticket.status)}</td>
             <td>{STATUS_PROGRESS[ticket.status]}%</td>
             <td>{ticket.assignedUser?.displayName ?? ticket.assignedTeam?.name ?? "Unassigned"}</td>
           </tr>

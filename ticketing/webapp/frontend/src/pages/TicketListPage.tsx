@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import { fetchAdminUsers, fetchTeams, fetchTickets, type TicketFilters } from "../lib/ticketApi";
+import { fetchAdminUsers, fetchPriorities, fetchStatusLabels, fetchTeams, fetchTickets, type TicketFilters } from "../lib/ticketApi";
 import { fetchNotifications } from "../lib/notificationApi";
-import type { AdminUser, Priority, Team, TicketStatus, TicketSummary } from "../types/ticket";
+import type { AdminUser, PriorityOption, StatusLabelOption, Team, TicketStatus, TicketSummary } from "../types/ticket";
 import { TicketTable } from "../components/TicketTable";
 import { AdminSummaryBar } from "../components/AdminSummaryBar";
 import { BrowserNotificationButton } from "../components/BrowserNotificationWatcher";
@@ -18,6 +18,8 @@ export function TicketListPage() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [teams, setTeams] = useState<Team[]>([]);
   const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [priorities, setPriorities] = useState<PriorityOption[]>([]);
+  const [statusLabels, setStatusLabels] = useState<StatusLabelOption[]>([]);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -33,6 +35,11 @@ export function TicketListPage() {
     fetchNotifications()
       .then((notifications) => setUnreadCount(notifications.filter((n) => !n.readAt).length))
       .catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    fetchPriorities().then(setPriorities).catch(() => undefined);
+    fetchStatusLabels().then(setStatusLabels).catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -61,6 +68,7 @@ export function TicketListPage() {
           <Link id="nav-notifications" className="nav-button header-menu-button" data-name="notifications" to="/notifications">Notifications{unreadCount > 0 ? ` (${unreadCount})` : ""}</Link>
           {isAdmin && <Link id="nav-manage-users" className="nav-button header-menu-button" data-name="manage-users" to="/admin/users">Manage users</Link>}
           {isAdmin && <Link id="nav-manage-categories" className="nav-button header-menu-button" data-name="manage-categories" to="/admin/categories">Manage categories</Link>}
+          {user?.isMaster && <Link id="nav-workflow-settings" className="nav-button header-menu-button" data-name="workflow-settings" to="/admin/workflow-settings">Statuses &amp; priorities</Link>}
           {user?.isMaster && <Link id="nav-email-settings" className="nav-button header-menu-button" data-name="email-settings" to="/admin/email-settings">Email settings</Link>}
           <Link id="nav-change-password" className="nav-button header-menu-button" data-name="change-password" to="/change-password">Change password</Link>
           <Link id="nav-new-ticket" className="nav-button header-menu-button" data-name="new-ticket" to="/tickets/new">New ticket</Link>
@@ -113,17 +121,17 @@ export function TicketListPage() {
             onChange={(event) => updateFilter("status", (event.target.value || undefined) as TicketStatus | undefined)}
           >
             <option value="">All statuses</option>
-            {(["NEW", "ASSIGNED", "IN_PROGRESS", "WAITING_FOR_USER", "WAITING_FOR_THIRD_PARTY", "RESOLVED", "CLOSED"] as TicketStatus[]).map((status) => (
-              <option key={status} value={status}>{status}</option>
+            {statusLabels.map(({ key, label }) => (
+              <option key={key} value={key}>{label}</option>
             ))}
           </select>
           <select
             value={filters.priority ?? ""}
-            onChange={(event) => updateFilter("priority", (event.target.value || undefined) as Priority | undefined)}
+            onChange={(event) => updateFilter("priority", event.target.value || undefined)}
           >
             <option value="">All priorities</option>
-            {(["LOW", "NORMAL", "HIGH", "CRITICAL"] as Priority[]).map((priority) => (
-              <option key={priority} value={priority}>{priority}</option>
+            {priorities.map((priority) => (
+              <option key={priority.key} value={priority.key}>{priority.label}</option>
             ))}
           </select>
           <button className="link-button" onClick={() => setFilters({})}>Clear filters</button>
@@ -145,17 +153,27 @@ export function TicketListPage() {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <TicketTable tickets={tickets} emptyLabel="No tickets match this filter." />
+            <TicketTable tickets={tickets} emptyLabel="No tickets match this filter." priorities={priorities} statusLabels={statusLabels} />
           )}
         </>
       ) : (
-        <RequesterTicketSections tickets={tickets} loading={loading} />
+        <RequesterTicketSections tickets={tickets} loading={loading} priorities={priorities} statusLabels={statusLabels} />
       )}
     </div>
   );
 }
 
-function RequesterTicketSections({ tickets, loading }: { tickets: TicketSummary[]; loading: boolean }) {
+function RequesterTicketSections({
+  tickets,
+  loading,
+  priorities,
+  statusLabels,
+}: {
+  tickets: TicketSummary[];
+  loading: boolean;
+  priorities: PriorityOption[];
+  statusLabels: StatusLabelOption[];
+}) {
   if (loading) return <p>Loading...</p>;
 
   const open = tickets.filter((t) => t.status !== "RESOLVED" && t.status !== "CLOSED");
@@ -165,11 +183,11 @@ function RequesterTicketSections({ tickets, loading }: { tickets: TicketSummary[
   return (
     <>
       <h2>Open tickets</h2>
-      <TicketTable tickets={open} emptyLabel="No open tickets." />
+      <TicketTable tickets={open} emptyLabel="No open tickets." priorities={priorities} statusLabels={statusLabels} />
       <h2>Resolved tickets</h2>
-      <TicketTable tickets={resolved} emptyLabel="No resolved tickets." />
+      <TicketTable tickets={resolved} emptyLabel="No resolved tickets." priorities={priorities} statusLabels={statusLabels} />
       <h2>Closed tickets</h2>
-      <TicketTable tickets={closed} emptyLabel="No closed tickets." />
+      <TicketTable tickets={closed} emptyLabel="No closed tickets." priorities={priorities} statusLabels={statusLabels} />
     </>
   );
 }
