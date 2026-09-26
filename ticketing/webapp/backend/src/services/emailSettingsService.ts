@@ -84,6 +84,16 @@ export async function updateEmailSettings(
     },
   });
 
+  // Disabling must be immediate and total: any not-yet-sent email deliveries
+  // that were queued while the feature was on are cleared rather than left to
+  // silently fire later if the feature is re-enabled without noticing them.
+  if (!input.enabled) {
+    await prisma.notification.updateMany({
+      where: { emailStatus: "PENDING" },
+      data: { emailStatus: null },
+    });
+  }
+
   await writeAuditLog(prisma, {
     actorId: actingMaster.id,
     action: input.enabled ? "EMAIL_DELIVERY_ENABLED" : "EMAIL_DELIVERY_DISABLED",

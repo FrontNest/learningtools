@@ -10,7 +10,12 @@ behavior and implementation contracts, not merely a future plan.
 
 The application manages internal IT tickets, user/admin accounts, teams,
 three-level category trees, comments, worklogs, attachments, audit history,
-notifications, and automatic ticket closure.
+notifications, and automatic ticket closure. It has been through a dedicated
+security hardening pass (persistent session storage, CSRF protection, rate
+limiting, master-only privilege boundaries) and supports optional outbound
+email delivery via Exchange Online / Microsoft Graph, fully configurable and
+toggleable by the master administrator at runtime. See section 13 for the
+full security hardening summary.
 
 
 1. TARGET ARCHITECTURE
@@ -24,10 +29,18 @@ Current stack:
 - Authentication: email/password with bcrypt password hashes and an httpOnly
   server-side session cookie (express-session). Do not trust role data sent
   from a client.
+- Sessions: persisted in the database via a custom Prisma-backed session
+  store (Session model), not the default in-memory store, so sessions survive
+  restarts and do not leak memory. A cleanup job removes expired rows.
+- CSRF: a double-submit-cookie token (non-httpOnly csrfToken cookie, echoed
+  back as the X-CSRF-Token header) is required on every state-changing
+  request from an authenticated session, on top of SameSite=strict cookies.
 - Storage: attachments are files on disk. The database stores only metadata
   and a generated relative storage key.
-- Jobs: node-cron runs automatic closure every 15 minutes in the backend
-  process.
+- Jobs: node-cron runs three scheduled jobs in the backend process:
+  automatic ticket closure (every 15 minutes), expired session cleanup
+  (every 30 minutes), and pending email delivery dispatch (every minute,
+  no-op unless email delivery is enabled).
 
 Project layout:
 - ticketing/webapp/frontend: React client.
@@ -59,7 +72,16 @@ Environment variables (backend/.env):
 - DEVICE_INVENTORY_CSV_PATH (CSV inventory input)
 - COOKIE_SECURE (true only behind HTTPS)
 - SERVE_FRONTEND_DIST (optional built SPA path)
-- SEED_ADMIN_PASSWORD and MASTER_USER_PASSWORD only for seeding
+- SEED_ADMIN_PASSWORD (optional, seed-time only, non-master demo accounts)
+- MASTER_USER_PASSWORD (mandatory at seed time, no fallback default exists;
+  the seed script throws if it is unset, to prevent provisioning the
+  highest-privilege account with a guessable password)
+
+Outbound email delivery configuration (tenant ID, app registration client ID,
+client secret, sender mailbox, enabled flag) is NOT environment-based. It is
+stored in the database (EmailSettings singleton row), configured at runtime
+by the master administrator through the UI, with the client secret encrypted
+at rest. See section 8 and section 13.
 
 Non-secret app settings are in backend/config/app.config.json:
 - appName, appShortName, favicon, supportContact
@@ -77,6 +99,16 @@ Security requirements:
 - Use httpOnly session cookies; use Secure cookies under HTTPS.
 - Use Helmet, CORS limited to FRONTEND_ORIGIN in split dev mode, input
   validation, route authorization and login rate limiting.
+- Login lockout (5 failed attempts / 5 minutes per email) returns the exact
+  same generic 401 message as a wrong password, never a distinct "locked"
+  message/status — a distinguishable response would let an attacker confirm
+  a lockout succeeded and enumerate valid accounts.
+- General API rate limiting (600 requests / 15 minutes / IP) plus a stricter
+  attachment upload limiter (30 uploads / 15 minutes / IP).
+- Attachment content is verified with a file-signature (magic-byte) check
+  against the claimed extension, in addition to extension and MIME-type
+  checks — the client-supplied MIME type is attacker-controlled and must
+  never be trusted alone.
 - Any current user must be reloaded from the database for protected requests;
   inactive accounts become unauthorized and their sessions are destroyed.
 - A frontend control is not authorization. Every permission below must be
@@ -105,7 +137,21 @@ Admin visibility:
 
 Master-only operations:
 - Permanently delete a ticket and all dependent data/files.
-- Reopen a CLOSED ticket.
+- Reopen a CLOSED ticket, or make any status/metadata/assignment change on a
+  RESOLVED or CLOSED ticket (a normal admin remains restricted to the
+  narrower resolved-reopen and closed-reopen rules in section 6).
+- Permanently delete ANY user account (a normal admin cannot delete any
+  account at all, regardless of target).
+- Reset the password of a user whose isMaster flag is true.
+- Edit the master account's own email, display name, role or team — a
+  normal admin viewing the master row sees read-only text and no Delete
+  control, even though the same row is technically reachable via the API
+  (which independently re-enforces this restriction).
+- Grant the ADMIN role to any account, whether via single-user create/update
+  or via bulk CSV import (rows requesting ADMIN are skipped with a reason if
+  the importing admin is not master).
+- View the global (non-ticket) account-management audit trail.
+- Configure and enable/disable outbound email delivery (section 8/13).
 
 User administration must protect master accounts from deletion or demotion.
 Users with history should normally be deactivated rather than hard-deleted.
@@ -174,7 +220,21 @@ AuditLog
 Notification
 - ticketId?, recipientId, type, status (PENDING/SENT/FAILED), message,
   createdAt, readAt?, errorMessage?.
-- In this local MVP, notifications are in-app database rows. No outbound email.
+- emailStatus? (null/PENDING/SENT/FAILED), emailError?, emailSentAt? —
+  independent of the in-app status/readAt above. emailStatus is set to
+  PENDING at creation time only if email delivery is enabled at that moment;
+  otherwise it stays null and no email is ever attempted for that row.
+- In-app notifications always exist regardless of email delivery being
+  enabled. Email is an additional, optional delivery channel for the exact
+  same message and the exact same recipient list — it never changes who is
+  allowed to see a notification, only whether they also receive it by email.
+
+EmailSettings (singleton row, id="singleton")
+- enabled (bool), tenantId?, clientId?, clientSecretEnc? (AES-256-GCM
+  ciphertext, key derived from SESSION_SECRET — never store or return the
+  plaintext secret), senderMailbox?, updatedByEmail?, updatedAt.
+- Only the master administrator may read (masked: hasClientSecret boolean
+  instead of the secret) or write this row.
 
 LoginAttempt
 - userId?, email, success, ipAddress?, createdAt.
@@ -182,6 +242,11 @@ LoginAttempt
 TicketSequence
 - year primary key and lastNumber. Increment inside a transaction to produce
   concurrency-safe per-year ticket numbers.
+
+Session
+- sid (primary key), data (serialized session JSON), expiresAt.
+- Backs the persistent Prisma-based express-session store (section 1/13).
+  A scheduled job deletes rows where expiresAt has passed.
 
 
 5. CATEGORIES AND TICKET CREATION
@@ -216,6 +281,21 @@ Required creation fields:
 Validate that the selected category is active. If a device is chosen, validate
 that it exists and store its snapshot.
 
+Category management admin UI (/admin/categories, admin-only):
+- A "Configure categories" panel with three linked dropdowns (Level 1,
+  Level 2, Level 3). Each dropdown lists existing categories at that level
+  plus a "New category..." option that reveals inline code/name inputs.
+  Level 2 only becomes selectable once Level 1 is chosen (existing or new);
+  Level 3 only once Level 2 is chosen. Saving creates whichever levels were
+  set to "New category...", using the resolved parent chain, and can
+  activate/deactivate the deepest selected existing category.
+- A read/manage tree view below it: Level 1 categories are collapsible
+  sections (closed by default), each containing its Level 2 collapsible
+  children, each containing a small table of Level 3 leaves. Every node at
+  every level has inline code/name editing and an Activate/Deactivate
+  control. There is no separate "reparent an existing category" control;
+  structure changes happen by creating new nodes in the desired position.
+
 
 6. TICKET WORKFLOW AND FINALIZATION RULES
 -----------------------------------------
@@ -249,16 +329,26 @@ Resolved workflow:
   the text does not need automatic sentiment analysis.
 - The REOPEN control appears beside the displayed RESOLVED status only when
   the backend supplies canReopen=true for the current user.
-- Reopening changes status to IN_PROGRESS and clears resolvedAt, autoCloseAt
-  and closedAt. Normal admin editing is then enabled again.
+- Reopening (by the resolver, under the rule above) changes status to
+  IN_PROGRESS and clears resolvedAt, autoCloseAt and closedAt. Normal admin
+  editing is then enabled again.
+- The master administrator is exempt from all of the above restrictions on a
+  RESOLVED (or CLOSED) ticket: master may change status to any value, and may
+  edit category, priority, team and assigned admin, even while finalized.
+  Moving a finalized ticket to any non-final status clears resolvedAt,
+  autoCloseAt and closedAt; moving it back to RESOLVED or CLOSED re-applies
+  the normal timestamp logic for that status.
 
 Closed workflow:
 - A scheduled job runs every 15 minutes. It changes RESOLVED tickets with
   autoCloseAt <= now to CLOSED and writes AUTOMATIC_CLOSURE audit data.
-- CLOSED tickets are fully locked: no ticket metadata/assignment/status change
-  and no new comments.
-- Only a master admin may reopen CLOSED. This also sets IN_PROGRESS and clears
-  resolvedAt, autoCloseAt and closedAt.
+- CLOSED tickets are fully locked for everyone except the master: no ticket
+  metadata/assignment/status change and no new comments (existing comment
+  history remains readable to everyone with ticket access).
+- Only the master administrator may reopen or otherwise edit a CLOSED
+  ticket (see the master exemption above). This also sets IN_PROGRESS (or
+  any other chosen status) and clears resolvedAt, autoCloseAt and closedAt
+  when leaving a finalized status.
 - A requester who needs new work after final closure can create a new ticket.
 
 Ticket deletion:
@@ -277,13 +367,14 @@ Comments:
 - Requesters can only create PUBLIC comments and only on tickets they can see.
 - Admins can create PUBLIC comments and INTERNAL notes.
 - Requesters never receive or view INTERNAL notes.
-- CLOSED tickets reject comments from everyone.
+- Comment history remains readable on CLOSED tickets; only creating a NEW
+  comment is rejected for everyone once a ticket is CLOSED.
 - Record COMMENT_ADDED or INTERNAL_NOTE_ADDED audit entries.
 
 Worklogs:
-- Admin-only.
+- Admin-only to view and create.
 - Enforce configured duration/line/character restrictions.
-- Record a worklog audit entry.
+- Record a WORKLOG_ADDED audit entry.
 
 Attachments:
 - Validate configured filename extensions, MIME type rules and max size.
@@ -300,33 +391,64 @@ Audit actions to support include:
 - PRIORITY_CHANGED, STATUS_CHANGED, ASSIGNMENT_CHANGED
 - REQUESTER_CLAIMED_TICKET
 - COMMENT_ADDED, INTERNAL_NOTE_ADDED
-- ATTACHMENT_UPLOADED, worklog-related action
+- ATTACHMENT_UPLOADED, WORKLOG_ADDED
 - AUTO_CLOSE_TIMER_RESET, AUTOMATIC_CLOSURE
 
 Audit log is admin-only in the UI/API. Render: localized timestamp, actor
 display name (or SYSTEM), action, and old/new values. For category changes,
 names must be displayed instead of UUIDs.
 
+Global account-management audit trail:
+- AuditLog rows with ticketId=null record account-management actions:
+  USER_CREATED, USER_UPDATED, USER_DELETED, USER_PASSWORD_RESET,
+  USERS_IMPORTED, EMAIL_DELIVERY_ENABLED, EMAIL_DELIVERY_DISABLED.
+- These are readable only by the master administrator, via a dedicated
+  endpoint and a collapsible "Account activity log" section on the Manage
+  Users page.
+
 
 8. NOTIFICATIONS
 ----------------
 
 Create in-app notification rows for meaningful events, avoiding redundant
-noise. Existing behavior:
-- Assignment/reassignment: notify the newly assigned individual admin. If only
-  a team is assigned, notify active admins in that team.
-- Requester comment: notify the current ticket recipients.
-- Requester comment on RESOLVED: additionally notify the resolving admin even
-  if assignment has since changed; message must make clear that reopening needs
-  review. Deduplicate recipients.
-- Admin public comment: notify the requester, unless the commenter is the
-  requester.
-- Status RESOLVED/CLOSED/other admin status changes: notify active requester.
-- Automatic closure: notify active requester.
+noise. Recipient computation must mirror actual ticket/comment visibility
+rules — a user must never be notified about something they are not allowed
+to open. Current behavior:
+- Assignment/team change: notify the newly assigned individual admin
+  (TICKET_ASSIGNED if previously unassigned, TICKET_REASSIGNED otherwise).
+  Additionally, always notify the requester with an ASSIGNMENT_UPDATED
+  message naming the new team/admin, whenever the assignment actually
+  changes — this is independent of any status-change notification.
+- Public comment: notify active admins, plus any requester who currently has
+  real access to the ticket (the ticket's own requester, or a requester-team
+  member when the ticket is assigned to their team with no individual
+  admin), excluding the comment's author. Uses COMMENT_ADDED.
+- Internal note: notify only active admins, excluding the author. Requesters
+  are never notified about INTERNAL_NOTE_ADDED, regardless of ticket access.
+- Requester comment on a RESOLVED ticket, within the original five-day
+  window: additionally notify the resolving admin (even if assignment has
+  since changed) with a message that reopening should be reviewed.
+  Deduplicate recipients.
+- Worklog added: notify active admins, excluding the admin who logged it.
+  Requesters are never notified about WORKLOG_ADDED.
+- Status changes (RESOLVED/CLOSED/other): notify the active requester.
+- Automatic closure: notify the active requester.
 
 Notification page:
 - List the latest 50 notifications with ticket number, message, timestamp and
   read/unread appearance.
+- Filter controls: read/unread/all, ticket-number search (normalized —
+  ignores case and non-alphanumeric characters like "#"/"-"/spaces, so
+  partial numbers like "0000003" match "TCK-2026-0000003"), created-from and
+  created-to date range.
+- Sort options: newest/oldest first, ticket number ascending/descending,
+  unread-first, read-first.
+- Filtered results are grouped into two collapsible sections, Unread
+  (expanded by default) and Read (collapsed by default), each showing a
+  count; the user can independently expand/collapse either.
+- Bulk actions: "Mark all read" and "Mark all unread" apply to every
+  notification belonging to the current user (not just the currently
+  filtered subset), via a single PATCH /notifications/read-state call.
 - Opening a notification marks it read and navigates to the ticket when it
   still exists.
 
@@ -343,6 +465,42 @@ Browser notifications:
 - Web Notifications generally require HTTPS, except localhost. They should not
   be expected to work reliably on plain HTTP LAN IP addresses.
 
+Optional email delivery (Exchange Online / Microsoft Graph):
+- Fully optional and disabled by default. Master-configurable at
+  /admin/email-settings (master-only route, double-enforced server-side).
+- Configuration: Entra ID tenant ID, app registration client ID, client
+  secret, sender mailbox address. The client secret is encrypted at rest
+  (AES-256-GCM, key derived from SESSION_SECRET) and is never returned to any
+  client; the settings API only reports whether one is set (hasClientSecret).
+- Enabling requires tenant ID, client ID, client secret and sender mailbox to
+  all already be present, and requires an explicit confirm:true flag on the
+  request. The frontend obtains this by asking the master an explicit
+  yes/no confirmation ("Are you sure you want to enable/disable email
+  delivery?") before sending the request; disabling requires the same
+  explicit confirmation.
+- When disabled: notify() never marks any Notification row for email
+  delivery, and the dispatch job exits immediately without any network call
+  — there is zero outbound traffic related to this feature while disabled.
+- When enabled: notify() stamps new Notification rows with
+  emailStatus="PENDING". A cron job (every minute) picks up PENDING rows (up
+  to 20 per run), sends each via Microsoft Graph's application-permission
+  sendMail endpoint (OAuth2 client-credentials flow, token cached until near
+  expiry), and marks each SENT (with emailSentAt) or FAILED (with
+  emailError). Inactive recipients are marked FAILED without attempting
+  delivery.
+- Email bodies are plain text only (never HTML) and contain only the same
+  short, server-generated message already used for the in-app notification
+  (e.g. ticket number and a short status phrase) — never raw ticket
+  descriptions, comments or attachment content. The "to" address always
+  comes from the recipient's verified User.email field via a structured API
+  call, not a raw string, so classic header injection does not apply.
+- Disabling the feature immediately clears any still-PENDING Notification
+  rows back to emailStatus=null, so nothing queued while it was enabled can
+  silently resume sending after a later re-enable.
+- tenantId and clientId are validated against a restrictive character set
+  before being interpolated into Microsoft login/Graph URLs, to prevent
+  malformed or unsafe values even though only the master can set them.
+
 
 9. USER EXPERIENCE REQUIREMENTS
 -------------------------------
@@ -350,13 +508,19 @@ Browser notifications:
 Pages/routes:
 - /login: email/password login.
 - /change-password: current/new/confirmation and policy enforcement.
-- /: requester ticket sections or admin all-ticket dashboard and filters.
+- /: requester ticket sections or admin all-ticket dashboard and filters,
+  with an active-work-focused summary bar (excludes RESOLVED/CLOSED from
+  workload counts) for admins.
 - /tickets/new: creation form with category cascade/device input.
 - /tickets/:id: ticket detail, meta controls according to permissions,
   comments, attachments, admin worklogs and audit log.
-- /notifications
-- /admin/users (admin only)
+- /notifications: filters, sorting, collapsible unread/read groups, bulk
+  mark-read/unread (section 8).
+- /admin/users (admin only; several controls further restricted to master,
+  see below)
 - /admin/categories (admin only)
+- /admin/email-settings (master only; a non-master admin is shown an access-
+  restricted message instead of the form)
 
 Password fields:
 - Login and every change-password password field has an eye button.
@@ -368,10 +532,29 @@ Password fields:
 Ticket detail controls:
 - Normal admins can edit category cascade, priority, status and assignment only
   while not RESOLVED or CLOSED.
-- On RESOLVED/CLOSED show values as text rather than editable controls.
+- The master administrator can edit all of the above on a RESOLVED or CLOSED
+  ticket too (section 6); the status dropdown always offers every status for
+  master, not just RESOLVED/CLOSED.
+- On RESOLVED/CLOSED show values as text rather than editable controls for
+  non-master admins.
 - Place REOPEN next to status only if ticket.canReopen is true from API.
 - Show master-only Delete ticket control with confirmation.
-- Hide comment form on CLOSED tickets and display a brief explanatory message.
+- Hide the comment submission form on CLOSED tickets (history remains
+  visible) and display a brief explanatory message.
+
+Manage users page:
+- Three collapsible sections with an arrow indicator next to each heading:
+  "New user" (closed by default), "Users" (open by default), and, master-only,
+  "Account activity log" (closed by default).
+- A client-side search field filters the Users table by email, display name,
+  role or team name.
+- The master row's role/team fields render as plain text (not selects) and
+  its Edit/Delete controls are hidden unless the current user is master.
+  Deactivate/Reset-password remain hidden for the master row entirely (the
+  master account cannot be deactivated by anyone).
+- The Delete action/button is master-only for every row.
+
+Manage categories page: see section 5 ("Category management admin UI").
 
 
 10. API CONTRACT OVERVIEW
@@ -386,17 +569,23 @@ Auth:
 - GET /auth/me -> public user (include isMaster).
 - POST /auth/change-password { currentPassword, newPassword } -> 204.
 
+All state-changing requests (POST/PATCH/PUT/DELETE) from an authenticated
+session must include the X-CSRF-Token header matching the csrfToken cookie
+value (double-submit CSRF check); login itself is exempt (no session exists
+yet) but is separately rate-limited.
+
 Tickets:
 - POST /tickets -> create.
 - GET /tickets -> filters: status, priority, assignedTeamId, assignedUserId,
-  categoryId, search, unassigned, createdFrom, createdTo, createdByMe,
-  assignedToMe.
+  categoryId, search, unassigned, openOnly (excludes RESOLVED/CLOSED),
+  createdFrom, createdTo, createdByMe, assignedToMe.
 - GET /tickets/:id -> detailed ticket. Add boolean canReopen computed for the
   current authenticated user.
-- PATCH /tickets/:id -> admin metadata/status update or limited requester-team
-  status handling. Enforce finalized workflow rules server-side.
-- PATCH /tickets/:id/assignment -> admin assignment change or permitted
-  requester-team self-claim.
+- PATCH /tickets/:id -> admin metadata/status update (master may bypass
+  finalized-ticket restrictions entirely), or limited requester-team status
+  handling. Enforce finalized workflow rules server-side.
+- PATCH /tickets/:id/assignment -> admin assignment change (master may bypass
+  the finalized-ticket restriction) or permitted requester-team self-claim.
 - DELETE /tickets/:id -> master-only hard delete, 204.
 
 Nested ticket resources:
@@ -410,10 +599,20 @@ Reference/catalogue routes:
 - GET /teams
 - GET /admin/users?teamId=... (active admins, admin only)
 - GET /me/devices
-- Admin category CRUD under /admin/categories
-- User management under /admin/users or the app's user-management route
-- GET /dashboard/summary (admin dashboard counters)
-- GET /notifications and PATCH /notifications/:id/read
+- Admin category CRUD under /admin/category-management
+- User management under /admin/user-management:
+  - GET / (list), POST / (create; role=ADMIN requires master)
+  - PATCH /:id (update; role=ADMIN requires master, and any edit at all to a
+    master-target account requires the acting user to be master)
+  - POST /:id/reset-password (requires master if the target is master)
+  - DELETE /:id (master-only, regardless of target)
+  - POST /import (CSV bulk import; rows requesting ADMIN are skipped unless
+    the importing admin is master)
+  - GET /audit-log (master-only; global ticketId=null audit trail)
+- GET/PUT /admin/email-settings (master-only; see section 8)
+- GET /dashboard/summary (admin dashboard counters; active-work-only)
+- GET /notifications, PATCH /notifications/:id/read,
+  PATCH /notifications/read-state { read: boolean } (bulk mark all)
 - GET /health
 
 Return structured error JSON with a safe error message and correct status:
@@ -427,8 +626,10 @@ conflict. Never expose stack traces to clients.
 Create IT teams SD and L2, the category hierarchy described above, and these
 development accounts:
 - admin.master@company.example: ADMIN, isMaster=true, SD team. Password from
-  MASTER_USER_PASSWORD (legacy default was ItSdMaster). No forced password
-  change in seed.
+  the mandatory MASTER_USER_PASSWORD env var (no fallback — seeding fails
+  without it). mustChangePassword=true on first creation, like every other
+  account; re-running the seed never resets an existing master's password or
+  mustChangePassword flag.
 - admin.sd@company.example: ADMIN, SD team.
 - admin.l2@company.example: ADMIN, L2 team.
 - requester.demo@company.example: REQUESTER.
@@ -436,6 +637,16 @@ development accounts:
 Non-master seeded accounts use SEED_ADMIN_PASSWORD or default ChangeMe123!,
 and mustChangePassword=true. Do not retain known default credentials in a
 production deployment.
+
+If the master administrator ever forgets their password and no other master
+exists to reset it (by design, no one else may), a local server-side
+maintenance script resets it directly in the database without touching any
+other data: `npm run reset:master-password` (backend/scripts/
+resetMasterPassword.ts). It prompts for a new password with masked input,
+enforces the same password policy, and sets mustChangePassword=true again.
+This is intentionally not exposed through any API — it requires OS-level
+file access to the server, which is the correct trust boundary for this kind
+of break-glass recovery.
 
 
 12. BUILD, RUN AND VALIDATION
@@ -459,6 +670,15 @@ requires rebuilding frontend before it is visible; backend TypeScript changes
 require npm run build and restarting npm start. In development, Vite hot
 reloads frontend changes and ts-node-dev restarts backend code.
 
+A guided Windows installer (ticketing/documentation/install.bat +
+Install-TicketingApp.ps1) automates the steps above end to end for a fresh
+machine: Node.js check/install, npm install for both packages, .env
+generation with a random SESSION_SECRET, database migration and seeding,
+building both packages, a Windows Firewall rule for the chosen port, and
+opening the login page in the default browser. See INSTALLDOCU.txt for the
+step-by-step manual equivalent and the master password recovery procedure
+(npm run reset:master-password / Reset-MasterPassword.bat).
+
 Minimum behavioral validation scenarios:
 1. Create a Software -> Security -> Phishing suspicion ticket and confirm the
    leaf category saves.
@@ -474,3 +694,100 @@ Minimum behavioral validation scenarios:
    files disappear.
 8. Enable browser alerts, create an unread notification as another user, and
    confirm title/favicons update and a permitted desktop alert appears.
+9. As master, move a CLOSED ticket to IN_PROGRESS or any other status,
+   confirm normal admin editing is enabled again, and that a non-master admin
+   still cannot touch a finalized ticket at all.
+10. As master, view another admin's row on Manage Users — role/team remain
+    editable; view the master's own row as a non-master admin — fields are
+    read-only text and Delete is absent.
+11. Enable email delivery with valid Exchange Online app credentials, trigger
+    a notification, and confirm the Notification row transitions
+    PENDING -> SENT within a minute. Disable it and confirm no further
+    Graph/login.microsoftonline.com network calls occur.
+
+
+13. SECURITY HARDENING SUMMARY
+-------------------------------
+
+This section summarizes a dedicated security review and the fixes applied as
+a result, for a deployment expected to run on internal/critical
+infrastructure. Items are listed by area, not by severity.
+
+Authentication and session handling:
+- Persistent Prisma-backed session store (Session model) replaces the
+  default in-memory express-session store, which is unsuitable for
+  production (unbounded memory growth, total session loss on restart).
+  A cleanup job removes expired rows every 30 minutes.
+- Login lockout (5 failed attempts / 5 minutes per email) responds with the
+  same generic message/status as a wrong password, removing a
+  distinguishable "account is locked" oracle that would otherwise let an
+  unauthenticated attacker both enumerate valid emails and confirm a
+  deliberate lockout-based denial-of-service against a specific account.
+- A startup warning is logged if NODE_ENV=production while COOKIE_SECURE is
+  not enabled, since that combination silently runs with weaker CSP and a
+  non-Secure session cookie.
+
+Request-level protections:
+- CSRF double-submit-cookie check on every authenticated state-changing
+  request, layered on top of SameSite=strict cookies, so a future change to
+  CORS/cookie configuration cannot silently remove CSRF protection.
+- General API rate limiting (600 requests / 15 minutes / IP) and a stricter
+  attachment-upload limiter (30 uploads / 15 minutes / IP), in addition to
+  the existing login limiter.
+- Attachment uploads are validated by extension, client-supplied MIME type,
+  AND file-signature (magic-byte) inspection — MIME type alone is
+  attacker-controlled and insufficient.
+
+Privilege boundaries (all enforced server-side, not just hidden in the UI):
+- Resetting a master account's password now requires the acting user to
+  already be master (previously any admin could reset any account's
+  password, including the master's, and read back the new temporary
+  password — a full account-takeover path against the highest-privilege
+  account).
+- Hard-deleting any user account is master-only, regardless of target.
+- Granting the ADMIN role (single create/update or CSV bulk import) is
+  master-only; CSV rows requesting ADMIN from a non-master importer are
+  skipped with a reported reason rather than silently downgraded or applied.
+- Any edit at all (email, display name, role, team) to the master account
+  requires the acting user to already be master; a non-master admin sees the
+  master row as read-only in the UI, and the backend independently rejects
+  such edits regardless of UI state.
+- A normal admin cannot modify or bypass restrictions on a RESOLVED/CLOSED
+  ticket beyond the narrow resolver-reopen rule; only master has full
+  override (section 6).
+- Bulk CSV user import, ticket deletion, and email-delivery configuration
+  all re-validate master status inside the service layer even though the
+  route layer already checks it — deliberate defense in depth.
+
+Auditability:
+- Global (ticketId=null) AuditLog entries now cover account-management
+  actions (create/update/delete/reset-password/CSV import) and email
+  delivery enable/disable, viewable only by master, closing a prior gap
+  where such actions left no investigable trail.
+
+Secrets and credentials:
+- The master account can no longer be seeded with a hardcoded default
+  password; MASTER_USER_PASSWORD is mandatory at seed time.
+- The Microsoft Graph client secret for email delivery is encrypted at rest
+  (AES-256-GCM) using a key derived from SESSION_SECRET, never logged, and
+  never returned to any client (only a hasClientSecret boolean is exposed).
+- The logger redacts any field whose key name contains password/token/
+  secret/authorization before writing it out.
+
+Email delivery feature-specific hardening: see section 8 ("Optional email
+delivery") for the full list — zero network activity while disabled,
+plain-text-only bodies (no HTML/script injection vector), structured
+recipient addressing (no header injection), format-restricted tenant/client
+IDs, and immediate clearing of queued deliveries on disable.
+
+Residual trust assumptions (not fixable by application code alone):
+- The security model still assumes the master account credentials
+  themselves are protected; a compromised master session bypasses every
+  privilege boundary above by design (master is the root of trust).
+- At-rest secret encryption protects against a database-only leak; an
+  attacker who obtains both the database file and the backend's .env
+  (which holds SESSION_SECRET) can decrypt the stored Graph client secret.
+- SQLite is a single file with no built-in replication. Automated, encrypted
+  off-host backups of both the database file and the uploads directory are
+  an operational requirement for a critical-infrastructure deployment, not
+  something the application can guarantee by itself.
