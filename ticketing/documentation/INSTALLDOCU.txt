@@ -1,0 +1,157 @@
+ITSD TICKETING SYSTEM - WINDOWS TELEPITESI UTMUTATO
+====================================================
+
+Ez a dokumentum egy uj Windows gepre torteno telepitest irja le, lepesrol
+lepesre. A dokumentum melle keszult egy automata telepito script is
+(install.bat + Install-TicketingApp.ps1), ami az alabbi lepeseket elvegzi
+helyetted.
+
+Erintett mappak (a repo klonozasa utan):
+  ticketing\documentation\   <- ez a dokumentum es a telepito scriptek
+  ticketing\webapp\backend\  <- Node.js/Express API + adatbazis
+  ticketing\webapp\frontend\ <- React kliens
+
+
+1. ELOFELTETELEK
+-----------------
+
+- Windows 10/11, adminisztrator jogosultsaggal rendelkezo felhasznalo.
+- Internetkapcsolat a telepites idejere (npm csomagok letoltesehez, es ha
+  meg nincs Node.js telepitve, annak letoltesehez is).
+- A repository mar le van klonozva / ki van masolva a gepre (pl. Git-tel
+  vagy zip-kent kicsomagolva), ugy hogy a "ticketing" mappa struktura
+  sertetlen maradjon.
+
+
+2. AUTOMATA TELEPITES (AJANLOTT)
+---------------------------------
+
+1. Nyisd meg a ticketing\documentation mappat.
+2. Jobb katt az "install.bat" fajlon -> "Futtatas rendszergazdakent"
+   (vagy csak inditsd el; a script automatikusan admin jogot fog kerni).
+3. Kovesd a kiirt lepeseket. A script:
+   - ellenorzi/telepiti a Node.js LTS-t (winget segitsegevel, ha elerheto),
+   - telepiti a backend es frontend fuggosegeit (npm install),
+   - letrehozza / beallitja a backend\.env fajlt (session titkos kulcs,
+     LAN-mod, a beepitett frontendet kiszolgalo mod),
+     a master jelszot alapertelmezettre allitja ("itsdmaster"),
+   - alkalmazza az adatbazis-migraciokat es feltolti az alapadatokat
+     (csapatok, kategoriak, kezdo felhasznalok, benne a master fiokkal),
+   - lefordit backend + frontend kodot,
+   - engedelyezi a 4000-es portot a Windows tuzfalon,
+   - elinditja a szervert egy kulon ablakban,
+   - megnyitja az alapertelmezett bongeszot a bejelentkezo oldalon
+     (http://localhost:4000/).
+
+FONTOS: a master fiok kezdo jelszava "itsdmaster". Az elso bejelentkezes
+utan a rendszer KOTELEZOEN jelszovaltoztatast ker - ezt azonnal, meg a
+teny leges hasznalat elott vegezd el, es ne oszd meg mashogy tovabb az
+alapertelmezett jelszot, csak a bejelentkezesig.
+
+
+3. KEZI TELEPITES (ha nem hasznalod az automata scriptet)
+-----------------------------------------------------------
+
+3.1 Node.js telepitese
+   - Toltsd le es telepitsd a Node.js LTS verziojat: https://nodejs.org/
+   - Ellenorzes egy uj cmd/PowerShell ablakban: node -v
+
+3.2 Backend fuggosegek es konfiguracio
+   cd ticketing\webapp\backend
+   npm install
+   copy .env.example .env
+
+   Nyisd meg a .env fajlt, es allitsd be:
+   - SESSION_SECRET  -> egy hosszu, veletlenszeru string
+   - MASTER_USER_PASSWORD (csak a soron kovetkezo seed lepeshez szukseges,
+     nem kerul be a vegleges .env-be futas kozben, de a seed parancsnak
+     latnia kell) -> pl. itsdmaster (elso bejelentkezeskor ugyis valtani
+     kell)
+   - COOKIE_SECURE=false        (LAN / nem-HTTPS demo mod)
+   - SERVE_FRONTEND_DIST=../frontend/dist   (egy portrol szolgalja ki az
+     API-t es a frontendet)
+
+3.3 Adatbazis letrehozasa es feltoltese
+   npx prisma migrate deploy
+   npm run prisma:seed
+
+   Ha a fenti "MASTER_USER_PASSWORD hianyzik" hibaval leall, allitsd be
+   a valtozot es futtasd ujra:
+   set MASTER_USER_PASSWORD=itsdmaster
+   npm run prisma:seed
+
+3.4 Build es inditas
+   npm run build
+   cd ..\frontend
+   npm install
+   npm run build
+   cd ..\backend
+   npm start
+
+   A szerver a http://localhost:4000 cimen erheto el (ugyanaz a port
+   szolgalja ki az API-t es a bejelentkezo oldalt).
+
+3.5 Tuzfal (ha mas gepekrol/LAN-rol is elerheto legyen)
+   netsh advfirewall firewall add rule name="ITSD Ticketing (TCP 4000)" ^
+     dir=in action=allow protocol=TCP localport=4000
+
+
+4. ELSO BEJELENTKEZES
+----------------------
+
+- Nyisd meg: http://localhost:4000/ (vagy a szerver gep LAN IP-jevel:
+  http://<szerver-ip>:4000/)
+- Email: admin.master@company.example
+- Jelszo: itsdmaster
+- A rendszer azonnal jelszovaltoztatast fog kerni - adj meg egy, a ceg
+  sajat hasznalatara szant, eros jelszot.
+
+
+5. MI VAN, HA A MASTER JELSZOT ELFELEJTIK? (helyi jelszo-visszaallitas,
+   adatbazis-ujratelepites NELKUL)
+--------------------------------------------------------------------------
+
+Biztonsagi okokbol a master fiok jelszavat sem a webes feluleten, sem az
+API-n keresztul nem lehet visszaallitani, ha mar senki nincs bejelentkezve
+mastarkent (ez szandekos vedelem masik admin altali atvetel ellen).
+
+Ha a ceg IT-se elfelejti a jelszot, a szerver gepen HELYBEN, kozvetlen
+fajlrendszer-hozzaferessel lehet visszaallitani, adatbazis-ujratelepites
+nelkul:
+
+   cd ticketing\webapp\backend
+   npm run reset:master-password
+
+A script:
+   - megkeresi az adatbazisban a master fiokot,
+   - bekeri (elrejtett bevitellel) az uj jelszot es annak megerositeset,
+   - ellenorzi a jelszopolitikat (min. 10 karakter, kis- es nagybetu,
+     szam, specialis karakter),
+   - elmenti az uj, bcrypt-tel hash-elt jelszot,
+   - ujra bekapcsolja a "legkozelebbi bejelentkezeskor jelszovaltoztatas
+     kotelezo" jelzot.
+
+Ehhez nem kell ujra lefuttatni a migraciot vagy a seedelest, es a meglevo
+ticketadatok, felhasznalok, beallitasok teljesen erintetlenek maradnak.
+
+Kényelmi celbol a ticketing\documentation mappaban talalhato egy
+"Reset-MasterPassword.bat" fajl is, ami ugyanezt inditja el egy dupla
+kattintassal (adminisztrator jogot nem igenyel, csak fajlrendszer-elerest
+a szerver gepen).
+
+
+6. TOVABBI MEGJEGYZESEK
+------------------------
+
+- A COOKIE_SECURE=false / LAN-mod plain HTTP-t hasznal. Kritikus,
+  tenylegesen production infrastrukturan javasolt valodi TLS tanusitvany
+  moge tenni a szolgaltatast (pl. IIS vagy nginx reverse proxy), es akkor
+  COOKIE_SECURE=true ertekre allitani.
+- A telepito script alapertelmezetten a 4000-es TCP portot nyitja meg a
+  tuzfalon. Ha mas portot hasznalsz, ezt es a .env PORT erteket is
+  egyeztetni kell.
+- Backup: az adatbazis egyetlen fajl
+  (ticketing\webapp\backend\prisma\data\dev.db), a csatolmanyok pedig a
+  ticketing\webapp\backend\data\uploads mappaban vannak. Rendszeres,
+  automatizalt mentes beallitasa (pl. ejszakankent egy masik gepre/tarhelyre
+  masolva) eros ajanlas kritikus hasznalat eseten.

@@ -12,7 +12,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "ts-node prisma/seed.ts",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "reset:master-password": "ts-node scripts/resetMasterPassword.ts"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
