@@ -64,7 +64,7 @@ export function TicketListPage() {
           <Link id="nav-change-password" className="nav-button header-menu-button" data-name="change-password" to="/change-password">Change password</Link>
           <Link id="nav-new-ticket" className="nav-button header-menu-button" data-name="new-ticket" to="/tickets/new">New ticket</Link>
           <button className="signOutButton header-menu-button" onClick={() => logout()}>Sign out</button>
-        </div>
+        </div> 
       </header>
 
       {isAdmin && user && <AdminSummaryBar currentUserId={user.id} onFilter={setFilters} />}
