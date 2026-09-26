@@ -249,7 +249,9 @@ export function AdminUsersPage() {
           </tr>
         </thead>
         <tbody>
-          {users.map((u) => (
+          {users.map((u) => {
+            const canEditRow = !u.isMaster || currentUser?.isMaster;
+            return (
             <tr key={u.id}>
               <td>
                 {editingUserId === u.id ? (
@@ -266,34 +268,44 @@ export function AdminUsersPage() {
                 )}
               </td>
               <td>
-                <select value={u.role} onChange={(e) => handleRoleChange(u, e.target.value as Role)}>
-                  {ROLES.map((r) => (
-                    <option key={r} value={r}>
-                      {r}
-                    </option>
-                  ))}
-                </select>
+                {canEditRow ? (
+                  <select value={u.role} onChange={(e) => handleRoleChange(u, e.target.value as Role)}>
+                    {ROLES.map((r) => (
+                      <option key={r} value={r}>
+                        {r}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  u.role
+                )}
               </td>
               <td>
-                <select value={u.teamId ?? ""} onChange={(e) => handleTeamChange(u, e.target.value)}>
-                  <option value="">None</option>
-                  {teams.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.name}
-                    </option>
-                  ))}
-                </select>
+                {canEditRow ? (
+                  <select value={u.teamId ?? ""} onChange={(e) => handleTeamChange(u, e.target.value)}>
+                    <option value="">None</option>
+                    {teams.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  u.team?.name ?? "None"
+                )}
               </td>
               <td>{u.isMaster ? "Master" : u.active ? "Yes" : "No"}</td>
               <td className="admin-action-cell">
                 <div className="admin-action-stack">
-                {editingUserId === u.id ? (
-                  <>
-                    <button className="saveButton" onClick={() => saveUserDetails(u)}>Save</button>
-                    <button className="cancelButton" onClick={() => setEditingUserId(null)}>Cancel</button>
-                  </>
-                ) : (
-                  <button className="editButton" onClick={() => startEditing(u)}>Edit</button>
+                {canEditRow && (
+                  editingUserId === u.id ? (
+                    <>
+                      <button className="saveButton" onClick={() => saveUserDetails(u)}>Save</button>
+                      <button className="cancelButton" onClick={() => setEditingUserId(null)}>Cancel</button>
+                    </>
+                  ) : (
+                    <button className="editButton" onClick={() => startEditing(u)}>Edit</button>
+                  )
                 )}
                 {!u.isMaster && (
                   <>
@@ -305,7 +317,8 @@ export function AdminUsersPage() {
                 </div>
               </td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
 

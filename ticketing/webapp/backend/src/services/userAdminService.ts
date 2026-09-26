@@ -101,6 +101,10 @@ export async function updateUser(actingAdmin: User, userId: string, input: Updat
     throw AppError.notFound("User not found");
   }
 
+  if (target.isMaster && !actingAdmin.isMaster) {
+    throw AppError.forbidden("Only the master administrator can edit the master account");
+  }
+
   if (target.isMaster && (input.active === false || input.role === "REQUESTER")) {
     throw AppError.forbidden("The master user cannot be deactivated or downgraded");
   }

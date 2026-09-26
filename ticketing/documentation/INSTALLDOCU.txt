@@ -106,6 +106,12 @@ alapertelmezett jelszot, csak a bejelentkezesig.
 - A rendszer azonnal jelszovaltoztatast fog kerni - adj meg egy, a ceg
   sajat hasznalatara szant, eros jelszot.
 
+MEGJEGYZES a "Manage users" oldalrol: a master fiok adatait (email, nev,
+szerepkor, csapat) es a tobbi admin torleset kizarolag maga a master
+tudja szerkeszteni/elvegezni. Ha egy sima admin nezi a master sorat, ott
+a mezok nem szerkesztheto szoveg formajaban jelennek meg, a Torles gomb
+pedig nem is latszik - ez szandekos vedelem, nem hiba.
+
 
 5. MI VAN, HA A MASTER JELSZOT ELFELEJTIK? (helyi jelszo-visszaallitas,
    adatbazis-ujratelepites NELKUL)
