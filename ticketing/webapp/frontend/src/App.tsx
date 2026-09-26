@@ -9,6 +9,7 @@ import { NotificationsPage } from "./pages/NotificationsPage";
 import { ChangePasswordPage } from "./pages/ChangePasswordPage";
 import { AdminUsersPage } from "./pages/AdminUsersPage";
 import { AdminCategoriesPage } from "./pages/AdminCategoriesPage";
+import { AdminTeamsPage } from "./pages/AdminTeamsPage";
 import { AdminWorkflowSettingsPage } from "./pages/AdminWorkflowSettingsPage";
 import { AdminDevicesPage } from "./pages/AdminDevicesPage";
 import { AdminEmailSettingsPage } from "./pages/AdminEmailSettingsPage";
@@ -42,6 +43,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <AdminCategoriesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/teams"
+            element={
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
+                <AdminTeamsPage />
               </ProtectedRoute>
             }
           />

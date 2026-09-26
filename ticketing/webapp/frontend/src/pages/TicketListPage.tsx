@@ -67,6 +67,7 @@ export function TicketListPage() {
           <BrowserNotificationButton />
           <Link id="nav-notifications" className="nav-button header-menu-button" data-name="notifications" to="/notifications">Notifications{unreadCount > 0 ? ` (${unreadCount})` : ""}</Link>
           {isAdmin && <Link id="nav-manage-users" className="nav-button header-menu-button" data-name="manage-users" to="/admin/users">Manage users</Link>}
+          {isAdmin && <Link id="nav-manage-teams" className="nav-button header-menu-button" data-name="manage-teams" to="/admin/teams">Manage teams</Link>}
           {isAdmin && <Link id="nav-manage-categories" className="nav-button header-menu-button" data-name="manage-categories" to="/admin/categories">Manage categories</Link>}
           {isAdmin && <Link id="nav-manage-devices" className="nav-button header-menu-button" data-name="manage-devices" to="/admin/devices">Device inventory</Link>}
           {user?.isMaster && <Link id="nav-workflow-settings" className="nav-button header-menu-button" data-name="workflow-settings" to="/admin/workflow-settings">Status &amp; priority</Link>}

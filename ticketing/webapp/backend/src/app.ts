@@ -28,6 +28,7 @@ import { userManagementRouter } from "./routes/userManagement";
 import { categoryManagementRouter } from "./routes/categoryManagement";
 import { priorityManagementRouter } from "./routes/priorityManagement";
 import { statusManagementRouter } from "./routes/statusManagement";
+import { teamManagementRouter } from "./routes/teamManagement";
 import { adminEmailSettingsRouter } from "./routes/adminEmailSettings";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
@@ -95,6 +96,7 @@ export function createApp() {
   app.use("/api/admin/category-management", categoryManagementRouter);
   app.use("/api/admin/priority-management", priorityManagementRouter);
   app.use("/api/admin/status-management", statusManagementRouter);
+  app.use("/api/admin/team-management", teamManagementRouter);
   app.use("/api/admin/email-settings", adminEmailSettingsRouter);
 
   app.use("/api", notFoundHandler);
