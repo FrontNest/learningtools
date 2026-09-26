@@ -449,22 +449,63 @@ select option:checked {
   display: none;
 }
 
-.collapsible-section summary h2 {
+.collapsible-section summary h2,
+.collapsible-section summary h3,
+.collapsible-section summary h4 {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   margin: 0;
 }
 
-.collapsible-section summary h2::before {
+.collapsible-section summary h2::before,
+.collapsible-section summary h3::before,
+.collapsible-section summary h4::before {
   content: "\25B8";
   display: inline-block;
   color: var(--surface-muted);
   transition: transform 150ms ease;
 }
 
-.collapsible-section[open] summary h2::before {
+.collapsible-section[open] > summary h2::before,
+.collapsible-section[open] > summary h3::before,
+.collapsible-section[open] > summary h4::before {
   transform: rotate(90deg);
+}
+
+.category-level-2 {
+  margin-left: 1.5rem;
+}
+
+.category-config-table {
+  table-layout: fixed;
+}
+
+.category-config-table th,
+.category-config-table td {
+  vertical-align: top;
+}
+
+.category-config-table td select,
+.category-config-table td input {
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 0.4rem;
+}
+
+.category-config-table td:last-child {
+  width: 160px;
+}
+
+.category-node-controls {
+  margin: 0.4rem 0 0.6rem;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.category-leaf-table {
+  width: calc(100% - 1.5rem);
+  margin: 0.4rem 0 0.6rem 1.5rem;
 }
 
 .user-search-input {
