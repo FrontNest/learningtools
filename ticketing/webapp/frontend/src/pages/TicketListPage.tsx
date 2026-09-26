@@ -68,7 +68,7 @@ export function TicketListPage() {
           <Link id="nav-notifications" className="nav-button header-menu-button" data-name="notifications" to="/notifications">Notifications{unreadCount > 0 ? ` (${unreadCount})` : ""}</Link>
           {isAdmin && <Link id="nav-manage-users" className="nav-button header-menu-button" data-name="manage-users" to="/admin/users">Manage users</Link>}
           {isAdmin && <Link id="nav-manage-categories" className="nav-button header-menu-button" data-name="manage-categories" to="/admin/categories">Manage categories</Link>}
-          {user?.isMaster && <Link id="nav-workflow-settings" className="nav-button header-menu-button" data-name="workflow-settings" to="/admin/workflow-settings">Statuses &amp; priorities</Link>}
+          {user?.isMaster && <Link id="nav-workflow-settings" className="nav-button header-menu-button" data-name="workflow-settings" to="/admin/workflow-settings">Status &amp; priority</Link>}
           {user?.isMaster && <Link id="nav-email-settings" className="nav-button header-menu-button" data-name="email-settings" to="/admin/email-settings">Email settings</Link>}
           <Link id="nav-change-password" className="nav-button header-menu-button" data-name="change-password" to="/change-password">Change password</Link>
           <Link id="nav-new-ticket" className="nav-button header-menu-button" data-name="new-ticket" to="/tickets/new">New ticket</Link>
