@@ -1,5 +1,6 @@
 import type { Prisma, PrismaClient, Ticket, User } from "@prisma/client";
 import type { NotificationTypeValue } from "../domain/enums";
+import type { CommentTypeValue } from "../domain/enums";
 import { prisma } from "../lib/prisma";
 import { AppError } from "../errors/AppError";
 
@@ -18,6 +19,34 @@ export async function getTicketNotificationRecipients(tx: TxClient, ticket: Tick
     return tx.user.findMany({ where: { teamId: ticket.assignedTeamId, role: "ADMIN", active: true } });
   }
   return [];
+}
+
+export async function getCommentNotificationRecipients(
+  tx: TxClient,
+  ticket: Ticket,
+  commentType: CommentTypeValue,
+  authorId: string
+): Promise<User[]> {
+  const admins = await tx.user.findMany({ where: { role: "ADMIN", active: true } });
+  const recipients = admins.filter((admin) => admin.id !== authorId);
+
+  if (commentType === "INTERNAL") return recipients;
+
+  const requesterAccessConditions = [
+    { id: ticket.requesterId },
+    ...(ticket.assignedTeamId && !ticket.assignedUserId ? [{ teamId: ticket.assignedTeamId }] : []),
+  ];
+  const requesters = await tx.user.findMany({
+    where: { role: "REQUESTER", active: true, OR: requesterAccessConditions },
+  });
+
+  for (const requester of requesters) {
+    if (requester.id !== authorId && !recipients.some((recipient) => recipient.id === requester.id)) {
+      recipients.push(requester);
+    }
+  }
+
+  return recipients;
 }
 
 interface NotifyInput {

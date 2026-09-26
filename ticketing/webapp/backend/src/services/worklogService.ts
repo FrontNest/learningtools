@@ -2,6 +2,7 @@ import type { User } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { AppError } from "../errors/AppError";
 import { writeAuditLog } from "./auditService";
+import { notify } from "./notificationService";
 import { assertValidWorklogDescription } from "../domain/worklogRules";
 
 // Worklogs are Admin-only to view and create (spec section 14 / 20).
@@ -46,6 +47,16 @@ export async function createWorklog(
       actorId: admin.id,
       action: "WORKLOG_ADDED",
       newValue: `${input.durationMinutes} min`,
+    });
+
+    const recipients = await tx.user.findMany({
+      where: { role: "ADMIN", active: true, id: { not: admin.id } },
+    });
+    await notify(tx, {
+      ticketId,
+      recipients,
+      type: "WORKLOG_ADDED",
+      message: `A worklog was added to ${ticket.ticketNumber}`,
     });
 
     return worklog;

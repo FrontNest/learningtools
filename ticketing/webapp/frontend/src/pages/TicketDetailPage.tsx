@@ -369,9 +369,14 @@ export function TicketDetailPage() {
         </button>
       )}
 
-      <CommentsSection ticketId={ticket.id} isAdmin={isAdmin} canComment={ticket.status !== "CLOSED"} />
+      <CommentsSection
+        ticketId={ticket.id}
+        isAdmin={isAdmin}
+        canComment={ticket.status !== "CLOSED"}
+        onActivityAdded={() => setAuditRefreshToken((token) => token + 1)}
+      />
       <AttachmentsSection ticketId={ticket.id} />
-      {isAdmin && <WorklogSection ticketId={ticket.id} />}
+      {isAdmin && <WorklogSection ticketId={ticket.id} onActivityAdded={() => setAuditRefreshToken((token) => token + 1)} />}
       {isAdmin && <AuditLogSection ticketId={ticket.id} refreshToken={auditRefreshToken} />}
     </div>
   );

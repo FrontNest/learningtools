@@ -6,7 +6,7 @@ import type { Worklog } from "../types/ticket";
 const MAX_LINES = 20;
 const MAX_CHARS = 10000;
 
-export function WorklogSection({ ticketId }: { ticketId: string }) {
+export function WorklogSection({ ticketId, onActivityAdded }: { ticketId: string; onActivityAdded?: () => void }) {
   const [worklogs, setWorklogs] = useState<Worklog[]>([]);
   const [duration, setDuration] = useState(15);
   const [description, setDescription] = useState("");
@@ -46,6 +46,7 @@ export function WorklogSection({ ticketId }: { ticketId: string }) {
       setDescription("");
       setDuration(15);
       load();
+      onActivityAdded?.();
     } catch (err) {
       const message = isAxiosError(err) ? err.response?.data?.error : undefined;
       setError(message ?? "Failed to add worklog.");

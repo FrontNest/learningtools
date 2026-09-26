@@ -3,7 +3,17 @@ import { isAxiosError } from "axios";
 import { createComment, fetchComments } from "../lib/ticketApi";
 import type { Comment, CommentType } from "../types/ticket";
 
-export function CommentsSection({ ticketId, isAdmin, canComment }: { ticketId: string; isAdmin: boolean; canComment: boolean }) {
+export function CommentsSection({
+  ticketId,
+  isAdmin,
+  canComment,
+  onActivityAdded,
+}: {
+  ticketId: string;
+  isAdmin: boolean;
+  canComment: boolean;
+  onActivityAdded?: () => void;
+}) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [text, setText] = useState("");
   const [type, setType] = useState<CommentType>("PUBLIC");
@@ -28,6 +38,7 @@ export function CommentsSection({ ticketId, isAdmin, canComment }: { ticketId: s
       setText("");
       setType("PUBLIC");
       load();
+      onActivityAdded?.();
     } catch (err) {
       const message = isAxiosError(err) ? err.response?.data?.error : undefined;
       setError(message ?? "Failed to add comment.");
