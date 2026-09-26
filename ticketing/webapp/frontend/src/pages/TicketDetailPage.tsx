@@ -349,11 +349,22 @@ export function TicketDetailPage() {
       {ticket.otherDeviceDescription && <p>Device: {ticket.otherDeviceDescription}</p>}
       {ticket.otherCategoryDescription && <p>Category description: {ticket.otherCategoryDescription}</p>}
       {ticket.deviceSnapshot && (
-        <p>
-          Device: {ticket.deviceSnapshot.deviceName}
-          {ticket.deviceSnapshot.model ? ` (${ticket.deviceSnapshot.model})` : ""}
-          {ticket.deviceSnapshot.serialNumber ? ` — SN ${ticket.deviceSnapshot.serialNumber}` : ""}
-        </p>
+        <div className="ticket-meta">
+          <h3>Device details</h3>
+          <p>Name: {ticket.deviceSnapshot.deviceName ?? "—"}{ticket.deviceSnapshot.manufacturer ? ` (${ticket.deviceSnapshot.manufacturer})` : ""}</p>
+          {ticket.deviceSnapshot.model && <p>Model: {ticket.deviceSnapshot.model}</p>}
+          {ticket.deviceSnapshot.serialNumber && <p>Serial number: {ticket.deviceSnapshot.serialNumber}</p>}
+          {(ticket.deviceSnapshot.operatingSystem || ticket.deviceSnapshot.osVersion) && (
+            <p>OS: {ticket.deviceSnapshot.operatingSystem ?? "—"} {ticket.deviceSnapshot.osVersion ?? ""}</p>
+          )}
+          {ticket.deviceSnapshot.complianceState && <p>Compliance state: {ticket.deviceSnapshot.complianceState}</p>}
+          {ticket.deviceSnapshot.managementState && <p>Management state: {ticket.deviceSnapshot.managementState}</p>}
+          {ticket.deviceSnapshot.entraDeviceId && <p className="hint">Entra device ID: {ticket.deviceSnapshot.entraDeviceId}</p>}
+          {ticket.deviceSnapshot.intuneDeviceId && <p className="hint">Intune managed device ID: {ticket.deviceSnapshot.intuneDeviceId}</p>}
+          {ticket.deviceSnapshot.lastCheckIn && (
+            <p className="hint">Last check-in (at ticket creation): {new Date(ticket.deviceSnapshot.lastCheckIn).toLocaleString()}</p>
+          )}
+        </div>
       )}
       {ticket.resolvedAt && <p>Resolved at: {new Date(ticket.resolvedAt).toLocaleString()}</p>}
       {ticket.autoCloseAt && <p>Auto-close at: {new Date(ticket.autoCloseAt).toLocaleString()}</p>}

@@ -173,6 +173,7 @@ export function NewTicketPage() {
             <option key={d.id} value={d.id}>
               {d.deviceName}
               {d.model ? ` (${d.model})` : ""}
+              {d.serialNumber ? ` — SN ${d.serialNumber}` : ""}
             </option>
           ))}
           <option value={OTHER_DEVICE_VALUE}>Other device...</option>

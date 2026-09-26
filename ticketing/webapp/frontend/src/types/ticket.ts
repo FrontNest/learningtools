@@ -90,7 +90,14 @@ export interface Ticket extends TicketSummary {
     deviceName: string | null;
     model: string | null;
     operatingSystem: string | null;
+    osVersion: string | null;
     serialNumber: string | null;
+    manufacturer: string | null;
+    entraDeviceId: string | null;
+    intuneDeviceId: string | null;
+    complianceState: string | null;
+    managementState: string | null;
+    lastCheckIn: string | null;
   } | null;
 }
 
