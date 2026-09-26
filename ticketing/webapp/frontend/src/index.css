@@ -467,6 +467,19 @@ select option:checked {
   transform: rotate(90deg);
 }
 
+.user-search-input {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 0 0.75rem;
+  padding: 0.5rem;
+  border: 1px solid var(--control-border);
+  border-radius: 4px;
+  color: var(--surface-text);
+  background: var(--control-bg);
+  font: inherit;
+}
+
 .comment-list {
   list-style: none;
   padding: 0;

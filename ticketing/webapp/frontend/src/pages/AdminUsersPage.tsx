@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { isAxiosError } from "axios";
 import {
@@ -39,6 +39,18 @@ export function AdminUsersPage() {
   const [editingEmail, setEditingEmail] = useState("");
   const [editingName, setEditingName] = useState("");
   const [auditEntries, setAuditEntries] = useState<UserManagementAuditEntry[]>([]);
+  const [userSearch, setUserSearch] = useState("");
+
+  const filteredUsers = useMemo(() => {
+    const query = userSearch.trim().toLowerCase();
+    if (!query) return users;
+    return users.filter((u) =>
+      u.email.toLowerCase().includes(query) ||
+      u.displayName.toLowerCase().includes(query) ||
+      u.role.toLowerCase().includes(query) ||
+      (u.team?.name.toLowerCase().includes(query) ?? false)
+    );
+  }, [users, userSearch]);
 
   function load() {
     fetchAllUsers()
@@ -239,6 +251,13 @@ export function AdminUsersPage() {
 
       <details className="collapsible-section" open>
         <summary><h2>Users</h2></summary>
+        <input
+          type="search"
+          className="user-search-input"
+          placeholder="Search by email, name, role or team"
+          value={userSearch}
+          onChange={(e) => setUserSearch(e.target.value)}
+        />
         <table className="ticket-table">
         <thead>
           <tr>
@@ -251,7 +270,10 @@ export function AdminUsersPage() {
           </tr>
         </thead>
         <tbody>
-          {users.map((u) => {
+          {filteredUsers.length === 0 && (
+            <tr><td colSpan={6} className="hint">No users match this search.</td></tr>
+          )}
+          {filteredUsers.map((u) => {
             const canEditRow = !u.isMaster || currentUser?.isMaster;
             return (
             <tr key={u.id}>
