@@ -8,6 +8,7 @@ import { writeAuditLog } from "./auditService";
 import { assertFileContentMatchesSignature, assertValidAttachment } from "../domain/attachmentRules";
 import { env } from "../config";
 import { canRequesterAccessTicket } from "./ticketService";
+import { getTicketNotificationRecipients, notify } from "./notificationService";
 
 async function getAuthorizedTicket(currentUser: User, ticketId: string) {
   const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
@@ -45,7 +46,7 @@ interface UploadedFile {
 }
 
 export async function createAttachment(currentUser: User, ticketId: string, file: UploadedFile) {
-  await getAuthorizedTicket(currentUser, ticketId);
+  const ticket = await getAuthorizedTicket(currentUser, ticketId);
   assertValidAttachment(file.originalname, file.mimetype, file.size);
   assertFileContentMatchesSignature(file.buffer, file.originalname);
 
@@ -84,6 +85,28 @@ export async function createAttachment(currentUser: User, ticketId: string, file
       action: "ATTACHMENT_UPLOADED",
       newValue: file.originalname,
     });
+
+    // Requester uploads notify the assigned Admin/team; an Admin/team upload
+    // notifies the requester (spec-parallel to comments/worklogs).
+    if (currentUser.role === "REQUESTER") {
+      const recipients = await getTicketNotificationRecipients(tx, ticket);
+      await notify(tx, {
+        ticketId,
+        recipients,
+        type: "ATTACHMENT_ADDED",
+        message: `${currentUser.displayName} attached a file to ${ticket.ticketNumber}`,
+      });
+    } else {
+      const requester = await tx.user.findUnique({ where: { id: ticket.requesterId } });
+      if (requester && requester.active && requester.id !== currentUser.id) {
+        await notify(tx, {
+          ticketId,
+          recipients: [requester],
+          type: "ATTACHMENT_ADDED",
+          message: `${currentUser.displayName} attached a file to ${ticket.ticketNumber}`,
+        });
+      }
+    }
 
     return attachment;
   });
