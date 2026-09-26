@@ -9,6 +9,7 @@ import { NotificationsPage } from "./pages/NotificationsPage";
 import { ChangePasswordPage } from "./pages/ChangePasswordPage";
 import { AdminUsersPage } from "./pages/AdminUsersPage";
 import { AdminCategoriesPage } from "./pages/AdminCategoriesPage";
+import { AdminEmailSettingsPage } from "./pages/AdminEmailSettingsPage";
 import { BrowserNotificationWatcher } from "./components/BrowserNotificationWatcher";
 
 function App() {
@@ -39,6 +40,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["ADMIN"]}>
                 <AdminCategoriesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/email-settings"
+            element={
+              <ProtectedRoute allowedRoles={["ADMIN"]}>
+                <AdminEmailSettingsPage />
               </ProtectedRoute>
             }
           />

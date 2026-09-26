@@ -3,6 +3,7 @@ import { env } from "./config";
 import { logger } from "./lib/logger";
 import { startAutoCloseJob } from "./jobs/autoCloseJob";
 import { startSessionCleanupJob } from "./jobs/sessionCleanupJob";
+import { startEmailDispatchJob } from "./jobs/emailDispatchJob";
 
 if (env.nodeEnv === "production" && !env.cookieSecure) {
   logger.warn(
@@ -18,4 +19,5 @@ app.listen(env.port, () => {
   logger.info(`Backend listening on port ${env.port} (${env.nodeEnv})`);
   startAutoCloseJob();
   startSessionCleanupJob();
+  startEmailDispatchJob();
 });

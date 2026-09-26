@@ -232,8 +232,16 @@ model Notification {
   readAt       DateTime?
   errorMessage String?
 
+  // Email delivery is independent from the in-app notification above and
+  // optional (master-configurable). Null = not yet attempted / not applicable
+  // (e.g. created before email delivery was ever enabled).
+  emailStatus String?
+  emailError  String?
+  emailSentAt DateTime?
+
   @@index([recipientId])
   @@index([status])
+  @@index([emailStatus])
 }
 
 // Tracks failed login attempts per account for basic brute-force lockout.
@@ -254,6 +262,21 @@ model LoginAttempt {
 model TicketSequence {
   year        Int @id
   lastNumber  Int @default(0)
+}
+
+// Single-row master-configurable Exchange Online (Microsoft Graph) email
+// delivery settings. Disabled by default — the app works exactly as before
+// (in-app notifications only) until a master explicitly configures and
+// enables this. clientSecretEnc is encrypted at rest, never returned to the API.
+model EmailSettings {
+  id              String   @id @default("singleton")
+  enabled         Boolean  @default(false)
+  tenantId        String?
+  clientId        String?
+  clientSecretEnc String?
+  senderMailbox   String?
+  updatedByEmail  String?
+  updatedAt       DateTime @updatedAt
 }
 
 // Persistent express-session store — the default in-memory store loses all

@@ -61,6 +61,9 @@ interface NotifyInput {
 export async function notify(tx: TxClient, input: NotifyInput) {
   if (input.recipients.length === 0) return;
 
+  const settings = await tx.emailSettings.findUnique({ where: { id: "singleton" } });
+  const emailStatus = settings?.enabled ? "PENDING" : null;
+
   await tx.notification.createMany({
     data: input.recipients.map((recipient) => ({
       ticketId: input.ticketId,
@@ -68,6 +71,7 @@ export async function notify(tx: TxClient, input: NotifyInput) {
       type: input.type,
       status: "SENT",
       message: input.message,
+      emailStatus,
     })),
   });
 }
