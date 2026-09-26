@@ -773,7 +773,7 @@ Secrets and credentials:
   never returned to any client (only a hasClientSecret boolean is exposed).
 - The logger redacts any field whose key name contains password/token/
   secret/authorization before writing it out.
-
+ 
 Email delivery feature-specific hardening: see section 8 ("Optional email
 delivery") for the full list — zero network activity while disabled,
 plain-text-only bodies (no HTML/script injection vector), structured
