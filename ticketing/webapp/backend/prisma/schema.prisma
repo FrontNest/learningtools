@@ -255,3 +255,14 @@ model TicketSequence {
   year        Int @id
   lastNumber  Int @default(0)
 }
+
+// Persistent express-session store — the default in-memory store loses all
+// sessions on every restart and is unbounded, which is unacceptable for a
+// production/critical-infrastructure deployment.
+model Session {
+  sid       String   @id
+  data      String
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}

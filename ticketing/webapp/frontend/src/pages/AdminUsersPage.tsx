@@ -5,11 +5,13 @@ import {
   createManagedUser,
   deleteManagedUser,
   fetchAllUsers,
+  fetchUserManagementAuditLog,
   importUsersCsv,
   resetManagedUserPassword,
   updateManagedUser,
   type ImportResult,
   type ManagedUser,
+  type UserManagementAuditEntry,
 } from "../lib/userAdminApi";
 import { fetchTeams } from "../lib/ticketApi";
 import { useAuth } from "../auth/AuthContext";
@@ -36,12 +38,18 @@ export function AdminUsersPage() {
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [editingEmail, setEditingEmail] = useState("");
   const [editingName, setEditingName] = useState("");
+  const [auditEntries, setAuditEntries] = useState<UserManagementAuditEntry[]>([]);
 
   function load() {
     fetchAllUsers()
       .then(setUsers)
       .catch(() => setError("Failed to load users."));
   }
+
+  useEffect(() => {
+    if (!currentUser?.isMaster) return;
+    fetchUserManagementAuditLog().then(setAuditEntries).catch(() => undefined);
+  }, [currentUser?.isMaster]);
 
   useEffect(load, []);
   useEffect(() => {
@@ -323,6 +331,25 @@ export function AdminUsersPage() {
             </ul>
           )}
         </div>
+      )}
+
+      {currentUser?.isMaster && (
+        <>
+          <h2>Account activity log (master only)</h2>
+          <ul className="audit-list">
+            {auditEntries.length === 0 && <li className="hint">No account management activity yet.</li>}
+            {auditEntries.map((entry) => (
+              <li key={entry.id}>
+                <span className="hint">{new Date(entry.createdAt).toLocaleString()}</span>{" "}
+                <strong>{entry.actor?.displayName ?? "SYSTEM"}</strong> — {entry.action}
+                {entry.oldValue || entry.newValue ? (
+                  <span> ({entry.oldValue ?? "—"} → {entry.newValue ?? "—"})</span>
+                ) : null}
+                {entry.details ? <span className="hint"> — {entry.details}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </>
       )}
 
     </div>

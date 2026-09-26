@@ -2,10 +2,15 @@ import express from "express";
 import "express-async-errors";
 import helmet from "helmet";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import session from "express-session";
 import path from "path";
 import fs from "fs";
 import { env } from "./config";
+import { prisma } from "./lib/prisma";
+import { PrismaSessionStore } from "./lib/prismaSessionStore";
+import { csrfProtection } from "./middleware/csrf";
+import { apiRateLimiter } from "./middleware/rateLimiters";
 import { healthRouter } from "./routes/health";
 import { authRouter } from "./routes/auth";
 import { ticketsRouter } from "./routes/tickets";
@@ -47,10 +52,12 @@ export function createApp() {
     })
   );
   app.use(express.json({ limit: "1mb" }));
+  app.use(cookieParser());
 
   app.use(
     session({
       name: "sid",
+      store: new PrismaSessionStore(prisma),
       secret: env.sessionSecret,
       resave: false,
       saveUninitialized: false,
@@ -62,6 +69,9 @@ export function createApp() {
       },
     })
   );
+
+  app.use(csrfProtection);
+  app.use("/api", apiRateLimiter);
 
   app.use("/api/health", healthRouter);
   app.use("/api/auth", authRouter);

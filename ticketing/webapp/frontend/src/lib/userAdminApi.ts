@@ -58,6 +58,22 @@ export async function resetManagedUserPassword(id: string): Promise<{ tempPasswo
   return data;
 }
 
+export interface UserManagementAuditEntry {
+  id: string;
+  action: string;
+  oldValue: string | null;
+  newValue: string | null;
+  details: string | null;
+  createdAt: string;
+  actor: { id: string; displayName: string } | null;
+}
+
+// Master-only endpoint — the backend rejects this for non-master admins.
+export async function fetchUserManagementAuditLog(): Promise<UserManagementAuditEntry[]> {
+  const { data } = await api.get<{ entries: UserManagementAuditEntry[] }>("/admin/user-management/audit-log");
+  return data.entries;
+}
+
 export async function deleteManagedUser(id: string, deleteHistory = false): Promise<void> {
   await api.delete(`/admin/user-management/${id}`, { params: { deleteHistory } });
 }

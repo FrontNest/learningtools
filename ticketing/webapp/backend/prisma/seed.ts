@@ -143,11 +143,23 @@ async function main() {
 
   const defaultAdminPassword = process.env.SEED_ADMIN_PASSWORD ?? "ChangeMe123!";
   const passwordHash = await bcrypt.hash(defaultAdminPassword, 12);
-  const masterPasswordHash = await bcrypt.hash(process.env.MASTER_USER_PASSWORD ?? "ItSdMaster", 12);
+
+  // The master account is the single highest-privilege identity in the
+  // system — refuse to seed it with a guessable, hardcoded default password.
+  // The operator must explicitly choose one before provisioning.
+  const masterPasswordEnv = process.env.MASTER_USER_PASSWORD;
+  if (!masterPasswordEnv) {
+    throw new Error(
+      "MASTER_USER_PASSWORD must be set before seeding — refusing to provision the master account with a default password."
+    );
+  }
+  const masterPasswordHash = await bcrypt.hash(masterPasswordEnv, 12);
 
   await prisma.user.upsert({
     where: { email: "admin.master@company.example" },
-    update: { isMaster: true, role: "ADMIN", active: true, mustChangePassword: false },
+    // Never reset mustChangePassword on re-seed — that would silently undo a
+    // real operator's password change on the highest-privilege account.
+    update: { isMaster: true, role: "ADMIN", active: true },
     create: {
       email: "admin.master@company.example",
       displayName: "Master Administrator",
@@ -155,7 +167,7 @@ async function main() {
       isMaster: true,
       teamId: sd.id,
       passwordHash: masterPasswordHash,
-      mustChangePassword: false,
+      mustChangePassword: true,
     },
   });
 

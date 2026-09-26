@@ -1,7 +1,9 @@
 import { parse } from "csv-parse/sync";
+import type { User } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { hashPassword } from "./authService";
 import { generateTempPassword } from "../lib/passwordGenerator";
+import { writeAuditLog } from "./auditService";
 import { ROLES, type RoleValue } from "../domain/enums";
 
 // Expected (semicolon-delimited) header, matching the pattern already used
@@ -28,7 +30,7 @@ interface ImportResult {
 // Bulk user import: never touches passwords for existing users (only sets a
 // fresh temp password for newly created accounts) — CSV is a directory-sync
 // source, not the authentication source of truth (see repo memory).
-export async function importUsersFromCsv(csvContent: string): Promise<ImportResult> {
+export async function importUsersFromCsv(actingAdmin: User, csvContent: string): Promise<ImportResult> {
   const records: Record<string, string>[] = parse(csvContent, {
     columns: (header: string[]) => header.map(normalizeHeader),
     delimiter: ";",
@@ -55,7 +57,13 @@ export async function importUsersFromCsv(csvContent: string): Promise<ImportResu
     }
 
     const email = data.email.toLowerCase();
-    const role: RoleValue = ROLES.includes(data.role as RoleValue) ? (data.role as RoleValue) : "REQUESTER";
+    let role: RoleValue = ROLES.includes(data.role as RoleValue) ? (data.role as RoleValue) : "REQUESTER";
+    if (role === "ADMIN" && !actingAdmin.isMaster) {
+      // Only the master may grant Admin via bulk import — silently downgrading
+      // to Requester would be surprising, so the row is reported as skipped.
+      result.skipped.push({ row: i + 2, reason: "Admin role requires master privileges" });
+      continue;
+    }
     const teamId = data.team ? teamByName.get(data.team.toLowerCase()) ?? null : null;
 
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -89,6 +97,12 @@ export async function importUsersFromCsv(csvContent: string): Promise<ImportResu
     });
     result.created.push({ email, tempPassword });
   }
+
+  await writeAuditLog(prisma, {
+    actorId: actingAdmin.id,
+    action: "USERS_IMPORTED",
+    details: `created=${result.created.length}, updated=${result.updated.length}, skipped=${result.skipped.length}`,
+  });
 
   return result;
 }

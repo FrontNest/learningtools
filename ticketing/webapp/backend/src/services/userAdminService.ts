@@ -5,6 +5,7 @@ import { prisma } from "../lib/prisma";
 import { AppError } from "../errors/AppError";
 import { hashPassword } from "./authService";
 import { generateTempPassword } from "../lib/passwordGenerator";
+import { writeAuditLog } from "./auditService";
 import type { RoleValue } from "../domain/enums";
 import { env } from "../config";
 
@@ -36,7 +37,11 @@ interface CreateUserInput {
   teamId?: string | null;
 }
 
-export async function createUser(input: CreateUserInput) {
+export async function createUser(actingAdmin: User, input: CreateUserInput) {
+  if (input.role === "ADMIN" && !actingAdmin.isMaster) {
+    throw AppError.forbidden("Only the master administrator can grant the Admin role");
+  }
+
   const normalizedEmail = input.email.trim().toLowerCase();
   const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existing) {
@@ -67,6 +72,13 @@ export async function createUser(input: CreateUserInput) {
     select: userSelect,
   });
 
+  await writeAuditLog(prisma, {
+    actorId: actingAdmin.id,
+    action: "USER_CREATED",
+    newValue: normalizedEmail,
+    details: `role=${input.role}`,
+  });
+
   return { user, tempPassword };
 }
 
@@ -93,6 +105,10 @@ export async function updateUser(actingAdmin: User, userId: string, input: Updat
     throw AppError.forbidden("The master user cannot be deactivated or downgraded");
   }
 
+  if (input.role === "ADMIN" && target.role !== "ADMIN" && !actingAdmin.isMaster) {
+    throw AppError.forbidden("Only the master administrator can grant the Admin role");
+  }
+
   if (input.teamId) {
     const team = await prisma.team.findUnique({ where: { id: input.teamId } });
     if (!team || !team.active) {
@@ -108,7 +124,7 @@ export async function updateUser(actingAdmin: User, userId: string, input: Updat
     }
   }
 
-  return prisma.user.update({
+  const updated = await prisma.user.update({
     where: { id: userId },
     data: {
       email: normalizedEmail,
@@ -120,12 +136,28 @@ export async function updateUser(actingAdmin: User, userId: string, input: Updat
     },
     select: userSelect,
   });
+
+  await writeAuditLog(prisma, {
+    actorId: actingAdmin.id,
+    action: "USER_UPDATED",
+    newValue: target.email,
+    details: `changed fields: ${Object.keys(input).join(", ")}`,
+  });
+
+  return updated;
 }
 
-export async function resetUserPassword(userId: string) {
+export async function resetUserPassword(actingAdmin: User, userId: string) {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
     throw AppError.notFound("User not found");
+  }
+
+  // Only the master may reset another admin's (or their own) master-level
+  // credentials — otherwise any regular Admin could hijack the master account
+  // by resetting its password and reading the returned temporary password.
+  if (user.isMaster && !actingAdmin.isMaster) {
+    throw AppError.forbidden("Only the master administrator can reset the master account's password");
   }
 
   const tempPassword = generateTempPassword();
@@ -134,6 +166,12 @@ export async function resetUserPassword(userId: string) {
   await prisma.user.update({
     where: { id: userId },
     data: { passwordHash, mustChangePassword: true },
+  });
+
+  await writeAuditLog(prisma, {
+    actorId: actingAdmin.id,
+    action: "USER_PASSWORD_RESET",
+    newValue: user.email,
   });
 
   return { tempPassword };
@@ -191,6 +229,13 @@ export async function deleteUser(actingAdmin: User, userId: string, deleteHistor
 
       await tx.loginAttempt.deleteMany({ where: { userId } });
       await tx.user.delete({ where: { id: userId } });
+
+      await writeAuditLog(tx, {
+        actorId: actingAdmin.id,
+        action: "USER_DELETED",
+        newValue: target.email,
+        details: "Deleted with full ticket history",
+      });
     });
 
     await Promise.all(
@@ -238,6 +283,13 @@ export async function deleteUser(actingAdmin: User, userId: string, deleteHistor
     prisma.loginAttempt.deleteMany({ where: { userId } }),
     prisma.user.delete({ where: { id: userId } }),
   ]);
+
+  await writeAuditLog(prisma, {
+    actorId: actingAdmin.id,
+    action: "USER_DELETED",
+    newValue: target.email,
+    details: "Deleted with no prior activity",
+  });
 
   return { deleted: true, deletedTicketCount: 0, storageKeys: [] as string[] };
 }

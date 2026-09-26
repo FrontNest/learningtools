@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import { AppError } from "../errors/AppError";
 import { env } from "../config";
+import { attachmentUploadRateLimiter } from "../middleware/rateLimiters";
 import {
   createAttachment,
   getAttachmentForDownload,
@@ -23,7 +24,7 @@ attachmentsRouter.get("/", async (req, res) => {
   res.json({ attachments });
 });
 
-attachmentsRouter.post("/", (req, res, next) => {
+attachmentsRouter.post("/", attachmentUploadRateLimiter, (req, res, next) => {
   upload.single("file")(req, res, (err) => {
     if (err) {
       next(err);

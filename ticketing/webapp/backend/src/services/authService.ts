@@ -19,7 +19,11 @@ export async function authenticate(email: string, password: string, ipAddress?: 
   });
 
   if (recentFailures >= MAX_FAILED_ATTEMPTS) {
-    throw AppError.forbidden("Account temporarily locked due to repeated failed login attempts. Try again later.");
+    // Same generic message/status as a wrong password: a distinct "locked"
+    // response would let an attacker confirm the lockout DoS succeeded and
+    // enumerate which email addresses are valid accounts.
+    logger.warn("Login blocked: account temporarily locked", { email: normalizedEmail });
+    throw AppError.unauthorized("Invalid email or password");
   }
 
   const passwordValid = user ? await bcrypt.compare(password, user.passwordHash) : false;

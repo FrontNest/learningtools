@@ -5,6 +5,7 @@ import { AppError } from "../errors/AppError";
 import { createUserSchema, updateUserSchema } from "../validators/userAdminValidators";
 import { createUser, deleteUser, listAllUsers, resetUserPassword, updateUser } from "../services/userAdminService";
 import { importUsersFromCsv } from "../services/userImportService";
+import { prisma } from "../lib/prisma";
 
 export const userManagementRouter = Router();
 
@@ -17,12 +18,27 @@ userManagementRouter.get("/", async (_req, res) => {
   res.json({ users });
 });
 
+// Master-only: global (non-ticket) audit trail for account management actions,
+// so an incident investigation can see who created/reset/deleted which account.
+userManagementRouter.get("/audit-log", async (req, res) => {
+  if (!req.currentUser!.isMaster) {
+    throw AppError.forbidden("Only the master administrator can view the account activity log");
+  }
+  const entries = await prisma.auditLog.findMany({
+    where: { ticketId: null },
+    include: { actor: { select: { id: true, displayName: true } } },
+    orderBy: { createdAt: "desc" },
+    take: 200,
+  });
+  res.json({ entries });
+});
+
 userManagementRouter.post("/", async (req, res) => {
   const parsed = createUserSchema.safeParse(req.body);
   if (!parsed.success) {
     throw AppError.badRequest(parsed.error.issues[0]?.message ?? "Invalid user data");
   }
-  const result = await createUser(parsed.data);
+  const result = await createUser(req.currentUser!, parsed.data);
   res.status(201).json(result);
 });
 
@@ -36,7 +52,7 @@ userManagementRouter.patch("/:id", async (req, res) => {
 });
 
 userManagementRouter.post("/:id/reset-password", async (req, res) => {
-  const result = await resetUserPassword(req.params.id);
+  const result = await resetUserPassword(req.currentUser!, req.params.id);
   res.json(result);
 });
 
@@ -58,6 +74,7 @@ userManagementRouter.post("/import", (req, res, next) => {
   if (!req.file) {
     throw AppError.badRequest("No file uploaded");
   }
-  const result = await importUsersFromCsv(req.file.buffer.toString("utf-8"));
+  const result = await importUsersFromCsv(req.currentUser!, req.file.buffer.toString("utf-8"));
   res.json(result);
 });
+

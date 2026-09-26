@@ -5,7 +5,7 @@ import type { User } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { AppError } from "../errors/AppError";
 import { writeAuditLog } from "./auditService";
-import { assertValidAttachment } from "../domain/attachmentRules";
+import { assertFileContentMatchesSignature, assertValidAttachment } from "../domain/attachmentRules";
 import { env } from "../config";
 import { canRequesterAccessTicket } from "./ticketService";
 
@@ -47,6 +47,7 @@ interface UploadedFile {
 export async function createAttachment(currentUser: User, ticketId: string, file: UploadedFile) {
   await getAuthorizedTicket(currentUser, ticketId);
   assertValidAttachment(file.originalname, file.mimetype, file.size);
+  assertFileContentMatchesSignature(file.buffer, file.originalname);
 
   const ext = path.extname(file.originalname).toLowerCase();
   // Never use the original filename as the storage key (spec section 15/16).
