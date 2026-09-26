@@ -791,3 +791,4 @@ Residual trust assumptions (not fixable by application code alone):
   off-host backups of both the database file and the uploads directory are
   an operational requirement for a critical-infrastructure deployment, not
   something the application can guarantee by itself.
+
