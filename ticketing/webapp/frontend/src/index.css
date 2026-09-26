@@ -353,6 +353,21 @@ select option:checked {
   flex-wrap: wrap;
 }
 
+.device-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0.5rem 0;
+}
+
+.device-details h3 {
+  margin: 0 0 0.25rem;
+}
+
+.device-details p {
+  margin: 0;
+}
+
 .ticket-description {
   white-space: pre-wrap;
   color: var(--surface-text);

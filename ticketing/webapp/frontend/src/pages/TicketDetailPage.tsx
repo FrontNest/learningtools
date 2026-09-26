@@ -349,7 +349,7 @@ export function TicketDetailPage() {
       {ticket.otherDeviceDescription && <p>Device: {ticket.otherDeviceDescription}</p>}
       {ticket.otherCategoryDescription && <p>Category description: {ticket.otherCategoryDescription}</p>}
       {ticket.deviceSnapshot && (
-        <div className="ticket-meta">
+        <div className="device-details">
           <h3>Device details</h3>
           <p>Name: {ticket.deviceSnapshot.deviceName ?? "—"}{ticket.deviceSnapshot.manufacturer ? ` (${ticket.deviceSnapshot.manufacturer})` : ""}</p>
           {ticket.deviceSnapshot.model && <p>Model: {ticket.deviceSnapshot.model}</p>}
