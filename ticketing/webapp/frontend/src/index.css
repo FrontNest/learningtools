@@ -436,6 +436,37 @@ select option:checked {
   margin: 1rem 0 0;
 }
 
+.collapsible-section {
+  margin: 1rem 0;
+}
+
+.collapsible-section summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.collapsible-section summary::-webkit-details-marker {
+  display: none;
+}
+
+.collapsible-section summary h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.collapsible-section summary h2::before {
+  content: "\25B8";
+  display: inline-block;
+  color: var(--surface-muted);
+  transition: transform 150ms ease;
+}
+
+.collapsible-section[open] summary h2::before {
+  transform: rotate(90deg);
+}
+
 .comment-list {
   list-style: none;
   padding: 0;

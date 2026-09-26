@@ -192,9 +192,12 @@ export function AdminUsersPage() {
         <Link id="nav-back-to-tickets-users" className="nav-button" data-name="back-to-tickets" to="/">Back to tickets</Link>
       </header>
 
+      {notice && <p className="hint">{notice}</p>}
+      {error && <p className="form-error">{error}</p>}
 
-      <h2>New user</h2>
-      <form className="ticket-form" onSubmit={handleCreate}>
+      <details className="collapsible-section">
+        <summary><h2>New user</h2></summary>
+        <form className="ticket-form" onSubmit={handleCreate}>
         <label htmlFor="new-email">Email</label>
         <input id="new-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
 
@@ -231,13 +234,12 @@ export function AdminUsersPage() {
         <button className="createButton" type="submit" disabled={creating}>
           {creating ? "Creating..." : "Create user"}
         </button>
-      </form>
+        </form>
+      </details>
 
-      {notice && <p className="hint">{notice}</p>}
-      {error && <p className="form-error">{error}</p>}
-
-      <h2>Users</h2>
-      <table className="ticket-table">
+      <details className="collapsible-section" open>
+        <summary><h2>Users</h2></summary>
+        <table className="ticket-table">
         <thead>
           <tr>
             <th>Email</th>
@@ -320,7 +322,8 @@ export function AdminUsersPage() {
             );
           })}
         </tbody>
-      </table>
+        </table>
+      </details>
 
       <h2>Bulk import (CSV)</h2>
       <p className="hint">
@@ -347,8 +350,8 @@ export function AdminUsersPage() {
       )}
 
       {currentUser?.isMaster && (
-        <>
-          <h2>Account activity log (master only)</h2>
+        <details className="collapsible-section">
+          <summary><h2>Account activity log (master only)</h2></summary>
           <ul className="audit-list">
             {auditEntries.length === 0 && <li className="hint">No account management activity yet.</li>}
             {auditEntries.map((entry) => (
@@ -362,7 +365,7 @@ export function AdminUsersPage() {
               </li>
             ))}
           </ul>
-        </>
+        </details>
       )}
 
     </div>
