@@ -7,15 +7,20 @@ This document describes the currently implemented standalone internal IT
 service-desk application. It is intended to let an AI or engineering team
 recreate equivalent behavior on another system. It describes actual product
 behavior and implementation contracts, not merely a future plan.
+The original as-built baseline is dated 2026-09-25; the SharePoint porting
+blueprint in section 14 was added on 2026-09-29.
 
 The application manages internal IT tickets, user/admin accounts, teams,
 three-level category trees, comments, worklogs, attachments, audit history,
-notifications, and automatic ticket closure. It has been through a dedicated
-security hardening pass (persistent session storage, CSRF protection, rate
-limiting, master-only privilege boundaries) and supports optional outbound
-email delivery via Exchange Online / Microsoft Graph, fully configurable and
+notifications, device inventory, and automatic ticket closure. It has been
+through a dedicated security hardening pass (persistent session storage,
+CSRF protection, rate limiting, master-only privilege boundaries) and
+supports optional outbound email delivery via Exchange Online / Microsoft Graph, fully configurable and
 toggleable by the master administrator at runtime. See section 13 for the
-full security hardening summary.
+full security hardening summary. Section 14 is a separate implementation
+blueprint for rebuilding the current behavior with SharePoint Lists, a
+Power Apps canvas app and Power Automate cloud flows; it is not a claim that
+the React app itself runs inside SharePoint.
 
 
 1. TARGET ARCHITECTURE
@@ -127,8 +132,8 @@ additional irreversible capabilities. It is not a third general role.
 
 Requester visibility:
 - Can see tickets they created.
-- If the requester belongs to a team, can also see tickets assigned to that
-  team where assignedUserId is null or equals that user.
+- If the requester's team matches a ticket's assignedTeamId, can also see
+  that ticket when assignedUserId is null or equals that requester.
 - Cannot see internal comments.
 
 Admin visibility:
@@ -152,6 +157,9 @@ Master-only operations:
   the importing admin is not master).
 - View the global (non-ticket) account-management audit trail.
 - Configure and enable/disable outbound email delivery (section 8/13).
+- Manage workflow catalogues: add/rename/reorder/activate/deactivate
+  priorities (delete only when unused) and rename the labels of fixed status
+  keys (section 9/14).
 
 User administration must protect master accounts from deletion or demotion.
 Users with history should normally be deactivated rather than hard-deleted.
@@ -171,6 +179,9 @@ User
 Team
 - id, name (unique), type (REQUESTER_TEAM or IT_TEAM), active.
 - relations: members, assigned tickets, requester-team tickets.
+- Admins can create, rename, change type and activate/deactivate teams from
+  /admin/teams. This is admin-only, not master-only. A team type change does
+  not automatically move its members or existing tickets.
 
 Category
 - id, parentId? self-relation, code (unique), name, active.
@@ -178,16 +189,32 @@ Category
   presents three levels: top category -> problem category -> subcategory.
 - Ticket category should be a leaf whenever a third-level option exists.
 
+TicketPriority
+- id, key (unique, stable), label, sortOrder, active, timestamps.
+- The master may add, rename, reorder, activate/deactivate; a used priority
+  cannot be hard-deleted. Existing tickets store the stable key.
+
+TicketStatusLabel
+- id, key (one of the seven fixed ticket status keys, unique), label,
+  updatedAt. Only the master-editable display label is stored here; workflow
+  keys and rules remain fixed.
+
 Device
 - id, source, deviceName, primaryUserEmail?, Entra/Intune identifiers,
   serialNumber?, manufacturer?, model?, OS fields, compliance/management
   state, lastCheckIn?, IP address and timestamps.
+- The current source is a manually uploaded semicolon-delimited CSV inventory;
+  it is synced into the local Device table. This is not yet a live Intune or
+  Microsoft Graph integration.
 
 Ticket
 - id, ticketNumber (unique, TCK-YYYY-0000001 style)
 - requesterId, requesterTeamId?
 - subject, description, categoryId, otherCategoryDescription?
-- priority: LOW | NORMAL | HIGH | CRITICAL
+- priority: stores a stable priority key. The master can add, rename,
+  reorder, activate/deactivate priorities; a key does not change on rename.
+- Status is one of the seven fixed workflow keys below. Only its displayed
+  label is master-editable; status keys and workflow behavior are fixed.
 - status: NEW | ASSIGNED | IN_PROGRESS | WAITING_FOR_USER |
   WAITING_FOR_THIRD_PARTY | RESOLVED | CLOSED
 - assignedTeamId?, assignedUserId?
@@ -280,6 +307,18 @@ Required creation fields:
 
 Validate that the selected category is active. If a device is chosen, validate
 that it exists and store its snapshot.
+
+Device selection:
+- The requester device list is filtered by the requester's email matching
+  Device.primaryUserEmail, case-insensitively. The picker shows device name,
+  model and serial number. "Other device" always remains available and
+  requires a free-text description when selected.
+- The selected device's inventory values are copied into TicketDeviceSnapshot
+  at ticket creation, so later inventory refreshes do not rewrite the
+  historical device facts for an existing ticket.
+- Admins can inspect the imported inventory and upload a new CSV from
+  /admin/devices. The upload replaces the configured input CSV and re-syncs
+  the inventory; "Sync now" rereads the file already on the server.
 
 Category management admin UI (/admin/categories, admin-only):
 - A "Configure categories" panel with three linked dropdowns (Level 1,
@@ -384,6 +423,9 @@ Attachments:
 - Download endpoint authorizes the current user against the ticket before
   resolving and serving the file.
 - Record ATTACHMENT_UPLOADED audit data.
+- The master may delete one attachment independently. The service removes
+  its database metadata and disk file, writes ATTACHMENT_DELETED audit data,
+  and leaves the ticket and every other child record untouched.
 
 Audit actions to support include:
 - TICKET_CREATED
@@ -391,7 +433,7 @@ Audit actions to support include:
 - PRIORITY_CHANGED, STATUS_CHANGED, ASSIGNMENT_CHANGED
 - REQUESTER_CLAIMED_TICKET
 - COMMENT_ADDED, INTERNAL_NOTE_ADDED
-- ATTACHMENT_UPLOADED, WORKLOG_ADDED
+- ATTACHMENT_UPLOADED, ATTACHMENT_DELETED, WORKLOG_ADDED
 - AUTO_CLOSE_TIMER_RESET, AUTOMATIC_CLOSURE
 
 Audit log is admin-only in the UI/API. Render: localized timestamp, actor
@@ -401,7 +443,11 @@ names must be displayed instead of UUIDs.
 Global account-management audit trail:
 - AuditLog rows with ticketId=null record account-management actions:
   USER_CREATED, USER_UPDATED, USER_DELETED, USER_PASSWORD_RESET,
-  USERS_IMPORTED, EMAIL_DELIVERY_ENABLED, EMAIL_DELIVERY_DISABLED.
+  USERS_IMPORTED, EMAIL_DELIVERY_ENABLED, EMAIL_DELIVERY_DISABLED,
+  TEAM_CREATED, TEAM_RENAMED, TEAM_TYPE_CHANGED, TEAM_ACTIVATED,
+  TEAM_DEACTIVATED, DEVICE_INVENTORY_IMPORTED, PRIORITY_CREATED,
+  PRIORITY_RENAMED, PRIORITY_ACTIVATED, PRIORITY_DEACTIVATED,
+  PRIORITY_DELETED, STATUS_LABEL_RENAMED.
 - These are readable only by the master administrator, via a dedicated
   endpoint and a collapsible "Account activity log" section on the Manage
   Users page.
@@ -418,11 +464,12 @@ to open. Current behavior:
   (TICKET_ASSIGNED if previously unassigned, TICKET_REASSIGNED otherwise).
   Additionally, always notify the requester with an ASSIGNMENT_UPDATED
   message naming the new team/admin, whenever the assignment actually
-  changes — this is independent of any status-change notification.
+  changes — this is independent of any status-change notification. A
+  team-only assignment does not currently notify every admin in that team.
 - Public comment: notify active admins, plus any requester who currently has
-  real access to the ticket (the ticket's own requester, or a requester-team
-  member when the ticket is assigned to their team with no individual
-  admin), excluding the comment's author. Uses COMMENT_ADDED.
+  real access to the ticket (the ticket's own requester, or a requester whose
+  TeamId matches the assigned team when there is no individual admin),
+  excluding the comment's author. Uses COMMENT_ADDED.
 - Internal note: notify only active admins, excluding the author. Requesters
   are never notified about INTERNAL_NOTE_ADDED, regardless of ticket access.
 - Requester comment on a RESOLVED ticket, within the original five-day
@@ -431,6 +478,14 @@ to open. Current behavior:
   Deduplicate recipients.
 - Worklog added: notify active admins, excluding the admin who logged it.
   Requesters are never notified about WORKLOG_ADDED.
+- Attachment uploaded by a requester: notify the assigned individual Admin,
+  or all active Admins in the assigned team if there is no individual
+  assignee. If the ticket is unassigned, there is no recipient.
+- Attachment uploaded by an Admin: notify the active ticket requester.
+- Attachment deleted by the master: notify the active uploader, requester,
+  and assigned Admin/team, deduplicated; do not notify the acting master.
+  The notification type is ATTACHMENT_DELETED. Only the attachment is
+  removed; the ticket and its other data remain intact.
 - Status changes (RESOLVED/CLOSED/other): notify the active requester.
 - Automatic closure: notify the active requester.
 
@@ -519,6 +574,11 @@ Pages/routes:
 - /admin/users (admin only; several controls further restricted to master,
   see below)
 - /admin/categories (admin only)
+- /admin/teams (admin only; create, rename, change team type and
+  activate/deactivate requester and IT teams)
+- /admin/devices (admin only; view inventory, upload CSV and sync)
+- /admin/workflow-settings (master only; priority CRUD and status-label
+  editing; the seven status keys remain fixed)
 - /admin/email-settings (master only; a non-master admin is shown an access-
   restricted message instead of the form)
 
@@ -539,6 +599,9 @@ Ticket detail controls:
   non-master admins.
 - Place REOPEN next to status only if ticket.canReopen is true from API.
 - Show master-only Delete ticket control with confirmation.
+- Show a master-only Delete control next to each attachment. Confirm before
+  deletion; this removes only that attachment and file, then refreshes the
+  attachment list.
 - Hide the comment submission form on CLOSED tickets (history remains
   visible) and display a brief explanatory message.
 
@@ -592,14 +655,25 @@ Nested ticket resources:
 - GET/POST /tickets/:id/comments
 - GET/POST /tickets/:id/worklogs (admin operations)
 - GET/POST /tickets/:id/attachments, GET /tickets/:id/attachments/:attachmentId
+- DELETE /tickets/:id/attachments/:attachmentId (master-only; deletes one
+  file and its metadata without deleting or changing the ticket)
 - GET /tickets/:id/audit (admin only)
 
 Reference/catalogue routes:
 - GET /categories (active categories, authenticated)
 - GET /teams
+- GET /priorities (active priorities, authenticated)
+- GET /statuses (fixed status keys with current display labels, authenticated)
 - GET /admin/users?teamId=... (active admins, admin only)
 - GET /me/devices
 - Admin category CRUD under /admin/category-management
+- Admin team CRUD under /admin/team-management (all admins)
+- Admin device inventory under /admin/devices (list, POST /sync,
+  multipart POST /import)
+- Master priority CRUD under /admin/priority-management; a used priority
+  cannot be deleted and must be deactivated instead.
+- Master status label reads/updates under /admin/status-management; keys are
+  fixed and only labels can change.
 - User management under /admin/user-management:
   - GET / (list), POST / (create; role=ADMIN requires master)
   - PATCH /:id (update; role=ADMIN requires master, and any edit at all to a
@@ -704,6 +778,19 @@ Minimum behavioral validation scenarios:
     a notification, and confirm the Notification row transitions
     PENDING -> SENT within a minute. Disable it and confirm no further
     Graph/login.microsoftonline.com network calls occur.
+12. Upload the sample device CSV as an admin; sign in as its Primary user and
+  confirm only their device rows appear. Create a ticket with a selected
+  inventory device and verify the snapshot is shown. Repeat with Other
+  device and verify the free-text value is saved.
+13. Delete one attachment as master. Confirm its file/metadata disappear,
+  the ticket and other attachments remain, an ATTACHMENT_DELETED audit row
+  exists and the uploader/requester/assignee receive deduplicated notices.
+14. As an admin, create and deactivate a REQUESTER_TEAM and an IT_TEAM; verify
+  inactive teams disappear from active pickers but existing ticket/user
+  history still displays the team.
+15. As master, rename/reorder/deactivate a priority and rename a status
+  label. Verify the UI uses current labels, stored ticket keys do not
+  change, and a used priority cannot be deleted.
 
 
 13. SECURITY HARDENING SUMMARY
@@ -791,4 +878,638 @@ Residual trust assumptions (not fixable by application code alone):
   off-host backups of both the database file and the uploads directory are
   an operational requirement for a critical-infrastructure deployment, not
   something the application can guarantee by itself.
+
+
+14. SHAREPOINT / POWER APPS / POWER AUTOMATE IMPLEMENTATION BLUEPRINT
+---------------------------------------------------------------------
+
+Purpose and boundary:
+- This section translates the current React application's behavior into a
+  SharePoint Lists + Power Apps canvas app + Power Automate design. It is a
+  build guide, not an existing deployment. Use the lists and column names
+  below exactly (ASCII, no spaces) so the expressions and OData filters
+  remain predictable.
+- Build and save cloud flows in Power Automate, preferably inside one
+  Solution, before adding them to Power Apps. Do not edit a flow from the
+  Power Apps designer while another editor/session is open. Save, test, and
+  export the Solution after each working flow. In the app, add the saved
+  flow as an existing data/flow connection; never recreate a working flow
+  under a second name to fix a stale app reference.
+- If a flow appears to change unexpectedly, stop editing it, open the flow's
+  Details/Version history in Power Automate, compare the latest saved
+  version and restore the last known-good version before reconnecting the
+  app. Power Apps normally stores a reference to a cloud flow; it is not a
+  reliable version-control surface for authoring that flow.
+- Power Automate action display names below are the names to assign in the
+  designer. Expressions use their action-independent triggerBody() values.
+  In the dynamic-content picker select the named token; do not type the
+  visible @... sample as literal text. If an action must be referenced in an
+  expression, rename it first as specified and use the expression shown.
+- Use a dedicated service account/connection for SharePoint and Outlook
+  actions, with the minimum site/list access needed. Do not store client
+  secrets in list columns or Power Apps formulas.
+- CRITICAL SECURITY GATE: Power Apps filters and hidden controls do not
+  protect SharePoint rows. Before loading real user data, configure and test
+  item/library permissions so requesters cannot read other users' tickets,
+  internal comments, notifications or files. Admins need all-ticket
+  visibility; requesters need their own tickets plus permitted team-queue
+  tickets. Use an approved SharePoint-group/unique-permission strategy and
+  permission-maintenance flows for create, assignment change and team
+  membership change. Unique item permissions have scale/maintenance costs;
+  get the tenant owner/security administrator to approve the model before
+  production. A canvas-app-only Filter() is not acceptable.
+
+14.1 SharePoint site and lists
+------------------------------
+
+Create these lists on the same SharePoint site. Keep the default Title field
+and set its display name as shown; all other column names are exact internal
+names. Use Number for SharePoint item IDs stored as relationships and text
+email columns (not person fields) for stable flow addressing.
+
+SD_Teams
+- Title: team name (single line text); TeamType (Choice: REQUESTER_TEAM,
+  IT_TEAM); Active (Yes/No, default Yes).
+- Create a team item for each requester department/group and each IT
+  resolver team. A team has one type. Do not delete teams with history;
+  deactivate them.
+
+SD_Users
+- Title: display name; Email (single line text, lowercase); Role (Choice:
+  REQUESTER, ADMIN); TeamId (Number, optional); Active (Yes/No); IsMaster
+  (Yes/No, default No).
+- One current team per user, matching the React User.teamId model. Only the
+  master may set IsMaster or grant Role=ADMIN. Populate/maintain this list
+  from the approved user directory; User().Email alone does not establish
+  an app role or team membership.
+
+SD_Categories
+- Title: category name; Code (single line text, unique); ParentId (Number,
+  blank for root); Active (Yes/No).
+
+SD_Priorities
+- Title: displayed label; PriorityKey (single line text, unique and
+  immutable after creation); SortOrder (Number); Active (Yes/No).
+- Seed keys/labels/order: LOW/Low/0, NORMAL/Normal/1, HIGH/High/2,
+  CRITICAL/Critical/3. Deactivate instead of deleting a key used by a
+  ticket. The master may add, rename, reorder, activate and deactivate.
+
+SD_StatusLabels
+- Title: displayed label; StatusKey (single line text, unique); SortOrder
+  (Number); Active (Yes/No).
+- Seed exactly these immutable workflow keys: NEW, ASSIGNED, IN_PROGRESS,
+  WAITING_FOR_USER, WAITING_FOR_THIRD_PARTY, RESOLVED, CLOSED. The master
+  may change labels only. Do not add/delete status keys: timer, reopen and
+  finalized-ticket rules depend on them.
+
+SD_DeviceInventory
+- Title: inventory name; PrimaryUserEmail (single line text, lowercase);
+  EntraDeviceId, IntuneManagedDeviceId, Model, OperatingSystem,
+  OperatingSystemVersion, ComplianceState, SerialNumber, Manufacturer,
+  ManagementState (single line text); LastCheckIn (Date/time); Active
+  (Yes/No); InventoryKey (single line text, unique).
+- InventoryKey should be IntuneManagedDeviceId when present, otherwise
+  EntraDeviceId, otherwise a normalized device name plus serial. Keep
+  PrimaryUserEmail lowercase when importing.
+
+SD_Tickets
+- Title: subject (single line text); TicketNumber (single line text, unique,
+  initially blank); Description (multiple lines, plain text); CategoryId
+  (Number); CategoryLabel (single line text snapshot); OtherCategoryDescription
+  (single line text); PriorityKey (single line text); PriorityLabel (single
+  line text snapshot); StatusKey (single line text); Progress (Number).
+- RequesterEmail, RequesterName (single line text); RequesterTeamId
+  (Number, optional); AssignedTeamId (Number, optional); AssignedTeamName,
+  AssignedAdminEmail and AssignedAdminName (single line text, optional);
+  ChangeSource (single line text: CREATE, ADMIN_STATUS, ADMIN_ASSIGNMENT,
+  REQUESTER_STATUS, REQUESTER_CLAIM, AUTO_CLOSE); PreviousStatusKey,
+  PreviousAssignedAdminEmail (single line text); PreviousAssignedTeamId
+  (Number, optional). Keep these Previous* fields synchronized in the
+  relevant serial flow so old/new values can be compared reliably.
+- DeviceId (Number, optional); OtherDeviceDescription (single line text,
+  optional); DeviceName, DeviceManufacturer, DeviceModel, DeviceSerialNumber,
+  DeviceOperatingSystem, DeviceOSVersion, DeviceComplianceState,
+  DeviceManagementState, DeviceEntraId, DeviceIntuneId (single line text,
+  optional); DeviceLastCheckIn (Date/time, optional).
+- ResolvedAt, AutoCloseAt, ClosedAt (Date/time, optional). SharePoint's
+  Created/Modified columns are the creation/update timestamps.
+- Store snapshot label/data fields on the ticket, not just DeviceId. An
+  inventory refresh must never rewrite an existing ticket's snapshot.
+
+SD_Comments
+- Title: generated short label; TicketId (Number); AuthorEmail, AuthorName
+  (single line text); CommentType (Choice: PUBLIC, INTERNAL); CommentText
+  (multiple lines, plain text); CreatedAt (Date/time).
+
+SD_Worklogs
+- Title: generated short label; TicketId (Number); AdminEmail, AdminName
+  (single line text); DurationMinutes (Number); WorkDescription (multiple
+  lines); CreatedAt (Date/time).
+
+SD_TicketFiles (document library, not a list attachment)
+- Enable metadata columns TicketId (Number), TicketNumber (single line text),
+  OriginalFileName (single line text), UploadedByEmail (single line text),
+  UploadedByName (single line text), Active (Yes/No).
+- Keep each file under a generated name or SharePoint item ID; display the
+  original name from metadata. Grant requesters access only to files for
+  tickets they may see. A Power Apps filter is not a security boundary;
+  configure SharePoint permissions or use a controlled flow connection.
+
+SD_Notifications
+- Title: short message; TicketId (Number); TicketNumber (single line text);
+  RecipientEmail (single line text, lowercase); RecipientName (single line
+  text); NotificationType (single line text); Status (Choice: SENT);
+  Read (Yes/No, default No);
+  CreatedAt (Date/time); EmailStatus (Choice: NONE, PENDING, SENDING, SENT,
+  FAILED); EmailError (multiple lines); EmailEnabledAtCreation (Yes/No).
+- In-app notification creation is independent from email. Set Status=SENT
+  for the in-app row. Set EmailStatus to PENDING only when the
+  master-controlled setting is enabled at creation;
+  otherwise NONE. Disabling email must clear queued PENDING rows to NONE.
+
+SD_AuditLog
+- Title: action; TicketId (Number, optional); ActorEmail, ActorName,
+  OldValue, NewValue, Details (multiple lines or single line as appropriate);
+  CreatedAt (Date/time); IsGlobal (Yes/No).
+- Append entries; do not let ordinary users edit/delete audit rows. Global
+  rows include team, device-import, priority, status-label and account
+  management changes. Scope read permissions to admins/master as appropriate.
+
+SD_Settings (one item, Title="App")
+- EmailEnabled (Yes/No, default No); AutoCloseAfterDays (Number, default 5).
+- Create this as the first item (ID=1), and keep exactly one row. Only
+  master may change settings. Keep Graph client secrets out of this
+  SharePoint list; the Outlook connector should use its managed connection.
+
+14.2 Power Apps data and formulas
+---------------------------------
+
+Connect the canvas app to all SD_ lists. On App.OnStart (or the landing
+screen's OnVisible), load small catalogues and the current user's directory
+row. Example formulas below assume modern Power Fx and exact list/column
+names from 14.1.
+
+Current user and authorization:
+- Set(varMyEmail, Lower(User().Email));
+- Set(varMe, LookUp(SD_Users, Email = varMyEmail && Active = true));
+- If(IsBlank(varMe), Navigate(scrNoAccess));
+- Set(varIsAdmin, varMe.Role.Value = "ADMIN");
+- Set(varIsMaster, varMe.IsMaster);
+- Never treat a hidden button as authorization. For privileged writes use a
+  flow that checks SD_Users.IsMaster again, or restrict the SharePoint list
+  so the caller cannot bypass the app.
+
+Requester device picker:
+- Items:
+  SortByColumns(Filter(SD_DeviceInventory, Active = true &&
+    PrimaryUserEmail = varMyEmail), "Title", SortOrder.Ascending)
+- Set the ComboBox/Dropdown display field to Title. Suggested secondary text:
+  `ThisItem.Title & If(IsBlank(ThisItem.Model), "", " (" & ThisItem.Model & ")") & If(IsBlank(ThisItem.SerialNumber), "", " - SN " & ThisItem.SerialNumber)`
+- Add a separate Radio control `radDeviceSource` with choices "Inventory
+  device" and "Other device"; OnChange formula:
+  `Set(varOtherDevice, radDeviceSource.Selected.Value = "Other device")`.
+  Show and require txtOtherDevice only when varOtherDevice is true. If no
+  inventory row is returned, default to Other device; never block ticket
+  submission.
+- For large inventory lists, keep the equality filter on the normalized
+  PrimaryUserEmail column delegable; do not wrap that SharePoint column in
+  Lower() inside Filter(). Normalize the value during import instead.
+
+Priority picker:
+- Items: `SortByColumns(Filter(SD_Priorities, Active = true),
+  "SortOrder", SortOrder.Ascending)`; display Title and store PriorityKey.
+- DefaultSelectedItems: `Filter(SD_Priorities, PriorityKey = "NORMAL")`;
+  if NORMAL was deactivated, default to the first active item.
+
+Status picker (admin only):
+- Items: `SortByColumns(Filter(SD_StatusLabels, Active = true),
+  "SortOrder", SortOrder.Ascending)`; display Title, store StatusKey.
+- Keep status keys fixed. In the app, only show status choices permitted by
+  section 6. Do not let a requester set RESOLVED/CLOSED. A normal admin may
+  not edit finalized ticket metadata; only master bypasses that restriction.
+- Progress formula when saving a status key:
+  `Switch(varStatusKey, "NEW", 0, "ASSIGNED", 10, "IN_PROGRESS", 50, "WAITING_FOR_USER", 50, "WAITING_FOR_THIRD_PARTY", 50, "RESOLVED", 90, "CLOSED", 100, 0)`.
+
+New ticket Submit button (OnSelect):
+- Validate required fields first: subject, description, category, active
+  priority, and either an inventory device or Other-device description.
+- Create the item with Patch and copy a complete device snapshot. Formula
+  shape (replace control names with the app's names if different):
+  `Set(varNewTicket, Patch(SD_Tickets, Defaults(SD_Tickets), {Title: Trim(txtSubject.Text), Description: Trim(txtDescription.Text), RequesterEmail: varMyEmail, RequesterName: varMe.Title, RequesterTeamId: varMe.TeamId, CategoryId: cmbCategory.Selected.ID, CategoryLabel: cmbCategory.Selected.Title, OtherCategoryDescription: If(cmbCategory.Selected.Code = "OTHER", Trim(txtOtherCategory.Text), Blank()), PriorityKey: cmbPriority.Selected.PriorityKey, PriorityLabel: cmbPriority.Selected.Title, StatusKey: "NEW", ChangeSource: "CREATE", Progress: 0, DeviceId: If(varOtherDevice, Blank(), cmbDevice.Selected.ID), OtherDeviceDescription: If(varOtherDevice, Trim(txtOtherDevice.Text), Blank()), DeviceName: If(varOtherDevice, Blank(), cmbDevice.Selected.Title), DeviceManufacturer: If(varOtherDevice, Blank(), cmbDevice.Selected.Manufacturer), DeviceModel: If(varOtherDevice, Blank(), cmbDevice.Selected.Model), DeviceSerialNumber: If(varOtherDevice, Blank(), cmbDevice.Selected.SerialNumber), DeviceOperatingSystem: If(varOtherDevice, Blank(), cmbDevice.Selected.OperatingSystem), DeviceOSVersion: If(varOtherDevice, Blank(), cmbDevice.Selected.OperatingSystemVersion), DeviceComplianceState: If(varOtherDevice, Blank(), cmbDevice.Selected.ComplianceState), DeviceManagementState: If(varOtherDevice, Blank(), cmbDevice.Selected.ManagementState), DeviceEntraId: If(varOtherDevice, Blank(), cmbDevice.Selected.EntraDeviceId), DeviceIntuneId: If(varOtherDevice, Blank(), cmbDevice.Selected.IntuneManagedDeviceId), DeviceLastCheckIn: If(varOtherDevice, Blank(), cmbDevice.Selected.LastCheckIn)}));`
+- On success navigate to the item using `varNewTicket.ID`. Flow SD-01 fills
+  TicketNumber asynchronously; show a short "creating ticket number" state
+  until it arrives. Do not issue two Patch creates on a double-click.
+- Requester ticket gallery Items formula (own tickets plus accessible team
+  queue tickets; SharePoint item permissions must enforce the same boundary):
+  `Filter(SD_Tickets, RequesterEmail = varMyEmail || (varMe.TeamId = AssignedTeamId && (IsBlank(AssignedAdminEmail) || AssignedAdminEmail = varMyEmail)))`.
+  Admin gallery Items: `SD_Tickets` (all tickets).
+- On admin status-save Patch set ChangeSource="ADMIN_STATUS"; on requester
+  team status-save set ChangeSource="REQUESTER_STATUS". On admin assignment
+  Patch set ChangeSource="ADMIN_ASSIGNMENT" and update AssignedTeamName from
+  `cmbTeam.Selected.Title`; on requester queue claim set ChangeSource to
+  `REQUESTER_CLAIM`. Do not let an event flow infer the actor type from the
+  changed fields alone.
+- Existing-ticket device details screen: show the Device* snapshot fields in
+  one vertical container, one compact label/value row per field. Never
+  LookUp current inventory to render historical ticket details.
+
+14.3 Power Automate naming and notification contract
+----------------------------------------------------
+
+Create these flows in a Solution, with the exact names below. Before turning
+on each trigger, create the lists/columns and test against a dedicated test
+ticket. For SharePoint triggers, set trigger concurrency to 1 on flows that
+allocate identifiers or close tickets; enable pagination on Get items where
+noted. Create one SD_Notifications row per recipient. Email flow consumes
+those rows; event flows must not each send their own Outlook email.
+For every SD_Notifications Create item action, set its in-app Status to SENT;
+EmailStatus is a separate email-queue state.
+
+Flow SD-01 - Ticket - Number and creation audit
+Trigger:
+- SharePoint - When an item is created.
+- Site Address: the service desk site. List Name: SD_Tickets.
+Actions:
+1. SharePoint - Update item, rename action `Update_Ticket_Number`.
+   Site/List: same; Id: trigger ID. Preserve Title and every required field
+   by selecting the matching trigger dynamic content values.
+   TicketNumber expression:
+   `concat('TCK-', formatDateTime(triggerBody()?['Created'],'yyyy'), '-', formatNumber(int(triggerBody()?['ID']), '0000000'))`
+  Also set PreviousStatusKey=`NEW`; PreviousAssignedAdminEmail blank and
+  PreviousAssignedTeamId blank in this same Update item action.
+2. SharePoint - Create item in SD_AuditLog, rename `Audit_Ticket_Created`.
+   Title: `TICKET_CREATED`; TicketId: trigger ID; ActorEmail:
+   trigger RequesterEmail; ActorName: trigger RequesterName; NewValue:
+   output TicketNumber from `Update_Ticket_Number`; IsGlobal: No;
+   CreatedAt: expression `utcNow()`.
+- Do not create a requester email/in-app notification here: the React app
+  currently audits ticket creation but does not notify on creation.
+
+Flow SD-02 - Notification - Send email (V2)
+Trigger:
+- SharePoint - When an item is created, List Name SD_Notifications.
+Actions:
+1. Condition, rename `Email_is_queued`: left expression
+   `triggerBody()?['EmailStatus']?['Value']`, operator is equal to, right
+   `PENDING`. In the Yes branch, also read SD_Settings item ID 1 and require
+   EmailEnabled = true. If disabled, SharePoint - Update item to set
+   EmailStatus=NONE and stop. No Outlook action runs in this branch.
+2. SharePoint - Update item, rename `Mark_email_sending`: Id = trigger ID;
+   preserve required columns; EmailStatus = SENDING.
+3. Office 365 Outlook - Send an email (V2), rename exactly
+   `Outlook_Send_notification_V2`:
+   - To: dynamic content `RecipientEmail` (not a typed address or a person
+     selected at design time).
+   - Subject: expression
+     `concat('[', triggerBody()?['TicketNumber'], '] ', triggerBody()?['Title'])`
+   - Body: select `Title` from the trigger's dynamic content; it is the same
+     short message shown in the in-app notification.
+   - Do not enter HTML markup. Do not include Description, comment text,
+     internal notes, file content, client secret or other sensitive data.
+     The Outlook V2 action does not expose an `Is HTML` toggle; if the tenant
+     requires an explicit MIME `text/plain` content type, use a Graph
+     sendMail action with `body.contentType` set to `Text` instead.
+4. On success, SharePoint - Update item `Mark_email_sent`: EmailStatus=SENT,
+   EmailError blank. Configure run after success of the Outlook action.
+5. Add a parallel error-handling Scope with run-after failed/timed out for
+   `Outlook_Send_notification_V2`; update the same notification to
+   EmailStatus=FAILED and EmailError to the failed action's safe error
+   message. Never retry a FAILED row automatically without a duplicate-send
+   check.
+- Dynamic-content mapping summary for Send an email (V2):
+  To | Text | `RecipientEmail` (trigger item)
+  Subject | Text expression | ticket number + notification Title, formula above
+  Body | Text | `Title` dynamic content (the same short message shown in-app)
+
+Flow SD-02b - Notification - Clear queue when email is disabled
+Trigger:
+- SharePoint - When an item is created or modified, List SD_Settings.
+Actions:
+1. Get changes for the settings item with Since = Trigger Window Start Token
+   and Until = Trigger Window End Token.
+2. Condition: Has Column Changed: EmailEnabled = true AND EmailEnabled is
+   false.
+3. In Yes, Get items from SD_Notifications with Filter Query
+   `EmailStatus eq 'PENDING'` (enable pagination). Apply to each result and
+   Update item to EmailStatus=NONE, preserving required fields. Do not call
+   Outlook. This prevents an old queued item from sending after a later
+   re-enable.
+
+Flow SD-03 - Ticket - Status changed notification
+Trigger:
+- SharePoint - When an item is created or modified, List SD_Tickets.
+Actions:
+1. SharePoint - Get item from SD_Settings, ID = 1; rename `Get_Settings`.
+2. SharePoint - Get changes for an item or a file (properties only): Id = ID
+   from trigger; Since = Trigger Window Start Token; Until = Trigger Window
+   End Token. Rename `Get_Ticket_Changes`.
+3. Condition: `Has Column Changed: StatusKey` is equal to `true` AND
+  PreviousStatusKey is not blank AND PreviousStatusKey is not equal to
+  StatusKey. This excludes initial creation while still allowing a later
+  deliberate change back to NEW.
+4. In Yes, update the SD_Tickets lifecycle fields before notifying:
+   - StatusKey=RESOLVED: ResolvedAt=`utcNow()`;
+    AutoCloseAt expression
+    `addDays(utcNow(), int(outputs('Get_Settings')?['body/AutoCloseAfterDays']))`;
+     ClosedAt blank; Progress=90.
+   - StatusKey=CLOSED: ClosedAt=`utcNow()`; AutoCloseAt blank;
+     Progress=100. Preserve ResolvedAt.
+   - Any other status: Progress uses the Switch formula in 14.2. If
+     PreviousStatusKey was RESOLVED or CLOSED, clear ResolvedAt, AutoCloseAt
+     and ClosedAt; otherwise preserve them.
+   - Set PreviousStatusKey to the current StatusKey in the same Update item.
+  This Update item retriggers the flow, but the next run sees
+  PreviousStatusKey equal to StatusKey, so it must not send a second
+  notification.
+5. Only when ChangeSource=`ADMIN_STATUS`, get the requester from SD_Users by
+  Email and Active=true. If found, create SD_Notifications item. For
+  REQUESTER_STATUS do not notify; for ADMIN_ASSIGNMENT, requester claim,
+  CREATE or AUTO_CLOSE, do not create a status notification here (assignment
+  and auto-close flows handle their own messages):
+   Title expression:
+   `concat(triggerBody()?['TicketNumber'], ' status changed to ', triggerBody()?['StatusKey'])`
+   TicketId = trigger ID; TicketNumber = trigger TicketNumber;
+   RecipientEmail = trigger RequesterEmail; RecipientName = trigger
+   RequesterName; NotificationType expression:
+   `if(equals(triggerBody()?['StatusKey'],'RESOLVED'),'TICKET_RESOLVED',if(equals(triggerBody()?['StatusKey'],'CLOSED'),'TICKET_CLOSED','STATUS_CHANGED'))`
+  Read = No; CreatedAt = `utcNow()`; EmailEnabledAtCreation =
+  `outputs('Get_Settings')?['body/EmailEnabled']`; EmailStatus = PENDING if
+  that value is true, else NONE.
+6. Create an SD_AuditLog row for ADMIN_STATUS or REQUESTER_STATUS changes;
+  TicketId = trigger ID; ActorEmail/ActorName = Editor Email/Display Name
+  from the original trigger body; OldValue=PreviousStatusKey;
+  NewValue=StatusKey; IsGlobal=No. Assignment's automatic NEW-to-ASSIGNED
+  transition is audited by SD-04, while SD-07 writes AUTOMATIC_CLOSURE. Do
+  not double-audit those paths.
+- Important: the React app notifies the active requester on every explicit
+  Admin status change, including statuses other than RESOLVED/CLOSED. Do not
+  notify on requester self-status updates, assignment's automatic NEW to
+  ASSIGNED transition, or auto-close; those paths have separate behavior.
+
+Flow SD-04 - Ticket - Assignment changed notification
+Trigger/actions 1:
+- Same SharePoint trigger and `Get_Ticket_Changes` configuration as SD-03.
+- Also add SharePoint - Get item from SD_Settings, ID = 1; rename
+  `Get_Settings`.
+- Condition is true if either `Has Column Changed: AssignedTeamId` or
+  `Has Column Changed: AssignedAdminEmail` equals true. Use an OR group.
+- Continue only when ChangeSource=`ADMIN_ASSIGNMENT`. Skip
+  REQUESTER_CLAIM; current React claim behavior does not send an assignment
+  notification.
+Yes branch:
+1. Create one SD_Notifications row for the ticket requester. Title expression:
+  `concat(triggerBody()?['TicketNumber'], ' is now assigned to ', if(empty(triggerBody()?['AssignedTeamName']), 'Unassigned', if(empty(triggerBody()?['AssignedAdminName']), triggerBody()?['AssignedTeamName'], concat(triggerBody()?['AssignedTeamName'], ' / ', triggerBody()?['AssignedAdminName']))))`;
+   TicketId, TicketNumber, RequesterEmail, RequesterName as above;
+   NotificationType = `ASSIGNMENT_UPDATED`; Read=No; CreatedAt=`utcNow()`;
+  EmailEnabledAtCreation = `outputs('Get_Settings')?['body/EmailEnabled']`;
+  EmailStatus = PENDING if that value is true, otherwise NONE.
+2. If AssignedAdminEmail is not empty and differs from
+  PreviousAssignedAdminEmail, create one notification for that individual
+  only. Type = TICKET_ASSIGNED if PreviousAssignedAdminEmail is blank,
+  otherwise TICKET_REASSIGNED. Title expression:
+  `concat('Ticket ', triggerBody()?['TicketNumber'], ' was assigned to you')`.
+  First verify SD_Users has an active Role=ADMIN row with that Email; if not,
+  terminate without creating this notification.
+  Do not assume the acting admin is a recipient unless the newly assigned
+  admin is that same person; the current React service does not exclude
+  that case.
+3. If AssignedAdminEmail is blank (including team-only assignment), do not
+  notify every admin in the team; current React behavior notifies only the
+  requester for a team-only change. If assignment is cleared, the requester
+  message names "Unassigned".
+4. The formula uses AssignedTeamName, which the Power Apps assignment save
+  must update from the selected SD_Teams.Title. If both team and admin are
+  blank, use "Unassigned"; if both exist, format "<team> / <admin>".
+5. Set PreviousAssignedAdminEmail and PreviousAssignedTeamId to their
+  current values in the same Update item, then write one ASSIGNMENT_CHANGED
+  audit row with ActorEmail/ActorName from the original trigger's Editor,
+  and old/new team/admin values. The follow-up trigger run must
+  not create duplicate notifications because neither assignment field
+  changed.
+- If the ticket was NEW and AssignedTeamId is now nonblank, also set
+  StatusKey=ASSIGNED and Progress=10 and create a STATUS_CHANGED audit row
+  (old NEW, new ASSIGNED). Set ChangeSource=ADMIN_ASSIGNMENT. SD-03 updates
+  PreviousStatusKey but must not send a status notification for this
+  automatic assignment transition.
+- If assignment is cleared completely, still notify the requester of the
+  new value "Unassigned"; do not notify a now-unassigned resolver team.
+
+Flow SD-05 - Comment - Notify visible participants
+Trigger:
+- SharePoint - When an item is created, List SD_Comments.
+Actions:
+1. Get item SD_Tickets using ID = comment TicketId. Rename `Get_Ticket`.
+2. Create audit row: CommentType INTERNAL -> INTERNAL_NOTE_ADDED, otherwise
+   COMMENT_ADDED; ActorEmail = AuthorEmail; TicketId = comment TicketId.
+3. Get items SD_Users with `Role eq 'ADMIN' and Active eq 1`; Apply to each,
+  skip AuthorEmail, create notification. For INTERNAL, Title expression is
+  `concat('Internal note added to ', outputs('Get_Ticket')?['body/TicketNumber'])`;
+  for PUBLIC use the message expressions in step 4. For INTERNAL, stop
+  after admins.
+4. For PUBLIC, additionally notify the active requester in the ticket and,
+   when AssignedTeamId is set and AssignedAdminEmail is blank, active
+   REQUESTER users whose TeamId equals the ticket AssignedTeamId. Deduplicate
+   by lowercase Email before Create item; skip the comment author.
+    Ordinary public-comment Title:
+    `concat(triggerBody()?['AuthorName'], ' added a comment to ', outputs('Get_Ticket')?['body/TicketNumber'])`.
+    For any requester comment while StatusKey=RESOLVED, notify the resolver
+    with `concat(triggerBody()?['AuthorName'], ' commented after ', outputs('Get_Ticket')?['body/TicketNumber'], ' was resolved; review reopening')`, even if the five-day timer-reset window has passed.
+5. If the author is a requester and StatusKey=RESOLVED, additionally include
+  the latest resolver from the newest SD_AuditLog STATUS_CHANGED row where
+  NewValue=RESOLVED (if active), deduplicated. This resolver notification is
+  sent for any requester comment while status remains RESOLVED. Only the
+  timer-reset part is limited to the original time window. First add
+  SharePoint - Get item from SD_Settings, ID = 1; rename `Get_Settings`.
+  If ResolvedAt is not blank and
+  `lessOrEquals(utcNow(), addDays(outputs('Get_Ticket')?['body/ResolvedAt'], int(outputs('Get_Settings')?['body/AutoCloseAfterDays'])))`
+  is true, update AutoCloseAt to
+  `addDays(utcNow(), int(outputs('Get_Settings')?['body/AutoCloseAfterDays']))`
+  and audit AUTO_CLOSE_TIMER_RESET.
+  Test against the original ResolvedAt boundary, not the reset AutoCloseAt.
+  Do not auto-reopen.
+- Never notify requesters about INTERNAL comments. Never put comment text in
+  the notification email; use a short message and ticket number only.
+
+Flow SD-06 - Ticket file - Notify participants
+Trigger:
+- SharePoint - When a file is created (properties only), Library SD_TicketFiles.
+Actions:
+1. Get the SD_Tickets item using the file TicketId metadata.
+2. If UploadedByEmail equals ticket RequesterEmail: resolve recipients as
+   assigned individual Admin, or active Admins in AssignedTeamId if no
+   individual assignment. If no assignment, create no recipient row.
+3. Otherwise (Admin upload): create one notification for active
+  RequesterEmail. Type = ATTACHMENT_ADDED; Title expression:
+  `concat(triggerBody()?['UploadedByName'], ' attached a file to ', triggerBody()?['TicketNumber'])`.
+  Match the current app's message; do not include file content.
+4. Create one ATTACHMENT_UPLOADED SD_AuditLog row.
+- Upload handoff: add a separate Power Apps (V2) flow named
+  `SD-06a Ticket file - Upload`, with inputs TicketId (Number), OriginalName
+  (Text) and UploadFile (File). In the flow, first Get item SD_Tickets by
+  TicketId using the run-only user's SharePoint connection, so SharePoint
+  enforces the caller's item access. Set Run-only users to the approved
+  requester/admin groups and the SharePoint connection to "Provided by
+  run-only user". Do not accept UploadedByEmail as an authorization input;
+  use the created file's SharePoint Author/Created By identity for audit.
+  Validate extension and size against the app's attachment policy.
+  Then SharePoint - Create file in SD_TicketFiles:
+  - Folder Path: `/` (or a TicketNumber subfolder if permissions are
+    consistently inherited/maintained).
+  - File Name: expression
+    `concat(guid(), '.', last(split(triggerBody()?['OriginalName'], '.')))`.
+  - File Content: the Power Apps trigger's dynamic `UploadFile Content`.
+  Follow with SharePoint - Get file properties using the created file's
+  Identifier, then Update file properties:
+  TicketId = input TicketId; TicketNumber = Get_Ticket.TicketNumber;
+  OriginalFileName = input OriginalName; UploadedByEmail/Name = Author
+  Email/Display Name from Get file properties; Active=Yes. This metadata
+  update triggers SD-06. In Power Apps, select the UploadFile parameter
+  generated by the flow and map the attachment control's Name and Value; do
+  not base64-convert the content
+  a second time. Verify the generated `.Run(...)` signature in the formula
+  bar after adding the flow, since Power Apps generates argument order from
+  the trigger inputs.
+- Important security gap: a standard cloud flow cannot reproduce the React
+  backend's server-side magic-byte/signature validation just by checking a
+  filename or client MIME type. Before accepting arbitrary files in
+  production, add an approved server-side file-signature scanner/parser (or
+  keep the allowed file types narrowly constrained and obtain security
+  approval); a Power Apps client-side size/type check is not sufficient.
+- Master deletion is performed by a Power Apps button that calls a
+  master-checked flow `SD-06b Ticket file - Master delete`. Inputs: TicketId
+  (Number), FileIdentifier (Text). Map FileIdentifier to the document
+  library file's SharePoint `Identifier`; Set Run-only users to the approved
+  SharePoint SD_Masters group and use "Provided by run-only user" for the
+  SharePoint connection. Also verify the authenticated caller against
+  SD_Users.IsMaster; never trust a caller-supplied ActingEmail value as proof
+  of master rights. Read caller email/name from the Power Apps (V2) trigger's
+  system headers `x-ms-user-email` and `x-ms-user-name`; if either is absent,
+  terminate. Rename SharePoint - Get file properties to `Get_File` and Get
+  item SD_Tickets by TicketId to `Get_Ticket`. Create
+  ATTACHMENT_DELETED audit row, create deduplicated notifications for
+  uploader/requester/assigned Admins (except the authenticated master), then
+  use Title expression
+  `concat(triggerOutputs()?['headers']?['x-ms-user-name'], ' removed the attachment "', outputs('Get_File')?['body/OriginalFileName'], '" from ', outputs('Get_Ticket')?['body/TicketNumber'])`;
+  delete that file only. Never delete or update the SD_Tickets item in this
+  flow.
+
+Flow SD-07 - Ticket - Automatic close
+Trigger:
+- Recurrence: every 15 minutes; time zone UTC.
+Actions:
+1. SharePoint - Get items, SD_Tickets. Filter Query:
+  `StatusKey eq 'RESOLVED'`; enable pagination. Add Data Operations - Filter
+  array, From = `value` from Get items, advanced condition:
+  `@and(not(empty(item()?['AutoCloseAt'])), lessOrEquals(ticks(item()?['AutoCloseAt']), ticks(utcNow())))`.
+2. Apply to each result; re-check StatusKey is RESOLVED and AutoCloseAt is
+   less than or equal to `utcNow()` immediately before update.
+3. Update item: StatusKey=CLOSED; PreviousStatusKey=CLOSED; Progress=100;
+  ClosedAt=`utcNow()`; AutoCloseAt blank. Set the previous key in this same
+  update so SD-03 does not send a duplicate status notification. Create
+  AUTOMATIC_CLOSURE audit row (ActorEmail blank, Details="System auto-close").
+4. Create TICKET_CLOSED notification for the active requester; EmailStatus
+   follows SD-03 setting rules.
+- Ticket status workflow rules remain fixed. A requester public comment
+  within five days may reset AutoCloseAt; it does not itself reopen the
+  ticket. Only master may edit/reopen CLOSED tickets.
+
+Flow SD-07b - Worklog - Notify admins
+Trigger:
+- SharePoint - When an item is created, List SD_Worklogs.
+Actions:
+1. Get SD_Tickets item using TicketId; rename action `Get_Ticket`.
+2. Get items SD_Users with filter query `Role eq 'ADMIN' and Active eq 1`;
+  enable pagination. Apply to each returned admin, skip Email equal to the
+  worklog AdminEmail, and create one SD_Notifications item per remaining
+  admin. NotificationType=WORKLOG_ADDED; Title expression:
+  `concat('A worklog was added to ', outputs('Get_Ticket')?['body/TicketNumber'])`;
+  TicketId and TicketNumber from Get_Ticket; RecipientEmail/Name from the
+  SD_Users row; Read=No; EmailStatus follows SD-02 rules.
+3. Create a WORKLOG_ADDED SD_AuditLog row. Do not notify requesters.
+
+Flow SD-08 - Device inventory import (reliable CSV handoff)
+Important connector limitation:
+- SharePoint/Power Automate has no built-in robust semicolon-CSV parser.
+  A simple `split()` breaks valid quoted CSV fields. Do not silently use it
+  for arbitrary exports. For the first SharePoint pilot, use an Excel
+  workbook with a named table `tblDeviceInventory` as the flow input. Open
+  the Intune CSV in Excel, confirm delimiter/header mapping, Save As .xlsx,
+  convert the data range to a table named tblDeviceInventory, then upload
+  it to document library SD_DeviceImport. This is an explicit interim step;
+  direct raw CSV ingestion needs an approved parser (for example an Office
+  Script or Azure Function) and should be added only after testing.
+Trigger/actions:
+1. SharePoint - When a file is created (properties only), Library
+   SD_DeviceImport; trigger condition File name with extension ends with
+   `.xlsx` (case-insensitive condition in a Condition action).
+2. Excel Online (Business) - List rows present in a table; Location = site;
+   Document Library = SD_DeviceImport; File = Identifier from trigger;
+   Table = `tblDeviceInventory`; enable pagination.
+3. Apply to each Excel row. Normalize Primary user with expression
+   `toLower(trim(items('Apply_to_each')?['Primary user']))`.
+   Use Intune managed device ID as InventoryKey, otherwise Entra device ID;
+   if both are blank, use a documented stable name+serial key.
+4. SharePoint - Get items SD_DeviceInventory filtered by exact InventoryKey.
+   If found, Update item; otherwise Create item. Map columns:
+   Title <- Inventory name; PrimaryUserEmail <- normalized Primary user;
+   EntraDeviceId <- Entra device ID; IntuneManagedDeviceId <- Intune managed
+   device ID; Model <- Model; OperatingSystem <- Operating system;
+   OperatingSystemVersion <- OS version; ComplianceState <- Compliance state;
+   SerialNumber <- serial number; Manufacturer <- manufacturer;
+   LastCheckIn <- Last check-in / last sync; Active <- Yes.
+5. After all rows, create DEVICE_INVENTORY_IMPORTED audit row with actor
+   (uploader/editor identity if available) and imported row count.
+6. Do not delete unseen devices automatically on the first implementation.
+   Mark them inactive only after a separately reviewed full-snapshot
+   process; a partial export must not erase users' device choices.
+
+14.4 Admin pages and permissions in the canvas app
+--------------------------------------------------
+
+- Manage teams: all admins may create/rename/change type/activate/deactivate
+  SD_Teams items. REQUESTER_TEAM is for requester groups; IT_TEAM groups
+  resolving admins. Write global audit rows. Do not hard-delete teams with
+  references.
+- Device inventory: admins can inspect the current list, upload the
+  normalized Excel import file and trigger SD-08. Requesters cannot upload
+  or edit inventory.
+- Workflow settings: master-only. Priorities support add/rename/reorder/
+  activate/deactivate; delete only when no SD_Tickets row references the
+  key. StatusLabels permit label edits only; seven keys remain fixed.
+- Email settings: master-only toggle. SD-02 must check EmailEnabled before
+  invoking Outlook. On disable, update queued PENDING notifications to NONE.
+- User admin, ticket master overrides, attachment delete and audit screens
+  must enforce permissions in the flow/list layer as well as hiding controls
+  in Power Apps. SharePoint list permissions are the security boundary.
+
+14.5 Pilot sequence and acceptance checks
+-----------------------------------------
+
+Build in this order, saving and testing after each step:
+1. Create lists/columns and seed SD_Teams, SD_Priorities,
+   SD_StatusLabels, SD_Categories, SD_Users, SD_Settings.
+2. Create SD-01 and test that one new ticket receives exactly one stable
+   TCK-YYYY-####### number and one creation audit row.
+3. Build Power Apps read-only catalogues and device picker; verify requester
+   sees only devices with matching PrimaryUserEmail and Other device works.
+4. Build ticket creation/detail screens; verify the device snapshot remains
+   unchanged after the inventory row is edited.
+5. Create SD-02 with EmailEnabled=false and prove no Outlook run occurs;
+   enable it only after a test notification successfully maps To, Subject,
+   Body and SENT status.
+6. Add SD-03/04 and test status/assignment notifications, including team-only
+   assignment and cleared assignment. Confirm no duplicate recipients.
+7. Add comments, files, worklogs and SD-07; test INTERNAL visibility,
+   requester comment timer reset, attachment delete without ticket delete,
+   and the five-day auto-close boundary.
+8. Test every role against direct list/flow access, not just screen visibility.
+   A Power Apps filter alone is not an access-control mechanism.
+
+Flow names are stable, action names are explicitly provided where expressions
+or run-after settings depend on them, and the exact SharePoint dynamic values
+are identified above. Connector labels may be localized in the workplace
+tenant (for example "Office 365 Outlook - Send an email (V2)"), but select
+the action with the stated English action name/version and verify its fields
+before saving. Do not treat an action's display label as its internal
+workflow identifier.
 
