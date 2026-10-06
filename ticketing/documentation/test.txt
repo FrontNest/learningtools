@@ -1,0 +1,38 @@
+Userek a ticketinghez:
+requester.demo@company.example	NewP4ssword!
+admin.l2@company.example	NewP4ssword!
+admin.master@company.example	ItSdMaster
+admin.sd@company.example	NewP4ssword!
+requester.demo.hr@company.example	NewP4ssword!
+
+cd C:\Users\lol\______ORSI\GitHub\FrontnestStudio\ticketing\webapp\backend
+npm start
+
+TELEPÍTÉSEKOR MASTER STANDARD PW: itsdmaster
+
+## Mi az a `prisma:seed`?
+
+Ez egy külön parancs (`npm run prisma:seed`), ami feltölti az adatbázist alapadatokkal: csapatok, kategóriák, és néhány teszt/kezdő felhasználó — köztük a **master** admin fiók.
+
+Ez **nem ugyanaz**, mint amit korábban futtattunk (`npx prisma migrate dev`). A migráció csak a táblaszerkezetet hozza létre/módosítja (pl. az új `Session` táblát), adatot nem ír bele.
+
+## Mikor fut le ez a parancs nálad?
+
+- Amikor **most elindítod**, a te adatbázisod (`prisma/data/dev.db`) már létezik, a master fiókod is már benne van a korábbi beállításokkal.
+- A `prisma:seed` script tipikusan csak ilyenkor fut le:
+  - első alkalommal, amikor a projektet friss gépen/szerveren állítod fel,
+  - vagy ha szándékosan újra le akarod futtatni a demóadatok feltöltésére.
+
+**Tehát most nincs azonnali teendőd.** A mostani, már működő master fiókodat a javítás nem érinti, nem törli, nem változtatja meg.
+
+## Mikor lesz ez fontos?
+
+Csak akkor, ha valaha **újra lefuttatod** a `npm run prisma:seed` parancsot (pl. új szerverre telepítéskor, vagy egy teljesen üres adatbázissal). Onnantól a script megköveteli, hogy előtte a `.env` fájlban szerepeljen egy sor:
+
+```
+MASTER_USER_PASSWORD=egy-erős-egyedi-jelszó
+```
+
+Ha ez hiányzik, a script hibával leáll (ez szándékos: korábban egy beégetett `ItSdMaster` alapértelmezett jelszót használt, ha ezt elfelejtették beállítani — ezt zártuk le).
+
+Összefoglalva: ez csak egy jövőbeli, "ha majd újraseedelsz" jellegű megjegyzés volt, nem sürgős, most semmit nem kell tenned vele.
